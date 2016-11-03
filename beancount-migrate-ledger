@@ -1,0 +1,30 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+# WIP
+#
+# TODO alternative dates
+# TODO balance assertions
+# TODO x-payee
+
+my $indent = "  ";
+
+sub print_metadata($$$) {
+    my ($depth, $key, $value) = @_;
+    print "$indent" x $depth, lc($key), ": \"$value\"\n";
+}
+
+while (my $l = <>) {
+    chomp $l;
+
+    if ($l =~ /^include\s+(.*)\.ledger/) {  # include
+	print "include \"$1.beancount\"\n";
+    } elsif ($l =~ /^([0-9]\S+)\s+([*!])\s+(.*)/) {  # txn header
+	print "$1 $2 \"$3\"\n";
+    } elsif ($l =~ /^(\s+);\s*(\S+):\s*(.*)/) {  # metadata
+	print_metadata(length($1) / 2, $2, $3);
+    } else {
+	print "$l\n";
+    }
+}
