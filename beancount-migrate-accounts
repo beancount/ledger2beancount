@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+my $account_open_date = "2014-03-30";  # date of my oldest Ledger txn minus 1 day
+my $indent = "  ";
+
+sub print_metadata($$) {
+    my ($key, $value) = @_;
+    print "$indent", lc($key), ": \"$value\"\n";
+}
+
+while (my $l = <>) {
+    chomp $l;
+
+    if ($l =~ /^account\s+(.*)/) {  # account declaration
+	print "$account_open_date open $1\n";
+    } elsif ($l =~ /^\s+note\s+(.*)/) {  # note
+	print_metadata("description", $1);
+    } elsif ($l =~ /^\s+;\s*(\S+):\s*(.*)/) {  # metadata
+	print_metadata($1, $2);
+    } else {
+	print "$l\n";
+    }
+}
