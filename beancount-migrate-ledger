@@ -6,8 +6,6 @@ use warnings;
 #
 # TODO alternative dates
 # TODO balance assertions
-# TODO duedate:: "[2015-12-31]" <- invalid beancount metadata
-# TODO duedate:: "[2015-12-31]" <- expand to proper date metadata value
 # TODO in-comment tags, e.g., "; :tommaso:battesimo-tz" or ":todo:"
 
 # mapping of ledger metadata key to corresponding beancount key
@@ -64,7 +62,7 @@ sub dump_cur_txn() {
 
 sub pp_txn_metadata($$$) {
     my ($depth, $key, $value) = @_;
-    return "$indent" x $depth . $key . ": \"$value\"\n";
+    return "$indent" x $depth . $key . ": $value\n";
 }
 
 sub pp_txn_posting($) {
@@ -105,6 +103,20 @@ sub pop_txn() {
 }
 
 
+sub parse_ledger_value($) {
+    my ($raw) = @_;
+    my $value;
+
+    if ($raw =~ /^\[(?<date>\d{4}-\d{2}-\d{2})\]$/) {
+	$value = $+{date};
+    } else {
+	$value = $raw;
+    }
+
+    return $value;
+}
+
+
 sub map_metadata($) {
     my ($key) = @_;
 
@@ -126,21 +138,26 @@ while (my $l = <>) {
 	print "include \"$+{filename}.beancount\"\n";
     } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {  # txn header
 	push_txn_header($+{date}, $+{flag}, $+{narration});
-    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>\S+):\s*(?<value>.*)/) {  # metadata
+    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>\w+):(?<typed>:)?\s*(?<value>.*)/) {  # metadata
 	my $key = map_metadata(lc($+{key}));
-	my $value = $+{value};
+	my $value;
+	if (defined($+{typed})) {
+	    $value = parse_ledger_value($+{value});
+	} else {
+	    $value = '"' . $+{value} . '"';
+	}
 	if ($key eq "x-payee") {
 	    push_txn_payee($+{value});
 	} else {
 	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
-					  $key, $+{value}));
+					  $key, $value));
 	}
     } elsif ($l =~ /^(?<indent>\s+);\s*(?<comment>.*)/) {  # non-metadata comment
 	if ($in_txn) {
 	    # work-around for
 	    # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
 	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
-					  "comment", $+{comment}));
+					  "comment", '"' . $+{comment} . '"'));
 	} else {
 	    print $l, "\n";
 	}
