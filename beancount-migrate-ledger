@@ -160,7 +160,7 @@ while (my $l = <>) {
 	print "include \"$+{filename}.beancount\"\n";
     } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {  # txn header
 	push_txn_header($+{date}, $+{flag}, $+{narration});
-    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>\w+):(?<typed>:)?\s*(?<value>.*)/) {  # metadata
+    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {  # metadata
 	my $key = map_metadata(lc($+{key}));
 	my $value;
 	if (defined($+{typed})) {
