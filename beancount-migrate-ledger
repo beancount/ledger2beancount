@@ -136,7 +136,11 @@ while (my $l = <>) {
 	print(pop_txn()) if $in_txn;
 	print "\n";
     } else {
-	push_txn_line($l . "\n");
+	if ($in_txn) {
+	    push_txn_line($l . "\n");
+	} else {
+	    print $l, "\n";
+	}
     }
 }
 print(pop_txn()) if $in_txn;
