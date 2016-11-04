@@ -6,6 +6,8 @@ use warnings;
 #
 # TODO alternative dates
 # TODO balance assertions
+# TODO duedate:: "[2015-12-31]" <- invalid beancount metadata
+# TODO duedate:: "[2015-12-31]" <- expand to proper date metadata value
 
 # mapping of ledger metadata key to corresponding beancount key
 my %metadata_map = (
