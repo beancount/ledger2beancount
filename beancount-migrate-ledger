@@ -6,25 +6,135 @@ use warnings;
 #
 # TODO alternative dates
 # TODO balance assertions
-# TODO x-payee
+
+# mapping of ledger metadata key to corresponding beancount key
+my %metadata_map = (
+    'x-payer' => 'payer',
+    );
 
 my $indent = "  ";
+my ($in_txn, %cur_txn_header, @cur_txn_lines);
 
-sub print_metadata($$$) {
-    my ($depth, $key, $value) = @_;
-    print "$indent" x $depth, lc($key), ": \"$value\"\n";
+sub reset_cur_txn() {
+    $in_txn = 0;
+    %cur_txn_header = ();
+    @cur_txn_lines = ();
+}
+reset_cur_txn();
+
+
+sub pp_cur_txn_header() {
+    my $buf = "";
+
+    $buf .= $cur_txn_header{date} . " ";
+    $buf .= $cur_txn_header{flag} . " ";
+    if (exists($cur_txn_header{payee})) {
+	$buf .= '"' . $cur_txn_header{payee} . '" ';
+    }
+    $buf .= '"' . $cur_txn_header{narration} . "\"\n";
+
+    return $buf;
 }
 
-while (my $l = <>) {
-    chomp $l;
+sub pp_cur_txn_lines() {
+    my $buf = "";
 
-    if ($l =~ /^include\s+(.*)\.ledger/) {  # include
-	print "include \"$1.beancount\"\n";
-    } elsif ($l =~ /^([0-9]\S+)\s+([*!])\s+(.*)/) {  # txn header
-	print "$1 $2 \"$3\"\n";
-    } elsif ($l =~ /^(\s+);\s*(\S+):\s*(.*)/) {  # metadata
-	print_metadata(length($1) / 2, $2, $3);
+    foreach my $line (@cur_txn_lines) {
+	$buf .= $line;
+    }
+
+    return $buf;
+}
+
+sub dump_cur_txn() {
+    if ($in_txn) {
+	print "D: cur_header: " . pp_cur_txn_header();
+	print "D: cur_lines_begin\n";
+	print(pp_cur_txn_lines());
+	print "D: cur_lines_end\n";
     } else {
-	print "$l\n";
+	print "D: no txn\n";
     }
 }
+
+
+sub pp_txn_metadata($$$) {
+    my ($depth, $key, $value) = @_;
+    return "$indent" x $depth . $key . ": \"$value\"\n";
+}
+
+sub pp_txn_posting($) {
+    return $indent . $1 . "\n";
+}
+
+
+sub push_txn_header($$$) {
+    my ($date, $flag, $narration) = @_;
+
+    $in_txn = 1;
+    $cur_txn_header{date} = $date;
+    $cur_txn_header{flag} = $flag;
+    $cur_txn_header{narration} = $narration;
+}
+
+sub push_txn_payee($) {
+    my ($payee) = @_;
+    $cur_txn_header{payee} = $payee;
+}
+
+sub push_txn_line($) {
+    my ($line) = @_;
+
+    push @cur_txn_lines, $line;
+}
+
+
+sub pop_txn() {
+    my $buf = "";
+
+    $buf .= pp_cur_txn_header();
+    $buf .= pp_cur_txn_lines();
+
+    reset_cur_txn();
+
+    return $buf;
+}
+
+
+sub map_metadata($) {
+    my ($key) = @_;
+
+    if (exists($metadata_map{$key})) {
+	return $metadata_map{$key};
+    } else {
+	return $key;
+    }
+}
+
+
+my $lineno = 0;
+while (my $l = <>) {
+    $lineno++;
+    chomp $l;
+
+    # print "D: line: ", $lineno, "\n"; dump_cur_txn(); print "\n";
+    if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
+	print "include \"$+{filename}.beancount\"\n";
+    } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {  # txn header
+	push_txn_header($+{date}, $+{flag}, $+{narration});
+    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>\S+):\s*(?<value>.*)/) {  # metadata
+	my $key = map_metadata(lc($+{key}));
+	my $value = $+{value};
+	if ($key eq "x-payee") {
+	    push_txn_payee($+{value});
+	} else {
+	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2, $key, $+{value}));
+	}
+    } elsif ($l =~ /^\s*$/) {  # empty line
+	print(pop_txn()) if $in_txn;
+	print "\n";
+    } else {
+	push_txn_line($l . "\n");
+    }
+}
+print(pop_txn()) if $in_txn;
