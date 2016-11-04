@@ -8,6 +8,7 @@ use warnings;
 # TODO balance assertions
 # TODO duedate:: "[2015-12-31]" <- invalid beancount metadata
 # TODO duedate:: "[2015-12-31]" <- expand to proper date metadata value
+# TODO in-comment tags, e.g., "; :tommaso:battesimo-tz" or ":todo:"
 
 # mapping of ledger metadata key to corresponding beancount key
 my %metadata_map = (
