@@ -11,6 +11,7 @@ use warnings;
 
 # mapping of ledger metadata key to corresponding beancount key
 my %metadata_map = (
+    'label'   => 'bank-label',
     'x-payer' => 'payer',
     );
 
