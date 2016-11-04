@@ -130,7 +130,17 @@ while (my $l = <>) {
 	if ($key eq "x-payee") {
 	    push_txn_payee($+{value});
 	} else {
-	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2, $key, $+{value}));
+	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
+					  $key, $+{value}));
+	}
+    } elsif ($l =~ /^(?<indent>\s+);\s*(?<comment>.*)/) {  # non-metadata comment
+	if ($in_txn) {
+	    # work-around for
+	    # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
+	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
+					  "comment", $+{comment}));
+	} else {
+	    print $l, "\n";
 	}
     } elsif ($l =~ /^\s*$/) {  # empty line
 	print(pop_txn()) if $in_txn;
