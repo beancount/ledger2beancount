@@ -17,6 +17,12 @@ my %metadata_map = (
 my $indent = "  ";
 my ($in_txn, %cur_txn_header, @cur_txn_lines);
 
+# Simple parsing state machine: we need to look ahead for payee metadata, as in
+# beancount they appear on the first line of a transaction, whereas in ledger
+# they appear as a regular metadata ("x-payee"). The following functions
+# support the parsing state machine for this:
+
+# reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
     $in_txn = 0;
     %cur_txn_header = ();
@@ -25,6 +31,8 @@ sub reset_cur_txn() {
 reset_cur_txn();
 
 
+# pretty print the transaction header (i.e., its first line) in beancount
+# format
 sub pp_cur_txn_header() {
     my $buf = "";
 
@@ -38,6 +46,8 @@ sub pp_cur_txn_header() {
     return $buf;
 }
 
+# pretty print subsequent lines (all but the first) of a transaction, in
+# beancount format
 sub pp_cur_txn_lines() {
     my $buf = "";
 
@@ -48,6 +58,13 @@ sub pp_cur_txn_lines() {
     return $buf;
 }
 
+# pretty print a single metadata line, in beancount format
+sub pp_txn_metadata($$$) {
+    my ($depth, $key, $value) = @_;
+    return "$indent" x $depth . $key . ": $value\n";
+}
+
+# dump the current parsing state to stdout. Used for debugging purposes only
 sub dump_cur_txn() {
     if ($in_txn) {
 	print "D: cur_header: " . pp_cur_txn_header();
@@ -60,16 +77,9 @@ sub dump_cur_txn() {
 }
 
 
-sub pp_txn_metadata($$$) {
-    my ($depth, $key, $value) = @_;
-    return "$indent" x $depth . $key . ": $value\n";
-}
-
-sub pp_txn_posting($) {
-    return $indent . $1 . "\n";
-}
-
-
+# set the current transaction header (= first line), overriding the previous
+# value (which should *usually* be empty, but it is the caller responsibility
+# to ensure this is the case)
 sub push_txn_header($$$) {
     my ($date, $flag, $narration) = @_;
 
@@ -79,11 +89,14 @@ sub push_txn_header($$$) {
     $cur_txn_header{narration} = $narration;
 }
 
+# set the current transaction payee, complementing the transaction header
 sub push_txn_payee($) {
     my ($payee) = @_;
     $cur_txn_header{payee} = $payee;
 }
 
+# add a transaction line. Call this multiple times to accmulate lines that will
+# be emitted as soon as the transaction is over
 sub push_txn_line($) {
     my ($line) = @_;
 
@@ -91,6 +104,9 @@ sub push_txn_line($) {
 }
 
 
+# return a pretty printed transaction, reseting the current parsing state. This
+# is usually called as soon as the end of a transaction (usually an empty line)
+# is encountered
 sub pop_txn() {
     my $buf = "";
 
@@ -103,6 +119,8 @@ sub pop_txn() {
 }
 
 
+# parse a ledger value. Usually to extract "semantic" values from typed
+# metadata
 sub parse_ledger_value($) {
     my ($raw) = @_;
     my $value;
@@ -117,6 +135,8 @@ sub parse_ledger_value($) {
 }
 
 
+# map a (ledger) metadata key to the desired (beancount) metadata key. Relies
+# on the global %metadata_map hash
 sub map_metadata($) {
     my ($key) = @_;
 
@@ -127,6 +147,8 @@ sub map_metadata($) {
     }
 }
 
+
+# MAIN CONVERSION LOOP
 
 my $lineno = 0;
 while (my $l = <>) {
@@ -172,4 +194,6 @@ while (my $l = <>) {
 	}
     }
 }
+
+# emit last transaction, if it's still active when reaching EOF
 print(pop_txn()) if $in_txn;
