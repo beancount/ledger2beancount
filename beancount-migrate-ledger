@@ -17,6 +17,9 @@ use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 
+
+# metadata tags used for specific purposes
+my $altdate_tag = 'alt-date';
 my $payee_tag = 'x-payee';
 
 # mapping of ledger metadata key to corresponding beancount key
@@ -244,7 +247,7 @@ while (my $l = <>) {
     } elsif ($l =~ /^(?<date>[0-9-]+)(=(?<altdate>[0-9-]+))?\s+(?<flag>[*!])\s+(?<narration>.*)/) {
 	# txn header
 	push_header $+{date}, $+{flag}, $+{narration};
-	push_metadata $depth + 1, "alt-date", $+{altdate} if defined $+{altdate};
+	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate};
     } elsif ($l =~ /^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
 	# metadata comment
 	my $key = map_metadata(lc($+{key}));
