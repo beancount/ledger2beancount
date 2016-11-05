@@ -106,7 +106,7 @@ sub dump_cur_txn() {
 # set the current transaction header (= first line), overriding the previous
 # value (which should *usually* be empty, but it is the caller responsibility
 # to ensure this is the case)
-sub push_txn_header($$$) {
+sub push_header($$$) {
     my ($date, $flag, $narration) = @_;
 
     $in_txn = 1;
@@ -116,26 +116,26 @@ sub push_txn_header($$$) {
 }
 
 # set the current transaction payee, complementing the transaction header
-sub push_txn_payee($) {
+sub push_payee($) {
     my ($payee) = @_;
     $cur_txn_header{payee} = $payee;
 }
 
 # add a transaction line. Call this multiple times to accmulate lines that will
 # be emitted as soon as the transaction is over
-sub push_txn_line($$) {
+sub push_line($$) {
     my ($depth, $line) = @_;
 
     push @cur_txn_lines, indent($depth, $line);
 }
 
-# add a comment line. Wrapper around push_txn_line() for comments
+# add a comment line. Wrapper around push_line() for comments
 sub push_comment($$) {
     my ($depth, $comment) = @_;
 
     # XXX workaround for bug
     # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    push_txn_line($depth, pp_metadata("comment", '"' . $comment . '"'));
+    push_line($depth, pp_metadata("comment", '"' . $comment . '"'));
 }
 
 
@@ -207,7 +207,7 @@ while (my $l = <>) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {
 	# txn header
-	push_txn_header($+{date}, $+{flag}, $+{narration});
+	push_header($+{date}, $+{flag}, $+{narration});
     } elsif ($l =~ /^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
 	# metadata comment
 	my $key = map_metadata(lc($+{key}));
@@ -218,15 +218,15 @@ while (my $l = <>) {
 	    $value = '"' . $+{value} . '"';
 	}
 	if ($key eq $payee_tag) {
-	    push_txn_payee($+{value});
+	    push_payee($+{value});
 	} else {
-	    push_txn_line($depth, pp_metadata($key, $value));
+	    push_line($depth, pp_metadata($key, $value));
 	}
     } elsif ($l =~ /^;\s*(?<comment>.*)\s+:(?<tags>[\w:-]+):\s*$/
 	     or $l =~ /^;\s+:(?<tags>[\w:-]+):\s+(?<comment>.*)$/) {
     	# tags comment
     	if ($in_txn) {
-    	    push_txn_line($depth, pp_tags(split(/:/, $+{tags})));
+    	    push_line($depth, pp_tags(split(/:/, $+{tags})));
     	    push_comment($depth, $+{comment}) if $+{comment} ne "";
     	} else {
     	    print_line $depth, $l;
@@ -242,7 +242,7 @@ while (my $l = <>) {
 	print "\n";
     } else {  # everything else
 	if ($in_txn) {
-	    push_txn_line($depth, $l);
+	    push_line($depth, $l);
 	} else {
 	    print_line $depth, $l;
 	}
