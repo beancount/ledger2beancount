@@ -4,9 +4,11 @@ use warnings;
 
 # WIP
 #
-# TODO balance assertions
 # TODO multi-line comment
+# TODO "Reducing position results in inventory with positive and negative lots"
 
+use Carp::Assert;
+use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 
 my $payee_tag = 'x-payee';
@@ -42,14 +44,15 @@ sub mk_beancount_string($) {
 # beancount they appear on the first line of a transaction, whereas in ledger
 # they appear as a regular metadata ("x-payee"). The following functions
 # support the parsing state machine for this:
-my ($in_txn, %cur_txn_header, @cur_txn_lines);
+my ($in_txn, %cur_txn_header, @cur_txn_lines, @cur_txn_assertions);
 
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
-    $in_txn = 0;
-    %cur_txn_header = ();
-    @cur_txn_lines = ();
+    $in_txn = 0;  # whether we are currently in a txn block
+    %cur_txn_header = ();  # txn header, i.e., its first line
+    @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
+    @cur_txn_assertions = ();  # balance assertions related to txn
 }
 reset_cur_txn();
 
@@ -72,13 +75,12 @@ sub pp_cur_header() {
 # pretty print subsequent lines (all but the first) of a transaction, in
 # beancount format
 sub pp_cur_lines() {
-    my $buf = "";
+    return (join "\n", @cur_txn_lines) . "\n";
+}
 
-    foreach my $line (@cur_txn_lines) {
-	$buf .= $line . "\n";
-    }
-
-    return $buf;
+# pretty print pending balance assertions, in beancount format
+sub pp_cur_assertions() {
+    return (join "\n", @cur_txn_assertions) . "\n";
 }
 
 # pretty print a single metadata key/value paris, in beancount format
@@ -137,6 +139,19 @@ sub push_line($$) {
     push @cur_txn_lines, indent($depth, $line);
 }
 
+# add a balance assertion to be published at the end of current transaction
+sub push_assertion($$) {
+    my ($account, $amount) = @_;
+
+    # beancount evalutes balance assertions at the beginning of the day,
+    # whereas ledger evalutes them at the end of the txn. So we schedule the
+    # balance assertion for the *after* the origin txn. This assumes that there
+    # are no *other* txn in the same day that change the balance again.
+    my $assertion_date = sprintf("%04d-%02d-%02d",
+				 Add_Delta_Days(split(/-/, $cur_txn_header{date}), 1));
+    push @cur_txn_assertions, "$assertion_date balance $account  $amount";
+}
+
 # add a metadata line. Wrapper around push_line() for metadata
 sub push_metadata($$$) {
     my ($depth, $key, $value) = @_;
@@ -161,6 +176,7 @@ sub pop_txn() {
 
     $buf .= pp_cur_header() . "\n";
     $buf .= pp_cur_lines();
+    $buf .= "\n" . pp_cur_assertions() if @cur_txn_assertions;
 
     reset_cur_txn();
 
@@ -252,6 +268,11 @@ while (my $l = <>) {
 	} else {
 	    print_line $depth, $l;
 	}
+    } elsif ($l =~ /^(?<posting>(?<account>[A-Z]\S*)\s+(?<amount>[\d.-]+\s+[A-Z]+))\s*=\s*(?<assertion>[\d\.-]+\s+[A-Z]+)/) {
+	# posting with balance assertion
+	assert $in_txn;
+	push_line $depth, $+{posting};
+	push_assertion $+{account}, $+{assertion};
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";
