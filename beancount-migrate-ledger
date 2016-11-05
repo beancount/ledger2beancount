@@ -105,6 +105,15 @@ sub push_txn_line($) {
     push @cur_txn_lines, $line;
 }
 
+# add a comment line. Wrapper around push_txn_line() for comments
+sub push_comment($$) {
+    my ($depth, $comment);
+
+    # work-around for
+    # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
+    push_txn_line(pp_txn_metadata($depth, "comment", '"' . $comment . '"'));
+}
+
 
 # return a pretty printed transaction, reseting the current parsing state. This
 # is usually called as soon as the end of a transaction (usually an empty line)
@@ -150,6 +159,14 @@ sub map_metadata($) {
 }
 
 
+# emit a single line
+sub print_line($) {
+    my ($line) = @_;
+
+    print $line, "\n";
+}
+
+
 # MAIN CONVERSION LOOP
 
 my $lineno = 0;
@@ -160,9 +177,11 @@ while (my $l = <>) {
     # print "D: line: ", $lineno, "\n"; dump_cur_txn(); print "\n";
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print "include \"$+{filename}.beancount\"\n";
-    } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {  # txn header
+    } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {
+	# txn header
 	push_txn_header($+{date}, $+{flag}, $+{narration});
-    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {  # metadata
+    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
+	# metadata
 	my $key = map_metadata(lc($+{key}));
 	my $value;
 	if (defined($+{typed})) {
@@ -178,21 +197,18 @@ while (my $l = <>) {
 	}
     } elsif ($l =~ /^(?<indent>\s+);\s*(?<comment>.*)/) {  # non-metadata comment
 	if ($in_txn) {
-	    # work-around for
-	    # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
-					  "comment", '"' . $+{comment} . '"'));
+	    push_comment(length($+{indent}) / 2, $+{comment});
 	} else {
-	    print $l, "\n";
+	    print_line($l);
 	}
     } elsif ($l =~ /^\s*$/) {  # empty line
 	print(pop_txn()) if $in_txn;
 	print "\n";
-    } else {
+    } else {  # everything else
 	if ($in_txn) {
 	    push_txn_line($l . "\n");
 	} else {
-	    print $l, "\n";
+	    print_line($l);
 	}
     }
 }
