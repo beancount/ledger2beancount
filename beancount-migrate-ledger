@@ -61,10 +61,10 @@ sub pp_cur_header() {
 
     $buf .= $cur_txn_header{date} . " ";
     $buf .= $cur_txn_header{flag} . " ";
-    if (exists($cur_txn_header{payee})) {
-	$buf .= mk_beancount_string($cur_txn_header{payee});
+    if (exists $cur_txn_header{payee}) {
+	$buf .= mk_beancount_string $cur_txn_header{payee};
     }
-    $buf .= mk_beancount_string($cur_txn_header{narration});
+    $buf .= mk_beancount_string $cur_txn_header{narration};
 
     return $buf;
 }
@@ -103,7 +103,7 @@ sub dump_cur_txn() {
     if ($in_txn) {
 	print "D: cur_header: " . pp_cur_header() . "\n";
 	print "D: cur_lines_begin\n";
-	print(pp_cur_lines());
+	print pp_cur_lines();
 	print "D: cur_lines_end\n";
     } else {
 	print "D: no txn\n";
@@ -149,7 +149,7 @@ sub push_comment($$) {
 
     # XXX workaround for bug
     # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    push_line($depth, pp_metadata("comment", mk_beancount_string($comment)));
+    push_metadata $depth, "comment", mk_beancount_string($comment);
 }
 
 
@@ -189,7 +189,7 @@ sub parse_ledger_value($) {
 sub map_metadata($) {
     my ($key) = @_;
 
-    if (exists($metadata_map{$key})) {
+    if (exists $metadata_map{$key}) {
 	return $metadata_map{$key};
     } else {
 	return $key;
@@ -221,19 +221,19 @@ while (my $l = <>) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^(?<date>[0-9-]+)(=(?<altdate>[0-9-]+))?\s+(?<flag>[*!])\s+(?<narration>.*)/) {
 	# txn header
-	push_header($+{date}, $+{flag}, $+{narration});
+	push_header $+{date}, $+{flag}, $+{narration};
 	push_metadata $depth + 1, "alt-date", $+{altdate} if defined $+{altdate};
     } elsif ($l =~ /^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
 	# metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;
 	if (defined($+{typed})) {
-	    $value = parse_ledger_value($+{value});
+	    $value = parse_ledger_value $+{value};
 	} else {
-	    $value = mk_beancount_string($+{value});
+	    $value = mk_beancount_string $+{value};
 	}
 	if ($key eq $payee_tag) {
-	    push_payee($+{value});
+	    push_payee $+{value};
 	} else {
 	    push_metadata $depth, $key, $value;
 	}
@@ -241,23 +241,23 @@ while (my $l = <>) {
 	     or $l =~ /^;\s+:(?<tags>[\w:-]+):\s+(?<comment>.*)$/) {
     	# tags comment
     	if ($in_txn) {
-    	    push_line($depth, pp_tags(split(/:/, $+{tags})));
-    	    push_comment($depth, $+{comment}) if $+{comment} ne "";
+	    push_line $depth, pp_tags(split(/:/, $+{tags}));
+	    push_comment $depth, $+{comment} if $+{comment} ne "";
     	} else {
     	    print_line $depth, $l;
     	}
     } elsif ($l =~ /^;\s*(?<comment>.*)/) {  # (every other) comment
 	if ($in_txn) {
-	    push_comment($depth, $+{comment});
+	    push_comment $depth, $+{comment};
 	} else {
 	    print_line $depth, $l;
 	}
     } elsif ($l =~ /^$/) {  # empty line
-	print(pop_txn()) if $in_txn;
+	print pop_txn() if $in_txn;
 	print "\n";
     } else {  # everything else
 	if ($in_txn) {
-	    push_line($depth, $l);
+	    push_line $depth, $l;
 	} else {
 	    print_line $depth, $l;
 	}
@@ -265,4 +265,4 @@ while (my $l = <>) {
 }
 
 # emit last transaction, if it's still active when reaching EOF
-print(pop_txn()) if $in_txn;
+print pop_txn() if $in_txn;
