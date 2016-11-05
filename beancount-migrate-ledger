@@ -8,6 +8,8 @@ use warnings;
 # TODO balance assertions
 # TODO in-comment tags, e.g., "; :tommaso:battesimo-tz" or ":todo:"
 
+my $payee_tag = 'x-payee';
+
 # mapping of ledger metadata key to corresponding beancount key
 my %metadata_map = (
     'label'   => 'bank-label',
@@ -168,7 +170,7 @@ while (my $l = <>) {
 	} else {
 	    $value = '"' . $+{value} . '"';
 	}
-	if ($key eq "x-payee") {
+	if ($key eq $payee_tag) {
 	    push_txn_payee($+{value});
 	} else {
 	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
