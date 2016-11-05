@@ -6,6 +6,7 @@ use warnings;
 #
 # TODO alternative dates
 # TODO balance assertions
+# TODO multi-line comment
 
 use POSIX qw(ceil);
 
@@ -27,6 +28,14 @@ sub indent($$) {
     my ($depth, $content) = @_;
 
     return ' ' x ($depth * $beancount_indent) . $content;
+}
+
+
+# return a beancount string literal, with a given content
+sub mk_beancount_string($) {
+    my ($s) = @_;
+    $s =~ s/"/\\"/g;
+    return '"' . $s . '"';
 }
 
 
@@ -54,9 +63,9 @@ sub pp_cur_header() {
     $buf .= $cur_txn_header{date} . " ";
     $buf .= $cur_txn_header{flag} . " ";
     if (exists($cur_txn_header{payee})) {
-	$buf .= '"' . $cur_txn_header{payee} . '" ';
+	$buf .= mk_beancount_string($cur_txn_header{payee});
     }
-    $buf .= '"' . $cur_txn_header{narration} . "\"";
+    $buf .= mk_beancount_string($cur_txn_header{narration});
 
     return $buf;
 }
@@ -135,7 +144,7 @@ sub push_comment($$) {
 
     # XXX workaround for bug
     # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    push_line($depth, pp_metadata("comment", '"' . $comment . '"'));
+    push_line($depth, pp_metadata("comment", mk_beancount_string($comment)));
 }
 
 
@@ -215,7 +224,7 @@ while (my $l = <>) {
 	if (defined($+{typed})) {
 	    $value = parse_ledger_value($+{value});
 	} else {
-	    $value = '"' . $+{value} . '"';
+	    $value = mk_beancount_string($+{value});
 	}
 	if ($key eq $payee_tag) {
 	    push_payee($+{value});
