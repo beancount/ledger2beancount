@@ -89,7 +89,7 @@ sub pp_cur_header() {
     $buf .= $cur_txn_header{date} . " ";
     $buf .= $cur_txn_header{flag} . " ";
     if (exists $cur_txn_header{payee}) {
-	$buf .= mk_beancount_string $cur_txn_header{payee};
+	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
     $buf .= mk_beancount_string $cur_txn_header{narration};
 
