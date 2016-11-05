@@ -4,7 +4,6 @@ use warnings;
 
 # WIP
 #
-# TODO alternative dates
 # TODO balance assertions
 # TODO multi-line comment
 
@@ -138,6 +137,12 @@ sub push_line($$) {
     push @cur_txn_lines, indent($depth, $line);
 }
 
+# add a metadata line. Wrapper around push_line() for metadata
+sub push_metadata($$$) {
+    my ($depth, $key, $value) = @_;
+    push_line $depth, pp_metadata($key, $value);
+}
+
 # add a comment line. Wrapper around push_line() for comments
 sub push_comment($$) {
     my ($depth, $comment) = @_;
@@ -214,9 +219,10 @@ while (my $l = <>) {
 
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
-    } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {
+    } elsif ($l =~ /^(?<date>[0-9-]+)(=(?<altdate>[0-9-]+))?\s+(?<flag>[*!])\s+(?<narration>.*)/) {
 	# txn header
 	push_header($+{date}, $+{flag}, $+{narration});
+	push_metadata $depth + 1, "alt-date", $+{altdate} if defined $+{altdate};
     } elsif ($l =~ /^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
 	# metadata comment
 	my $key = map_metadata(lc($+{key}));
@@ -229,7 +235,7 @@ while (my $l = <>) {
 	if ($key eq $payee_tag) {
 	    push_payee($+{value});
 	} else {
-	    push_line($depth, pp_metadata($key, $value));
+	    push_metadata $depth, $key, $value;
 	}
     } elsif ($l =~ /^;\s*(?<comment>.*)\s+:(?<tags>[\w:-]+):\s*$/
 	     or $l =~ /^;\s+:(?<tags>[\w:-]+):\s+(?<comment>.*)$/) {
