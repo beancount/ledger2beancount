@@ -6,7 +6,8 @@ use warnings;
 #
 # TODO alternative dates
 # TODO balance assertions
-# TODO in-comment tags, e.g., "; :tommaso:battesimo-tz" or ":todo:"
+
+use POSIX qw(ceil);
 
 my $payee_tag = 'x-payee';
 
@@ -16,13 +17,25 @@ my %metadata_map = (
     'x-payer' => 'payer',
     );
 
-my $indent = "  ";
-my ($in_txn, %cur_txn_header, @cur_txn_lines);
+
+# indentation length, for ledger and beancount
+my $beancount_indent = 2;
+my $ledger_indent = 4;
+
+# indent some content at a given depth in beancount style
+sub indent($$) {
+    my ($depth, $content) = @_;
+
+    return ' ' x ($depth * $beancount_indent) . $content;
+}
+
 
 # Simple parsing state machine: we need to look ahead for payee metadata, as in
 # beancount they appear on the first line of a transaction, whereas in ledger
 # they appear as a regular metadata ("x-payee"). The following functions
 # support the parsing state machine for this:
+my ($in_txn, %cur_txn_header, @cur_txn_lines);
+
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
@@ -35,7 +48,7 @@ reset_cur_txn();
 
 # pretty print the transaction header (i.e., its first line) in beancount
 # format
-sub pp_cur_txn_header() {
+sub pp_cur_header() {
     my $buf = "";
 
     $buf .= $cur_txn_header{date} . " ";
@@ -43,35 +56,46 @@ sub pp_cur_txn_header() {
     if (exists($cur_txn_header{payee})) {
 	$buf .= '"' . $cur_txn_header{payee} . '" ';
     }
-    $buf .= '"' . $cur_txn_header{narration} . "\"\n";
+    $buf .= '"' . $cur_txn_header{narration} . "\"";
 
     return $buf;
 }
 
 # pretty print subsequent lines (all but the first) of a transaction, in
 # beancount format
-sub pp_cur_txn_lines() {
+sub pp_cur_lines() {
     my $buf = "";
 
     foreach my $line (@cur_txn_lines) {
-	$buf .= $line;
+	$buf .= $line . "\n";
     }
 
     return $buf;
 }
 
-# pretty print a single metadata line, in beancount format
-sub pp_txn_metadata($$$) {
-    my ($depth, $key, $value) = @_;
-    return "$indent" x $depth . $key . ": $value\n";
+# pretty print a single metadata key/value paris, in beancount format
+sub pp_metadata($$) {
+    my ($key, $value) = @_;
+
+    return "$key: $value";
+}
+
+# pretty print in-transaction tags, in beancount format
+sub pp_tags(@) {
+    my @tags = @_;
+
+    # XXX workaround for the fact that per-posting tags are currently not
+    # allowed.  See:
+    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
+    return "tags: \"" . join(', ', @tags) . "\"";
 }
 
 # dump the current parsing state to stdout. Used for debugging purposes only
 sub dump_cur_txn() {
     if ($in_txn) {
-	print "D: cur_header: " . pp_cur_txn_header();
+	print "D: cur_header: " . pp_cur_header() . "\n";
 	print "D: cur_lines_begin\n";
-	print(pp_cur_txn_lines());
+	print(pp_cur_lines());
 	print "D: cur_lines_end\n";
     } else {
 	print "D: no txn\n";
@@ -99,19 +123,19 @@ sub push_txn_payee($) {
 
 # add a transaction line. Call this multiple times to accmulate lines that will
 # be emitted as soon as the transaction is over
-sub push_txn_line($) {
-    my ($line) = @_;
+sub push_txn_line($$) {
+    my ($depth, $line) = @_;
 
-    push @cur_txn_lines, $line;
+    push @cur_txn_lines, indent($depth, $line);
 }
 
 # add a comment line. Wrapper around push_txn_line() for comments
 sub push_comment($$) {
-    my ($depth, $comment);
+    my ($depth, $comment) = @_;
 
-    # work-around for
+    # XXX workaround for bug
     # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    push_txn_line(pp_txn_metadata($depth, "comment", '"' . $comment . '"'));
+    push_txn_line($depth, pp_metadata("comment", '"' . $comment . '"'));
 }
 
 
@@ -121,8 +145,8 @@ sub push_comment($$) {
 sub pop_txn() {
     my $buf = "";
 
-    $buf .= pp_cur_txn_header();
-    $buf .= pp_cur_txn_lines();
+    $buf .= pp_cur_header() . "\n";
+    $buf .= pp_cur_lines();
 
     reset_cur_txn();
 
@@ -160,28 +184,32 @@ sub map_metadata($) {
 
 
 # emit a single line
-sub print_line($) {
-    my ($line) = @_;
+sub print_line($$) {
+    my ($depth, $line) = @_;
 
-    print $line, "\n";
+    print indent($depth, $line), "\n";
 }
 
 
 # MAIN CONVERSION LOOP
 
-my $lineno = 0;
 while (my $l = <>) {
-    $lineno++;
-    chomp $l;
+    # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
-    # print "D: line: ", $lineno, "\n"; dump_cur_txn(); print "\n";
+    # handle line indentation once and for all
+    chomp $l;
+    $l =~ /^(?<indent>\s*)(?<line>.*)/;
+    my $depth = ceil(length($+{indent}) / $ledger_indent);
+      # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+    $l = $+{line};
+
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
-	print "include \"$+{filename}.beancount\"\n";
+	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^(?<date>[0-9]\S+)\s+(?<flag>[*!])\s+(?<narration>.*)/) {
 	# txn header
 	push_txn_header($+{date}, $+{flag}, $+{narration});
-    } elsif ($l =~ /^(?<indent>\s+);\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
-	# metadata
+    } elsif ($l =~ /^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/) {
+	# metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;
 	if (defined($+{typed})) {
@@ -192,23 +220,31 @@ while (my $l = <>) {
 	if ($key eq $payee_tag) {
 	    push_txn_payee($+{value});
 	} else {
-	    push_txn_line(pp_txn_metadata(length($+{indent}) / 2,
-					  $key, $value));
+	    push_txn_line($depth, pp_metadata($key, $value));
 	}
-    } elsif ($l =~ /^(?<indent>\s+);\s*(?<comment>.*)/) {  # non-metadata comment
+    } elsif ($l =~ /^;\s*(?<comment>.*)\s+:(?<tags>[\w:-]+):\s*$/
+	     or $l =~ /^;\s+:(?<tags>[\w:-]+):\s+(?<comment>.*)$/) {
+    	# tags comment
+    	if ($in_txn) {
+    	    push_txn_line($depth, pp_tags(split(/:/, $+{tags})));
+    	    push_comment($depth, $+{comment}) if $+{comment} ne "";
+    	} else {
+    	    print_line $depth, $l;
+    	}
+    } elsif ($l =~ /^;\s*(?<comment>.*)/) {  # (every other) comment
 	if ($in_txn) {
-	    push_comment(length($+{indent}) / 2, $+{comment});
+	    push_comment($depth, $+{comment});
 	} else {
-	    print_line($l);
+	    print_line $depth, $l;
 	}
-    } elsif ($l =~ /^\s*$/) {  # empty line
+    } elsif ($l =~ /^$/) {  # empty line
 	print(pop_txn()) if $in_txn;
 	print "\n";
     } else {  # everything else
 	if ($in_txn) {
-	    push_txn_line($l . "\n");
+	    push_txn_line($depth, $l);
 	} else {
-	    print_line($l);
+	    print_line $depth, $l;
 	}
     }
 }
