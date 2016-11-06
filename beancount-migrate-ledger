@@ -10,7 +10,6 @@ use warnings;
 
 # WIP
 #
-# TODO multi-line comment
 # TODO "Reducing position results in inventory with positive and negative lots"
 
 use Carp::Assert;
@@ -41,11 +40,16 @@ sub indent($$) {
 }
 
 
+sub escape_beancount_string($) {
+    my ($s) = @_;
+    $s =~ s/"/\\"/g;
+    return $s;
+}
+
 # return a beancount string literal, with a given content
 sub mk_beancount_string($) {
     my ($s) = @_;
-    $s =~ s/"/\\"/g;
-    return '"' . $s . '"';
+    return '"' . escape_beancount_string($s) . '"';
 }
 
 # parse a ledger value. Usually to extract "semantic" values from typed
@@ -186,9 +190,24 @@ sub push_metadata($$$) {
 sub push_comment($$) {
     my ($depth, $comment) = @_;
 
-    # XXX workaround for bug
+    # XXX as a workaround for bug
     # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    push_metadata $depth, "comment", mk_beancount_string($comment);
+    # we store comments as "comment: text" metadata entries (rather than
+    # beancount comments)
+
+    if (@cur_txn_lines and
+	$cur_txn_lines[-1] =~ /^\s*comment:\s+"(?<comment>.*)"/s) {
+	# last pushed (logical) line was a comment too, treat it as a
+	# multi-line comment and append current comment payload to it
+	pop @cur_txn_lines;
+	$comment = "$+{comment}\n"
+	    . indent($depth + 1, escape_beancount_string($comment));
+	$comment = "\n" . indent($depth +1, $comment)
+	    unless $+{comment} =~ /^\n/;
+	push_metadata $depth, "comment", "\"$comment\"";
+    } else {
+	push_metadata $depth, "comment", mk_beancount_string($comment);
+    }
 }
 
 
