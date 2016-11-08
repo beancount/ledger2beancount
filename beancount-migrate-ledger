@@ -251,11 +251,12 @@ sub print_line($$) {
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/[0-9-]+/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s+(?<flag>[*!])\s+(?<narration>.*)/;
-my $tags_RE = qr/[\w:-]+/;
+my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z]\S*/;
-my $amount_RE = qr/[\d.-]+\s+[A-Z]+/;
+my $amount_RE = qr/[\d.-]+\s+[A-Z_]+/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
+my $posting_RE = qr/(?<posting>(?<account>$account_RE)\s+(?<amount>$amount_RE))/;
 
 
 # emit fixed beancount header (due to a current beancount limitation, options
@@ -293,8 +294,8 @@ while (my $l = <>) {
 	} else {
 	    push_metadata $depth, $key, $value;
 	}
-    } elsif ($l =~ /^$comment_RE\s+:(?<tags>$tags_RE):\s*$/
-	     or $l =~ /^;\s+:(?<tags>$tags_RE):\s+(?<comment>.*)$/) {
+    } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
+	     or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
     	# tags comment
     	if ($in_txn) {
 	    push_line $depth, pp_tags(split(/:/, $+{tags}));
@@ -303,25 +304,31 @@ while (my $l = <>) {
     	    print_line $depth, $l;
     	}
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
-	if ($in_txn) {
-	    push_comment $depth, $+{comment};
-	} else {
-	    print_line $depth, $l;
-	}
-    } elsif ($l =~ /^(?<posting>(?<account>$account_RE)\s+(?<amount>$amount_RE))\s*=\s*(?<assertion>$amount_RE)/) {
+	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
+    } elsif ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
 	# posting with balance assertion
 	assert $in_txn;
 	push_line $depth, $+{posting};
 	push_assertion $+{account}, $+{assertion};
+    } elsif ($l =~ /^$posting_RE(\s+\{(?<lot_price>$amount_RE)\})?\s+@\s+(?<unit_price>$amount_RE)/) {
+	# posting with unit price and optional lot price
+	# XXX refactor/merge with previous regexp case
+	assert $in_txn;
+	if (not defined $+{lot_price}) {
+	    # No ledger {lot price}, only per-unit @price. Convert to a
+	    # beancount {cost}, which is required to ensure cost basis
+	    $l = "$+{posting} {$+{unit_price}}";
+	} else {
+	    # Both ledger {lot price} and per-unit @price. Convert to a
+	    # beancount {cost} with @price, to compute gains.
+	    $l = "$+{posting} {$+{lot_price}} @ $+{unit_price}";
+	}
+	$in_txn ? push_line $depth, $l : print_line $depth, $l;
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";
     } else {  # everything else
-	if ($in_txn) {
-	    push_line $depth, $l;
-	} else {
-	    print_line $depth, $l;
-	}
+	$in_txn ? push_line $depth, $l : print_line $depth, $l;
     }
 }
 
