@@ -258,6 +258,11 @@ my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 
 
+# emit fixed beancount header (due to a current beancount limitation, options
+# must be in the top-level file)
+print "option \"operating_currency\" \"USD\"\n";
+
+
 # MAIN CONVERSION LOOP
 
 while (my $l = <>) {
