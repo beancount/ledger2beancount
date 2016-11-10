@@ -17,6 +17,9 @@ use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 
 
+# list of frequently used currencies (not *all* used currencies)
+my @operating_currencies = ("EUR");
+
 # metadata tags used for specific purposes
 my $altdate_tag = 'alt-date';
 my $payee_tag = 'x-payee';
@@ -261,7 +264,7 @@ my $posting_RE = qr/(?<posting>(?<account>$account_RE)\s+(?<amount>$amount_RE))/
 
 # emit fixed beancount header (due to a current beancount limitation, options
 # must be in the top-level file)
-print "option \"operating_currency\" \"USD\"\n";
+print "option \"operating_currency\" \"$_\"\n" foreach @operating_currencies;
 
 
 # MAIN CONVERSION LOOP
