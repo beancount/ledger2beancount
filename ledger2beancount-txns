@@ -20,6 +20,9 @@ use POSIX qw(ceil);
 # list of frequently used currencies (not *all* used currencies)
 my @operating_currencies = ("EUR");
 
+# beancount file listing plugins to load
+my $beancount_plugins = "plugins.beancount";
+
 # metadata tags used for specific purposes
 my $altdate_tag = 'alt-date';
 my $payee_tag = 'x-payee';
@@ -263,8 +266,18 @@ my $posting_RE = qr/(?<posting>(?<account>$account_RE)\s+(?<amount>$amount_RE))/
 
 
 # emit fixed beancount header (due to a current beancount limitation, options
-# must be in the top-level file)
+# and plugins must be in the top-level file)
 print "option \"operating_currency\" \"$_\"\n" foreach @operating_currencies;
+print <<'EOT';
+
+; plugins listed here because they don't work if declared in included files
+; see: https://bitbucket.org/blais/beancount/issues/147
+EOT
+open(my $plugins, '<', $beancount_plugins)
+    or die "cannot open beancount plugins file: $beancount_plugins\n";
+print $_ while (<$plugins>);
+print "\n";
+close $plugins;
 
 
 # MAIN CONVERSION LOOP
