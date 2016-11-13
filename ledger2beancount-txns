@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 # Copyright (C) 2016 Stefano Zacchiroli <zack@upsilon.cc>
 # License: GNU General Public License (GPL), version 3 or above
@@ -7,10 +7,6 @@
 
 use strict;
 use warnings;
-
-# WIP
-#
-# TODO "Reducing position results in inventory with positive and negative lots"
 
 use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
