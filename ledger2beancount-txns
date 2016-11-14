@@ -269,6 +269,7 @@ sub print_line($$) {
 # emit fixed beancount header (due to a current beancount limitation, options
 # and plugins must be in the top-level file)
 print "option \"operating_currency\" \"$_\"\n" foreach @operating_currencies;
+print "include \"avg-cost-adjustments.beancount\"\n";
 print <<'EOT';
 
 ; plugins listed here because they don't work if declared in included files
