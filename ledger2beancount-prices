@@ -1,0 +1,19 @@
+#!/usr/bin/perl -w
+
+# Copyright (C) 2018 Stefano Zacchiroli <zack@upsilon.cc>
+# License: GNU General Public License (GPL), version 3 or above
+
+# convert a ledger-cli pricedb file to beancount format
+
+use strict;
+use warnings;
+
+while (my $l = <>) {
+    chomp $l;
+
+    if ($l =~ /^P\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)$/) {
+	print "$1 price $2 $3 $4\n";
+    } else {
+	print "$l\n";
+    }
+}
