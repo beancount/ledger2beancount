@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-# Copyright (C) 2016 Stefano Zacchiroli <zack@upsilon.cc>
+# Copyright (C) 2016-2018 Stefano Zacchiroli <zack@upsilon.cc>
+#           (C) 2018 Martin Michlmayr <tbm@cyrius.com>
 # License: GNU General Public License (GPL), version 3 or above
 
 # convert a ledger-cli main ledger file to beancount format
