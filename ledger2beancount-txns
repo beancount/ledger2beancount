@@ -299,7 +299,7 @@ while (my $l = <>) {
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
 	push_header $+{date}, $+{flag}, $+{narration};
 	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate};
-    } elsif ($l =~ /$metadata_RE/) {  # metadata comment
+    } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;
 	if (defined($+{typed})) {
