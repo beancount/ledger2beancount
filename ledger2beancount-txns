@@ -332,7 +332,7 @@ while (my $l = <>) {
 	assert $in_txn;
 	push_line $depth, $+{posting};
 	push_assertion $+{account}, $+{assertion};
-    } elsif ($l =~ /^$posting_RE(\s+\{(?<lot_price>$amount_RE)\})?\s+@\s+(?<unit_price>$amount_RE)/) {
+    } elsif ($l =~ /^$posting_RE(\s+\{\s*(?<lot_price>$amount_RE)\s*\})?\s+@\s+(?<unit_price>$amount_RE)/) {
 	# posting with unit price and optional lot price
 	# XXX refactor/merge with previous regexp case
 	assert $in_txn;
