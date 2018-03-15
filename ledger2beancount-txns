@@ -342,6 +342,10 @@ while (my $l = <>) {
 	    # No ledger {lot price}, only per-unit @price. Convert to a
 	    # beancount {cost}, which is required to ensure cost basis
 	    $l = "$+{posting} {$+{unit_price}$date}";
+	} elsif ($+{lot_price} eq $+{unit_price}) {
+	    # ledger requires you to specify both {lot price} and @price
+	    # due to a bug.  If both are the same, ignore the @price.
+	    $l = "$+{posting} {$+{unit_price}$date}";
 	} else {
 	    # Both ledger {lot price} and per-unit @price. Convert to a
 	    # beancount {cost} with @price, to compute gains.
