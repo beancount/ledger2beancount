@@ -12,38 +12,10 @@ use warnings;
 use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
+use YAML::XS qw(LoadFile);
 
 
-# list of frequently used currencies (not *all* used currencies)
-my @operating_currencies = ("EUR");
-
-# beancount file listing plugins to load
-my $beancount_plugins = "plugins.beancount";
-
-# mapping of ledger metadata key to corresponding beancount key
-my %metadata_map = (
-    'label'   => 'bank-label',
-    'x-payee' => 'payee',
-    'x-payer' => 'payer',
-    );
-
-# mapping of ledger account names to valid beancount accounts
-my %account_map = (
-    'Equity:Opening balance' => 'Equity:Opening-Balance',
-    );
-
-# mapping of ledger commodities to valid beancount commodities
-my %commodity_map = (
-    );
-
-# metadata tags (*after* above mapping) used for specific purposes
-my $payee_tag = 'payee';
-my $payer_tag = 'payer';
-# You can set the following metadata tags to an empty string if you
-# don't want the metadata to be added to beancount.
-my $altdate_tag = 'alt-date';
-my $code_tag = 'code';
-
+my $config = LoadFile('ledger2beancount.yml');
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/[0-9-]+/;
@@ -59,15 +31,11 @@ my $posting_RE = qr/(?<posting>(?<account>$account_RE)(  |\t)\s*(?<amount>$amoun
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 
-# indentation length, for ledger and beancount
-my $beancount_indent = 2;
-my $ledger_indent = 4;
-
 # indent some content at a given depth in beancount style
 sub indent($$) {
     my ($depth, $content) = @_;
 
-    return ' ' x ($depth * $beancount_indent) . $content;
+    return ' ' x ($depth * $config->{beancount_indent}) . $content;
 }
 
 
@@ -266,8 +234,8 @@ sub pop_txn() {
 sub map_metadata($) {
     my ($key) = @_;
 
-    if (exists $metadata_map{$key}) {
-	return $metadata_map{$key};
+    if (exists $config->{metadata_map}{$key}) {
+	return $config->{metadata_map}{$key};
     } else {
 	return $key;
     }
@@ -282,20 +250,20 @@ sub print_line($$) {
 }
 
 
-# emit fixed beancount header (due to a current beancount limitation, options
+# emit beancount header
+print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_currencies}};
+# (due to a current beancount limitation, options
 # and plugins must be in the top-level file)
-print "option \"operating_currency\" \"$_\"\n" foreach @operating_currencies;
-print "include \"avg-cost-adjustments.beancount\"\n";
+print "include \"$_\"\n" foreach @{$config->{includes}};
+
 print <<'EOT';
 
 ; plugins listed here because they don't work if declared in included files
 ; see: https://bitbucket.org/blais/beancount/issues/147
 EOT
-open(my $plugins, '<', $beancount_plugins)
-    or die "cannot open beancount plugins file: $beancount_plugins\n";
-print $_ while (<$plugins>);
+print "plugin \"$_\"\n" foreach @{$config->{plugins}};
+
 print "\n";
-close $plugins;
 
 
 # MAIN CONVERSION LOOP
@@ -306,7 +274,7 @@ while (my $l = <>) {
     # handle line indentation once and for all
     chomp $l;
     $l =~ /^(?<indent>\s*)(?<line>.*)/;
-    my $depth = ceil(length($+{indent}) / $ledger_indent);
+    my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
       # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
     $l = $+{line};
 
@@ -314,8 +282,8 @@ while (my $l = <>) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
 	push_header $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate} && defined $altdate_tag;
-	push_metadata $depth + 1, $code_tag, mk_beancount_string $+{code} if defined $+{code} && defined $code_tag;
+	push_metadata $depth + 1, $config->{altdate_tag}, $+{altdate} if defined $+{altdate} && defined $config->{altdate_tag};
+	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;
@@ -324,7 +292,7 @@ while (my $l = <>) {
 	} else {
 	    $value = mk_beancount_string $+{value};
 	}
-	if (not $in_postings and ($key eq $payee_tag or $key eq $payer_tag)) {
+	if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
 	    # ASSUMPTION: payer_tag always occurs later than payee_tag, which
 	    # is currently enforced in our leder. This is to guarantee that we
 	    # promote payers to payees, because that's the sensible thing to do
@@ -346,16 +314,16 @@ while (my $l = <>) {
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
     } elsif ($l =~ /^$price_RE/) {
 	my $commodity1 = $+{commodity1};
-	$commodity1 = $commodity_map{$+{commodity1}} if exists $commodity_map{$+{commodity1}};
+	$commodity1 = $config->{commodity_map}{$+{commodity1}} if exists $config->{commodity_map}{$+{commodity1}};
 	my $commodity2 = $+{commodity2};
-	$commodity2 = $commodity_map{$+{commodity2}} if exists $commodity_map{$+{commodity2}};
+	$commodity2 = $config->{commodity_map}{$+{commodity2}} if exists $config->{commodity_map}{$+{commodity2}};
 	$l = "$+{date} price $commodity1 $+{value} $commodity2";
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
 	# Replace ledger account names with corresponding beancount account names
 	my $beancount_account = $+{account};
-	$beancount_account = $account_map{$+{account}} if exists $account_map{$+{account}};
+	$beancount_account = $config->{account_map}{$+{account}} if exists $config->{account_map}{$+{account}};
 	$l =~ s/$+{account}/$beancount_account/;
 
 	if ($l =~ /$amount_RE/) {
@@ -364,7 +332,7 @@ while (my $l = <>) {
 	    # beancount doesn't allow quoted commodities
 	    $beancount_commodity =~ s/"//g;
 	    # Replace ledger commodities with corresponding beancount commodities
-	    $beancount_commodity = $commodity_map{$commodity} if exists $commodity_map{$commodity};
+	    $beancount_commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 	    $l =~ s/$commodity/$beancount_commodity/;
 	}
 
