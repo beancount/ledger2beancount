@@ -5,6 +5,14 @@ include "avg-cost-adjustments.beancount"
 ; see: https://bitbucket.org/blais/beancount/issues/147
 
 
+2018-03-17 * "Opening balance"
+  Assets:Test              100.00 EUR {{90.00 GBP}}
+  Equity:Opening-Balance
+
+2018-03-17 * "Opening balance"
+  Assets:Test              100.00 EUR {0.90 GBP}
+  Equity:Opening-Balance
+
 2018-03-17 * "Test"
   Assets:Test               10.00 EUR {9.00 GBP}
   Equity:Opening-Balance   -90.00 GBP
@@ -36,4 +44,53 @@ include "avg-cost-adjustments.beancount"
 2018-03-17 * "Test"
   Assets:Test               10.00 EUR {9 GBP}
   Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test              -10.00 EUR {0.90 GBP} @ 0.95 GBP
+  Assets:Test                9.50 GBP
+  Income:Capital-Gain       -0.50 GBP
+
+2018-03-17 * "Test"
+  Assets:Test              -10.00 EUR {0.90 GBP} @ 0.95 GBP
+  Assets:Test                9.50 GBP
+  Income:Capital-Gain       -0.50 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9.00 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{ 9.00 GBP }}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9.00 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test              -10.00 EUR {{9.00 GBP}} @@ 9.50 GBP
+  Assets:Test                9.50 GBP
+  Income:Capital-Gain       -0.50 GBP
+
+2018-03-17 * "Test"
+  Assets:Test              -10.00 EUR {{9.00 GBP}} @ 0.95 GBP
+  Assets:Test                9.50 GBP
+  Income:Capital-Gain       -0.50 GBP
+
+2018-03-17 * "Test"
+  Assets:Test              -10.00 EUR {0.90 GBP} @@ 9.50 GBP
+  Assets:Test                9.50 GBP
+  Income:Capital-Gain       -0.50 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9.00 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
 

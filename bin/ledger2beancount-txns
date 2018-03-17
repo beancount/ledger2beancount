@@ -373,24 +373,23 @@ while (my $l = <>) {
 	    assert $in_txn;
 	    push_line $depth, $+{posting};
 	    push_assertion $+{account}, $+{assertion};
-	} elsif ($l =~ /^$posting_RE(\s+\{\s*(?<lot_price>$amount_RE)\s*\})?\s+(\[(?<date>$date_RE)\])?\s?@\s+(?<unit_price>$amount_RE)/) {
+	} elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s+(\[(?<date>$date_RE)\])?\s?(?<at>@@?)\s+(?<lot_price>$amount_RE)/) {
 	    # posting with unit price and optional lot price
 	    # XXX refactor/merge with previous regexp case
 	    assert $in_txn;
 	    my $date = "";
 	    $date = ", $+{date}" if (defined $+{date});
-	    if (not defined $+{lot_price}) {
-		# No ledger {lot price}, only per-unit @price. Convert to a
-		# beancount {cost}, which is required to ensure cost basis
-		$l = "$+{posting} {$+{unit_price}$date}";
-	    } elsif ($+{lot_price} eq $+{unit_price}) {
-		# ledger requires you to specify both {lot price} and @price
-		# due to a bug.  If both are the same, ignore the @price.
-		$l = "$+{posting} {$+{unit_price}$date}";
+	    if (not defined $+{lot_cost}) {
+		# No ledger lot cost, only lot price.  Convert lot price to a
+		# beancount cost, which is required to ensure cost basis
+		$l = sprintf "$+{posting} %s$+{lot_price}$date%s", "{" x length $+{at}, "}" x length $+{at};
+	    } elsif ($+{lot_cost} eq $+{lot_price}) {
+		# ledger requires you to specify both lot cost and lot price
+		# due to a bug.  If both are the same, don't put in the price.
+		$l = "$+{posting} $+{curlyopen}$+{lot_price}$date$+{curlyclose}";
 	    } else {
-		# Both ledger {lot price} and per-unit @price. Convert to a
-		# beancount {cost} with @price, to compute gains.
-		$l = "$+{posting} {$+{lot_price}$date} @ $+{unit_price}";
+		# Both ledger lot cost and lot price.
+		$l = "$+{posting} $+{curlyopen}$+{lot_cost}$date$+{curlyclose} $+{at} $+{lot_price}";
 	    }
 	    push_line $depth, $l;
 	} else {
