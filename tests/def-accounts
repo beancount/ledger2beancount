@@ -1,0 +1,10 @@
+
+account Assets:Test
+    note Just a test account
+
+account Equity:Opening-Balance
+    note Opening balances
+
+account Income:Capital-Gain
+    note Capital gains
+
