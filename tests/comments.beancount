@@ -1,0 +1,18 @@
+option "operating_currency" "EUR"
+include "avg-cost-adjustments.beancount"
+
+; plugins listed here because they don't work if declared in included files
+; see: https://bitbucket.org/blais/beancount/issues/147
+
+
+; This is a comment
+; Test: not a tag
+; :not:a:tag:
+; Another comment
+
+2018-03-17 * "Test"
+  comment: "Another comment"
+  Assets:Test                        10.00 EUR ; What an "interesting" accout name
+  comment: "see beancount issue #143"
+  Equity:Opening-Balance            -10.00 EUR ; Opening balance?
+

@@ -1,0 +1,12 @@
+
+; This is a comment
+; Test: not a tag
+; :not:a:tag:
+; Another comment
+
+2018-03-17 * Test
+    ; Another comment
+    Assets:Test                        10.00 EUR ; What an "interesting" accout name
+    ; Comment: see beancount issue #143
+    Equity:Opening-Balance            -10.00 EUR ; Opening balance?
+

@@ -1,0 +1,39 @@
+option "operating_currency" "EUR"
+include "avg-cost-adjustments.beancount"
+
+; plugins listed here because they don't work if declared in included files
+; see: https://bitbucket.org/blais/beancount/issues/147
+
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {9.00 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR { 9.00 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR { 9.00 GBP }
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {   9.00 GBP }
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {9 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR { 9 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {9.00 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {9 GBP}
+  Equity:Opening-Balance   -90.00 GBP
+

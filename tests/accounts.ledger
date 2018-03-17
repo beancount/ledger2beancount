@@ -1,0 +1,30 @@
+
+2018-03-17 * Test 1
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * Test 2
+    Assets:Test
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * Test 3
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance
+
+2018-03-17 * Test 4
+    Assets:Test                           10 EUR
+    Equity:Opening-Balance
+
+; Account with space
+2018-03-17 * Test
+    Assets:Test                        10.00 EUR
+    Equity:Opening balance            -10.00 EUR
+
+2018-03-17 * Test 1
+    Assets:Test  10.00 EUR
+    Equity:Opening-Balance  -10.00 EUR
+
+2018-03-17 * Test 1
+    Assets:Test	10.00 EUR
+    Equity:Opening-Balance	-10.00 EUR
+
