@@ -54,6 +54,7 @@ my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>(?<account>$account_RE)(  |\t)\s*(?<amount>$amount_RE))/;
+my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 
 # indentation length, for ledger and beancount
@@ -341,6 +342,14 @@ while (my $l = <>) {
     	}
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
+    } elsif ($l =~ /^$price_RE/) {
+	my $commodity1 = $+{commodity1};
+	$commodity1 = $commodity_map{$+{commodity1}} if exists $commodity_map{$+{commodity1}};
+	my $commodity2 = $+{commodity2};
+	$commodity2 = $commodity_map{$+{commodity2}} if exists $commodity_map{$+{commodity2}};
+	$l = "$+{date} price $commodity1 $+{value} $commodity2";
+	$l =~ s/"//g;
+	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
 	# Replace ledger account names with corresponding beancount account names
 	my $beancount_account = $+{account};
