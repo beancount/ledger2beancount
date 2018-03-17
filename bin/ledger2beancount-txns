@@ -124,7 +124,7 @@ sub pp_cur_header() {
     my $buf = "";
 
     $buf .= $cur_txn_header{date} . " ";
-    $buf .= $cur_txn_header{flag} . " " if $cur_txn_header{flag};
+    $buf .= $cur_txn_header{flag} . " ";
     if (exists $cur_txn_header{payee}) {
 	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
@@ -313,7 +313,7 @@ while (my $l = <>) {
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
-	push_header $+{date}, $+{flag} ? $+{flag} : "", $+{narration};
+	push_header $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
 	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate} && defined $altdate_tag;
 	push_metadata $depth + 1, $code_tag, mk_beancount_string $+{code} if defined $+{code} && defined $code_tag;
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
