@@ -11,11 +11,11 @@ use strict;
 use warnings;
 
 my $commodities_date = "1970-01-01";  # unix epoch, just because
-my $indent = "  ";
+my $beancount_indent = 2;
 
 sub print_metadata($$) {
     my ($key, $value) = @_;
-    print "$indent", lc($key), ": \"$value\"\n";
+    print ' ' x $beancount_indent, lc($key), ": \"$value\"\n";
 }
 
 while (my $l = <>) {
