@@ -5,5 +5,5 @@ before_install:
   - sudo apt-get install libcarp-assert-perl
   - sudo apt-get install libdate-calc-perl
   - sudo apt-get install python3-pip
-  - pip3 install beancount
+  - pip3 install beancount==2.0rc1
 install: true
