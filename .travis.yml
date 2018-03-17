@@ -4,3 +4,5 @@ python:
 install:
   - sudo apt-get install libcarp-assert-perl libdate-calc-perl
   - pip install beancount==2.0rc1
+script:
+  - make test
