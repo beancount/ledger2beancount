@@ -1,0 +1,33 @@
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {9.00 GBP}
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR { 9.00 GBP}
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR { 9.00 GBP }
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {   9.00 GBP }
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {9 GBP}
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR { 9 GBP}
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {9.00 GBP} @ 9.00 GBP
+    Equity:Opening-Balance   -90.00 GBP
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {9 GBP} @ 9 GBP
+    Equity:Opening-Balance   -90.00 GBP
+

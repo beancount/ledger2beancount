@@ -1,0 +1,34 @@
+#!/bin/sh
+
+TEST_DIR=tests
+status=0
+
+run_test () {
+	file=$1
+	test=$(basename "$file")
+	expected=$(echo $file | sed -e 's/.ledger$/.beancount/')
+
+	actual=$(tempfile)
+
+	printf "Test $test... "
+
+	cat $file | bin/ledger2beancount-txns > $actual
+
+	if $(cmp -s $expected $actual); then
+		echo "ok"
+	else
+		status=1
+		echo "FAIL"
+		diff -urN $expected $actual | tail -n +3
+	fi
+
+	rm -f $actual
+}
+
+YEAR=${1:-*}
+for test in `find $TEST_DIR/ -name "*.ledger" | sort`; do
+	run_test "$test"
+done
+
+exit $status
+

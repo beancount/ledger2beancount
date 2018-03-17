@@ -1,0 +1,16 @@
+
+; Integer
+2018-03-17 * (1201) Test
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+; String
+2018-03-17 * (AT20) Test
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+; Code but no flag
+2018-03-17 (AT20) Test
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
