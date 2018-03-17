@@ -1,4 +1,7 @@
 language: perl
 perl:
   - "5.26"
+before_install:
+  - sudo apt-get install libcarp-assert-perl
+  - sudo apt-get install libdate-calc-perl
 install: true
