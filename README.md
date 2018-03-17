@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zacchiro/ledger2beancount.svg?branch=master)](https://travis-ci.org/zacchiro/ledger2beancount)
+
 ledger2beancount
 ================
 
