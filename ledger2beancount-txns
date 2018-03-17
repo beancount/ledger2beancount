@@ -29,13 +29,14 @@ my %metadata_map = (
 
 # metadata tags (*after* above mapping) used for specific purposes
 my $altdate_tag = 'alt-date';
+my $code_tag = 'code';
 my $payee_tag = 'payee';
 my $payer_tag = 'payer';
 
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/[0-9-]+/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s+(?<flag>[*!])\s+(?<narration>.*)/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s+(?<flag>[*!])(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $amount_RE = qr/[\d.-]+\s+[A-Z0-9_"]+/;
@@ -300,6 +301,7 @@ while (my $l = <>) {
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
 	push_header $+{date}, $+{flag}, $+{narration};
 	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate};
+	push_metadata $depth + 1, $code_tag, $+{code} if defined $+{code};
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;
