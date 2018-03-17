@@ -1,6 +1,6 @@
 
 # Date used to open accounts
-account_open_date: "2014-03-30" # date of my oldest Ledger txn minus 1 day
+account_open_date: "1970-01-01" # Unix epoch, just because
 
 # Date used to create commodities
 commodities_date:  "1970-01-01" # Unix epoch, just because
@@ -13,8 +13,7 @@ operating_currencies:
   - EUR
 
 # Any other include files listed at the top
-includes:
-  - avg-cost-adjustments.beancount
+includes: []
 
 # Plugins to load
 plugins: []
