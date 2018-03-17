@@ -27,6 +27,15 @@ my %metadata_map = (
     'x-payer' => 'payer',
     );
 
+# mapping of ledger account names to valid beancount accounts
+my %account_map = (
+    'Equity:Opening balance' => 'Equity:Opening-Balance',
+    );
+
+# mapping of ledger commodities to valid beancount commodities
+my %commodity_map = (
+    );
+
 # metadata tags (*after* above mapping) used for specific purposes
 my $altdate_tag = 'alt-date';
 my $code_tag = 'code';
@@ -39,7 +48,9 @@ my $date_RE = qr/[0-9-]+/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s*(?<flag>[*!])?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
-my $amount_RE = qr/[\d.-]+\s+[A-Z0-9_"]+/;
+my $value_RE = qr/[\d.-]+/;
+my $commodity_RE = qr/[A-Z0-9_"]+/;
+my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>(?<account>$account_RE)(  |\t)\s*(?<amount>$amount_RE))/;
@@ -330,31 +341,47 @@ while (my $l = <>) {
     	}
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
-    } elsif ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
-	# posting with balance assertion
-	assert $in_txn;
-	push_line $depth, $+{posting};
-	push_assertion $+{account}, $+{assertion};
-    } elsif ($l =~ /^$posting_RE(\s+\{\s*(?<lot_price>$amount_RE)\s*\})?\s+(\[(?<date>$date_RE)\])?\s?@\s+(?<unit_price>$amount_RE)/) {
-	# posting with unit price and optional lot price
-	# XXX refactor/merge with previous regexp case
-	assert $in_txn;
-	my $date = "";
-	$date = ", $+{date}" if (defined $+{date});
-	if (not defined $+{lot_price}) {
-	    # No ledger {lot price}, only per-unit @price. Convert to a
-	    # beancount {cost}, which is required to ensure cost basis
-	    $l = "$+{posting} {$+{unit_price}$date}";
-	} elsif ($+{lot_price} eq $+{unit_price}) {
-	    # ledger requires you to specify both {lot price} and @price
-	    # due to a bug.  If both are the same, ignore the @price.
-	    $l = "$+{posting} {$+{unit_price}$date}";
-	} else {
-	    # Both ledger {lot price} and per-unit @price. Convert to a
-	    # beancount {cost} with @price, to compute gains.
-	    $l = "$+{posting} {$+{lot_price}$date} @ $+{unit_price}";
+    } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
+	# Replace ledger account names with corresponding beancount account names
+	my $beancount_account = $+{account};
+	$beancount_account = $account_map{$+{account}} if exists $account_map{$+{account}};
+	$l =~ s/$+{account}/$beancount_account/;
+
+	# Replace ledger commodities with corresponding beancount commodites
+	if ($l =~ /$amount_RE/) {
+	    my $beancount_commodity = $+{commodity};
+	    $beancount_commodity = $commodity_map{$+{commodity}} if exists $commodity_map{$+{commodity}};
+	    $l =~ s/$+{commodity}/$beancount_commodity/;
 	}
-	push_line $depth, $l;
+
+	if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
+	    # posting with balance assertion
+	    assert $in_txn;
+	    push_line $depth, $+{posting};
+	    push_assertion $+{account}, $+{assertion};
+	} elsif ($l =~ /^$posting_RE(\s+\{\s*(?<lot_price>$amount_RE)\s*\})?\s+(\[(?<date>$date_RE)\])?\s?@\s+(?<unit_price>$amount_RE)/) {
+	    # posting with unit price and optional lot price
+	    # XXX refactor/merge with previous regexp case
+	    assert $in_txn;
+	    my $date = "";
+	    $date = ", $+{date}" if (defined $+{date});
+	    if (not defined $+{lot_price}) {
+		# No ledger {lot price}, only per-unit @price. Convert to a
+		# beancount {cost}, which is required to ensure cost basis
+		$l = "$+{posting} {$+{unit_price}$date}";
+	    } elsif ($+{lot_price} eq $+{unit_price}) {
+		# ledger requires you to specify both {lot price} and @price
+		# due to a bug.  If both are the same, ignore the @price.
+		$l = "$+{posting} {$+{unit_price}$date}";
+	    } else {
+		# Both ledger {lot price} and per-unit @price. Convert to a
+		# beancount {cost} with @price, to compute gains.
+		$l = "$+{posting} {$+{lot_price}$date} @ $+{unit_price}";
+	    }
+	    push_line $depth, $l;
+	} else {
+	    push_line $depth, $l;
+	}
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";
