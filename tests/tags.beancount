@@ -3,7 +3,6 @@ option "operating_currency" "EUR"
 
 2018-03-17 * "Test"
   tags: "foo, bar, baz"
-  tags: "test"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
