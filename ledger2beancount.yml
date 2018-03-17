@@ -39,3 +39,11 @@ commodity_map:
 altdate_tag: alt-date
 code_tag: code
 
+# A list of commodities that should be treated as commodities
+# rather than currencies even though they consist of 3 characters
+# (which is usually a characteristic of a currency)
+commodities3char:
+  - BTC
+  - ETH
+  - IBM
+

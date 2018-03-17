@@ -8,6 +8,7 @@
 
 use strict;
 use warnings;
+use experimental 'smartmatch';
 
 use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
@@ -359,9 +360,26 @@ while (my $l = <>) {
 	    my $date = "";
 	    $date = ", $+{date}" if (defined $+{date});
 	    if (not defined $+{lot_cost}) {
-		# No ledger lot cost, only lot price.  Convert lot price to a
-		# beancount cost, which is required to ensure cost basis
-		$l = sprintf "$+{posting} %s$+{lot_price}$date%s", "{" x length $+{at}, "}" x length $+{at};
+		# No ledger lot cost, only price.  This one is tricky
+		# because this convention can be used for two different
+		# purposes:
+		# 1) For conversion between currencies where you do not
+		# generally wish to retain the cost.
+		# 2) To acquire/dispose of commodities (e.g. shares)
+		# where you want to retain the cost.
+		#
+		# Most currencies have 3 characters (e.g. EUR, USD, GBP)
+		# whereas commodities often have more (e.g. the ISIN).
+		# Therefore, we assume the cost should not be kept if
+		# both currencies have 3 characters.  Since this won't
+		# work in all cases, we also check for a list of
+		# commodities.
+		if ((length $+{commodity} == 3 && length((split / /, $+{lot_price}, 2)[1]) == 3)
+		    && !($+{commodity} ~~ @{$config->{commodities3char}})) {
+		    $l = sprintf "$+{posting} %s $+{lot_price}", "@" x length $+{at};
+		} else {
+		    $l = sprintf "$+{posting} %s$+{lot_price}$date%s", "{" x length $+{at}, "}" x length $+{at};
+		}
 	    } elsif ($+{lot_cost} eq $+{lot_price}) {
 		# ledger requires you to specify both lot cost and lot price
 		# due to a bug.  If both are the same, don't put in the price.
