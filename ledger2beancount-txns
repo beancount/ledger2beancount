@@ -347,11 +347,14 @@ while (my $l = <>) {
 	$beancount_account = $account_map{$+{account}} if exists $account_map{$+{account}};
 	$l =~ s/$+{account}/$beancount_account/;
 
-	# Replace ledger commodities with corresponding beancount commodites
 	if ($l =~ /$amount_RE/) {
-	    my $beancount_commodity = $+{commodity};
-	    $beancount_commodity = $commodity_map{$+{commodity}} if exists $commodity_map{$+{commodity}};
-	    $l =~ s/$+{commodity}/$beancount_commodity/;
+	    my $commodity = $+{commodity};
+	    my $beancount_commodity = $commodity;
+	    # beancount doesn't allow quoted commodities
+	    $beancount_commodity =~ s/"//g;
+	    # Replace ledger commodities with corresponding beancount commodities
+	    $beancount_commodity = $commodity_map{$commodity} if exists $commodity_map{$commodity};
+	    $l =~ s/$commodity/$beancount_commodity/;
 	}
 
 	if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
