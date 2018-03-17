@@ -36,7 +36,7 @@ my $payer_tag = 'payer';
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/[0-9-]+/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s+(?<flag>[*!])(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s*(?<flag>[*!])?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $amount_RE = qr/[\d.-]+\s+[A-Z0-9_"]+/;
@@ -110,7 +110,7 @@ sub pp_cur_header() {
     my $buf = "";
 
     $buf .= $cur_txn_header{date} . " ";
-    $buf .= $cur_txn_header{flag} . " ";
+    $buf .= $cur_txn_header{flag} . " " if $cur_txn_header{flag};
     if (exists $cur_txn_header{payee}) {
 	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
@@ -299,7 +299,7 @@ while (my $l = <>) {
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
-	push_header $+{date}, $+{flag}, $+{narration};
+	push_header $+{date}, $+{flag} ? $+{flag} : "", $+{narration};
 	push_metadata $depth + 1, $altdate_tag, $+{altdate} if defined $+{altdate};
 	push_metadata $depth + 1, $code_tag, $+{code} if defined $+{code};
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
