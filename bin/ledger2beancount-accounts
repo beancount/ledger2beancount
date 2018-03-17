@@ -8,19 +8,20 @@
 use strict;
 use warnings;
 
-my $account_open_date = "2014-03-30";  # date of my oldest Ledger txn minus 1 day
-my $beancount_indent = 2;
+use YAML::XS qw(LoadFile);
+
+my $config = LoadFile('ledger2beancount.yml');
 
 sub print_metadata($$) {
     my ($key, $value) = @_;
-    print ' ' x $beancount_indent, lc($key), ": \"$value\"\n";
+    print ' ' x $config->{beancount_indent}, lc($key), ": \"$value\"\n";
 }
 
 while (my $l = <>) {
     chomp $l;
 
     if ($l =~ /^account\s+(.*)/) {  # account declaration
-	print "$account_open_date open $1\n";
+	print "$config->{account_open_date} open $1\n";
     } elsif ($l =~ /^\s+note\s+(.*)/) {  # note
 	print_metadata("description", $1);
     } elsif ($l =~ /^\s+;\s*(\S+):\s*(.*)/) {  # metadata
