@@ -37,11 +37,11 @@ my $payer_tag = 'payer';
 my $date_RE = qr/[0-9-]+/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s+(?<flag>[*!])\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
-my $account_RE = qr/[A-Z]\S*/;
+my $account_RE = qr/[A-Z].*?/;
 my $amount_RE = qr/[\d.-]+\s+[A-Z0-9_"]+/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
-my $posting_RE = qr/(?<posting>(?<account>$account_RE)\s+(?<amount>$amount_RE))/;
+my $posting_RE = qr/(?<posting>(?<account>$account_RE)(  |\t)\s*(?<amount>$amount_RE))/;
 
 
 # indentation length, for ledger and beancount
