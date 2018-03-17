@@ -4,4 +4,6 @@ perl:
 before_install:
   - sudo apt-get install libcarp-assert-perl
   - sudo apt-get install libdate-calc-perl
+  - sudo apt-get install python3-pip
+  - pip3 install beancount
 install: true
