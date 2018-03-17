@@ -1,7 +1,6 @@
-language: perl
-perl:
-  - "5.26"
+language: python
+python:
+  - "3.6"
 install:
   - sudo apt-get install libcarp-assert-perl libdate-calc-perl
-  - sudo apt-get install python3.5 python3-pip
-  - pip3 install beancount==2.0rc1
+  - pip install beancount==2.0rc1
