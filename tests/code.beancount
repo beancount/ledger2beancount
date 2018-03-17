@@ -18,7 +18,7 @@ include "avg-cost-adjustments.beancount"
   Equity:Opening-Balance            -10.00 EUR
 
 ; Code but no flag
-2018-03-17 "Test"
+2018-03-17 txn "Test"
   code: "AT20"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
