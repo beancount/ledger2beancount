@@ -34,6 +34,7 @@ account_map:
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:
   Chase: UR
+  '"M&M"': MILESMORE
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.

@@ -33,7 +33,7 @@ my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s*(?<flag>[*!]
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
-my $commodity_RE = qr/[A-Za-z0-9_"]+/;
+my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
 my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;

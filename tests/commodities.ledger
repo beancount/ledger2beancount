@@ -1,9 +1,13 @@
 
-2018-03-17 * Test
+2018-03-17 * Test quoted commodity
     Assets:Test                      1 "DE0002635307"
     Equity:Opening-Balance          -1 "DE0002635307"
 
-2018-03-17 * Test Chase
+2018-03-17 * Test commodity mapping
     Assets:Test                      1 Chase
     Equity:Opening-Balance          -1 Chase
+
+2018-03-18 * Test quoted commodity with defined mapping
+    Assets:Test                      1 "M&M"
+    Equity:Opening-Balance          -1 "M&M"
 
