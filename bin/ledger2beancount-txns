@@ -108,6 +108,9 @@ sub pp_cur_header() {
 	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
     $buf .= mk_beancount_string $cur_txn_header{narration};
+    if (exists $cur_txn_header{tags}) {
+        $buf .= $cur_txn_header{tags};
+    }
 
     return $buf;
 }
@@ -130,6 +133,18 @@ sub pp_metadata($$) {
     return "$key: $value";
 }
 
+
+# determine whether something should be a link or a tag
+sub tag_or_link(@) {
+    my ($key) = @_;
+
+    foreach my $link_RE (@{$config->{link_tags}}) {
+	return '^' . $key if $key =~ /$link_RE/;
+    }
+    return "#" . $key;
+}
+
+
 # pretty print in-transaction tags, in beancount format
 sub pp_tags(@) {
     my @tags = @_;
@@ -137,7 +152,11 @@ sub pp_tags(@) {
     # XXX workaround for the fact that per-posting tags are currently not
     # allowed.  See:
     # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-    return "tags: \"" . join(', ', @tags) . "\"";
+    if ($config->{tag_as_metadata}) {
+	return "tags: \"" . join(', ', @tags) . "\"";
+    } else {
+	return join(' ', map tag_or_link($_), @tags);
+    }
 }
 
 # dump the current parsing state to stdout. Used for debugging purposes only
@@ -331,8 +350,11 @@ while (my $l = <>) {
 	     or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
     	# tags comment
     	if ($in_txn) {
-	    push_line $depth, pp_tags(split(/:/, $+{tags}));
-	    push_comment $depth, $+{comment} if $+{comment} ne "";
+	    if ($config->{tag_as_metadata}) {
+		push_line $depth, pp_tags(split(/:/, $+{tags}));
+	    } else {
+		$cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
+	    }
     	} else {
     	    print_line $depth, $l;
     	}

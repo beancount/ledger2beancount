@@ -17,6 +17,50 @@ the config file `ledger2beancount.yml` and if that is not found for
 file for the variables.
 
 
+FUNCTIONALITY
+-------------
+
+### Tags
+
+Beancount currently has two limitations regarding tags:
+
+1. they have to be on the same line as the narration ([issue
+99](https://bitbucket.org/blais/beancount/issues/99)), which means the
+line can get very long.  It would be good to put tags on a line on its
+own before the first posting but this currently doesn't work.
+
+2. postings can't have tags ([issue
+144](https://bitbucket.org/blais/beancount/issues/144)).
+
+Because of these limitations, ledger2beancount offers two ways to handle
+tags using the `tag_as_metadata` variable:
+
+If `tag_as_metadata` is `true`, tags will be stored as metadata with the
+key `tags`.  This works both for transactions and postings.  This option
+should be seen as a workaround because metadata with the key `tags` is
+not seen the same by beancount as proper tags.
+
+If `tag_as_metadata` is `false`, transaction tags will be put after the
+narration as tags.  Because of the limitation in beancount, posting-level
+tags are currently ignored.  If tags are rendered as tags, you can define
+[regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions)
+in `link_tags` to determine that a tag should be rendered as a link
+instead.  For example, if you tag your trips in the format
+`YYYY-MM-DD-foo`, you could use
+
+    link_tags:
+      - ^\d\d\d\d-\d\d-\d\d-
+
+to render them as links.  So the ledger transaction header
+
+    2018-02-02 * Train Brussels airport to city
+        ; :2018-02-02-brussels-fosdem:debian:
+
+would become the following in beancount:
+
+    2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
+
+
 AUTHORS
 -------
 
