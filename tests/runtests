@@ -1,6 +1,5 @@
 #!/bin/sh
 
-TEST_DIR=.
 status=0
 
 test_conversion () {
@@ -30,7 +29,7 @@ test_validity () {
 	test=$(basename "$file")
 	printf "Validating $test... "
 	beancount=$(tempfile)
-	cat $TEST_DIR/def-accounts| ../bin/ledger2beancount-accounts > $beancount
+	cat def-accounts| ../bin/ledger2beancount-accounts > $beancount
 	cat $file >> $beancount
 	if bean-check $beancount; then
 		echo "ok"
@@ -41,11 +40,11 @@ test_validity () {
 	rm -f $beancount
 }
 
-for test in `find $TEST_DIR/ -name "*.ledger" | sort`; do
+for test in `find . -name "*.ledger" | sort`; do
 	test_conversion "$test"
 done
 
-for test in `find $TEST_DIR/ -name "*.beancount" | sort`; do
+for test in `find . -name "*.beancount" | sort`; do
 	test_validity "$test"
 done
 
