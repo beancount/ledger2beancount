@@ -1,5 +1,21 @@
 
-2018-03-17=2018-03-16 * Test
+2018-03-17=2018-03-16 * Test with transaction aux date
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * Test with posting aux date
+    Assets:Test                        10.00 EUR ; [=2018-03-13]
+    Equity:Opening balance
+
+2018-03-18=2018-03-17 * Test with transaction and posting aux date
+    Assets:Test                        10.00 EUR ; [=2018-03-13]
+    Equity:Opening balance
+
+2018-03-18 * Test with posting aux date plus comment
+    Assets:Test                        10.00 EUR ; [=2018-03-13] ; foo
+    Equity:Opening balance
+
+2018-03-18 * Test with posting aux date after no amount
+    Assets:Test                        10.00 EUR
+    Equity:Opening balance                       ; [=2018-03-13]
 
