@@ -185,7 +185,7 @@ sub push_assertion($$) {
 
     # beancount evalutes balance assertions at the beginning of the day,
     # whereas ledger evalutes them at the end of the txn. So we schedule the
-    # balance assertion for the *after* the origin txn. This assumes that there
+    # balance assertion for *after* the origin txn. This assumes that there
     # are no *other* txn in the same day that change the balance again.
     my $assertion_date = sprintf("%04d-%02d-%02d",
 				 Add_Delta_Days(split(/-/, $cur_txn_header{date}), 1));
@@ -223,7 +223,7 @@ sub push_comment($$) {
 }
 
 
-# return a pretty printed transaction, reseting the current parsing state. This
+# return a pretty printed transaction, resetting the current parsing state. This
 # is usually called as soon as the end of a transaction (usually an empty line)
 # is encountered
 sub pop_txn() {
@@ -287,7 +287,7 @@ while (my $l = <>) {
     chomp $l;
     $l =~ /^(?<indent>\s*)(?<line>.*)/;
     my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
-      # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+    # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
     $l = $+{line};
 
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
@@ -306,7 +306,7 @@ while (my $l = <>) {
 	}
 	if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
 	    # ASSUMPTION: payer_tag always occurs later than payee_tag, which
-	    # is currently enforced in our leder. This is to guarantee that we
+	    # is currently enforced in our ledger. This is to guarantee that we
 	    # promote payers to payees, because that's the sensible thing to do
 	    # with Beancount
 	    push_payee $+{value};
