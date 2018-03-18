@@ -38,7 +38,7 @@ my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
 my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t)\s*(?<amount>$amount_RE))/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 

@@ -32,3 +32,7 @@
     * Assets:Test                        10.00 EUR
     ! Equity:Opening balance            -10.00 EUR
 
+2018-03-18 * Test
+    Assets:Test                        10.00 EUR
+    Equity:Opening balance                       ; comment
+
