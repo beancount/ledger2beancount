@@ -1,4 +1,5 @@
 all:
 
+.PHONY: test
 test:
-	./runtests
+	cd tests && ./runtests
