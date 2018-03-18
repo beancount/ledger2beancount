@@ -36,7 +36,7 @@ commodity_map:
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.
-altdate_tag: alt-date
+altdate_tag: aux-date
 code_tag: code
 
 # A list of commodities that should be treated as commodities
