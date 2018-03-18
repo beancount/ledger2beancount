@@ -38,7 +38,7 @@ my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
 my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?)/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<altdatestrip>\s*;\s*\[=(?<altdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 
@@ -343,10 +343,15 @@ while (my $l = <>) {
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
+	my $account = $+{account};
+	my $altdate = $+{altdate};
+	# Strip the altdate info
+	$l =~ s/\s*\Q$+{altdatestrip}\E// if $+{altdatestrip};
+
 	# Replace ledger account names with corresponding beancount account names
-	my $beancount_account = $+{account};
-	$beancount_account = $config->{account_map}{$+{account}} if exists $config->{account_map}{$+{account}};
-	$l =~ s/$+{account}/$beancount_account/;
+	my $beancount_account = $account;
+	$beancount_account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+	$l =~ s/$account/$beancount_account/;
 
 	if ($l =~ /$amount_RE/) {
 	    my $commodity = $+{commodity};
@@ -398,6 +403,7 @@ while (my $l = <>) {
 	} else {
 	    push_line $depth, $l;
 	}
+	push_metadata $depth + 1, $config->{altdate_tag}, $altdate if defined $altdate && defined $config->{altdate_tag};
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";
