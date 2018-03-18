@@ -2,7 +2,7 @@ language: python
 python:
   - "3.6"
 install:
-  - sudo apt-get install libcarp-assert-perl libdate-calc-perl libyaml-libyaml-perl
+  - sudo apt-get install libcarp-assert-perl libdate-calc-perl libyaml-libyaml-perl libfile-basedir-perl
   - pip install beancount==2.0rc1
 script:
   - make test

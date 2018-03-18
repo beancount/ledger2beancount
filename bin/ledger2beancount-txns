@@ -12,10 +12,19 @@ use warnings;
 use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
+use File::BaseDir qw/config_home/;
 use YAML::XS qw(LoadFile);
 
 
-my $config = LoadFile('ledger2beancount.yml');
+my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+my $config;
+foreach my $config_file (@config_files) {
+    if (-r $config_file) {
+	$config = LoadFile($config_file);
+	last;
+    }
+}
+die "No config file found (tried ", (join ", ", @config_files), ")\n" if !$config;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/[0-9-]+/;

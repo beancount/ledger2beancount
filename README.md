@@ -11,6 +11,11 @@ Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
+ledger2beancount relies on some configuration data.  It will search for
+the config file `ledger2beancount.yml` and if that is not found for
+`$HOME/.config/ledger2beancount/config.yml`.  See the sample config
+file for the variables.
+
 
 AUTHORS
 -------
