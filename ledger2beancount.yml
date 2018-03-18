@@ -16,7 +16,8 @@ operating_currencies:
 includes: []
 
 # Plugins to load
-plugins: []
+plugins:
+ - beancount.plugins.implicit_prices
 
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
