@@ -15,3 +15,7 @@
     Assets:Test                      1 "M&M2"
     Equity:Opening-Balance          -1 "M&M2"
 
+2018-03-18 * Test upper case
+    Assets:Test                      1 Gandi
+    Equity:Opening-Balance          -1 Gandi
+

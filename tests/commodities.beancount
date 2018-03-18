@@ -17,3 +17,7 @@ option "operating_currency" "EUR"
   Assets:Test                      1 MILESMORE2
   Equity:Opening-Balance          -1 MILESMORE2
 
+2018-03-18 * "Test upper case"
+  Assets:Test                      1 GANDI
+  Equity:Opening-Balance          -1 GANDI
+
