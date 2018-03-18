@@ -28,6 +28,12 @@ metadata_map:
 payee_tag: payee
 payer_tag: payer
 
+payee_split:
+  - (?<narration>.*?)\s+\((?<payee>Tesco)\)
+
+payee_match:
+  ^Oyster card top-up: TfL
+
 account_map:
   "Equity:Opening balance": Equity:Opening-Balance
 

@@ -1,0 +1,19 @@
+
+2018-03-18 * Payee Foo
+    ; payee: Foo
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * Payer Bar
+    ; payer: Bar
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * Oyster card top-up
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * Supermarket (Tesco)
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
