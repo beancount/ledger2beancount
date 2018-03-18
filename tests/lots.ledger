@@ -36,6 +36,10 @@
     Equity:Opening-Balance   -12.30 USD
 
 2018-03-17 * Test
+    Assets:Test               10.00 EUR {1.23 USD}  [2018-03-16] @ 1.23 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-17 * Test
     Assets:Test               10.00 EUR {0.90 GBP}  @  0.90 GBP
     Equity:Opening-Balance    -9.00 GBP
 
@@ -71,6 +75,10 @@
 
 2018-03-17 * Test
     Assets:Test               10.00 EUR {{12.30 USD}} [2018-03-16] @@ 12.30 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-17 * Test
+    Assets:Test               10.00 EUR {{12.30 USD}}   [2018-03-16]  @@ 12.30 USD
     Equity:Opening-Balance   -12.30 USD
 
 2018-03-17 * Test
