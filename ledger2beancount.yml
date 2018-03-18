@@ -39,6 +39,16 @@ commodity_map:
 altdate_tag: aux-date
 code_tag: code
 
+# Render tags as metadata instead of tags:
+# If true, tags are stored as metadata with the key "tags"
+# If false, tags are rendered as #tags after the narration
+tag_as_metadata: false
+
+# A list of regular expressions that will cause a tag to be
+# rendered as a link. (Only works if tag_as_metadata is false)
+link_tag:
+  - ^\d\d\d\d-\d\d-\d\d-
+
 # A list of commodities that should be treated as commodities
 # rather than currencies even though they consist of 3 characters
 # (which is usually a characteristic of a currency)

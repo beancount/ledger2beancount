@@ -1,13 +1,24 @@
 option "operating_currency" "EUR"
 
 
-2018-03-17 * "Test"
-  tags: "foo, bar, baz"
+2018-03-17 * "Tag on transaction" #foo #bar #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * "Tag on transaction, split over two lines" #foo #bar #baz #second
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * "Tag on transaction, one converted to a link" #foo #bar ^2018-02-02-brussels-fosdem #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * "Tag on postings" #foo #bar #baz
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 ; label will be mapped to bank-label
-2018-03-17 * "Test"
+2018-03-17 * "Map meta data"
   bank-label: "foo"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
