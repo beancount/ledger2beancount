@@ -261,7 +261,7 @@ sub map_commodity($) {
     # Check again after removing the quote
     return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
 
-    return $key;
+    return uc $key;
 }
 
 
