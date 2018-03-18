@@ -171,7 +171,7 @@ sub push_payee($) {
     $cur_txn_header{payee} = $payee;
 }
 
-# add a transaction line. Call this multiple times to accmulate lines that will
+# add a transaction line. Call this multiple times to accumulate lines that will
 # be emitted as soon as the transaction is over
 sub push_line($$) {
     my ($depth, $line) = @_;
