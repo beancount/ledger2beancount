@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TEST_DIR=tests
+TEST_DIR=.
 status=0
 
 test_conversion () {
@@ -12,7 +12,7 @@ test_conversion () {
 
 	printf "Converting $test... "
 
-	cat $file | bin/ledger2beancount-txns > $actual
+	cat $file | ../bin/ledger2beancount-txns > $actual
 
 	if $(cmp -s $expected $actual); then
 		echo "ok"
@@ -30,7 +30,7 @@ test_validity () {
 	test=$(basename "$file")
 	printf "Validating $test... "
 	beancount=$(tempfile)
-	cat $TEST_DIR/def-accounts| bin/ledger2beancount-accounts > $beancount
+	cat $TEST_DIR/def-accounts| ../bin/ledger2beancount-accounts > $beancount
 	cat $file >> $beancount
 	if bean-check $beancount; then
 		echo "ok"
