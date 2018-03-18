@@ -252,6 +252,17 @@ sub map_metadata($) {
 }
 
 
+# map a ledger commodity to a beancount commodity
+sub map_commodity($) {
+    my ($key) = @_;
+
+    return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
+    $key =~ s/"//g;
+
+    return $key;
+}
+
+
 # emit a single line
 sub print_line($$) {
     my ($depth, $line) = @_;
@@ -325,11 +336,7 @@ while (my $l = <>) {
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
     } elsif ($l =~ /^$price_RE/) {
-	my $commodity1 = $+{commodity1};
-	$commodity1 = $config->{commodity_map}{$+{commodity1}} if exists $config->{commodity_map}{$+{commodity1}};
-	my $commodity2 = $+{commodity2};
-	$commodity2 = $config->{commodity_map}{$+{commodity2}} if exists $config->{commodity_map}{$+{commodity2}};
-	$l = "$+{date} price $commodity1 $+{value} $commodity2";
+	$l = sprintf "$+{date} price %s $+{value} %s", map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
@@ -340,11 +347,7 @@ while (my $l = <>) {
 
 	if ($l =~ /$amount_RE/) {
 	    my $commodity = $+{commodity};
-	    my $beancount_commodity = $commodity;
-	    # beancount doesn't allow quoted commodities
-	    $beancount_commodity =~ s/"//g;
-	    # Replace ledger commodities with corresponding beancount commodities
-	    $beancount_commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
+	    my $beancount_commodity = map_commodity $commodity;
 	    $l =~ s/$commodity/$beancount_commodity/;
 	}
 
