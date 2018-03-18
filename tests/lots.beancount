@@ -10,36 +10,32 @@ option "operating_currency" "EUR"
   Equity:Opening-Balance
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR {9.00 GBP}
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR { 9.00 GBP}
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR { 0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR { 9.00 GBP }
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR { 0.90 GBP }
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR {   9.00 GBP }
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR {   0.90 GBP }
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR {9 GBP}
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR {{ 9 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR { 9 GBP}
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
-  Assets:Test               10.00 EUR {9.00 GBP}
-  Equity:Opening-Balance   -90.00 GBP
-
-2018-03-17 * "Test"
-  Assets:Test               10.00 EUR {9 GBP}
-  Equity:Opening-Balance   -90.00 GBP
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
   Assets:Test              -10.00 EUR {0.90 GBP} @ 0.95 GBP
@@ -66,6 +62,18 @@ option "operating_currency" "EUR"
 2018-03-17 * "Test"
   Assets:Test               10.00 EUR {{9.00 GBP}}
   Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9.00 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9 GBP}}
+  Equity:Opening-Balance   -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {{9 GBP}}
+  Equity:Opening-Balance   -9.00 GBP
 
 2018-03-17 * "Test"
   Assets:Test              -10.00 EUR {{9.00 GBP}} @@ 9.50 GBP
