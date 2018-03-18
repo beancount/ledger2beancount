@@ -20,6 +20,70 @@ file for the variables.
 FUNCTIONALITY
 -------------
 
+### Narration
+
+The ledger payee information, which is generally used as free-form text
+to describe the transaction, is stored in beancount's narration field
+and properly quoted.
+
+### Payees
+
+Ledger has limited support for payees.  A `payee` metadata key can be set
+but this also overrides the free-form text to describe the transaction.
+In ledger2beancount, we offer several features to determine the payee.
+
+You can set `payee_split` and define a list of regular expressions which
+allow you to split ledger's payee field into payee and narration.  You
+have to use [Perl regular
+expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions)
+with the named capture groups `payee` and `narration`.  For example,
+given the ledger transaction
+
+    2018-03-18 * Supermarket (Tesco)
+
+and the configuration
+
+    payee_split:
+      - (?<narration>.*?)\s+\((?<payee>Tesco)\)
+
+ledger2beancount will create this beancount transaction:
+
+    2018-03-18 * "Tesco" "Supermarket"
+
+In other words, `payee_split` allows you to split the ledger payee
+into payee and narration in beancount.
+
+`payee_split` is a list of regular expressions and we stop when we
+find a match.
+
+Furthermore, you can use `payee_match` to match based on the ledger
+payee field and assign payees according to the match.  This variable
+is a hash consisting of a regular expressions and the corresponding
+payees.  For example, if your ledger contains a transaction like:
+
+    2018-03-18 * Oyster card top-up
+
+you can use
+
+    payee_split:
+      ^Oyster card top-up: Transport for London
+
+to match the line and assign the payee `Transport for London`:
+
+    2018-03-18 * "Transport for London" "Oyster card top-up"
+
+Unlike `payee_split`, the full payee field from ledger is used as the
+narration in beancount.  Again, we stop after the first match.
+
+Please note that the `payee_match` is done after `payee_split` and we run
+`payee_match` even if `payee_split` matched.  This allows you to remove
+some information from the narration using `payee_split` while overriding
+the found payee using `payee_match`.
+
+Finally, metadata describing a payee or payer will be used to set the
+payee.  The tags used for that information can be specified in
+`payee_tag` and `payer_tag`.
+
 ### Tags
 
 Beancount currently has two limitations regarding tags:

@@ -329,6 +329,21 @@ while (my $l = <>) {
 	push_header $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
 	push_metadata $depth + 1, $config->{altdate_tag}, $+{altdate} if defined $+{altdate} && defined $config->{altdate_tag};
 	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
+	# Determine payee based on the narration field
+	my $narration = $+{narration};
+	foreach my $custom_narration_RE (@{$config->{payee_split}}) {
+	    if ($narration =~ /$custom_narration_RE/) {
+		push_payee $+{payee};
+		$cur_txn_header{narration} = $+{narration};
+		last;
+	    }
+	}
+	foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
+	    if ($narration =~ /$custom_narration_RE/) {
+		push_payee $config->{payee_match}{$custom_narration_RE};
+		last;
+	    }
+	}
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
 	my $key = map_metadata(lc($+{key}));
 	my $value;

@@ -28,6 +28,19 @@ metadata_map:
 payee_tag: payee
 payer_tag: payer
 
+# payee_split: a list of regular expressions which allows you
+# to split ledger's payee field into payee and narration.
+# Use named capture groups "payee" and "narration".
+payee_split:
+  - (?<narration>.*?)\s+\((?<payee>Tesco)\)
+
+# payee_match: a hash of regular expressions and corresponding
+# payees.  The whole ledger payee becomes the narration and
+# the matched payee from the regular expression becomes the
+# payee.
+payee_match:
+  ^Oyster top-up: TfL
+
 account_map:
   "Equity:Opening balance": Equity:Opening-Balance
 

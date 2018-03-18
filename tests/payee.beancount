@@ -1,0 +1,19 @@
+option "operating_currency" "EUR"
+
+
+2018-03-18 * "Foo" "Payee Foo"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * "Bar" "Payer Bar"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * "TfL" "Oyster card top-up"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-18 * "Tesco" "Supermarket"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
