@@ -11,3 +11,7 @@
     Assets:Test                      1 "M&M"
     Equity:Opening-Balance          -1 "M&M"
 
+2018-03-18 * Test quoted commodity with defined mapping missing quotes
+    Assets:Test                      1 "M&M2"
+    Equity:Opening-Balance          -1 "M&M2"
+

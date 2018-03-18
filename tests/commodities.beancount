@@ -13,3 +13,7 @@ option "operating_currency" "EUR"
   Assets:Test                      1 MILESMORE
   Equity:Opening-Balance          -1 MILESMORE
 
+2018-03-18 * "Test quoted commodity with defined mapping missing quotes"
+  Assets:Test                      1 MILESMORE2
+  Equity:Opening-Balance          -1 MILESMORE2
+

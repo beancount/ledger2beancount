@@ -35,6 +35,7 @@ account_map:
 commodity_map:
   Chase: UR
   '"M&M"': MILESMORE
+  M&M2: MILESMORE2
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.
