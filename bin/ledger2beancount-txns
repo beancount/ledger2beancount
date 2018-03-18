@@ -258,6 +258,8 @@ sub map_commodity($) {
 
     return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
     $key =~ s/"//g;
+    # Check again after removing the quote
+    return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
 
     return $key;
 }
