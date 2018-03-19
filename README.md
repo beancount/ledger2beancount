@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/zacchiro/ledger2beancount.svg?branch=master)](https://travis-ci.org/zacchiro/ledger2beancount)
 
+
 ledger2beancount
 ================
 
@@ -25,11 +26,13 @@ you to specify regular expressions in ledger2beancount configuration file. The
 expected syntax (and semantics) for all such values is that of
 [Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
 
+
 ### Narration
 
 The ledger payee information, which is generally used as free-form text
 to describe the transaction, is stored in beancount's narration field
 and properly quoted.
+
 
 ### Payees
 
@@ -87,6 +90,7 @@ Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in
 `payee_tag` and `payer_tag`.
 
+
 ### Tags
 
 Beancount currently has two limitations regarding tags:
@@ -110,6 +114,7 @@ not seen the same by beancount as proper tags.
 If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
 tags are currently ignored.
+
 
 ### Links
 
