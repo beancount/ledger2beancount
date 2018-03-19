@@ -27,6 +27,58 @@ expected syntax (and semantics) for all such values is that of
 [Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
 
 
+### Accounts
+
+ledger2beancount will convert ledger account declarations to beancount
+`open` statements using the `account_open_date` variable as the opening
+date.  The `note` is used as the `description`.
+
+You can also add account mappings to `account_map` for automatic
+conversion of account names.
+
+
+### Commodities
+
+Like accounts, ledger2beancount will convert ledger commodity
+declarations to beancount.  The `note` is converted to `name`.
+
+ledger2beancount will automatically convert all commodities to uppercase
+and strip quoted commodities.  If you require a mapping between ledger
+and beancount commodities, you can use `commodity_map`.
+
+Commodity symbols (like $, € and £) are not supported.
+
+
+### Flags
+
+ledger2beancount supports both transaction flags ([transaction
+state](https://www.ledger-cli.org/3.0/doc/ledger3.html#Transaction-state))
+and account flags ([state
+flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
+
+
+### Dates
+
+Only dates in the format YYYY-MM-DD (ISO 8601) are currently supported.
+
+
+### Auxiliary dates
+
+Beancount currently doesn't support ledger's [auxiliary dates (or effective
+dates)](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
+(but there is a proposal to support this functionality in a different way),
+so these are stored as metadata according to the `altdate_tag` variable.
+Unset the variable if you don't want auxiliary dates to be stored as
+metadata.  Account and posting-level auxiliary dates are supported.
+
+
+### Transaction codes
+
+Beancount doesn't support ledger's [transaction
+codes](https://www.ledger-cli.org/3.0/doc/ledger3.html#Codes).  These are
+therefore stored as metatags if `code_tag` is set.
+
+
 ### Narration
 
 The ledger payee information, which is generally used as free-form text
@@ -64,7 +116,7 @@ find a match.
 
 Furthermore, you can use `payee_match` to match based on the ledger
 payee field and assign payees according to the match.  This variable
-is a hash consisting of a regular expressions and the corresponding
+is a hash consisting of regular expressions and the corresponding
 payees.  For example, if your ledger contains a transaction like:
 
     2018-03-18 * Oyster card top-up
@@ -91,6 +143,18 @@ payee.  The tags used for that information can be specified in
 `payee_tag` and `payer_tag`.
 
 
+### Metadata
+
+Account and posting metadata are converted to beancount syntax.  Metadata
+keys used in ledger can be converted to different keys in beancount using
+`metadata_map`.  Metadata can also be converted to links (see below).
+
+ledger2beancount also supports
+[typed metadata](https://www.ledger-cli.org/3.0/doc/ledger3.html#Typed-metadata)
+(i.e. `key::` instead of `key:`) and doesn't quote the values accordingly,
+but you should make sure the values are valid in beancount.
+
+
 ### Tags
 
 Beancount currently has two limitations regarding tags:
@@ -109,7 +173,7 @@ tags using the `tag_as_metadata` variable:
 If `tag_as_metadata` is `true`, tags will be stored as metadata with the
 key `tags`.  This works both for transactions and postings.  This option
 should be seen as a workaround because metadata with the key `tags` is
-not seen the same by beancount as proper tags.
+not treated the same way by beancount as proper tags.
 
 If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
@@ -123,7 +187,7 @@ ledger2beancount offers two mechanisms to convert ledger tags and
 metadata to links.
 
 First, you can define a list of metadata tags in `link_tags` whose
-value should be converted to a beancount link instead of metadata.  For
+values should be converted to beancount links instead of metadata.  For
 example:
 
     link_tags:
@@ -143,7 +207,7 @@ instead of
     2018-03-19 * Invoice 4 #4
 
 Tags are case insensitive.  Be aware that the metadata must not contain
-whitespace.
+any whitespace.
 
 Since posting-level links are currently not allowed in beancount, they
 are stored as metadata.
@@ -163,6 +227,50 @@ to render them as links.  So the ledger transaction header
 would become the following in beancount:
 
     2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
+
+
+### Comments
+
+Comments are supported.  Since beancount currently [doesn't allow
+full-line comments within
+transactions](https://bitbucket.org/blais/beancount/issues/143), these
+are stored as metadata.
+
+
+### Lots
+
+Lot costs and prices are supported, including per-unit and total lot
+costs.  Lot dates are converted to beancount but lot notes are not
+handled at the moment.
+
+The behaviour of ledger and beancount is different when it comes to
+costs.  In ledger, the statement
+
+    Assets:Test          10.00 EUR @ 0.90 GBP
+
+creates the lot `10.00 EUR {0.90 GBP}`.  In beancount, this is not the
+case and a cost is only associated if done so explicitly:
+
+    Assets:Test          10.00 EUR {0.90 GBP}
+
+This makes automatic conversion tricky because some statements should be
+simple conversions without associating a cost whereas it's vital to
+preserve the cost in other conversions.
+
+Generally, it doesn't make sense to preserve the cost for currency
+conversion (as opposed to conversions involving commodities like shares
+and stocks).  Since most currency codes consist of 3 characters (EUR,
+GBP, USD, etc), the script makes a simple conversion (`10.00 EUR @ 0.90
+GBP`) if both commodities consist of 3 characters.  Otherwise it
+associates a cost (`1 LU0274208692 {48.67 EUR}`).  Since some 3 character
+symbols might be commodities instead of currencies (e.g. ETH and BTH), the
+`commodities3char` variable can be used to treat them as commodities and
+associate a cost in conversions.
+
+
+### Balance assertions
+
+Ledger balance assertions are converted to beancount `balance` statements.
 
 
 Authors
