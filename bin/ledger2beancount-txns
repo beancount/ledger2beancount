@@ -346,12 +346,6 @@ while (my $l = <>) {
 	}
     } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
 	my $key = map_metadata(lc($+{key}));
-	my $value;
-	if (defined($+{typed})) {
-	    $value = parse_ledger_value $+{value};
-	} else {
-	    $value = mk_beancount_string $+{value};
-	}
 	if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
 	    # ASSUMPTION: payer_tag always occurs later than payee_tag, which
 	    # is currently enforced in our ledger. This is to guarantee that we
@@ -359,7 +353,19 @@ while (my $l = <>) {
 	    # with Beancount
 	    push_payee $+{value};
 	} else {
-	    push_metadata $depth, $key, $value;
+	    # Check if we should store as metadata or as links
+	    # We check for $depth since posting-level links are not allowed
+	    if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1) {
+		$cur_txn_header{tags} .= " ^" . $+{value};
+	    } else {
+		my $value;
+		if (defined($+{typed})) {
+		    $value = parse_ledger_value $+{value};
+		} else {
+		    $value = mk_beancount_string $+{value};
+		}
+		push_metadata $depth, $key, $value;
+	    }
 	}
     } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	     or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {

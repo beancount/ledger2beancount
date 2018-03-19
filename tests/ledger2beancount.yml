@@ -53,6 +53,10 @@ tag_as_metadata: false
 link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 
+link_tags:
+  - Trip
+  - Invoice
+
 # A list of commodities that should be treated as commodities
 # rather than currencies even though they consist of 3 characters
 # (which is usually a characteristic of a currency)

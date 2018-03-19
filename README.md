@@ -106,11 +106,45 @@ not seen the same by beancount as proper tags.
 
 If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
-tags are currently ignored.  If tags are rendered as tags, you can define
-[regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions)
-in `link_match` to determine that a tag should be rendered as a link
-instead.  For example, if you tag your trips in the format
-`YYYY-MM-DD-foo`, you could use
+tags are currently ignored.
+
+### Links
+
+Beancount differentiates between tags and links whereas ledger doesn't.
+ledger2beancount offers two mechanisms to convert ledger tags and
+metadata to links.
+
+First, you can define a list of metadata tags in `link_tags` whose
+value should be converted to a beancount link instead of metadata.  For
+example:
+
+    link_tags:
+      - Invoice
+
+with the ledger input
+
+    2018-03-19 * Invoice 4
+        ; Invoice:: 4
+
+will be converted to
+
+    2018-03-19 * Invoice 4 ^4
+
+instead of
+
+    2018-03-19 * Invoice 4 #4
+
+Tags are case insensitive.  Be aware that the metadata must not contain
+whitespace.
+
+Since posting-level links are currently not allowed in beancount, they
+are stored as metadata.
+
+Second, you can define [regular
+expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions) in
+`link_match` to determine that a tag should be rendered as a link instead.
+For example, if you tag your trips in the format `YYYY-MM-DD-foo`, you
+could use
 
     link_match:
       - ^\d\d\d\d-\d\d-\d\d-
