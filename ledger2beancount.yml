@@ -62,8 +62,8 @@ tag_as_metadata: false
 link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 
-# A list of metadata tags whose value should be converted to a
-# beancount link instead of metadata.
+# A list of metadata tags whose values should be converted to
+# beancount links instead of metadata.
 # Tags are case insensitive.  Values must not contain whitespace.
 link_tags: []
 
