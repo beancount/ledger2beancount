@@ -44,7 +44,7 @@ code_tag: code
 
 tag_as_metadata: false
 
-link_tags:
+link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 
 # A list of commodities that should be treated as commodities

@@ -46,7 +46,7 @@ tag_as_metadata: false
 
 # A list of regular expressions that will cause a tag to be
 # rendered as a link. (Only works if tag_as_metadata is false)
-link_tag:
+link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 
 # A list of commodities that should be treated as commodities
