@@ -17,8 +17,8 @@ the config file `ledger2beancount.yml` and if that is not found for
 file for the variables.
 
 
-FUNCTIONALITY
--------------
+Features
+--------
 
 ### Narration
 
@@ -159,14 +159,14 @@ would become the following in beancount:
     2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
 
 
-AUTHORS
+Authors
 -------
 
 * Stefano Zacchiroli `<zack@upsilon.cc>`
 * Martin Michlmayr `<tbm@cyrius.com>`
 
 
-LICENSE
+License
 -------
 
     This program is free software: you can redistribute it and/or modify
