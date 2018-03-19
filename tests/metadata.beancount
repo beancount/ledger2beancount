@@ -26,3 +26,24 @@ option "operating_currency" "EUR"
   Equity:Opening-Balance            -10.00 EUR
   comment: "and another comment"
 
+2018-03-19 * "Metadata, one of which should be converted to a link" #tag1 #tag2 ^brussels-fosdem #tag3
+  test: "foo bar baz"
+  Assets:Test                        10.00 EUR
+    test: "baz"
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-19 * "Metadata, two of which should be converted to a link" #tag1 #tag2 ^brussels-fosdem #tag3 ^1234
+  test: "foo bar baz"
+  Assets:Test                        10.00 EUR
+    test: "baz"
+  Equity:Opening-Balance            -10.00 EUR
+    trip: "brussels-fosdem"
+
+2018-03-19 * "Metadata, some posting-level links" #tag1 #tag2 ^brussels-fosdem #tag3 ^4
+  test: "foo bar baz"
+  Assets:Test                        10.00 EUR
+    test: "baz"
+    invoice: 5
+  Equity:Opening-Balance            -10.00 EUR
+    invoice: 6
+
