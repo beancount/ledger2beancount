@@ -1,0 +1,26 @@
+
+2018-03-19 * Metadata after posting
+    ; test: foo bar baz
+    Assets:Test                        10.00 EUR ; test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-19 * Metadata on next line of posting, no space
+    ; test: foo bar baz
+    Assets:Test                        10.00 EUR
+    ; test: bar
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-19 * Metadata on next line of posting, with space
+    ; test: "foo bar baz"
+    Assets:Test                        10.00 EUR
+        ; test: baz
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-19 * Metadata and comments
+    ; test: foo bar baz
+    ; one comment
+    Assets:Test                        10.00 EUR ; another comment
+        ; test: baz
+    Equity:Opening-Balance            -10.00 EUR
+    ; and another comment
+
