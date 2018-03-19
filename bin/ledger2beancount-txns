@@ -370,6 +370,7 @@ while (my $l = <>) {
 	    } else {
 		$cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
 	    }
+	    push_comment $depth, $+{comment} if $+{comment} ne "";
     	} else {
     	    print_line $depth, $l;
     	}
