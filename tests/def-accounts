@@ -5,6 +5,9 @@ account Assets:Test
 account Equity:Opening-Balance
     note Opening balances
 
+account Expenses:Test
+    note Expense account
+
 account Income:Capital-Gain
     note Capital gains
 

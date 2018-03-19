@@ -413,9 +413,7 @@ while (my $l = <>) {
 	$l =~ s/$account/$beancount_account/;
 
 	if ($l =~ /$amount_RE/) {
-	    my $commodity = $+{commodity};
-	    my $beancount_commodity = map_commodity $commodity;
-	    $l =~ s/$commodity/$beancount_commodity/;
+	    $l =~ s/$amount_RE/$1 @{[map_commodity($2)]}/;
 	}
 
 	if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
