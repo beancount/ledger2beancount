@@ -35,9 +35,9 @@ my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
 my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
-my $amount_RE = qr/(?<value>$value_RE)\s+(?<commodity>$commodity_RE)/;
+my $amount_RE = qr/(?<num>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
-my $metadata_RE = qr/^;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
+my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<altdatestrip>\s*;\s*\[=(?<altdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
@@ -259,6 +259,36 @@ sub pop_txn() {
 }
 
 
+# Handle metadata
+sub handle_metadata($$) {
+    #my ($depth, $key, $typed, $value) = @_;
+    my ($depth, $metadata) = @_;
+
+    my $key = map_metadata(lc($metadata->{key}));
+    if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
+	# ASSUMPTION: payer_tag always occurs later than payee_tag, which
+	# is currently enforced in our ledger. This is to guarantee that we
+	# promote payers to payees, because that's the sensible thing to do
+	# with Beancount
+	push_payee $metadata->{value};
+    } else {
+	# Check if we should store as metadata or as links
+	# We check for $depth since posting-level links are not allowed
+	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1) {
+	    $cur_txn_header{tags} .= " ^" . $metadata->{value};
+	} else {
+	    my $value;
+	    if (defined($metadata->{typed})) {
+		$value = parse_ledger_value $metadata->{value};
+	    } else {
+		$value = mk_beancount_string $metadata->{value};
+	    }
+	    push_metadata $depth, $key, $value;
+	}
+    }
+}
+
+
 # map a (ledger) metadata key to the desired (beancount) metadata key. Relies
 # on the global %metadata_map hash
 sub map_metadata($) {
@@ -344,29 +374,8 @@ while (my $l = <>) {
 		last;
 	    }
 	}
-    } elsif ($l =~ /$metadata_RE/ && $in_txn) {  # metadata comment
-	my $key = map_metadata(lc($+{key}));
-	if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
-	    # ASSUMPTION: payer_tag always occurs later than payee_tag, which
-	    # is currently enforced in our ledger. This is to guarantee that we
-	    # promote payers to payees, because that's the sensible thing to do
-	    # with Beancount
-	    push_payee $+{value};
-	} else {
-	    # Check if we should store as metadata or as links
-	    # We check for $depth since posting-level links are not allowed
-	    if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1) {
-		$cur_txn_header{tags} .= " ^" . $+{value};
-	    } else {
-		my $value;
-		if (defined($+{typed})) {
-		    $value = parse_ledger_value $+{value};
-		} else {
-		    $value = mk_beancount_string $+{value};
-		}
-		push_metadata $depth, $key, $value;
-	    }
-	}
+    } elsif ($l =~ /^$metadata_RE/ && $in_txn) {  # metadata comment
+	handle_metadata $depth, \%+;
     } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	     or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
     	# tags comment
@@ -382,7 +391,7 @@ while (my $l = <>) {
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
     } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "$+{date} price %s $+{value} %s", map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l = sprintf "$+{date} price %s $+{num} %s", map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
@@ -390,6 +399,12 @@ while (my $l = <>) {
 	my $altdate = $+{altdate};
 	# Strip the altdate info
 	$l =~ s/\s*\Q$+{altdatestrip}\E// if $+{altdatestrip};
+
+	# Check for posting-level metadata
+	my %metadata_posting;
+	if ($l =~ s/^($posting_RE)(\s*$metadata_RE)/$1/) {
+	    %metadata_posting = %+;
+	}
 
 	# Replace ledger account names with corresponding beancount account names
 	my $beancount_account = $account;
@@ -446,6 +461,7 @@ while (my $l = <>) {
 	} else {
 	    push_line $depth, $l;
 	}
+	handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	push_metadata $depth + 1, $config->{altdate_tag}, $altdate if defined $altdate && defined $config->{altdate_tag};
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;

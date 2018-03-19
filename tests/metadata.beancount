@@ -1,9 +1,16 @@
 option "operating_currency" "EUR"
 
 
-2018-03-19 * "Metadata after posting"
+2018-03-19 * "Metadata after posting, with amount"
   test: "foo bar baz"
-  Assets:Test                        10.00 EUR ; test: foo
+  Assets:Test                        10.00 EUR
+    test: "foo"
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-19 * "Metadata after posting, no amount"
+  test: "foo bar baz"
+  Assets:Test          
+    test: "foo"
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-19 * "Metadata on next line of posting, no space"
