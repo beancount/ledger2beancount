@@ -20,6 +20,11 @@ file for the variables.
 Features
 --------
 
+Note on **regular expressions**: many of the features described below require
+you to specify regular expressions in ledger2beancount configuration file. The
+expected syntax (and semantics) for all such values is that of
+[Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
+
 ### Narration
 
 The ledger payee information, which is generally used as free-form text
@@ -34,10 +39,8 @@ In ledger2beancount, we offer several features to determine the payee.
 
 You can set `payee_split` and define a list of regular expressions which
 allow you to split ledger's payee field into payee and narration.  You
-have to use [Perl regular
-expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions)
-with the named capture groups `payee` and `narration`.  For example,
-given the ledger transaction
+have to use regular expressions with the named capture groups `payee`
+and `narration`.  For example, given the ledger transaction
 
     2018-03-18 * Supermarket (Tesco)
 
@@ -140,11 +143,9 @@ whitespace.
 Since posting-level links are currently not allowed in beancount, they
 are stored as metadata.
 
-Second, you can define [regular
-expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions) in
-`link_match` to determine that a tag should be rendered as a link instead.
-For example, if you tag your trips in the format `YYYY-MM-DD-foo`, you
-could use
+Second, you can define regular expressions in `link_match` to determine
+that a tag should be rendered as a link instead.  For example, if you
+tag your trips in the format `YYYY-MM-DD-foo`, you could use
 
     link_match:
       - ^\d\d\d\d-\d\d-\d\d-
