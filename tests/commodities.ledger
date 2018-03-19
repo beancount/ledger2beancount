@@ -19,3 +19,7 @@
     Assets:Test                      1 Gandi
     Equity:Opening-Balance          -1 Gandi
 
+2017-03-31 * Test with account name containing same string as commodity
+    Expenses:Test                                         140616 Gandi
+    Assets:Test                                          -140616 Gandi
+

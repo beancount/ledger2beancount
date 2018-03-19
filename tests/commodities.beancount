@@ -21,3 +21,7 @@ option "operating_currency" "EUR"
   Assets:Test                      1 GANDI
   Equity:Opening-Balance          -1 GANDI
 
+2017-03-31 * "Test with account name containing same string as commodity"
+  Expenses:Test                                         140616 GANDI
+  Assets:Test                                          -140616 GANDI
+
