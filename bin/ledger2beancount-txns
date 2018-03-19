@@ -138,7 +138,7 @@ sub pp_metadata($$) {
 sub tag_or_link(@) {
     my ($key) = @_;
 
-    foreach my $link_RE (@{$config->{link_tags}}) {
+    foreach my $link_RE (@{$config->{link_match}}) {
 	return '^' . $key if $key =~ /$link_RE/;
     }
     return "#" . $key;

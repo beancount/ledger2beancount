@@ -44,11 +44,11 @@ If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
 tags are currently ignored.  If tags are rendered as tags, you can define
 [regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions)
-in `link_tags` to determine that a tag should be rendered as a link
+in `link_match` to determine that a tag should be rendered as a link
 instead.  For example, if you tag your trips in the format
 `YYYY-MM-DD-foo`, you could use
 
-    link_tags:
+    link_match:
       - ^\d\d\d\d-\d\d-\d\d-
 
 to render them as links.  So the ledger transaction header
