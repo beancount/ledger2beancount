@@ -33,8 +33,21 @@ ledger2beancount will convert ledger account declarations to beancount
 `open` statements using the `account_open_date` variable as the opening
 date.  The `note` is used as the `description`.
 
-You can also add account mappings to `account_map` for automatic
-conversion of account names.
+ledger2beancount replaces ledger account names with valid beancount
+accounts and therefore performs the following three transformations
+automatically:
+
+1. Replaces space with dash (`Liabilities:Credit Card` becomes
+   `Liabilities:Credit-Card`)
+2. Replaces account names starting with lower case letters with
+   upper case letters (`Assets:test` becomes `Assets:Test`)
+3. Moves digits from the beginning of the account name to the
+   end (`Assets:99Ranch` becomes `Assets:Ranch99`)
+
+While these transformations lead to valid beancount account names,
+they might not be what you desire.  Therefore, you can add account
+mappings to `account_map` to map the transformed account names to
+something different.
 
 
 ### Commodities

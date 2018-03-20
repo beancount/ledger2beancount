@@ -42,7 +42,7 @@ payee_match:
   ^Oyster top-up: TfL
 
 account_map:
-  "Equity:Opening balance": Equity:Opening-Balance
+  "Equity:Opening-balance": Equity:Opening-Balance
 
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:

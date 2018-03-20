@@ -36,3 +36,23 @@
     Assets:Test                        10.00 EUR
     Equity:Opening balance                       ; comment
 
+2018-03-18 * Account name with space
+    Liabilities:Credit Card:Test      -10.00 EUR
+    Equity:Opening balance
+
+2018-03-18 * Account name starting with lower case
+    Assets:test                        10.00 EUR
+    Equity:Opening balance
+
+2018-03-18 * Account name with space and ucfirst
+    Liabilities:credit Card:test      -10.00 EUR
+    Equity:Opening balance
+
+2018-03-18 * Account name starting with digits
+    Assets:Vouchers:99Ranch            10.00 EUR
+    Equity:Opening-Balance
+
+2018-03-18 * 2 account name starting with digits
+    Assets:Vouchers:99Ranch:99Test     10.00 EUR
+    Equity:Opening-Balance
+

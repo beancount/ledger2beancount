@@ -409,7 +409,10 @@ while (my $l = <>) {
 
 	# Replace ledger account names with corresponding beancount account names
 	my $beancount_account = $account;
-	$beancount_account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+	$beancount_account =~ s/ /-/g;
+	$beancount_account =~ s/:([a-z])/:\U$1\E/g;
+	$beancount_account =~ s/:(\d+)([^:]+)/:$2$1/g;
+	$beancount_account = $config->{account_map}{$beancount_account} if exists $config->{account_map}{$beancount_account};
 	$l =~ s/$account/$beancount_account/;
 
 	if ($l =~ /$amount_RE/) {
