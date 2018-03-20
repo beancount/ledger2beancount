@@ -28,7 +28,7 @@ foreach my $config_file (@config_files) {
 die "No config file found (tried ", (join ", ", @config_files), ")\n" if !$config;
 
 # regular expression snippets used for ledger parsing
-my $date_RE = qr/[0-9-]+/;
+my $date_RE = qr{$config->{date_match}};
 my $flags_RE = qr/[*!]/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
@@ -62,14 +62,28 @@ sub mk_beancount_string($) {
     return '"' . escape_beancount_string($s) . '"';
 }
 
+
+# Print a date in ISO 8601 format (YYYY-MM-DD)
+sub pp_date($) {
+    my ($date) = @_;
+
+    if ($date =~ /$date_RE/) {
+	return sprintf "%04d-%02d-%02d", $+{year}, $+{month}, $+{day};
+    } else {
+	# This can't happen since every caller did a regex match already
+	die "Can't parse date $date";
+    }
+}
+
+
 # parse a ledger value. Usually to extract "semantic" values from typed
 # metadata
 sub parse_ledger_value($) {
     my ($raw) = @_;
     my $value;
 
-    if ($raw =~ /^\[(?<date>\d{4}-\d{2}-\d{2})\]$/) {
-	$value = $+{date};
+    if ($raw =~ /^\[(?<date>$date_RE)\]$/) {
+	$value = pp_date $+{date};
     } else {
 	$value = $raw;
     }
@@ -356,8 +370,8 @@ while (my $l = <>) {
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
-	push_header $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	push_metadata $depth + 1, $config->{altdate_tag}, $+{altdate} if defined $+{altdate} && defined $config->{altdate_tag};
+	push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
+	push_metadata $depth + 1, $config->{altdate_tag}, pp_date $+{altdate} if defined $+{altdate} && defined $config->{altdate_tag};
 	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
 	# Determine payee based on the narration field
 	my $narration = $+{narration};
@@ -392,7 +406,7 @@ while (my $l = <>) {
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
     } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "$+{date} price %s $+{num} %s", map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l = sprintf "%s price %s $+{num} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
@@ -429,7 +443,7 @@ while (my $l = <>) {
 	    # XXX refactor/merge with previous regexp case
 	    assert $in_txn;
 	    my $date = "";
-	    $date = ", $+{date}" if (defined $+{date});
+	    $date = ", " . pp_date $+{date} if (defined $+{date});
 	    if (not defined $+{lot_cost}) {
 		# No ledger lot cost, only price.  This one is tricky
 		# because this convention can be used for two different
@@ -464,7 +478,7 @@ while (my $l = <>) {
 	    push_line $depth, $l;
 	}
 	handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
-	push_metadata $depth + 1, $config->{altdate_tag}, $altdate if defined $altdate && defined $config->{altdate_tag};
+	push_metadata $depth + 1, $config->{altdate_tag}, pp_date $altdate if defined $altdate && defined $config->{altdate_tag};
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";

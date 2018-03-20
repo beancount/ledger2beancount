@@ -72,7 +72,12 @@ flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 
 ### Dates
 
-Only dates in the format YYYY-MM-DD (ISO 8601) are currently supported.
+ledger supports a wide range of date formats whereas beancount requires
+all dates in the format YYYY-MM-DD (ISO 8601).  The regular expression
+from the config variable `date_match` is used to match the date from the
+ledger file.  You can adapt it to your needs but make sure that your
+regular expression contains the named capture groups `year`, `month` and
+`day`.
 
 
 ### Auxiliary dates
