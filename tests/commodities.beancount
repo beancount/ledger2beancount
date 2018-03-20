@@ -25,3 +25,7 @@ option "operating_currency" "EUR"
   Expenses:Test                                         140616 GANDI
   Assets:Test                                          -140616 GANDI
 
+2018-03-20 * "Account name ending in digits - digits not part of amount"
+  Assets:Test123                     10.00 EUR
+  Equity:Opening-Balance
+
