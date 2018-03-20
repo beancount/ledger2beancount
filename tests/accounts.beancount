@@ -38,3 +38,23 @@ option "operating_currency" "EUR"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance                       ; comment
 
+2018-03-18 * "Account name with space"
+  Liabilities:Credit-Card:Test      -10.00 EUR
+  Equity:Opening-Balance
+
+2018-03-18 * "Account name starting with lower case"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance
+
+2018-03-18 * "Account name with space and ucfirst"
+  Liabilities:Credit-Card:Test      -10.00 EUR
+  Equity:Opening-Balance
+
+2018-03-18 * "Account name starting with digits"
+  Assets:Vouchers:Ranch99            10.00 EUR
+  Equity:Opening-Balance
+
+2018-03-18 * "2 account name starting with digits"
+  Assets:Vouchers:Ranch99:Test99     10.00 EUR
+  Equity:Opening-Balance
+

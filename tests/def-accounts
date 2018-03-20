@@ -2,6 +2,15 @@
 account Assets:Test
     note Just a test account
 
+account Assets:Vouchers:Ranch99
+    note assets
+
+account Assets:Vouchers:Ranch99:Test99
+    note assets
+
+account Liabilities:Credit-Card:Test
+    note liability
+
 account Equity:Opening-Balance
     note Opening balances
 
