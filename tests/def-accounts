@@ -8,6 +8,9 @@ account Assets:Vouchers:Ranch99
 account Assets:Vouchers:Ranch99:Test99
     note assets
 
+account Assets:Test123
+    note assets
+
 account Liabilities:Credit-Card:Test
     note liability
 

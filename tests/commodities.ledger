@@ -23,3 +23,7 @@
     Expenses:Test                                         140616 Gandi
     Assets:Test                                          -140616 Gandi
 
+2018-03-20 * Account name ending in digits - digits not part of amount
+    Assets:Test123                     10.00 EUR
+    Equity:Opening-Balance
+
