@@ -14,18 +14,28 @@ use Carp::Assert;
 use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 use File::BaseDir qw/config_home/;
-use YAML::XS qw(LoadFile);
+use Config::Onion;
 
 
-my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+my @config_files = ('ledger2beancount', config_home('ledger2beancount', 'config'));
 my $config;
 foreach my $config_file (@config_files) {
-    if (-r $config_file) {
-	$config = LoadFile($config_file);
-	last;
-    }
+    $config = Config::Onion->load($config_file);
+    # We don't actually use the Config::Onion feature to load several
+    # config files.  We merely use it to set some defaults.
+    last if defined $config;
 }
-die "No config file found (tried ", (join ", ", @config_files), ")\n" if !$config;
+
+$config->set_default(date_match => qr"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})");
+$config->set_default(account_open_date => "1970-01-01");
+$config->set_default(commodities_date => "1970-01-01");
+$config->set_default(payee_tag => "");
+$config->set_default(payer_tag => "");
+$config->set_default(ledger_indent => 4);
+$config->set_default(beancount_indent => 2);
+
+# Make config variables easier to access
+$config = $config->get;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr{$config->{date_match}};
@@ -343,7 +353,7 @@ print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_cur
 # and plugins must be in the top-level file)
 print "include \"$_\"\n" foreach @{$config->{includes}};
 
-if (@{$config->{plugins}}) {
+if (exists $config->{plugins} && @{$config->{plugins}}) {
     print <<'EOT';
 
 ; plugins listed here because they don't work if declared in included files

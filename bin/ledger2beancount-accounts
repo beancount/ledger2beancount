@@ -9,17 +9,20 @@ use strict;
 use warnings;
 
 use File::BaseDir qw/config_home/;
-use YAML::XS qw(LoadFile);
+use Config::Onion;
 
-my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+my @config_files = ('ledger2beancount', config_home('ledger2beancount', 'config'));
 my $config;
 foreach my $config_file (@config_files) {
-    if (-r $config_file) {
-	$config = LoadFile($config_file);
-	last;
-    }
+    $config = Config::Onion->load($config_file);
+    last if defined $config;
 }
-die "No config file found (tried ", (join ", ", @config_files), ")\n" if !$config;
+
+$config->set_default(account_open_date => "1970-01-01");
+$config->set_default(beancount_indent => 2);
+
+$config = $config->get;
+
 
 sub print_metadata($$) {
     my ($key, $value) = @_;
