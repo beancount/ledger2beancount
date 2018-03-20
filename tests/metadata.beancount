@@ -54,3 +54,8 @@ option "operating_currency" "EUR"
   Equity:Opening-Balance            -10.00 EUR
     invoice: 6
 
+2018-03-20 * "Typed meta data with date"
+  date: 2017-12-31
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

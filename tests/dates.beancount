@@ -1,0 +1,16 @@
+option "operating_currency" "EUR"
+
+
+2018-03-19 * "Non-ISO 8601 date"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-20 * "Typed meta data with non-ISO 8601 date"
+  date: 2017-12-31
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-20 * "Lot date with non-ISO 8601 date"
+  Assets:Test               10.00 EUR {1.23 USD, 2018-03-16}
+  Equity:Opening-Balance   -12.30 USD
+
