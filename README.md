@@ -102,7 +102,7 @@ regular expression contains the named capture groups `year`, `month` and
 Beancount currently doesn't support ledger's [auxiliary dates (or effective
 dates)](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
 (but there is a proposal to support this functionality in a different way),
-so these are stored as metadata according to the `altdate_tag` variable.
+so these are stored as metadata according to the `auxdate_tag` variable.
 Unset the variable if you don't want auxiliary dates to be stored as
 metadata.  Account and posting-level auxiliary dates are supported.
 
