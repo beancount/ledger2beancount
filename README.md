@@ -283,8 +283,7 @@ ledger2beancount therefore treats them as regular costs.
 ### Lots
 
 Lot costs and prices are supported, including per-unit and total lot
-costs.  Lot dates are converted to beancount but lot notes are not
-handled at the moment.
+costs.  Lot dates and lot notes are converted to beancount.
 
 The behaviour of ledger and beancount is different when it comes to
 costs.  In ledger, the statement
