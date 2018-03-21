@@ -20,7 +20,7 @@
     Equity:Opening-Balance          -1 Gandi
 
 2017-03-31 * Test with account name containing same string as commodity
-    Expenses:Test                                         140616 Gandi
+    Expenses:Gandi                                        140616 Gandi
     Assets:Test                                          -140616 Gandi
 
 2018-03-20 * Account name ending in digits - digits not part of amount

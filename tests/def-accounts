@@ -20,6 +20,9 @@ account Equity:Opening-Balance
 account Expenses:Test
     note Expense account
 
+account Expenses:Gandi
+    note Expense account Gandi
+
 account Income:Capital-Gain
     note Capital gains
 
