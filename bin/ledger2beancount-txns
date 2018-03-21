@@ -163,7 +163,7 @@ sub tag_or_link(@) {
     my ($key) = @_;
 
     foreach my $link_RE (@{$config->{link_match}}) {
-	return '^' . $key if $key =~ /$link_RE/;
+	return '^' . $key if $key =~ /$link_RE/i;
     }
     return "#" . $key;
 }
@@ -386,14 +386,14 @@ while (my $l = <>) {
 	# Determine payee based on the narration field
 	my $narration = $+{narration};
 	foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-	    if ($narration =~ /$custom_narration_RE/) {
+	    if ($narration =~ /$custom_narration_RE/i) {
 		push_payee $+{payee};
 		$cur_txn_header{narration} = $+{narration};
 		last;
 	    }
 	}
 	foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
-	    if ($narration =~ /$custom_narration_RE/) {
+	    if ($narration =~ /$custom_narration_RE/i) {
 		push_payee $config->{payee_match}{$custom_narration_RE};
 		last;
 	    }

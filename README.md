@@ -171,7 +171,8 @@ narration in beancount.  Again, we stop after the first match.
 Please note that the `payee_match` is done after `payee_split` and we run
 `payee_match` even if `payee_split` matched.  This allows you to remove
 some information from the narration using `payee_split` while overriding
-the found payee using `payee_match`.
+the found payee using `payee_match`.  Both `payee_split` and `payee_match`
+are treated as case insensitive.
 
 Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in
@@ -262,6 +263,8 @@ to render them as links.  So the ledger transaction header
 would become the following in beancount:
 
     2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
+
+The matching of `link_match` is performed case insensitive.
 
 
 ### Comments
