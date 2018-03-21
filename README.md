@@ -18,6 +18,23 @@ the config file `ledger2beancount.yml` and if that is not found for
 file for the variables.
 
 
+Dependencies
+------------
+
+ledger2beancount uses several Perl modules:
+
+* Carp::Assert
+* Config::Onion
+* Date::Calc
+* File::BaseDir
+* YAML::XS
+
+If you use Debian, you can install them with:
+
+    sudo apt install libcarp-assert-perl libconfig-onion-perl \
+        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl
+
+
 Features
 --------
 
