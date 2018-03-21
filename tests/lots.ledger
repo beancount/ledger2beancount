@@ -136,3 +136,23 @@
     Assets:Test               1.00 ETH @@ 6500.00 EUR
     Equity:Opening-Balance    -6500.00 EUR
 
+2018-03-21 * Lot note
+    Assets:Test               10.00 EUR {1.23 USD} (this is a note) @ 1.23 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-21 * Lot note with lot date
+    Assets:Test               10.00 EUR {1.23 USD} [2018-03-16] (note! oh my @ what) @ 1.23 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-21 * Lot note
+    Assets:Test               10.00 EUR {{12.30 USD}} (a note) @@ 12.30 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-21 * Lot note with date
+    Assets:Test               10.00 EUR {{12.30 USD}} [2018-03-16] (whatever) @@ 12.30 USD
+    Equity:Opening-Balance   -12.30 USD
+
+2018-03-21 * Lot note with date and no space
+    Assets:Test               10.00 EUR {{12.30 USD}}[2018-03-16](whatever)@@12.30 USD
+    Equity:Opening-Balance   -12.30 USD
+
