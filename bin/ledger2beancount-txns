@@ -26,7 +26,7 @@ foreach my $config_file (@config_files) {
     last if defined $config;
 }
 
-$config->set_default(date_match => qr"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})");
+$config->set_default(date_match => qr"(?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})");
 $config->set_default(account_open_date => "1970-01-01");
 $config->set_default(commodities_date => "1970-01-01");
 $config->set_default(payee_tag => "");
