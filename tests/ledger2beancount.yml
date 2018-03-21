@@ -40,6 +40,9 @@ link_tags:
 # A list of commodities that should be treated as commodities
 # rather than currencies even though they consist of 3 characters
 # (which is usually a characteristic of a currency)
-commodities3char:
+currency_is_commodity:
   - ETH
+
+commodity_is_currency:
+  - MR
 
