@@ -306,8 +306,13 @@ GBP, USD, etc), the script makes a simple conversion (`10.00 EUR @ 0.90
 GBP`) if both commodities consist of 3 characters.  Otherwise it
 associates a cost (`1 LU0274208692 {48.67 EUR}`).  Since some 3 character
 symbols might be commodities instead of currencies (e.g. ETH and BTH), the
-`commodities3char` variable can be used to treat them as commodities and
-associate a cost in conversions.
+`currency_is_commodity` variable can be used to treat them as commodities
+and associate a cost in conversions.  Similarly, `commodity_is_currency`
+can be used to configure commodities that should be treated as currencies
+in the sense that no cost is retained.  This is useful if you, for
+example, track miles or hotel points, that are sometimes redeemed for a
+cash value.  (Note that beancount itself uses the terms "commodity" and
+"currency" interchangeably.)
 
 
 ### Balance assertions

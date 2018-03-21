@@ -157,3 +157,7 @@
   Assets:Test               10.00 EUR {{12.30 USD, 2018-03-16, "whatever"}}
   Equity:Opening-Balance   -12.30 USD
 
+2018-03-20 * "Test"
+  Assets:Test                42.30 USD @@ 5641 MR
+  Assets:Test                            -5641 MR
+
