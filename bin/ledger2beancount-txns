@@ -40,7 +40,7 @@ $config = $config->get;
 # regular expression snippets used for ledger parsing
 my $date_RE = qr{$config->{date_match}};
 my $flags_RE = qr/[*!]/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<altdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
@@ -48,7 +48,7 @@ my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
 my $amount_RE = qr/(?<num>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<altdatestrip>\s*;\s*\[=(?<altdate>$date_RE)\])?)/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 
@@ -381,7 +381,7 @@ while (my $l = <>) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /$txn_header_RE/) {  # txn header
 	push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	push_metadata $depth + 1, $config->{altdate_tag}, pp_date $+{altdate} if defined $+{altdate} && defined $config->{altdate_tag};
+	push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
 	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
 	# Determine payee based on the narration field
 	my $narration = $+{narration};
@@ -421,9 +421,9 @@ while (my $l = <>) {
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
 	my $account = $+{account};
-	my $altdate = $+{altdate};
-	# Strip the altdate info
-	$l =~ s/\s*\Q$+{altdatestrip}\E// if $+{altdatestrip};
+	my $auxdate = $+{auxdate};
+	# Strip the auxdate info
+	$l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
 
 	# Check for posting-level metadata
 	my %metadata_posting;
@@ -492,7 +492,7 @@ while (my $l = <>) {
 	}
 	push_line $depth, $l;
 	handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
-	push_metadata $depth + 1, $config->{altdate_tag}, pp_date $altdate if defined $altdate && defined $config->{altdate_tag};
+	push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
     } elsif ($l =~ /^$/) {  # empty line
 	print pop_txn() if $in_txn;
 	print "\n";
