@@ -28,3 +28,7 @@
   Assets:Test123                     10.00 EUR
   Equity:Opening-Balance
 
+2018-03-21 * "Test upper caser for lot price"
+  Assets:Test                  1 MR @ 1 KRISFLYER
+  Equity:Opening-Balance
+
