@@ -255,6 +255,14 @@ transactions](https://bitbucket.org/blais/beancount/issues/143), these
 are stored as metadata.
 
 
+### Virtual costs
+
+Beancount does not have a concept of [virtual
+costs](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-posting-costs)
+([issue 248](https://bitbucket.org/blais/beancount/issues/248)).
+ledger2beancount therefore treats them as regular costs.
+
+
 ### Lots
 
 Lot costs and prices are supported, including per-unit and total lot

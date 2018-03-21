@@ -448,7 +448,7 @@ while (my $l = <>) {
 	    assert $in_txn;
 	    push_line $depth, $+{posting};
 	    push_assertion $+{account}, $+{assertion};
-	} elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*((?<at>@@?)\s+(?<lot_price>$amount_RE))?/) {
+	} elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
 	    # posting with unit price and optional lot price
 	    # XXX refactor/merge with previous regexp case
 	    assert $in_txn;
