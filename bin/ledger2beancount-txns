@@ -44,7 +44,7 @@ my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$fla
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
-my $commodity_RE = qr/[A-Za-z0-9_"^&]+/;
+my $commodity_RE = qr/[A-Za-z_"][A-Za-z0-9_"^&]+/;
 my $amount_RE = qr/(?<num>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
@@ -440,7 +440,7 @@ while (my $l = <>) {
 	$l =~ s/$account/$beancount_account/;
 
 	if ($l =~ /$amount_RE/) {
-	    $l =~ s/(\s+)$amount_RE/$1$2 @{[map_commodity($3)]}/;
+	    $l =~ s/$amount_RE/$1 @{[map_commodity($2)]}/;
 	}
 
 	if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
