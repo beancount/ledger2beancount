@@ -15,6 +15,8 @@ payee_split:
 
 payee_match:
   ^Oyster card top-up: TfL
+  ^Marriott reward1.*\(£\d+\.\d+\): Creation
+  ^Marriott reward2.*\(.\d+\.\d+\): Creation
 
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance

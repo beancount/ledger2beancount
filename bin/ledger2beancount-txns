@@ -15,6 +15,7 @@ use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 use File::BaseDir qw/config_home/;
 use Config::Onion;
+use open qw(:std :locale);
 
 
 my @config_files = ('ledger2beancount', config_home('ledger2beancount', 'config'));

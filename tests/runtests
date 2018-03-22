@@ -40,6 +40,8 @@ test_validity () {
 	rm -f $beancount
 }
 
+export LC_ALL=C.UTF-8
+
 for test in `find . -name "*.ledger" | sort`; do
 	test_conversion "$test"
 done
