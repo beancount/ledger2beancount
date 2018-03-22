@@ -16,3 +16,11 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+2018-03-22 * "Creation" "Marriott reward1: test (£10.00)"
+  Assets:Test                        10.00 GBP
+  Equity:Opening-Balance            -10.00 GBP
+
+2018-03-22 * "Creation" "Marriott reward2: test (£10.00)"
+  Assets:Test                        10.00 GBP
+  Equity:Opening-Balance            -10.00 GBP
+
