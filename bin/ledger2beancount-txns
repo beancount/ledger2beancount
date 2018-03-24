@@ -44,7 +44,9 @@ my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$fla
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
-my $commodity_RE = qr/[A-Za-z_"][A-Za-z0-9_"^&]+/;
+# ledger doesn't allow digits at the end (has to be a quote) but the
+# regex has to match after we strip the quote so we allow digits at end.
+my $commodity_RE = qr/[A-Za-z_"][A-Za-z0-9 !_"^&]*[A-Za-z_0-9"]/;
 my $amount_RE = qr/(?<num>$value_RE)\s+(?<commodity>$commodity_RE)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
@@ -331,11 +333,19 @@ sub map_commodity($) {
     my ($key) = @_;
 
     return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
-    $key =~ s/"//g;
+    $key =~ s/(^")|("$)//g;
     # Check again after removing the quote
     return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
 
-    return uc $key;
+    # Generate a valid beancount name
+    # Dash (-) is not valid in ledger (even with quoted commodity) but valid
+    # in beancount
+    $key =~ s/[!"^& ]/-/g;
+
+    return $config->{commodity_map}{$key} if exists $config->{commodity_map}{$key};
+
+    # Maxium limit for beancount commodities: 24 characters
+    return substr (uc $key, 0, 24);
 }
 
 # Replace commodity in string with beancount commodity

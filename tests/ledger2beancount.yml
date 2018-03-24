@@ -24,6 +24,8 @@ commodity_map:
   Chase: UR
   '"M&M"': MILESMORE
   M&M2: MILESMORE2
+  M-M4: MILESMORE4
+  Another commodity: ANOTHER
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.
