@@ -54,7 +54,6 @@ my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
-my @input;
 
 # indent some content at a given depth in beancount style
 sub indent($$) {
@@ -369,54 +368,32 @@ sub print_line($$) {
 
 
 # Process a ledger transaction
-sub process_txn() {
-    # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
+sub process_txn(@) {
+    my @txn = @_;
 
-    while (@input) {
-	my $l = shift @input;
+    foreach my $l (@txn) {
+	# print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
+	chomp $l;
 	# handle line indentation once and for all
 	$l =~ /^(?<indent>\s*)(?<line>.*)/;
 	my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
 	# round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
 	$l = $+{line};
 
-	if ($l =~ /$txn_header_RE/) {  # txn header
-	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
-	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
-	    # Determine payee based on the narration field
-	    my $narration = $+{narration};
-	    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-		if ($narration =~ /$custom_narration_RE/) {
-		    push_payee $+{payee};
-		    $cur_txn_header{narration} = $+{narration};
-		    last;
-		}
-	    }
-	    foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
-		if ($narration =~ /$custom_narration_RE/) {
-		    push_payee $config->{payee_match}{$custom_narration_RE};
-		    last;
-		}
-	    }
-	} elsif ($l =~ /^$metadata_RE/ && $in_txn) {  # metadata comment
+	if ($l =~ /^$metadata_RE/) {  # metadata comment
 	    handle_metadata $depth, \%+;
 	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
 	    # tags comment
-	    if ($in_txn) {
-		if ($config->{tag_as_metadata}) {
-		    push_line $depth, pp_tags(split(/:/, $+{tags}));
-		} else {
-		    $cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
-		}
-		push_comment $depth, $+{comment} if $+{comment} ne "";
+	    if ($config->{tag_as_metadata}) {
+		push_line $depth, pp_tags(split(/:/, $+{tags}));
 	    } else {
-		print_line $depth, $l;
+		$cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
 	    }
+	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
-	    $in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
+	    push_comment $depth, $+{comment};
 	} elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
 	    my $account = $+{account};
 	    my $auxdate = $+{auxdate};
@@ -441,13 +418,11 @@ sub process_txn() {
 
 	    if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
 		# posting with balance assertion
-		assert $in_txn;
 		push_line $depth, $+{posting};
 		push_assertion $+{account}, $+{assertion};
 	    } elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regexp case
-		assert $in_txn;
 		my $lot_info = "";
 		$lot_info .= ", " . pp_date $+{date} if (defined $+{date});
 		$lot_info .= ", " . mk_beancount_string $+{lot_note} if (defined $+{lot_note});
@@ -490,13 +465,25 @@ sub process_txn() {
 	    push_line $depth, $l;
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
-	} elsif ($l =~ /^$/) {  # empty line
-	    print pop_txn() if $in_txn;
-	    print "\n";
 	} else {  # everything else
-	    $in_txn ? push_line $depth, $l : print_line $depth, $l;
+	    push_line $depth, $l;
 	}
     }
+    print pop_txn();
+}
+
+
+# Read one ledger stanza (everything intended by whitespace)
+sub read_stanza($) {
+    my ($input_ref) = @_;
+
+    my @stanza = ();
+    my $l;
+    do {
+	$l = @{$input_ref}[0];
+	push @stanza, shift @{$input_ref} if $l =~ /^\h+/;
+    } while ($l =~ /^\h+/ && @{$input_ref});
+    return @stanza;
 }
 
 
@@ -528,6 +515,7 @@ while (@input) {
     my $l = shift @input;
     chomp $l;
     my $depth = 0;
+    my @stanza;
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_RE/) {
@@ -536,11 +524,31 @@ while (@input) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
+    } elsif ($l =~ /^[0-9]/) {
+	if ($l =~ /$txn_header_RE/) {  # txn header
+	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
+	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
+	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
+	    # Determine payee based on the narration field
+	    my $narration = $+{narration};
+	    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
+		if ($narration =~ /$custom_narration_RE/) {
+		    push_payee $+{payee};
+		    $cur_txn_header{narration} = $+{narration};
+		    last;
+		}
+	    }
+	    foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
+		if ($narration =~ /$custom_narration_RE/) {
+		    push_payee $config->{payee_match}{$custom_narration_RE};
+		    last;
+		}
+	    }
+	}
+	@stanza = read_stanza \@input;
+	process_txn @stanza;
     } else {
-	unshift @input, $l;
-	process_txn;
+	print_line 0, $l;
     }
 }
 
-# emit last transaction, if it's still active when reaching EOF
-print pop_txn() if $in_txn;
