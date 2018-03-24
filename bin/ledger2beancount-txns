@@ -436,7 +436,7 @@ while (my $l = <>) {
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
     } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "%s price %s $+{num} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
