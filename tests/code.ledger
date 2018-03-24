@@ -1,4 +1,9 @@
 
+account Assets:Test
+account Equity:Opening-Balance
+
+commodity EUR
+
 ; Integer
 2018-03-17 * (1201) Test
     Assets:Test                        10.00 EUR

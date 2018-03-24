@@ -1,4 +1,15 @@
 
+account Assets:Test
+account Equity:Opening-Balance
+account Income:Capital-Gain
+
+commodity ETH
+commodity EUR
+commodity GBP
+commodity "LU0274208692"
+commodity MR
+commodity USD
+
 2018-03-17 * Opening balance
     Assets:Test              100.00 EUR {{90.00 GBP}}
     Equity:Opening-Balance

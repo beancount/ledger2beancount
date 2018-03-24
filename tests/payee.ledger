@@ -1,4 +1,10 @@
 
+account Assets:Test
+account Equity:Opening-Balance
+
+commodity EUR
+commodity GBP
+
 2018-03-18 * Payee Foo
     ; payee: Foo
     Assets:Test                        10.00 EUR
