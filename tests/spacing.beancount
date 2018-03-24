@@ -1,0 +1,11 @@
+
+2018-03-24 * "Test 1"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+; comment
+2018-03-24 * "Test 2"
+  Assets:Test
+  Equity:Opening-Balance            -10.00 EUR
+2018-03-24 * "No empty line after the transaction"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance
