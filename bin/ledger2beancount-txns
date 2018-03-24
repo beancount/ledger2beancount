@@ -390,16 +390,27 @@ print "\n";
 while (my $l = <>) {
     # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
-    # handle line indentation once and for all
     chomp $l;
+    my $depth = 0;
+    if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
+	print_line $depth, "include \"$+{filename}.beancount\"";
+	next;
+    } elsif ($l =~ /^$comment_RE/) {
+	print_line $depth, $l;
+	next;
+    } elsif ($l =~ /^$price_RE/) {
+	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l =~ s/"//g;
+	print_line $depth, $l;
+    }
+
+    # handle line indentation once and for all
     $l =~ /^(?<indent>\s*)(?<line>.*)/;
-    my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
+    $depth = ceil(length($+{indent}) / $config->{ledger_indent});
     # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
     $l = $+{line};
 
-    if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
-	print_line $depth, "include \"$+{filename}.beancount\"";
-    } elsif ($l =~ /$txn_header_RE/) {  # txn header
+    if ($l =~ /$txn_header_RE/) {  # txn header
 	push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
 	push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
 	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
@@ -435,10 +446,6 @@ while (my $l = <>) {
     	}
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
-    } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
-	$l =~ s/"//g;
-	print_line $depth, $l;
     } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
 	my $account = $+{account};
 	my $auxdate = $+{auxdate};
