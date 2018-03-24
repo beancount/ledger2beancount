@@ -54,6 +54,7 @@ my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
+my @input;
 
 # indent some content at a given depth in beancount style
 sub indent($$) {
@@ -367,6 +368,138 @@ sub print_line($$) {
 }
 
 
+# Process a ledger transaction
+sub process_txn() {
+    # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
+
+    while (@input) {
+	my $l = shift @input;
+
+	# handle line indentation once and for all
+	$l =~ /^(?<indent>\s*)(?<line>.*)/;
+	my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
+	# round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+	$l = $+{line};
+
+	if ($l =~ /$txn_header_RE/) {  # txn header
+	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
+	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
+	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
+	    # Determine payee based on the narration field
+	    my $narration = $+{narration};
+	    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
+		if ($narration =~ /$custom_narration_RE/) {
+		    push_payee $+{payee};
+		    $cur_txn_header{narration} = $+{narration};
+		    last;
+		}
+	    }
+	    foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
+		if ($narration =~ /$custom_narration_RE/) {
+		    push_payee $config->{payee_match}{$custom_narration_RE};
+		    last;
+		}
+	    }
+	} elsif ($l =~ /^$metadata_RE/ && $in_txn) {  # metadata comment
+	    handle_metadata $depth, \%+;
+	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
+	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
+	    # tags comment
+	    if ($in_txn) {
+		if ($config->{tag_as_metadata}) {
+		    push_line $depth, pp_tags(split(/:/, $+{tags}));
+		} else {
+		    $cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
+		}
+		push_comment $depth, $+{comment} if $+{comment} ne "";
+	    } else {
+		print_line $depth, $l;
+	    }
+	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
+	    $in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
+	} elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
+	    my $account = $+{account};
+	    my $auxdate = $+{auxdate};
+	    # Strip the auxdate info
+	    $l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
+
+	    # Check for posting-level metadata
+	    my %metadata_posting;
+	    if ($l =~ s/^($posting_RE)(\s*$metadata_RE)/$1/) {
+		%metadata_posting = %+;
+	    }
+
+	    # Replace ledger account names with corresponding beancount account names
+	    my $beancount_account = $account;
+	    $beancount_account =~ s/ /-/g;
+	    $beancount_account =~ s/:([a-z])/:\U$1\E/g;
+	    $beancount_account =~ s/:(\d+)([^:]+)/:$2$1/g;
+	    $beancount_account = $config->{account_map}{$beancount_account} if exists $config->{account_map}{$beancount_account};
+	    $l =~ s/$account/$beancount_account/;
+
+	    $l = replace_commodity $l;
+
+	    if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
+		# posting with balance assertion
+		assert $in_txn;
+		push_line $depth, $+{posting};
+		push_assertion $+{account}, $+{assertion};
+	    } elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
+		# posting with unit price and optional lot price
+		# XXX refactor/merge with previous regexp case
+		assert $in_txn;
+		my $lot_info = "";
+		$lot_info .= ", " . pp_date $+{date} if (defined $+{date});
+		$lot_info .= ", " . mk_beancount_string $+{lot_note} if (defined $+{lot_note});
+		if (defined $+{lot_price} && not defined $+{lot_cost}) {
+		    # No ledger lot cost, only price.  This one is tricky
+		    # because this convention can be used for two different
+		    # purposes:
+		    # 1) For conversion between currencies where you do not
+		    # generally wish to retain the cost.
+		    # 2) To acquire/dispose of commodities (e.g. shares)
+		    # where you want to retain the cost.
+		    #
+		    # Most currencies have 3 characters (e.g. EUR, USD, GBP)
+		    # whereas commodities often have more (e.g. the ISIN).
+		    # Therefore, we assume the cost should not be kept if
+		    # both currencies have 3 characters.  Since this won't
+		    # work in all cases, we also check for a list of
+		    # commodities.  Similarly, we allow users to configure
+		    # commodities that should be treated as currencies.
+		    my $commodity1 = $+{commodity};
+		    my $commodity2 = (split / /, replace_commodity $+{lot_price}, 2)[1];
+		    if ((length $commodity1 == 3 && length $commodity2 == 3 &&
+			!($commodity1 ~~ @{$config->{currency_is_commodity}})) ||
+			$commodity1 ~~ @{$config->{commodity_is_currency}} ||
+			$commodity2 ~~ @{$config->{commodity_is_currency}}) {
+			$l = sprintf "$+{posting} %s %s", "@" x length $+{at}, replace_commodity $+{lot_price};
+		    } else {
+			$l = sprintf "$+{posting} %s%s%s%s", "{" x length $+{at},
+			    replace_commodity $+{lot_price}, $lot_info, "}" x length $+{at};
+		    }
+		} elsif (defined $+{lot_cost}) {
+		    $l = "$+{posting} $+{curlyopen}$+{lot_cost}$lot_info$+{curlyclose}";
+		    # ledger requires you to specify both lot cost and lot price
+		    # due to a bug.  If both are the same, don't put in the price.
+		    if (defined $+{lot_price} && ($+{lot_cost} ne $+{lot_price})) {
+			$l .= " $+{at} " . replace_commodity $+{lot_price};
+		    }
+		}
+	    }
+	    push_line $depth, $l;
+	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
+	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
+	} elsif ($l =~ /^$/) {  # empty line
+	    print pop_txn() if $in_txn;
+	    print "\n";
+	} else {  # everything else
+	    $in_txn ? push_line $depth, $l : print_line $depth, $l;
+	}
+    }
+}
+
+
 # emit beancount header
 print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_currencies}};
 # (due to a current beancount limitation, options
@@ -393,142 +526,19 @@ my @input = <$input>;
 close $input;
 while (@input) {
     my $l = shift @input;
-    # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
-
     chomp $l;
     my $depth = 0;
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
-	next;
     } elsif ($l =~ /^$comment_RE/) {
 	print_line $depth, $l;
-	next;
     } elsif ($l =~ /^$price_RE/) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
-    }
-
-    # handle line indentation once and for all
-    $l =~ /^(?<indent>\s*)(?<line>.*)/;
-    $depth = ceil(length($+{indent}) / $config->{ledger_indent});
-    # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
-    $l = $+{line};
-
-    if ($l =~ /$txn_header_RE/) {  # txn header
-	push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
-	push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
-	# Determine payee based on the narration field
-	my $narration = $+{narration};
-	foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-	    if ($narration =~ /$custom_narration_RE/) {
-		push_payee $+{payee};
-		$cur_txn_header{narration} = $+{narration};
-		last;
-	    }
-	}
-	foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
-	    if ($narration =~ /$custom_narration_RE/) {
-		push_payee $config->{payee_match}{$custom_narration_RE};
-		last;
-	    }
-	}
-    } elsif ($l =~ /^$metadata_RE/ && $in_txn) {  # metadata comment
-	handle_metadata $depth, \%+;
-    } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	     or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
-    	# tags comment
-    	if ($in_txn) {
-	    if ($config->{tag_as_metadata}) {
-		push_line $depth, pp_tags(split(/:/, $+{tags}));
-	    } else {
-		$cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
-	    }
-	    push_comment $depth, $+{comment} if $+{comment} ne "";
-    	} else {
-    	    print_line $depth, $l;
-    	}
-    } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
-	$in_txn ? push_comment $depth, $+{comment} : print_line $depth, $l;
-    } elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
-	my $account = $+{account};
-	my $auxdate = $+{auxdate};
-	# Strip the auxdate info
-	$l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
-
-	# Check for posting-level metadata
-	my %metadata_posting;
-	if ($l =~ s/^($posting_RE)(\s*$metadata_RE)/$1/) {
-	    %metadata_posting = %+;
-	}
-
-	# Replace ledger account names with corresponding beancount account names
-	my $beancount_account = $account;
-	$beancount_account =~ s/ /-/g;
-	$beancount_account =~ s/:([a-z])/:\U$1\E/g;
-	$beancount_account =~ s/:(\d+)([^:]+)/:$2$1/g;
-	$beancount_account = $config->{account_map}{$beancount_account} if exists $config->{account_map}{$beancount_account};
-	$l =~ s/$account/$beancount_account/;
-
-	$l = replace_commodity $l;
-
-	if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
-	    # posting with balance assertion
-	    assert $in_txn;
-	    push_line $depth, $+{posting};
-	    push_assertion $+{account}, $+{assertion};
-	} elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
-	    # posting with unit price and optional lot price
-	    # XXX refactor/merge with previous regexp case
-	    assert $in_txn;
-	    my $lot_info = "";
-	    $lot_info .= ", " . pp_date $+{date} if (defined $+{date});
-	    $lot_info .= ", " . mk_beancount_string $+{lot_note} if (defined $+{lot_note});
-	    if (defined $+{lot_price} && not defined $+{lot_cost}) {
-		# No ledger lot cost, only price.  This one is tricky
-		# because this convention can be used for two different
-		# purposes:
-		# 1) For conversion between currencies where you do not
-		# generally wish to retain the cost.
-		# 2) To acquire/dispose of commodities (e.g. shares)
-		# where you want to retain the cost.
-		#
-		# Most currencies have 3 characters (e.g. EUR, USD, GBP)
-		# whereas commodities often have more (e.g. the ISIN).
-		# Therefore, we assume the cost should not be kept if
-		# both currencies have 3 characters.  Since this won't
-		# work in all cases, we also check for a list of
-		# commodities.  Similarly, we allow users to configure
-		# commodities that should be treated as currencies.
-		my $commodity1 = $+{commodity};
-		my $commodity2 = (split / /, replace_commodity $+{lot_price}, 2)[1];
-		if ((length $commodity1 == 3 && length $commodity2 == 3 &&
-		    !($commodity1 ~~ @{$config->{currency_is_commodity}})) ||
-		    $commodity1 ~~ @{$config->{commodity_is_currency}} ||
-		    $commodity2 ~~ @{$config->{commodity_is_currency}}) {
-		    $l = sprintf "$+{posting} %s %s", "@" x length $+{at}, replace_commodity $+{lot_price};
-		} else {
-		    $l = sprintf "$+{posting} %s%s%s%s", "{" x length $+{at},
-			replace_commodity $+{lot_price}, $lot_info, "}" x length $+{at};
-		}
-	    } elsif (defined $+{lot_cost}) {
-		$l = "$+{posting} $+{curlyopen}$+{lot_cost}$lot_info$+{curlyclose}";
-		# ledger requires you to specify both lot cost and lot price
-		# due to a bug.  If both are the same, don't put in the price.
-		if (defined $+{lot_price} && ($+{lot_cost} ne $+{lot_price})) {
-		    $l .= " $+{at} " . replace_commodity $+{lot_price};
-		}
-	    }
-	}
-	push_line $depth, $l;
-	handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
-	push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
-    } elsif ($l =~ /^$/) {  # empty line
-	print pop_txn() if $in_txn;
-	print "\n";
-    } else {  # everything else
-	$in_txn ? push_line $depth, $l : print_line $depth, $l;
+    } else {
+	unshift @input, $l;
+	process_txn;
     }
 }
 
