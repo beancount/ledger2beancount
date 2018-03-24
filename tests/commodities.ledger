@@ -31,3 +31,23 @@
     Assets:Test                  1 MR @ 1 KrisFlyer
     Equity:Opening-Balance
 
+2018-03-21 * Invalid character for beancount commodity names
+    Assets:Test                          1 "M&M3"
+    Equity:Opening-Balance
+
+2018-03-21 * Invalid character for beancount commodity names, with mapping
+    Assets:Test                          1 "M&M4"
+    Equity:Opening-Balance
+
+2018-03-21 * Commodity with space
+    Assets:Test                          1 "A commodity"
+    Equity:Opening-Balance
+
+2018-03-21 * Commodity with space, with mapping
+    Assets:Test                          1 "Another commodity"
+    Equity:Opening-Balance
+
+2018-03-21 * Commodity is too long for beancount
+    Assets:Test                          1 AnotherAnotherAnotherAnother
+    Equity:Opening-Balance
+

@@ -72,9 +72,16 @@ something different.
 Like accounts, ledger2beancount will convert ledger commodity
 declarations to beancount.  The `note` is converted to `name`.
 
-ledger2beancount will automatically convert all commodities to uppercase
-and strip quoted commodities.  If you require a mapping between ledger
-and beancount commodities, you can use `commodity_map`.
+ledger2beancount will automatically convert commodities to valid
+beancount commodities.  This involves replacing all invalid characters
+with a dash (a character allowed in beancount commodities but not in
+ledger commodities), stripping quoted commodities, making the commodity
+uppercase and limiting it to 24 characters.
+
+If you require a mapping between ledger and beancount commodities, you
+can use `commodity_map`.  You can use your ledger commodity names or
+the names after the transformation in the map to perform a mapping to
+another commodity name.
 
 Commodity symbols (like $, € and £) are not supported.
 
