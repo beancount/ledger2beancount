@@ -387,7 +387,12 @@ print "\n";
 
 # MAIN CONVERSION LOOP
 
-while (my $l = <>) {
+unshift(@ARGV, '-') unless @ARGV;
+open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
+my @input = <$input>;
+close $input;
+while (@input) {
+    my $l = shift @input;
     # print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
     chomp $l;
