@@ -1,4 +1,15 @@
 
+account Assets:Test
+    note Test account
+
+account Equity:Opening balance
+    note opening balance...
+account Assets:Vouchers:99Ranch
+account Assets:Vouchers:99Ranch:99Test
+account Liabilities:Credit Card:Test
+
+commodity EUR
+
 2018-03-17 * Test 1
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR

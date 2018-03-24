@@ -1,4 +1,8 @@
 
+1970-01-01 open Assets:Test
+1970-01-01 open Equity:Opening-Balance
+
+1970-01-01 commodity EUR
 
 2018-03-17 * "Tag on transaction" #foo #bar #baz
   Assets:Test                        10.00 EUR

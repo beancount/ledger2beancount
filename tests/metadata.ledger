@@ -1,4 +1,9 @@
 
+account Assets:Test
+account Equity:Opening-Balance
+
+commodity EUR
+
 2018-03-19 * Metadata after posting, with amount
     ; test: foo bar baz
     Assets:Test                        10.00 EUR ; test: foo

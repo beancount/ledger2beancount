@@ -1,4 +1,29 @@
 
+account Assets:Test
+account Assets:Test123
+account Expenses:Gandi
+account Equity:Opening-Balance
+
+commodity "A commodity"
+commodity "Another commodity"
+commodity AnotherAnotherAnotherAnother
+commodity Chase
+commodity "DE0002635307"
+
+commodity EUR
+    note Euro
+    format 1000.00EUR
+
+commodity Gandi
+    note Gandi points
+commodity KrisFlyer
+commodity "M&M"
+commodity "M&M2"
+commodity "M&M3"
+commodity "M&M4"
+commodity MR
+    note AMEX Membership Rewards
+
 2018-03-17 * Test quoted commodity
     Assets:Test                      1 "DE0002635307"
     Equity:Opening-Balance          -1 "DE0002635307"

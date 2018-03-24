@@ -301,7 +301,7 @@ sub handle_metadata($$) {
     } else {
 	# Check if we should store as metadata or as links
 	# We check for $depth since posting-level links are not allowed
-	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1) {
+	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1 && $in_txn) {
 	    $cur_txn_header{tags} .= " ^" . $metadata->{value};
 	} else {
 	    my $value;
@@ -326,6 +326,18 @@ sub map_metadata($) {
     } else {
 	return $key;
     }
+}
+
+
+# map a ledger account to a beancount account
+sub map_account($) {
+    my ($account) = @_;
+
+    $account =~ s/ /-/g;
+    $account =~ s/:([a-z])/:\U$1\E/g;
+    $account =~ s/:(\d+)([^:]+)/:$2$1/g;
+    $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+    return $account;
 }
 
 
@@ -367,6 +379,19 @@ sub print_line($$) {
 }
 
 
+# Strip indentation from a line and return the depth and line
+sub strip_indentation($) {
+    my ($line) = @_;
+
+    chomp $line;
+    # handle line indentation once and for all
+    $line =~ /^(?<indent>\s*)(?<line>.*)/;
+    my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
+        # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+
+    return ($depth, $+{line});
+}
+
 # Process a ledger transaction
 sub process_txn(@) {
     my @txn = @_;
@@ -374,12 +399,7 @@ sub process_txn(@) {
     foreach my $l (@txn) {
 	# print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
-	chomp $l;
-	# handle line indentation once and for all
-	$l =~ /^(?<indent>\s*)(?<line>.*)/;
-	my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
-	# round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
-	$l = $+{line};
+	(my $depth, $l) = strip_indentation($l);
 
 	if ($l =~ /^$metadata_RE/) {  # metadata comment
 	    handle_metadata $depth, \%+;
@@ -407,11 +427,7 @@ sub process_txn(@) {
 	    }
 
 	    # Replace ledger account names with corresponding beancount account names
-	    my $beancount_account = $account;
-	    $beancount_account =~ s/ /-/g;
-	    $beancount_account =~ s/:([a-z])/:\U$1\E/g;
-	    $beancount_account =~ s/:(\d+)([^:]+)/:$2$1/g;
-	    $beancount_account = $config->{account_map}{$beancount_account} if exists $config->{account_map}{$beancount_account};
+	    my $beancount_account = map_account $account;
 	    $l =~ s/$account/$beancount_account/;
 
 	    $l = replace_commodity $l;
@@ -502,8 +518,6 @@ EOT
     print "plugin \"$_\"\n" foreach @{$config->{plugins}};
 }
 
-print "\n";
-
 
 # MAIN CONVERSION LOOP
 
@@ -524,6 +538,34 @@ while (@input) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
+    } elsif ($l =~ /^.?account\s+(.*)/) {  # account declaration
+	printf "$config->{account_open_date} open %s\n", map_account $1;
+	@stanza = read_stanza \@input;
+	foreach $l (@stanza) {
+	    ($depth, $l) = strip_indentation $l;
+	    if ($l =~ /^note\s+(.*)/) {  # note
+		print_line $depth, pp_metadata "description", mk_beancount_string $1;
+	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
+		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
+	    } else {
+		print_line $depth, $l;
+	    }
+	}
+    } elsif ($l =~ /^.?commodity\s+(.*)/) {  # commodity declaration
+	printf "$config->{commodities_date} commodity %s\n", map_commodity $1;
+	@stanza = read_stanza \@input;
+	foreach $l (@stanza) {
+	    ($depth, $l) = strip_indentation $l;
+	    if ($l =~ /^note\s+(.*)/) {  # note
+		print_line $depth, pp_metadata "name", mk_beancount_string $1;
+	    } elsif ($l =~ /^format\s+(.*)/) {  # format
+		next;  # skip directive, not needed in beancount
+	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
+		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
+	    } else {
+		print_line $depth, $l;
+	    }
+	}
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/) {  # txn header
 	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};

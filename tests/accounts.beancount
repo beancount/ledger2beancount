@@ -1,4 +1,14 @@
 
+1970-01-01 open Assets:Test
+  description: "Test account"
+
+1970-01-01 open Equity:Opening-Balance
+  description: "opening balance..."
+1970-01-01 open Assets:Vouchers:Ranch99
+1970-01-01 open Assets:Vouchers:Ranch99:Test99
+1970-01-01 open Liabilities:Credit-Card:Test
+
+1970-01-01 commodity EUR
 
 2018-03-17 * "Test 1"
   Assets:Test                        10.00 EUR

@@ -1,4 +1,14 @@
 
+1970-01-01 open Assets:Test
+1970-01-01 open Equity:Opening-Balance
+1970-01-01 open Income:Capital-Gain
+
+1970-01-01 commodity ETH
+1970-01-01 commodity EUR
+1970-01-01 commodity GBP
+1970-01-01 commodity LU0274208692
+1970-01-01 commodity MR
+1970-01-01 commodity USD
 
 2018-03-17 * "Opening balance"
   Assets:Test              100.00 EUR {{90.00 GBP}}

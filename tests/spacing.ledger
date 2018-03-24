@@ -1,3 +1,6 @@
+account Assets:Test
+account Equity:Opening-Balance
+commodity EUR
 2018-03-24 * Test 1
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR

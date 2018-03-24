@@ -4,9 +4,8 @@
 ledger2beancount
 ================
 
-(set of) script(s) to automatically
-convert [Ledger](https://www.ledger-cli.org/)-based textual ledgers
-to [Beancount](http://furius.ca/beancount/) ones.
+A script to automatically convert [Ledger](https://www.ledger-cli.org/)-based
+textual ledgers to [Beancount](http://furius.ca/beancount/) ones.
 
 Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,

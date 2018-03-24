@@ -1,4 +1,11 @@
 
+account Assets:Test
+account Equity:Opening-Balance
+
+commodity ETH
+commodity EUR
+commodity GBP
+
 P 2018-03-21 EUR 0.87 GBP
 P 2018-03-21 Chase 0.015 USD
 P 2018-03-21 "M&M4" 0.01 USD

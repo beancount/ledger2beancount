@@ -11,7 +11,7 @@ test_conversion () {
 
 	printf "Converting $test... "
 
-	cat $file | ../bin/ledger2beancount-txns > $actual
+	cat $file | ../bin/ledger2beancount > $actual
 
 	if $(cmp -s $expected $actual); then
 		echo "ok"
@@ -28,16 +28,12 @@ test_validity () {
 	file=$1
 	test=$(basename "$file")
 	printf "Validating $test... "
-	beancount=$(tempfile)
-	cat def-accounts| ../bin/ledger2beancount-accounts > $beancount
-	cat $file >> $beancount
-	if bean-check $beancount; then
+	if bean-check $test; then
 		echo "ok"
 	else
 		echo "FAIL"
 		status=1
 	fi
-	rm -f $beancount
 }
 
 export LC_ALL=C.UTF-8
