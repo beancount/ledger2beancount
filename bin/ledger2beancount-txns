@@ -544,6 +544,10 @@ while (@input) {
 		    last;
 		}
 	    }
+	} elsif ($l !~ /^$date_RE/) {
+	    die "Cannot process date in transaction header: $l\n";
+	} else {
+	    die "Cannot process transaction header: $l\n";
 	}
 	@stanza = read_stanza \@input;
 	process_txn @stanza;
