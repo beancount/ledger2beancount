@@ -15,10 +15,22 @@ use Date::Calc qw(Add_Delta_Days);
 use POSIX qw(ceil);
 use File::BaseDir qw/config_home/;
 use Config::Onion;
+use Getopt::Long::Descriptive;
 use open qw(:std :locale);
 
 
-my @config_files = ('ledger2beancount', config_home('ledger2beancount', 'config'));
+my ($opt, $usage) = describe_options(
+    "bin/ledger2beancount %o <ledger-file>",
+    [ "config|c=s", "configuration file", { default  => "ledger2beancount.yml"  } ],
+    [ "help|h",     "print usage message and exit", { shortcircuit => 1 } ],
+);
+
+print($usage->text), exit if $opt->help;
+
+my $config_file = $opt->config;
+# Config::Onion expects filename without extension
+die "Config file must end in .yml" unless $config_file =~ s/\.(yml|yaml)$//;
+my @config_files = ($config_file, config_home('ledger2beancount', 'config'));
 my $config;
 foreach my $config_file (@config_files) {
     $config = Config::Onion->load($config_file);
