@@ -1,4 +1,8 @@
 
+!include def-include1.ledger
+@include def-include2.ledger
+include def-include3.ledger
+
 = expr true
     Assets:Foo                          50.00 USD
     Assets:Bar                         -50.00 USD

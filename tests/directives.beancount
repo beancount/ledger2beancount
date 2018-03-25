@@ -1,4 +1,8 @@
 
+include "def-include1.beancount"
+include "def-include2.beancount"
+include "def-include3.beancount"
+
 ; = expr true
 ;   Assets:Foo                          50.00 USD
 ;   Assets:Bar                         -50.00 USD
