@@ -1,4 +1,5 @@
 
+; Accounts and commodities are declared in the include files
 !include def-include1.ledger
 @include def-include2.ledger
 include def-include3.ledger
@@ -21,4 +22,30 @@ payee KFC
 !payee McD
 
 @payee Burger King
+
+; setting year 2015
+Y 2015
+
+10-02 * Transaction without year
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+10-02=10-01 * Transaction without year, with aux date
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+; setting year 2016
+year 2016
+
+10-02 * Transaction without year
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+10-02=10-01 * Transaction without year, with aux date
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-25 * Transaction with year
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
 

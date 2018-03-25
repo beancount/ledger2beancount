@@ -1,4 +1,5 @@
 
+; Accounts and commodities are declared in the include files
 include "def-include1.beancount"
 include "def-include2.beancount"
 include "def-include3.beancount"
@@ -21,4 +22,30 @@ include "def-include3.beancount"
 ; payee McD
 
 ; payee Burger King
+
+; setting year 2015
+
+2015-10-02 * "Transaction without year"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2015-10-02 * "Transaction without year, with aux date"
+  aux-date: 2015-10-01
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+; setting year 2016
+
+2016-10-02 * "Transaction without year"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2016-10-02 * "Transaction without year, with aux date"
+  aux-date: 2016-10-01
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-25 * "Transaction with year"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
 
