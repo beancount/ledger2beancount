@@ -477,8 +477,10 @@ sub process_txn(@) {
 			$l .= " $+{at} " . replace_commodity $+{lot_price};
 		    }
 		}
+		push_line $depth, $l;
+	    } else {
+		push_line $depth, $l;
 	    }
-	    push_line $depth, $l;
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
 	} else {  # everything else
