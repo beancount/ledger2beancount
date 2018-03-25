@@ -22,6 +22,12 @@ end test
     This is another block comment
 end comment
 
+; This is a single line comment,
+#  and this,
+%   and this,
+|    and this,
+*     and this.
+
 ; This is a comment
 ; Test: not a tag
 ; :not:a:tag:

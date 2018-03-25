@@ -49,6 +49,7 @@ my $value_RE = qr/[\d.-]+/;
 # regex has to match after we strip the quote so we allow digits at end.
 my $commodity_RE = qr/[A-Za-z_"][A-Za-z0-9 !_"^&]*[A-Za-z_0-9"]/;
 my $amount_RE = qr/(?<num>$value_RE)\s+(?<commodity>$commodity_RE)/;
+my $comment_top_level_RE = qr/[;#%|*]\s*(?<comment>.*)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  |\t|$)\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
@@ -534,8 +535,8 @@ while (@input) {
     my @stanza;
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
-    } elsif ($l =~ /^$comment_RE/) {
-	print_line $depth, $l;
+    } elsif ($l =~ /^$comment_top_level_RE/) {
+	print_line $depth, "; $+{comment}";
     } elsif ($l =~ /^.?(comment|test)/) {  # block comment
 	@stanza = read_stanza \@input;
 	assert $input[0] =~ /^end/;
