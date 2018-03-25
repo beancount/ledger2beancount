@@ -5,8 +5,8 @@ account Assets:Test
 account Equity:Opening balance
     note opening balance...
 account Assets:Vouchers:99Ranch
-account Assets:Vouchers:99Ranch:99Test
-account Liabilities:Credit Card:Test
+!account Assets:Vouchers:99Ranch:99Test
+@account Liabilities:Credit Card:Test
 
 commodity EUR
 
