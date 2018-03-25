@@ -326,6 +326,22 @@ cash value.  (Note that beancount itself uses the terms "commodity" and
 Ledger balance assertions are converted to beancount `balance` statements.
 
 
+### Automated transactions
+
+Ledger's [automated
+transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Automated-Transactions)
+are not supported in beancount.  They are added as comments to the
+beancount file.
+
+
+### Periodic transactions
+
+Ledger's [periodic
+transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Periodic-Transactions)
+are not supported in beancount.  They are added as comments to the
+beancount file.
+
+
 Authors
 -------
 

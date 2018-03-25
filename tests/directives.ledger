@@ -1,0 +1,12 @@
+
+= expr true
+    Assets:Foo                          50.00 USD
+    Assets:Bar                         -50.00 USD
+
+= /^(?:Income:|Expenses:(?:Business|Rent$|Furnishings|Taxes|Insurance))/
+  (Liabilities:Huququ'llah)               0.19
+
+~ Yearly
+    Expenses:Auto:Repair        $500.00
+    Assets
+
