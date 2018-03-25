@@ -554,7 +554,7 @@ while (@input) {
     chomp $l;
     my $depth = 0;
     my @stanza;
-    if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
+    if ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
 	print_comment_top_level $depth, $+{comment};
