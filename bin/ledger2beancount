@@ -380,6 +380,15 @@ sub print_line($$) {
 }
 
 
+# emit a top-level comment: the comment marker ; is put as the first
+# character and the rest is indented according to depth.
+sub print_comment_top_level($$) {
+    my ($depth, $comment) = @_;
+
+    print "; ", indent($depth, $comment), "\n";
+}
+
+
 # Strip indentation from a line and return the depth and line
 sub strip_indentation($) {
     my ($line) = @_;
@@ -536,7 +545,7 @@ while (@input) {
     if ($l =~ /^include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
-	print_line $depth, "; $+{comment}";
+	print_comment_top_level $depth, $+{comment};
     } elsif ($l =~ /^.?(comment|test)/) {  # block comment
 	@stanza = read_stanza \@input;
 	assert $input[0] =~ /^end/;
@@ -549,6 +558,13 @@ while (@input) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
+    } elsif ($l =~ /^([=~].*)/) {  # automated transaction (=) or periodic transaction (~)
+	print_comment_top_level $depth, $1;
+	@stanza = read_stanza \@input;
+	foreach $l (@stanza) {
+	    ($depth, $l) = strip_indentation $l;
+	    print_comment_top_level $depth, $l;
+	}
     } elsif ($l =~ /^.?account\s+(.*)/) {  # account declaration
 	printf "$config->{account_open_date} open %s\n", map_account $1;
 	@stanza = read_stanza \@input;
