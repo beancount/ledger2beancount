@@ -4,6 +4,24 @@ account Equity:Opening-Balance
 
 commodity EUR
 
+comment
+    This is a block comment
+    Second line
+end comment
+
+comment
+    Comment with end, not end comment
+    Second line
+end
+
+test
+    Another comment
+end test
+
+!comment
+    This is another block comment
+end comment
+
 ; This is a comment
 ; Test: not a tag
 ; :not:a:tag:

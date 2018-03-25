@@ -4,6 +4,16 @@
 
 1970-01-01 commodity EUR
 
+; This is a block comment
+; Second line
+
+; Comment with end, not end comment
+; Second line
+
+; Another comment
+
+; This is another block comment
+
 ; This is a comment
 ; Test: not a tag
 ; :not:a:tag:
