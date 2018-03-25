@@ -13,8 +13,9 @@ formatting, etc.) can be preserved.
 
 ledger2beancount relies on some configuration data.  It will search for
 the config file `ledger2beancount.yml` and if that is not found for
-`$HOME/.config/ledger2beancount/config.yml`.  See the sample config
-file for the variables.
+`$HOME/.config/ledger2beancount/config.yml`.  You can also pass an
+alternative config file via `--config/-c`.  The file must end in `.yml`
+or `.yaml`.  See the sample config file for the variables you can use.
 
 
 Dependencies
@@ -26,12 +27,14 @@ ledger2beancount uses several Perl modules:
 * Config::Onion
 * Date::Calc
 * File::BaseDir
+* Getopt::Long::Descriptive
 * YAML::XS
 
 If you use Debian, you can install them with:
 
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
-        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl
+        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
+        libgetopt-long-descriptive-perl
 
 
 Features
