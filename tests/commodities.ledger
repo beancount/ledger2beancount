@@ -7,8 +7,8 @@ account Equity:Opening-Balance
 commodity "A commodity"
 commodity "Another commodity"
 commodity AnotherAnotherAnotherAnother
-commodity Chase
-commodity "DE0002635307"
+@commodity Chase
+!commodity "DE0002635307"
 
 commodity EUR
     note Euro

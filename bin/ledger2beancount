@@ -546,7 +546,7 @@ while (@input) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
 	print_comment_top_level $depth, $+{comment};
-    } elsif ($l =~ /^.?(comment|test)/) {  # block comment
+    } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
 	@stanza = read_stanza \@input;
 	assert $input[0] =~ /^end/;
 	shift @input;
@@ -565,7 +565,7 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_comment_top_level $depth, $l;
 	}
-    } elsif ($l =~ /^.?account\s+(.*)/) {  # account declaration
+    } elsif ($l =~ /^[!@]?account\s+(.*)/) {  # account declaration
 	printf "$config->{account_open_date} open %s\n", map_account $1;
 	@stanza = read_stanza \@input;
 	foreach $l (@stanza) {
@@ -578,7 +578,7 @@ while (@input) {
 		print_line $depth, $l;
 	    }
 	}
-    } elsif ($l =~ /^.?commodity\s+(.*)/) {  # commodity declaration
+    } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
 	printf "$config->{commodities_date} commodity %s\n", map_commodity $1;
 	@stanza = read_stanza \@input;
 	foreach $l (@stanza) {
