@@ -534,6 +534,14 @@ while (@input) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_RE/) {
 	print_line $depth, $l;
+    } elsif ($l =~ /^.?(comment|test)/) {  # block comment
+	@stanza = read_stanza \@input;
+	assert $input[0] =~ /^end/;
+	shift @input;
+	foreach $l (@stanza) {
+	    ($depth, $l) = strip_indentation $l;
+	    print_line $depth-1, "; $l";
+	}
     } elsif ($l =~ /^$price_RE/) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
