@@ -1,0 +1,19 @@
+
+1970-01-01 open Assets:Test
+1970-01-01 open Equity:Opening-Balance
+
+1970-01-01 commodity EUR
+
+2018-03-23 * "Test 1"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-24 balance Assets:Test  10.00 EUR
+
+2018-03-24 * "Test 2"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-25 balance Assets:Test  20.00 EUR
+2018-03-25 balance Equity:Opening-Balance  -20.00 EUR
+
