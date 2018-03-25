@@ -40,6 +40,7 @@ foreach my $config_file (@config_files) {
 }
 
 $config->set_default(date_match => qr"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})");
+$config->set_default(date_match_no_year => qr"(?<month>\d{2})-(?<day>\d{2})");
 $config->set_default(account_open_date => "1970-01-01");
 $config->set_default(commodities_date => "1970-01-01");
 $config->set_default(payee_tag => "");
@@ -52,8 +53,11 @@ $config = $config->get;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr{$config->{date_match}};
+my $date_no_year_RE = qr{$config->{date_match_no_year}};
 my $flags_RE = qr/[*!]/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
+my $txn_header_no_date_RE = qr/\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?$txn_header_no_date_RE/;
+my $txn_header_no_year_RE = qr/^(?<date>$date_no_year_RE)(=(?<auxdate>$date_no_year_RE))?$txn_header_no_date_RE/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $account_RE = qr/[A-Z].*?/;
 my $value_RE = qr/[\d.-]+/;
@@ -90,11 +94,17 @@ sub mk_beancount_string($) {
 
 
 # Print a date in ISO 8601 format (YYYY-MM-DD)
-sub pp_date($) {
-    my ($date) = @_;
+sub pp_date($$) {
+    my ($date, $year) = @_;
 
     if ($date =~ /$date_RE/) {
 	return sprintf "%04d-%02d-%02d", $+{year}, $+{month}, $+{day};
+    } elsif ($date =~ /$date_no_year_RE/) {
+	if ($year) {
+	    return sprintf "%04d-%02d-%02d", $year, $+{month}, $+{day};
+	} else {
+	    die "Date without year but no Y/year directive";
+	}
     } else {
 	# This can't happen since every caller did a regex match already
 	die "Can't parse date $date";
@@ -109,7 +119,7 @@ sub parse_ledger_value($) {
     my $value;
 
     if ($raw =~ /^\[(?<date>$date_RE)\]$/) {
-	$value = pp_date $+{date};
+	$value = pp_date $+{date}, 0;
     } else {
 	$value = $raw;
     }
@@ -462,7 +472,7 @@ sub process_txn(@) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regexp case
 		my $lot_info = "";
-		$lot_info .= ", " . pp_date $+{date} if (defined $+{date});
+		$lot_info .= ", " . pp_date $+{date}, 0 if (defined $+{date});
 		$lot_info .= ", " . mk_beancount_string $+{lot_note} if (defined $+{lot_note});
 		if (defined $+{lot_price} && not defined $+{lot_cost}) {
 		    # No ledger lot cost, only price.  This one is tricky
@@ -504,7 +514,7 @@ sub process_txn(@) {
 		push_line $depth, $l;
 	    }
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
-	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate if defined $auxdate && defined $config->{auxdate_tag};
+	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
 	} else {  # everything else
 	    push_line $depth, $l;
 	}
@@ -549,6 +559,9 @@ unshift(@ARGV, '-') unless @ARGV;
 open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
 my @input = <$input>;
 close $input;
+
+my $year; # To store year declaration
+
 while (@input) {
     my $l = shift @input;
     chomp $l;
@@ -566,8 +579,10 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_line $depth-1, "; $l";
 	}
+    } elsif ($l =~ /^(Y|year)\s+(\d{4})/) {  # year declaration
+	$year = $2;
     } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "%s price %s $+{value} %s", pp_date $+{date}, map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l = sprintf "%s price %s $+{value} %s", pp_date($+{date}, $year), map_commodity $+{commodity1}, map_commodity $+{commodity2};
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^([=~].*)/) {  # automated transaction (=) or periodic transaction (~)
@@ -613,9 +628,9 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	}
     } elsif ($l =~ /^[0-9]/) {
-	if ($l =~ /$txn_header_RE/) {  # txn header
-	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};
-	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $+{auxdate} if defined $+{auxdate} && defined $config->{auxdate_tag};
+	if ($l =~ /$txn_header_RE/ || $l =~ /$txn_header_no_year_RE/) {  # txn header
+	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $+{narration};
+	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};
 	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
 	    # Determine payee based on the narration field
 	    my $narration = $+{narration};

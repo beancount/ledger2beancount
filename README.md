@@ -105,6 +105,11 @@ ledger file.  You can adapt it to your needs but make sure that your
 regular expression contains the named capture groups `year`, `month` and
 `day`.
 
+Ledger allows dates without a year if the year is declared using the `Y`
+or `year` directive.  If `date_match_no_year` is set (with the capture
+groups `month` and `day`), ledger2beancount can convert such dates to
+YYYY-MM-DD.
+
 
 ### Auxiliary dates
 
