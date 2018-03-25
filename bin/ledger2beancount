@@ -593,6 +593,13 @@ while (@input) {
 		print_line $depth, $l;
 	    }
 	}
+    } elsif ($l =~ /^[!@]?(payee\s+.*)/) {  # payee declaration
+	print_comment_top_level $depth, $1;
+	@stanza = read_stanza \@input;
+	foreach $l (@stanza) {
+	    ($depth, $l) = strip_indentation $l;
+	    print_comment_top_level $depth, $l;
+	}
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/) {  # txn header
 	    push_header pp_date $+{date}, $+{flag} ? $+{flag} : "txn", $+{narration};

@@ -131,7 +131,12 @@ and properly quoted.
 
 Ledger has limited support for payees.  A `payee` metadata key can be set
 but this also overrides the free-form text to describe the transaction.
-In ledger2beancount, we offer several features to determine the payee.
+Payees can also be declared explicitly in ledger but this is not required
+by beancount, so such declarations are ignored (they are preserved as
+comments).
+
+Since ledger has limited support for payees, ledger2beancount offers
+several features to determine the payee from on the transaction.
 
 You can set `payee_split` and define a list of regular expressions which
 allow you to split ledger's payee field into payee and narration.  You
