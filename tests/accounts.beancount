@@ -7,6 +7,13 @@
 1970-01-01 open Assets:Vouchers:Ranch99
 1970-01-01 open Assets:Vouchers:Ranch99:Test99
 1970-01-01 open Liabilities:Credit-Card:Test
+1970-01-01 open Assets:Vouchers:Test99
+1970-01-01 open Assets:X-DASD----------------0---ds
+1970-01-01 open Assets:Xfoo:Xbar
+1970-01-01 open Expenses:Ecole-republicaine
+1970-01-01 open Expenses:Ecole
+1970-01-01 open Assets:Crowns
+1970-01-01 open Assets:Test:I-Love-Crowns
 
 1970-01-01 commodity EUR
 
@@ -66,4 +73,32 @@
 2018-03-18 * "2 account name starting with digits"
   Assets:Vouchers:Ranch99:Test99     10.00 EUR
   Equity:Opening-Balance
+
+2018-03-18 * "Lower case after digit"
+  Assets:Vouchers:Test99             10.00 EUR
+  Equity:Opening-Balance
+
+2018-03-26 * "Interesting account name"
+  Assets:X-DASD----------------0---ds   10.00 EUR
+  Equity:Opening-Balance               -10.00 EUR
+
+2018-03-26 * "Interesting account name, mapped before conversion"
+  Assets:Crowns                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * "Interesting account name, mapped after conversion"
+  Assets:Test:I-Love-Crowns            10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * "Ensure first letter is upper case letter"
+  Assets:Xfoo:Xbar                   10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * "Drop accents"
+  Expenses:Ecole-republicaine        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * "Ensure first letter is upper case letter"
+  Expenses:Ecole                     10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
 

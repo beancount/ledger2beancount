@@ -7,6 +7,13 @@ account Equity:Opening balance
 account Assets:Vouchers:99Ranch
 !account Assets:Vouchers:99Ranch:99Test
 @account Liabilities:Credit Card:Test
+account Assets:Vouchers:99test
+account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds
+account Assets:♚foo:♚bar
+account Expenses:École républicaine
+account Expenses:école
+account Assets:♚♛♕♔
+account Assets:Test:I love ♚♛♕♔
 
 commodity EUR
 
@@ -66,4 +73,32 @@ commodity EUR
 2018-03-18 * 2 account name starting with digits
     Assets:Vouchers:99Ranch:99Test     10.00 EUR
     Equity:Opening-Balance
+
+2018-03-18 * Lower case after digit
+    Assets:Vouchers:99test             10.00 EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Interesting account name
+    Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds   10.00 EUR
+    Equity:Opening-Balance               -10.00 EUR
+
+2018-03-26 * Interesting account name, mapped before conversion
+    Assets:♚♛♕♔                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * Interesting account name, mapped after conversion
+    Assets:Test:I love ♚♛♕♔            10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * Ensure first letter is upper case letter
+    Assets:♚foo:♚bar                   10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * Drop accents
+    Expenses:École républicaine        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-03-26 * Ensure first letter is upper case letter
+    Expenses:école                     10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
 
