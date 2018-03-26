@@ -378,8 +378,9 @@ and associate a cost in conversions.  Similarly, `commodity_is_currency`
 can be used to configure commodities that should be treated as currencies
 in the sense that no cost is retained.  This is useful if you, for
 example, track miles or hotel points, that are sometimes redeemed for a
-cash value.  (Note that beancount itself uses the terms "commodity" and
-"currency" interchangeably.)
+cash value.  Both of these variables expect beancount commodities, i.e.
+after transformation and mapping.  (Note that beancount itself uses the
+terms "commodity" and "currency" interchangeably.)
 
 
 ### Balance assertions

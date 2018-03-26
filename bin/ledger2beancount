@@ -554,8 +554,8 @@ sub process_txn(@) {
 		    # work in all cases, we also check for a list of
 		    # commodities.  Similarly, we allow users to configure
 		    # commodities that should be treated as currencies.
-		    my $commodity1 = $+{commodity};
-		    my $commodity2 = parse_commodity $+{lot_price};
+		    my $commodity1 = map_commodity $+{commodity};
+		    my $commodity2 = map_commodity parse_commodity $+{lot_price};
 		    if ((length $commodity1 == 3 && length $commodity2 == 3 &&
 			!($commodity1 ~~ @{$config->{currency_is_commodity}})) ||
 			$commodity1 ~~ @{$config->{commodity_is_currency}} ||
