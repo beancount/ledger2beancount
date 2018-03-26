@@ -63,7 +63,7 @@ my $txn_header_no_year_RE = qr/^(?<date>$date_no_year_RE)(=(?<auxdate>$date_no_y
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
-my $account_RE = qr/.*?/;
+my $account_RE = qr/[^\s]([^\t](?!  ))*.?/;
 my $value_RE = qr/[\d.-]+/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
