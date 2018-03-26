@@ -100,7 +100,7 @@ ledger2beancount will automatically convert commodities to valid
 beancount commodities.  This involves replacing all invalid characters
 with a dash (a character allowed in beancount commodities but not in
 ledger commodities), stripping quoted commodities, making the commodity
-uppercase and limiting it to 24 characters.  Futhermore, the first
+uppercase and limiting it to 24 characters.  Furthermore, the first
 character will be replaced with an "X" if it's not a letter and the
 same will be done for the last character if it's not a letter or digit.
 
