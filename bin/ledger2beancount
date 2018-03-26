@@ -260,9 +260,9 @@ sub push_line($$) {
 sub push_assertion($$) {
     my ($account, $amount) = @_;
 
-    # beancount evalutes balance assertions at the beginning of the day,
-    # whereas ledger evalutes them at the end of the txn. So we schedule the
-    # balance assertion for *after* the origin txn. This assumes that there
+    # beancount evaluates balance assertions at the beginning of the day,
+    # whereas ledger evaluates them at the end of the txn. So we schedule the
+    # balance assertion for *after* the original txn. This assumes that there
     # are no *other* txn in the same day that change the balance again.
     my $assertion_date = sprintf("%04d-%02d-%02d",
 				 Add_Delta_Days(split(/-/, $cur_txn_header{date}), 1));

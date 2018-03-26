@@ -345,6 +345,11 @@ cash value.  (Note that beancount itself uses the terms "commodity" and
 ### Balance assertions
 
 Ledger balance assertions are converted to beancount `balance` statements.
+Please note that beancount evaluates balance assertions at the beginning of
+the day whereas ledger evaluates them at the end of the transaction.
+Therefore, we schedule the balance assertion for the day *after* the
+original transaction.  This assumes that there are no other transactions
+on the same day that change the balance again for this account.
 
 
 ### Automated transactions
