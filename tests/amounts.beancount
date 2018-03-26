@@ -69,3 +69,19 @@
   Assets:Test99:Test99                    -1 USD
   Equity:Opening-Balance
 
+2018-03-26 * "Commodity after amount, comma"
+  Assets:Test99:Test99               1,000 EUR
+  Equity:Opening-Balance
+
+2018-03-26 * "Commodity before amount, comma"
+  Assets:Test99:Test99            1,000.00 EUR
+  Equity:Opening-Balance
+
+2018-03-26 * "Commodity before amount, comma, no space"
+  Assets:Test99:Test99             1,000.00 EUR
+  Equity:Opening-Balance
+
+2018-03-26 * "Commodity before amount, comma, one million"
+  Assets:Test99:Test99        1,000,000.00 EUR
+  Equity:Opening-Balance
+
