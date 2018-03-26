@@ -538,8 +538,10 @@ sub process_txn(@) {
 	    }
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
-	} else {  # everything else
-	    push_line $depth, replace_commodity $l;
+	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
+	    push_line 0, "";
+	} else {  # there shouldn't be anything
+	    die "Don't know how to process transaction line: $l\n";
 	}
     }
     print pop_txn();
