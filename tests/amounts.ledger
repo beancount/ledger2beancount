@@ -1,0 +1,71 @@
+
+account Assets:99Test:Test99
+account Equity:Opening-Balance
+
+commodity EUR
+commodity $
+
+2018-03-26 * Commodity after amount
+    Assets:99Test:Test99                   1 EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity after amount, no space
+    Assets:99Test:Test99                    1EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity before amount
+    Assets:99Test:Test99                   EUR 1
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity before amount, no space
+    Assets:99Test:Test99              EUR1000.00
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity after amount, negative
+    Assets:99Test:Test99                  -1 EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity after amount, negative, no space
+    Assets:99Test:Test99                   -1EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity before amount, negative
+    Assets:99Test:Test99                  EUR -3
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity before amount, negative
+    Assets:99Test:Test99                  -EUR 2
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol after amount
+    Assets:99Test:Test99                    100$
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol after amount, negative
+    Assets:99Test:Test99                     -1$
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol before amount
+    Assets:99Test:Test99                      $1
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol before amount, negative
+    Assets:99Test:Test99                     -$1
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol after amount, with space
+    Assets:99Test:Test99                     1 $
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol before amount, with space
+    Assets:99Test:Test99                     $ 1
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol after amount, negative, with space
+    Assets:99Test:Test99                    -1 $
+    Equity:Opening-Balance
+
+2018-03-26 * Commodity symbol before amount, negative
+    Assets:99Test:Test99                    -$ 1
+    Equity:Opening-Balance
+
