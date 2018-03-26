@@ -93,7 +93,12 @@ can use `commodity_map`.  You can use your ledger commodity names or
 the names after the transformation in the map to perform a mapping to
 another commodity name.
 
-Commodity symbols (like $, € and £) are not supported.
+Commodity symbols (like $, € and £) are supported and converted to
+their respective commodity codes (like USD, EUR, GBP).  Update
+`commodity_map` if you use other symbols.
+
+Commodities can be placed in front of the amount in ledger.  This is
+converted to beancount as the amount followed by the commodity.
 
 
 ### Flags
