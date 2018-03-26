@@ -408,6 +408,24 @@ are not supported in beancount.  They are added as comments to the
 beancount file.
 
 
+### Inline math
+
+Very simple inline math is supported in postings.  Specifically, basic
+multiplications and divisiosn are supported, such as shown in the
+following transactions:
+
+    2018-03-26 * Simple inline math
+        Assets:Test1            1 GBP @ (1/1.14 EUR)
+        Assets:Test2                       -0.88 EUR
+
+    2018-03-26 * Simple inline math
+        Assets:Test1                     (1 * 3 GBP)
+        Assets:Test2                          -3 GBP
+
+Support for more complex inline math would require substantial changes
+to the parser.
+
+
 Authors
 -------
 
