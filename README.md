@@ -75,6 +75,22 @@ something different.  The mapping will work on your ledger account
 names and on the account names after the transformation.
 
 
+### Amounts
+
+In ledger, amounts can be placed after the amount.  This is converted
+to beancount with the the amount first, followed by the commodity.
+
+If you use commas as the decimal separator (i.e. values like `10,12`,
+using the ledger option `--decimal-comma`) you have to set the
+`decimal_comma` option to `true`.  Please note that commas are not
+supported as the decimal separator in beancount at the moment ([issue
+204](https://bitbucket.org/blais/beancount/issues/204)) so your
+amounts are converted not to use comma as the decimal separator.
+
+Commas as separators for thousands (e.g. `1,000,000`) are supported by
+beancount.
+
+
 ### Commodities
 
 Like accounts, ledger2beancount will convert ledger commodity
@@ -96,9 +112,6 @@ another commodity name.
 Commodity symbols (like $, € and £) are supported and converted to
 their respective commodity codes (like USD, EUR, GBP).  Update
 `commodity_map` if you use other symbols.
-
-Commodities can be placed in front of the amount in ledger.  This is
-converted to beancount as the amount followed by the commodity.
 
 
 ### Flags

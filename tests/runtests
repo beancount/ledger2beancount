@@ -11,7 +11,12 @@ test_conversion () {
 
 	printf "Converting $test... "
 
-	cat $file | ../bin/ledger2beancount > $actual
+	config=ledger2beancount.yml
+	if grep -q "^; Config:" $test; then
+		config=$(grep "^; Config:" $test | cut -d: -f2 | sed 's/ //g')
+	fi
+
+	cat $file | ../bin/ledger2beancount --config $config > $actual
 
 	if $(cmp -s $expected $actual); then
 		echo "ok"

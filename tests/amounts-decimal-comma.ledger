@@ -1,0 +1,19 @@
+; Config: amounts-decimal-comma.yml
+
+account Assets:99Test:Test99
+account Equity:Opening-Balance
+
+commodity EUR
+
+2018-03-26 * Decimal comma
+    Assets:99Test:Test99               10,12 EUR
+    Equity:Opening-Balance
+
+2018-03-26 * Decimal comma, with thousand separator
+    Assets:99Test:Test99            EUR 1.000,00
+    Equity:Opening-Balance
+
+2018-03-26 * Decimal comma, with thousand separator
+    Assets:99Test:Test99            EUR 1.000,00
+    Equity:Opening-Balance
+
