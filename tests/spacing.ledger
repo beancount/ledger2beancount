@@ -8,6 +8,10 @@ commodity EUR
 2018-03-24 * Test 2
     Assets:Test
     Equity:Opening-Balance            -10.00 EUR
+2018-03-24 * Indented whitespace
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance
+      
 2018-03-24 * No empty line after the transaction
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance
