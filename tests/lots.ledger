@@ -9,6 +9,8 @@ commodity GBP
 commodity "LU0274208692"
 commodity MR
 commodity USD
+commodity XX
+commodity XXXx
 
 2018-03-17 * Opening balance
     Assets:Test              100.00 EUR {{90.00 GBP}}
@@ -167,7 +169,15 @@ commodity USD
     Assets:Test               10.00 EUR {{12.30 USD}}[2018-03-16](whatever)@@12.30 USD
     Equity:Opening-Balance   -12.30 USD
 
-2018-03-20 * Test
+2018-03-20 * Commodity treated as currency
     Assets:Test                42.30 USD @@ 5641 MR
     Assets:Test                            -5641 MR
+
+2018-03-27 * Commodity treated as currency, transformed
+    Assets:Test              42.30 USD @@ 5641 XXXx
+    Assets:Test                          -5641 XXXx
+
+2018-03-27 * Commodity treated as currency, mapped
+    Assets:Test                42.30 USD @@ 5641 XX
+    Assets:Test                            -5641 XX
 

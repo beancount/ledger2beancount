@@ -80,13 +80,15 @@ link_tags: []
 
 # A list of commodities that should be treated as commodities
 # rather than currencies even though they consist of 3 characters
-# (which is usually a characteristic of a currency)
+# (which is usually a characteristic of a currency).  Expects
+# beancount commodities (i.e. after transformation and mapping).
 currency_is_commodity:
   - BTC
   - ETH
   - IBM
 
 # A list of commodities that should be treated as currencies
-# (in the sense that cost is not retained)
+# (in the sense that cost is not retained).  Expects beancount
+# commodities (i.e. after transformation and mapping).
 commodity_is_currency:
 

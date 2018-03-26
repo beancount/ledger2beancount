@@ -34,6 +34,7 @@ commodity_map:
   Another commodity: ANOTHER
   Mötz: MOETZ
   M-O: MOO
+  XX: AA
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.
@@ -54,5 +55,7 @@ currency_is_commodity:
   - ETH
 
 commodity_is_currency:
+  - AA
   - MR
+  - XXXX
 
