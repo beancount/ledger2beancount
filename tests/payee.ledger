@@ -31,3 +31,13 @@ commodity GBP
     Assets:Test                        10.00 GBP
     Equity:Opening-Balance            -10.00 GBP
 
+2018-03-26 * Payee from metadata
+    ; X-Payee: MK2
+    Assets:Test                        10.00 GBP
+    Equity:Opening-Balance            -10.00 GBP
+
+2018-03-26 * Payer from metadata
+    ; X-Payer: Martin
+    Assets:Test                        10.00 GBP
+    Equity:Opening-Balance            -10.00 GBP
+
