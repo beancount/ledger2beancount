@@ -1,8 +1,11 @@
 
 account Assets:99Test:Test99
+account Assets:Test1
+account Assets:Test2
 account Equity:Opening-Balance
 
 commodity EUR
+commodity GBP
 commodity $
 
 2018-03-26 * Commodity after amount
@@ -84,4 +87,28 @@ commodity $
 2018-03-26 * Commodity before amount, comma, one million
     Assets:99Test:Test99        EUR 1,000,000.00
     Equity:Opening-Balance
+
+2018-03-26 * Simple inline math
+    Assets:Test1                       (1*3 GBP)
+    Assets:Test2                          -3 GBP
+
+2018-03-26 * Simple inline math
+    Assets:Test1            1 GBP @ (1/1.14 EUR)
+    Assets:Test2                       -0.88 EUR
+
+2018-03-26 * Simple inline math
+    Assets:Test1       44.06 USD @ (1/1.362 GBP)
+    Assets:Test2                      -32.35 GBP
+
+2018-03-26 * Simple inline math
+    Assets:Test1                     (1 * 3 GBP)
+    Assets:Test2                          -3 GBP
+
+2018-03-26 * Simple inline math
+    Assets:Test1          1 GBP @ (1 / 1.14 EUR)
+    Assets:Test2                       -0.88 EUR
+
+2018-03-26 * Simple inline math
+    Assets:Test1     44.06 USD @ (1 / 1.362 GBP)
+    Assets:Test2                      -32.35 GBP
 
