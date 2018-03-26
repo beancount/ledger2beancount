@@ -20,6 +20,8 @@ payee_match:
 
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance
+  Assets:♚♛♕♔: Assets:Crowns
+  Assets:Test:I love ♚♛♕♔: Assets:Test:I-Love-Crowns
 
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:
@@ -28,6 +30,8 @@ commodity_map:
   M&M2: MILESMORE2
   M-M4: MILESMORE4
   Another commodity: ANOTHER
+  Mötz: MOETZ
+  M-O: MOO
 
 # You can set the following metadata tags to an empty string if you
 # don't want the metadata to be added to beancount.

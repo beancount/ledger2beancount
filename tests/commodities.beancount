@@ -23,6 +23,15 @@
 1970-01-01 commodity MR
   name: "AMEX Membership Rewards"
 
+1970-01-01 commodity KRW
+1970-01-01 commodity AUD
+1970-01-01 commodity CROWNX
+1970-01-01 commodity BAR
+1970-01-01 commodity FOO
+
+1970-01-01 commodity MOETZ
+1970-01-01 commodity MOO
+
 2018-03-17 * "Test quoted commodity"
   Assets:Test                      1 DE0002635307
   Equity:Opening-Balance          -1 DE0002635307
@@ -73,5 +82,33 @@
 
 2018-03-21 * "Commodity is too long for beancount"
   Assets:Test                          1 ANOTHERANOTHERANOTHERANO
+  Equity:Opening-Balance
+
+2018-03-26 * "Lower case"
+  Assets:Test                          1 KRW
+  Equity:Opening-Balance
+
+2018-03-26 * "Lower case at end"
+  Assets:Test                          1 AUD
+  Equity:Opening-Balance
+
+2018-03-26 * "Non-letter at end"
+  Assets:Test                          1 CROWNX
+  Equity:Opening-Balance
+
+2018-03-26 * "Umlaut in middle"
+  Assets:Test                          1 BAR
+  Equity:Opening-Balance
+
+2018-03-26 * "Umlaut at end"
+  Assets:Test                          1 FOO
+  Equity:Opening-Balance
+
+2018-03-26 * "Mapped before transformation"
+  Assets:Test                          1 MOETZ
+  Equity:Opening-Balance
+
+2018-03-26 * "Mapped after transformation"
+  Assets:Test                          1 MOO
   Equity:Opening-Balance
 

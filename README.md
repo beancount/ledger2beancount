@@ -53,20 +53,26 @@ ledger2beancount will convert ledger account declarations to beancount
 date.  The `note` is used as the `description`.
 
 ledger2beancount replaces ledger account names with valid beancount
-accounts and therefore performs the following three transformations
+accounts and therefore performs the following transformations
 automatically:
 
-1. Replaces space with dash (`Liabilities:Credit Card` becomes
-   `Liabilities:Credit-Card`)
+1. Replaces space and other invalid characters with dash
+   (`Liabilities:Credit Card` becomes `Liabilities:Credit-Card`)
 2. Replaces account names starting with lower case letters with
    upper case letters (`Assets:test` becomes `Assets:Test`)
 3. Moves digits from the beginning of the account name to the
    end (`Assets:99Ranch` becomes `Assets:Ranch99`)
+4. Ensures the first letter is a letter by replacing a non-letter
+   first character with an "X".
+5. Strips accents and umlauts because they are currently not
+   supported in beancount ([issue
+   171](https://bitbucket.org/blais/beancount/issues/171)).
 
 While these transformations lead to valid beancount account names,
 they might not be what you desire.  Therefore, you can add account
 mappings to `account_map` to map the transformed account names to
-something different.
+something different.  The mapping will work on your ledger account
+names and on the account names after the transformation.
 
 
 ### Commodities
@@ -78,7 +84,9 @@ ledger2beancount will automatically convert commodities to valid
 beancount commodities.  This involves replacing all invalid characters
 with a dash (a character allowed in beancount commodities but not in
 ledger commodities), stripping quoted commodities, making the commodity
-uppercase and limiting it to 24 characters.
+uppercase and limiting it to 24 characters.  Futhermore, the first
+character will be replaced with an "X" if it's not a letter and the
+same will be done for the last character if it's not a letter or digit.
 
 If you require a mapping between ledger and beancount commodities, you
 can use `commodity_map`.  You can use your ledger commodity names or

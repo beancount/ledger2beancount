@@ -24,6 +24,15 @@ commodity "M&M4"
 commodity MR
     note AMEX Membership Rewards
 
+commodity krw
+commodity Aud
+commodity Crown♛
+commodity Bär
+commodity Föö
+
+commodity Mötz
+commodity M♛O
+
 2018-03-17 * Test quoted commodity
     Assets:Test                      1 "DE0002635307"
     Equity:Opening-Balance          -1 "DE0002635307"
@@ -74,5 +83,33 @@ commodity MR
 
 2018-03-21 * Commodity is too long for beancount
     Assets:Test                          1 AnotherAnotherAnotherAnother
+    Equity:Opening-Balance
+
+2018-03-26 * Lower case
+    Assets:Test                          1 krw
+    Equity:Opening-Balance
+
+2018-03-26 * Lower case at end
+    Assets:Test                          1 Aud
+    Equity:Opening-Balance
+
+2018-03-26 * Non-letter at end
+    Assets:Test                          1 Crown♛
+    Equity:Opening-Balance
+
+2018-03-26 * Umlaut in middle
+    Assets:Test                          1 Bär
+    Equity:Opening-Balance
+
+2018-03-26 * Umlaut at end
+    Assets:Test                          1 Föö
+    Equity:Opening-Balance
+
+2018-03-26 * Mapped before transformation
+    Assets:Test                          1 Mötz
+    Equity:Opening-Balance
+
+2018-03-26 * Mapped after transformation
+    Assets:Test                          1 M♛O
     Equity:Opening-Balance
 
