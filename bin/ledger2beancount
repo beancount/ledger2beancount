@@ -252,7 +252,6 @@ sub push_payee($) {
 sub push_line($$) {
     my ($depth, $line) = @_;
 
-    $in_postings = 1 if $line =~ /^$posting_RE/;
     push @cur_txn_lines, indent($depth, $line);
 }
 
@@ -472,6 +471,7 @@ sub process_txn(@) {
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	    push_comment $depth, $+{comment};
 	} elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
+	    $in_postings = 1;
 	    my $account = $+{account};
 	    my $auxdate = $+{auxdate};
 	    # Strip the auxdate info

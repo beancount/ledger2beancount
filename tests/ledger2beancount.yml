@@ -5,6 +5,8 @@ date_match: (?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
   label: bank-label
+  x-payee: payee
+  x-payer: payer
 
 # metadata tags (*after* above mapping) used for specific purposes
 payee_tag: payee

@@ -29,3 +29,11 @@
   Assets:Test                        10.00 GBP
   Equity:Opening-Balance            -10.00 GBP
 
+2018-03-26 * "MK2" "Payee from metadata"
+  Assets:Test                        10.00 GBP
+  Equity:Opening-Balance            -10.00 GBP
+
+2018-03-26 * "Martin" "Payer from metadata"
+  Assets:Test                        10.00 GBP
+  Equity:Opening-Balance            -10.00 GBP
+
