@@ -14,6 +14,7 @@ account Expenses:École républicaine
 account Expenses:école
 account Assets:♚♛♕♔
 account Assets:Test:I love ♚♛♕♔
+account Assets:Commodity-Test123
 
 commodity EUR
 
@@ -101,4 +102,8 @@ commodity EUR
 2018-03-26 * Ensure first letter is upper case letter
     Expenses:école                     10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
+
+2018-03-27 * Account name could be mistaken for commodity
+    Assets:Test                        10.00 EUR
+    Assets:Commodity-Test123
 

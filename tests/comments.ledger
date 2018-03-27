@@ -1,6 +1,7 @@
 
 account Assets:Test
 account Equity:Opening-Balance
+account Assets:Commodity-Test123
 
 commodity EUR
 
@@ -54,4 +55,12 @@ end comment
     ; comment2
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
+
+2018-03-27 * Account name could be mistaken for commodity
+    Assets:Test                        10.00 EUR
+    Assets:Commodity-Test123       ; comment
+
+2018-03-27 * Account name could be mistaken for commodity
+    Assets:Test                        10.00 EUR
+    Assets:Commodity-Test123  ; comment
 

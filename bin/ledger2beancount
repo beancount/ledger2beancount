@@ -494,10 +494,11 @@ sub process_txn(@) {
 	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	    push_comment $depth, $+{comment};
-	} elsif ($l =~ /^$posting_RE/ || $l =~ /^(?<account>$account_RE)$/) {
+	} elsif ($l =~ /^$posting_RE/) {
 	    $in_postings = 1;
 	    my $account = $+{account};
 	    my $auxdate = $+{auxdate};
+	    my $has_amount = $+{amount} ? 1 : 0;
 	    # Strip the auxdate info
 	    $l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
 
@@ -515,7 +516,7 @@ sub process_txn(@) {
 		# posting with balance assertion
 		push_line $depth, replace_commodity $+{posting};
 		push_assertion $+{account}, $+{assertion};
-	    } elsif ($l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
+	    } elsif ($has_amount && $l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regexp case
 		my $lot_info = "";
@@ -557,8 +558,10 @@ sub process_txn(@) {
 		    }
 		}
 		push_line $depth, replace_commodity $l;
-	    } else {
+	    } elsif ($has_amount) {
 		push_line $depth, replace_commodity $l;
+	    } else {
+		push_line $depth, $l;
 	    }
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
