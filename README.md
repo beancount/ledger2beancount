@@ -11,12 +11,6 @@ Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
-ledger2beancount relies on some configuration data.  It will search for
-the config file `ledger2beancount.yml` and if that is not found for
-`$HOME/.config/ledger2beancount/config.yml`.  You can also pass an
-alternative config file via `--config/-c`.  The file must end in `.yml`
-or `.yaml`.  See the sample config file for the variables you can use.
-
 
 Dependencies
 ------------
@@ -35,6 +29,34 @@ If you use Debian, you can install them with:
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
         libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
         libgetopt-long-descriptive-perl
+
+
+Usage
+-----
+
+ledger2beancount accepts input from `stdin` or from a file and will write
+the converted data to `stdout`.  You can run ledger2beancount like this:
+
+    ledger2beancount test.ledger > test.beancount
+
+Afterwards, please validate your file with `bean-check` and fix all errors:
+
+    bean-check test.beancount
+
+If you believe that ledger2beancount could have produced a better
+conversion or if you get an error message from ledger2beancount, please
+[file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
+with a simple test case.
+
+
+Configuration
+-------------
+
+ledger2beancount can use a configuration file.  It will search for
+the config file `ledger2beancount.yml` and if that is not found for
+`$HOME/.config/ledger2beancount/config.yml`.  You can also pass an
+alternative config file via `--config/-c`.  The file must end in `.yml`
+or `.yaml`.  See the sample config file for the variables you can use.
 
 
 Features
