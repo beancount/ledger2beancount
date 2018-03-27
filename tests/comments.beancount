@@ -1,6 +1,7 @@
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
+1970-01-01 open Assets:Commodity-Test123
 
 1970-01-01 commodity EUR
 
@@ -45,4 +46,12 @@
     comment2"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
+
+2018-03-27 * "Account name could be mistaken for commodity"
+  Assets:Test                        10.00 EUR
+  Assets:Commodity-Test123       ; comment
+
+2018-03-27 * "Account name could be mistaken for commodity"
+  Assets:Test                        10.00 EUR
+  Assets:Commodity-Test123  ; comment
 
