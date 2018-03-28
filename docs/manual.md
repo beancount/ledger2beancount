@@ -33,7 +33,7 @@ repository and run the script directly or copy it to `$HOME/bin` or
 a similar location:
 
     git clone https://github.com/zacchiro/ledger2beancount/
-    ./bin/ledger2beancount test.ledger
+    ./bin/ledger2beancount examples/simple.ledger
 
 ledger2beancount is currently not packaged for any Linux distribution.
 

@@ -1,0 +1,20 @@
+
+2018-03-28 Simple transaction
+    Expenses:Purchase                   10.00 EUR
+    Assets:Wallet
+
+2018-03-28 Currency code, posting flag
+    Expenses:Purchase                      £20.00
+    * Assets:Wallet
+
+2018-03-28=2018-03-27 * (100) Transaction flag, aux date, code, conversion
+    Expenses:Purchase        10.00 EUR @ 0.86 GBP
+    Assets:Wallet                       -8.60 GBP
+
+2018-03-28 * Meta data
+    ; :tag:
+    ; Key: value
+    ; Typed:: [2018-03-20]
+    Expenses:Purchase                   10.00 EUR
+    Assets:Wallet
+
