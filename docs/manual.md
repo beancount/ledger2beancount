@@ -67,6 +67,26 @@ ledger2beancount.  Please read the [section on features](#features)
 to learn about these variables.
 
 
+Usage
+-----
+
+ledger2beancount accepts input from `stdin` or from a file and will write
+the converted data to `stdout`.  You can run ledger2beancount like this
+on the example provided:
+
+    ledger2beancount examples/simple.ledger > simple.beancount
+
+Afterwards, you should validate your file with `bean-check` and fix all
+errors:
+
+    bean-check simple.beancount
+
+If you believe that ledger2beancount could have produced a better
+conversion or if you get an error message from ledger2beancount, please
+[file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
+with a simple test case.
+
+
 Features
 --------
 
