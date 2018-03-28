@@ -4,6 +4,6 @@ python:
 install:
   - sudo apt-get install libcarp-assert-perl libdate-calc-perl libyaml-libyaml-perl libfile-basedir-perl libexperimental-perl libgetopt-long-descriptive-perl cpanminus
   - sudo cpanm Config::Onion
-  - pip install beancount==2.0rc1
+  - pip install beancount==2.0
 script:
   - make test
