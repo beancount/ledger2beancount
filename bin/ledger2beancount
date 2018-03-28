@@ -404,7 +404,7 @@ sub map_account($) {
     my ($account) = @_;
 
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
-    $account =~ s/:(\p{lower})/:\U$1\E/g; # Make first letter uppercase
+    $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
     # Work around lack of Unicode support (beancount #161)
     $account = NFKD $account;
