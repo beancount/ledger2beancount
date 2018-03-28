@@ -51,12 +51,6 @@ ledger2beancount uses several Perl modules:
 * Getopt::Long::Descriptive
 * YAML::XS
 
-If you use Debian, you can install them with:
-
-    sudo apt install libcarp-assert-perl libconfig-onion-perl \
-        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
-        libgetopt-long-descriptive-perl
-
 
 Authors
 -------
