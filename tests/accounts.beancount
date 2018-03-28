@@ -17,6 +17,7 @@
 1970-01-01 open Assets:Crowns
 1970-01-01 open Assets:Test:I-Love-Crowns
 1970-01-01 open Assets:Commodity-Test123
+1970-01-01 open Expenses:Purchase
 
 1970-01-01 commodity EUR
 
@@ -108,4 +109,8 @@
 2018-03-27 * "Account name could be mistaken for commodity"
   Assets:Test                        10.00 EUR
   Assets:Commodity-Test123
+
+2018-03-28 * "all lower case account names"
+  Expenses:Purchase                  10.00 EUR
+  Assets:Test
 
