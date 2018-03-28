@@ -476,3 +476,15 @@ following transactions:
 Support for more complex inline math would require substantial changes
 to the parser.
 
+
+Bugs and Contributions
+----------------------
+
+If you find any bugs in ledger2beancount or believe the conversion from
+ledger to beancount could be improved, please [open an
+issue](https://github.com/zacchiro/ledger2beancount/issues).  Please
+include a small test case so we can reproduce the problem.
+
+See [the contributing guide](CONTRIBUTING.md) for more information on
+how to contribute to ledger2beancount.
+
