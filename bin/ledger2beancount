@@ -670,7 +670,7 @@ while (@input) {
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
 		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
 	    } else {
-		print_line $depth, $l;
+		print_comment_top_level $depth, $l;
 	    }
 	}
     } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
@@ -685,7 +685,7 @@ while (@input) {
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
 		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
 	    } else {
-		print_line $depth, $l;
+		print_comment_top_level $depth, $l;
 	    }
 	}
     } elsif ($l =~ /^[!@]?(payee\s+.*)/) {  # payee declaration

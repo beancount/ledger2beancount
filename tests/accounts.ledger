@@ -1,6 +1,8 @@
 
 account Assets:Test
     note Test account
+    alias food
+    default
 
 account Equity:Opening balance
     note opening balance...
