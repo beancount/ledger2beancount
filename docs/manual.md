@@ -15,6 +15,29 @@ and tags on a posting-level).  ledger2beancount aims to be compatible with
 the latest official release of beancount.
 
 
+Installation
+------------
+
+ledger2beancount is a Perl script and relies on several Perl modules.
+Please see the [README](../README.md#dependencies) for a list of
+required modules.
+
+If you use Debian, you can install the dependencies with this command:
+
+    sudo apt install libcarp-assert-perl libconfig-onion-perl \
+        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
+        libgetopt-long-descriptive-perl
+
+ledger2beancount itself consists of one script.  You can clone the
+repository and run the script directly or copy it to `$HOME/bin` or
+a similar location:
+
+    git clone https://github.com/zacchiro/ledger2beancount/
+    ./bin/ledger2beancount test.ledger
+
+ledger2beancount is currently not packaged for any Linux distribution.
+
+
 Configuration
 -------------
 
