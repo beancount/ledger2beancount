@@ -23,6 +23,18 @@ include "def-include3.beancount"
 
 ; payee Burger King
 
+; setting year 2014
+; (no space)
+
+2014-10-02 * "Transaction without year"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2014-10-02 * "Transaction without year, with aux date"
+  aux-date: 2014-10-01
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
 ; setting year 2015
 
 2015-10-02 * "Transaction without year"
