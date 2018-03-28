@@ -1,0 +1,392 @@
+ledger2beancount
+================
+
+ledger2beancount is a script to automatically convert
+[Ledger](https://www.ledger-cli.org/)-based textual ledgers to
+[Beancount](http://furius.ca/beancount/) ones.
+
+Conversion is based on (concrete) syntax, so that information that are not
+meaningful for accounting reasons but still valuable (e.g., comments,
+formatting, etc.) can be preserved.
+
+The syntax of beancount is expected to become slightly less restrictive
+as some missing features are implemented (such as UTF-8 for account names
+and tags on a posting-level).  ledger2beancount aims to be compatible with
+the latest official release of beancount.
+
+
+Configuration
+-------------
+
+ledger2beancount can use a configuration file.  It will search for
+the config file `ledger2beancount.yml` and if that is not found for
+`$HOME/.config/ledger2beancount/config.yml`.  You can also pass an
+alternative config file via `--config/-c`.  The file must end in `.yml`
+or `.yaml`.  See the sample config file for the variables you can use.
+
+
+Features
+--------
+
+Note on **regular expressions**: many of the features described below require
+you to specify regular expressions in ledger2beancount configuration file. The
+expected syntax (and semantics) for all such values is that of
+[Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
+
+
+### Accounts
+
+ledger2beancount will convert ledger account declarations to beancount
+`open` statements using the `account_open_date` variable as the opening
+date.  The `note` is used as the `description`.
+
+ledger2beancount replaces ledger account names with valid beancount
+accounts and therefore performs the following transformations
+automatically:
+
+1. Replaces space and other invalid characters with dash
+   (`Liabilities:Credit Card` becomes `Liabilities:Credit-Card`)
+2. Replaces account names starting with lower case letters with
+   upper case letters (`Assets:test` becomes `Assets:Test`)
+3. Strips accents and umlauts because they are currently not
+   supported in beancount ([issue
+   171](https://bitbucket.org/blais/beancount/issues/171)).
+4. Ensures the first letter is a letter or number by replacing
+   a non-letter first character with an "X".
+
+While these transformations lead to valid beancount account names,
+they might not be what you desire.  Therefore, you can add account
+mappings to `account_map` to map the transformed account names to
+something different.  The mapping will work on your ledger account
+names and on the account names after the transformation.
+
+
+### Amounts
+
+In ledger, amounts can be placed after the amount.  This is converted
+to beancount with the the amount first, followed by the commodity.
+
+If you use commas as the decimal separator (i.e. values like `10,12`,
+using the ledger option `--decimal-comma`) you have to set the
+`decimal_comma` option to `true`.  Please note that commas are not
+supported as the decimal separator in beancount at the moment ([issue
+204](https://bitbucket.org/blais/beancount/issues/204)) so your
+amounts are converted not to use comma as the decimal separator.
+
+Commas as separators for thousands (e.g. `1,000,000`) are supported by
+beancount.
+
+
+### Commodities
+
+Like accounts, ledger2beancount will convert ledger commodity
+declarations to beancount.  The `note` is converted to `name`.
+
+ledger2beancount will automatically convert commodities to valid
+beancount commodities.  This involves replacing all invalid characters
+with a dash (a character allowed in beancount commodities but not in
+ledger commodities), stripping quoted commodities, making the commodity
+uppercase and limiting it to 24 characters.  Furthermore, the first
+character will be replaced with an "X" if it's not a letter and the
+same will be done for the last character if it's not a letter or digit.
+
+If you require a mapping between ledger and beancount commodities, you
+can use `commodity_map`.  You can use your ledger commodity names or
+the names after the transformation in the map to perform a mapping to
+another commodity name.
+
+Commodity symbols (like $, € and £) are supported and converted to
+their respective commodity codes (like USD, EUR, GBP).  Update
+`commodity_map` if you use other symbols.
+
+
+### Flags
+
+ledger2beancount supports both transaction flags ([transaction
+state](https://www.ledger-cli.org/3.0/doc/ledger3.html#Transaction-state))
+and account flags ([state
+flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
+
+
+### Dates
+
+ledger supports a wide range of date formats whereas beancount requires
+all dates in the format YYYY-MM-DD (ISO 8601).  The regular expression
+from the config variable `date_match` is used to match the date from the
+ledger file.  You can adapt it to your needs but make sure that your
+regular expression contains the named capture groups `year`, `month` and
+`day`.
+
+Ledger allows dates without a year if the year is declared using the `Y`
+or `year` directive.  If `date_match_no_year` is set (with the capture
+groups `month` and `day`), ledger2beancount can convert such dates to
+YYYY-MM-DD.
+
+
+### Auxiliary dates
+
+Beancount currently doesn't support ledger's [auxiliary dates (or effective
+dates)](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
+(but there is a proposal to support this functionality in a different way),
+so these are stored as metadata according to the `auxdate_tag` variable.
+Unset the variable if you don't want auxiliary dates to be stored as
+metadata.  Account and posting-level auxiliary dates are supported.
+
+
+### Transaction codes
+
+Beancount doesn't support ledger's [transaction
+codes](https://www.ledger-cli.org/3.0/doc/ledger3.html#Codes).  These are
+therefore stored as metatags if `code_tag` is set.
+
+
+### Narration
+
+The ledger payee information, which is generally used as free-form text
+to describe the transaction, is stored in beancount's narration field
+and properly quoted.
+
+
+### Payees
+
+Ledger has limited support for payees.  A `payee` metadata key can be set
+but this also overrides the free-form text to describe the transaction.
+Payees can also be declared explicitly in ledger but this is not required
+by beancount, so such declarations are ignored (they are preserved as
+comments).
+
+Since ledger has limited support for payees, ledger2beancount offers
+several features to determine the payee from on the transaction.
+
+You can set `payee_split` and define a list of regular expressions which
+allow you to split ledger's payee field into payee and narration.  You
+have to use regular expressions with the named capture groups `payee`
+and `narration`.  For example, given the ledger transaction
+
+    2018-03-18 * Supermarket (Tesco)
+
+and the configuration
+
+    payee_split:
+      - (?<narration>.*?)\s+\((?<payee>Tesco)\)
+
+ledger2beancount will create this beancount transaction:
+
+    2018-03-18 * "Tesco" "Supermarket"
+
+In other words, `payee_split` allows you to split the ledger payee
+into payee and narration in beancount.
+
+`payee_split` is a list of regular expressions and we stop when we
+find a match.
+
+Furthermore, you can use `payee_match` to match based on the ledger
+payee field and assign payees according to the match.  This variable
+is a hash consisting of regular expressions and the corresponding
+payees.  For example, if your ledger contains a transaction like:
+
+    2018-03-18 * Oyster card top-up
+
+you can use
+
+    payee_split:
+      ^Oyster card top-up: Transport for London
+
+to match the line and assign the payee `Transport for London`:
+
+    2018-03-18 * "Transport for London" "Oyster card top-up"
+
+Unlike `payee_split`, the full payee field from ledger is used as the
+narration in beancount.  Again, we stop after the first match.
+
+Please note that the `payee_match` is done after `payee_split` and we run
+`payee_match` even if `payee_split` matched.  This allows you to remove
+some information from the narration using `payee_split` while overriding
+the found payee using `payee_match`.
+
+Finally, metadata describing a payee or payer will be used to set the
+payee.  The tags used for that information can be specified in
+`payee_tag` and `payer_tag`.
+
+
+### Metadata
+
+Account and posting metadata are converted to beancount syntax.  Metadata
+keys used in ledger can be converted to different keys in beancount using
+`metadata_map`.  Metadata can also be converted to links (see below).
+
+ledger2beancount also supports
+[typed metadata](https://www.ledger-cli.org/3.0/doc/ledger3.html#Typed-metadata)
+(i.e. `key::` instead of `key:`) and doesn't quote the values accordingly,
+but you should make sure the values are valid in beancount.
+
+
+### Tags
+
+Beancount currently has two limitations regarding tags:
+
+1. they have to be on the same line as the narration ([issue
+99](https://bitbucket.org/blais/beancount/issues/99)), which means the
+line can get very long.  It would be good to put tags on a line on its
+own before the first posting but this currently doesn't work.
+
+2. postings can't have tags ([issue
+144](https://bitbucket.org/blais/beancount/issues/144)).
+
+Because of these limitations, ledger2beancount offers two ways to handle
+tags using the `tag_as_metadata` variable:
+
+If `tag_as_metadata` is `true`, tags will be stored as metadata with the
+key `tags`.  This works both for transactions and postings.  This option
+should be seen as a workaround because metadata with the key `tags` is
+not treated the same way by beancount as proper tags.
+
+If `tag_as_metadata` is `false`, transaction tags will be put after the
+narration as tags.  Because of the limitation in beancount, posting-level
+tags are currently ignored.
+
+
+### Links
+
+Beancount differentiates between tags and links whereas ledger doesn't.
+ledger2beancount offers two mechanisms to convert ledger tags and
+metadata to links.
+
+First, you can define a list of metadata tags in `link_tags` whose
+values should be converted to beancount links instead of metadata.  For
+example:
+
+    link_tags:
+      - Invoice
+
+with the ledger input
+
+    2018-03-19 * Invoice 4
+        ; Invoice:: 4
+
+will be converted to
+
+    2018-03-19 * Invoice 4 ^4
+
+instead of
+
+    2018-03-19 * Invoice 4 #4
+
+Tags are case insensitive.  Be aware that the metadata must not contain
+any whitespace.
+
+Since posting-level links are currently not allowed in beancount, they
+are stored as metadata.
+
+Second, you can define regular expressions in `link_match` to determine
+that a tag should be rendered as a link instead.  For example, if you
+tag your trips in the format `YYYY-MM-DD-foo`, you could use
+
+    link_match:
+      - ^\d\d\d\d-\d\d-\d\d-
+
+to render them as links.  So the ledger transaction header
+
+    2018-02-02 * Train Brussels airport to city
+        ; :2018-02-02-brussels-fosdem:debian:
+
+would become the following in beancount:
+
+    2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
+
+
+### Comments
+
+Comments are supported.  Since beancount currently [doesn't allow
+full-line comments within
+transactions](https://bitbucket.org/blais/beancount/issues/143), these
+are stored as metadata.
+
+
+### Virtual costs
+
+Beancount does not have a concept of [virtual
+costs](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-posting-costs)
+([issue 248](https://bitbucket.org/blais/beancount/issues/248)).
+ledger2beancount therefore treats them as regular costs.
+
+
+### Lots
+
+Lot costs and prices are supported, including per-unit and total lot
+costs.  Lot dates and lot notes are converted to beancount.
+
+The behaviour of ledger and beancount is different when it comes to
+costs.  In ledger, the statement
+
+    Assets:Test          10.00 EUR @ 0.90 GBP
+
+creates the lot `10.00 EUR {0.90 GBP}`.  In beancount, this is not the
+case and a cost is only associated if done so explicitly:
+
+    Assets:Test          10.00 EUR {0.90 GBP}
+
+This makes automatic conversion tricky because some statements should be
+simple conversions without associating a cost whereas it's vital to
+preserve the cost in other conversions.
+
+Generally, it doesn't make sense to preserve the cost for currency
+conversion (as opposed to conversions involving commodities like shares
+and stocks).  Since most currency codes consist of 3 characters (EUR,
+GBP, USD, etc), the script makes a simple conversion (`10.00 EUR @ 0.90
+GBP`) if both commodities consist of 3 characters.  Otherwise it
+associates a cost (`1 LU0274208692 {48.67 EUR}`).  Since some 3 character
+symbols might be commodities instead of currencies (e.g. ETH and BTH), the
+`currency_is_commodity` variable can be used to treat them as commodities
+and associate a cost in conversions.  Similarly, `commodity_is_currency`
+can be used to configure commodities that should be treated as currencies
+in the sense that no cost is retained.  This is useful if you, for
+example, track miles or hotel points, that are sometimes redeemed for a
+cash value.  Both of these variables expect beancount commodities, i.e.
+after transformation and mapping.  (Note that beancount itself uses the
+terms "commodity" and "currency" interchangeably.)
+
+
+### Balance assertions
+
+Ledger balance assertions are converted to beancount `balance` statements.
+Please note that beancount evaluates balance assertions at the beginning of
+the day whereas ledger evaluates them at the end of the transaction.
+Therefore, we schedule the balance assertion for the day *after* the
+original transaction.  This assumes that there are no other transactions
+on the same day that change the balance again for this account.
+
+
+### Automated transactions
+
+Ledger's [automated
+transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Automated-Transactions)
+are not supported in beancount.  They are added as comments to the
+beancount file.
+
+
+### Periodic transactions
+
+Ledger's [periodic
+transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Periodic-Transactions)
+are not supported in beancount.  They are added as comments to the
+beancount file.
+
+
+### Inline math
+
+Very simple inline math is supported in postings.  Specifically, basic
+multiplications and divisiosn are supported, such as shown in the
+following transactions:
+
+    2018-03-26 * Simple inline math
+        Assets:Test1            1 GBP @ (1/1.14 EUR)
+        Assets:Test2                       -0.88 EUR
+
+    2018-03-26 * Simple inline math
+        Assets:Test1                     (1 * 3 GBP)
+        Assets:Test2                          -3 GBP
+
+Support for more complex inline math would require substantial changes
+to the parser.
+
