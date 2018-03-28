@@ -47,6 +47,25 @@ the config file `ledger2beancount.yml` and if that is not found for
 alternative config file via `--config/-c`.  The file must end in `.yml`
 or `.yaml`.  See the sample config file for the variables you can use.
 
+While the configuration file is optional, you may have to define a
+number of variables for ledger2beancount to work correctly with your
+ledger files:
+
+* `ledger_indent` sets the indentation level used in your ledger file
+  (by default 4).
+* `date_match` has to be configured if you don't use the date format
+  YYYY-MM-DD.
+* `decimal_comma` has to be set to `true` if you use commas as the
+  decimal separator (for example, `10,12 EUR` meaning 10 Euro and
+  12 cents).
+* `commodity_map` defines mappings from ledger to beancount commodities.
+  You have to set this if you use commodity codes like `€` or `£` (to
+  map them to `EUR` and `GBP`, respectively).
+
+Other variables can be set to use various functionality offered by
+ledger2beancount.  Please read the [section on features](#features)
+to learn about these variables.
+
 
 Features
 --------
