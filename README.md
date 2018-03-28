@@ -11,6 +11,11 @@ Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
+The syntax of beancount is expected to become slightly less restrictive
+as some missing features are implemented (such as UTF-8 for account names
+and tags on a posting-level).  ledger2beancount aims to be compatible with
+the latest official release of beancount.
+
 
 Dependencies
 ------------
