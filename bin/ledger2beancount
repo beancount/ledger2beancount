@@ -397,16 +397,15 @@ sub map_metadata($) {
 # map a ledger account to a beancount account
 # ledger account: can be pretty much anything, as long as it's followed
 # by two spaces, a tab or the end of the line.
-# beancount accounts: "account names begin with a capital letter and are
-# followed letters, numbers or dash (-) characters. All other characters
-# are disallowed."
+# beancount accounts: "account names begin with a capital letter or a
+# number and are followed letters, numbers or dash (-) characters. All
+# other characters are disallowed."
 sub map_account($) {
     my ($account) = @_;
 
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
-    $account =~ s/:(\d+)([^:]+)/:$2$1/g; # Move digits from the front to the back
     $account =~ s/:(\p{lower})/:\U$1\E/g; # Make first letter uppercase
-    $account =~ s/:[^\p{letter}]/:X/g; # Make sure first character is a letter
+    $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
     # Work around lack of Unicode support (beancount #161)
     $account = NFKD $account;
     $account =~ s/\p{NonspacingMark}//g;
