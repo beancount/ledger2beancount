@@ -1,0 +1,584 @@
+
+; ------------------------------------------------------------------------
+; Accounts
+; ------------------------------------------------------------------------
+
+; Declarations are converted to ledger
+; The variable `account_open_date` (here 2010-03-01) is used as the open date
+; The "note" is converted to "description"
+account Assets:Test
+    note Just a test account
+
+; Note that account declarations are not optional in beancount!
+account Assets:-Test
+account Assets:A
+account Assets:B
+account Assets:Bar
+account Assets:Bal
+account Assets:École
+account Assets:Föö
+account Assets:MyLedger
+account Assets:Test1
+account Assets:Test2
+account Assets:Wallet
+account Equity:Opening-Balance
+account Expenses:Purchase
+account Liabilities:Credit Card_Test
+
+; Liabilities:Credit Card_Test -> Liabilities:Credit-Card-Test
+2018-03-28 * Space and many other characters not allowed in account names
+    Liabilities:Credit Card_Test        10.00 EUR
+    Assets:Wallet
+
+; expenses:purchase -> Expenses:Purchase
+2018-03-28 * First letter of each account component has to be upper case
+    expenses:purchase                   10.00 EUR
+    Assets:Wallet
+
+; Assets:-Test -> Assets:XTest
+2018-03-28 * First letter of each account component has to be an upper case letter or a number
+    Assets:-Test                        10.00 EUR
+    Assets:B
+
+; Assets:MyLedger -> Assets:MyBeancount (using `account_map`)
+2018-03-28 * Account names can be mapped using `account_map`
+    Assets:MyLedger                     10.00 EUR
+    Assets:B
+
+; Beancount currently doesn't support UTF-8 in account names.  Therefore,
+; ledger2beancount strips away accents and umlauts:
+
+; Assets:Föö -> Assets:Foo
+; Assets:École -> Assets:Ecole
+2018-03-28 * No accents or umlauts in account names
+    Assets:Föö                          10.00 EUR
+    Assets:École
+
+; ------------------------------------------------------------------------
+; Amounts
+; ------------------------------------------------------------------------
+
+; With `decimal_comma` false (the default), commas as thousand separator
+; are retained as they are allowed by beancount.
+2018-03-28 * Amounts can contain commas as thousand separator
+    Assets:A                     1,000,000.00 EUR
+    Assets:B
+
+; Set `decimal_comma` to `true` if you use `--decimal-comma` in ledger
+; Beancount currently doesn't support decimal commas, so they are
+; replaced.
+; With `decimal_comma: true`, the following is accepted by
+; ledger2beancount and converted to 10.12 EUR.
+;2018-03-28 * Amounts can contain commas as thousand separator
+;    Assets:A                            10,12 EUR
+;    Assets:B
+
+; ------------------------------------------------------------------------
+; Commodities
+; ------------------------------------------------------------------------
+
+; Declarations are converted to ledger
+; The variable `commodities_date` is used as the open date
+; The "note" is converted to "name"
+commodity EUR
+    note Euro
+
+; £10.00 -> 10.00 EUR
+2018-03-28 * Commodity symbols like £ have to be converted
+    Expenses:Purchase                      £10.00
+    Assets:Wallet
+
+; EUR 10.00 -> 10.00 EUR
+2018-03-28 * Commodities in front of the amount are converted to amount, followed by commodity
+    Expenses:Purchase                   EUR 10.00
+    Assets:Wallet
+
+; "DE0002635307" -> DE0002635307
+2018-03-28 * Quoted commodities are stripped"
+    Assets:A                         1 "DE0002635307"
+    Assets:B
+
+; "C mm.di!y" -> C-MM.DI-Y
+2018-03-28 * Commodities are converted to valid beancount commodities
+    Assets:A                        1 "C mm.di!y"
+    Assets:B
+
+; "M&M" -> MILESMORE (using `commodity_map`)
+2018-03-28 * Commodities can be mapped to other commodities
+    Assets:A                          10.00 "M&M"
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Flags
+; ------------------------------------------------------------------------
+
+; beancount: 2018-03-28 txn "Without a transaction flag beancount requires 'txn'"
+2018-03-28 Without a transaction flag beancount requires 'txn'
+    Assets:A                            10.00 EUR
+    Assets:B
+
+2018-03-28 ! Transactions flags are supported
+    Assets:A                            10.00 EUR
+    Assets:B
+
+2018-03-28 Posting flags are supported
+    ! Assets:A                          10.00 EUR
+    * Assets:B
+
+; ------------------------------------------------------------------------
+; Dates
+; ------------------------------------------------------------------------
+
+; `date_match` can be adapted to your date format if you don't use
+; `YYYY-MM-DD`.  beancount only supports `YYYY-MM-DD`
+; 2018/03/28 -> 2018-03-28
+2018/03/28 * Non-standard date formats require `date_match`
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ledger allows you to set the date so you can skip the year.
+; ledger2beancount supports this if `date_match_no_year` is set.
+; A complete date in `YYYY-MM-DD` format is generated since beancount
+; requires complete dates.
+
+Y 2017
+
+; 03-28 -> 2017-03-28
+03/28 * Date without year
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Auxiliary dates
+; ------------------------------------------------------------------------
+
+; Beancount currently doesn't have a concept of aux dates like ledger does,
+; although there;s a proposal in beancount to support dates on the posting
+; level.  In the meantime, aux dates are converted to metadata.
+2018-03-28=2018-03-27 * Ledger supports aux dates but beancount currently does not
+    Assets:A                            10.00 EUR
+    Assets:B
+
+2018-03-28 * Same for aux dates on postings
+    Assets:A                            10.00 EUR ; [=2018-03-27]
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Transaction codes
+; ------------------------------------------------------------------------
+
+; If `code_tag` is set, transaction codes will be converted to metadata
+
+2018-03-28 * (100) Code can be converted to metadata (if `code_tag` is set)
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Narration
+; ------------------------------------------------------------------------
+
+; The narration has to be quoted in beancount
+; beancount: 2018-03-28 * "Ledger's payee becomes the narration"
+2018-03-28 * Ledger's payee becomes the narration
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; beancount: 2018-03-28 * "Ledger's payee becomes the narration - \"quotes\" are handled"
+2018-03-28 * Ledger's payee becomes the narration - "quotes" are handled
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Payees
+; ------------------------------------------------------------------------
+
+; Ledger does not distinguish between payee and narration (a description,
+; basically a "memo" field).  Beancount does.
+
+; ledger2beancount offers several features to obtain a payee.
+
+; `payee_split`: can be used split the ledger payee into payee and
+; narration
+; For example:
+; payee_split:
+;   - (?<narration>.*?)\s+\((?<payee>.*)\)
+; This puts everything in brackets as the payee.  The rest is used
+; as the narration
+
+; beancount: 2018-03-28 * "Tesco" "Supermarket"
+2018-03-28 * Supermarket (Tesco)
+    Assets:A                            10.00 GBP
+    Assets:B
+
+; `payee_match` will assign a payee based on the match
+; payee_match:
+;   ^Oyster top-up: TfL
+; Assign payee "TfL" to everything matching "Oyster top-up".
+
+; beancount: 2018-03-28 * "TfL" "Oyster top-up"
+2018-03-28 * Oyster top-up
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; `payee_tag` and `payer_tag`
+; Use metadata with the key from `payee_tag` or `payer_tag` for payee.
+
+; payee_tag: payee
+; beancount: 2018-03-28 * "Martin "Test"
+2018-03-28 * Test
+    ; Payee: Martin
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; payer_tag: payer
+; beancount: 2018-03-28 * "Martin "Test"
+2018-03-28 * Test
+    ; Payer: Martin
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Metadata
+; ------------------------------------------------------------------------
+
+; Beancount doesn't use comments for tags or metadata
+
+; For metadata, you write
+;     key: "value"
+2018-03-28 * Metadata
+    ; key: value
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; Metadata keys can be converted to different keys with `metadata_map`
+; metadata_map:
+;   foo: bar
+
+; beancount:
+;   bar: "test"
+2018-03-28 * Metadata keys can be converted: foo -> bar
+    ; foo: test
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; In beancount, metadata values generally have to be quoted.
+; ledger allows typed metadata (`key::`) and this is not quoted
+; in beancount.  This makes sense in certain cases (e.g. dates),
+; but might not be the right thing for you.
+
+; beancount:
+;   year: 2017
+2018-03-28 * Typed metadata is not quoted
+    ; Year:: 2017
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Tags
+; ------------------------------------------------------------------------
+
+; Tags: you put them after the narration in beancount (but on the same
+; line)
+
+; beancount: 2018-03-28 * "Tag" #test
+2018-03-28 * Tag
+    ; :test:
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Links
+; ------------------------------------------------------------------------
+
+; Links in beancount allow you to link different transactions together
+; (put `^foo` on the narration line to add a link `foo`)
+
+; `link_match` allows you to change tags to links.  If it matches, it
+; will become a ^link instead of a #tag.
+; link_match:
+;   - ^\d\d\d\d-\d\d-\d\d-
+
+; beancount: 2018-03-28 * "Tag" #test ^2018-03-28-test
+2018-03-28 * Tag and link
+    ; :test:2018-03-28-test:
+    Assets:A                            10.00 EUR
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Comments
+; ------------------------------------------------------------------------
+
+; Comments are the same in beancount as in ledger (except that you don't
+; use comments for tags and metadata).
+
+; comment
+2018-03-28 * Show comments
+    Assets:A                            10.00 EUR ; comment
+    Assets:B  ; comment
+
+; However, currently you can't have a whole line consisting of only
+; a comment in a transaction.  This is allowed in ledger and will
+; hopefully be supported in beancount in the future.
+
+; ------------------------------------------------------------------------
+; Virtual costs
+; ------------------------------------------------------------------------
+
+; beancount doesn't have the concept of virtual costs at the moment.
+; Maybe this feature will come in the future.
+; For now, they are converted to "normal" costs
+
+; (@) -> @
+2018-03-28 * beancount lacks support for virtual costs
+    Assets:A               10.00 EUR (@) 0.88 GBP
+    Assets:B
+
+; ------------------------------------------------------------------------
+; Lots
+; ------------------------------------------------------------------------
+
+2018-03-28 * Lots are supported
+    Assets:A         1 "DE0002635307" {36.11 EUR}
+    Assets:B
+
+; The syntax for lot dates and lot notes are different
+
+; beancount: 1 DE0002635307 {36.11 EUR, 2018-03-27}
+2018-03-28 * Lots dates are different
+    Assets:A           1 "DE0002635307" {36.11 EUR} [2018-03-27]
+    Assets:B
+
+; beancount: 1 DE0002635307 {36.11 EUR, "Note!"}
+2018-03-28 * Lots notes are different
+    Assets:A           1 "DE0002635307" {36.11 EUR} (Note!)
+    Assets:B
+
+; beancount: 1 DE0002635307 {36.11 EUR, 2018-03-27, "Note!"}
+2018-03-28 * Lots date and lot note
+    Assets:A           1 "DE0002635307" {36.11 EUR} [2018-03-27] (Note!)
+    Assets:B
+
+; Lots, costs and prices
+
+2018-03-28 * Conversions are handled
+    Assets:Test              10.00 EUR @ 0.90 GBP
+    Assets:B
+
+; But the semantics are different!
+
+; In ledger, the transaction above actually creates a lot (check with
+; `--lots`), i.e. we now have 10.00 EUR at a cost of 0.90 GBP (on
+; 2018-03-28)
+
+; ledger --flat --lots bal assets:test
+; 10.00 EUR {0.90 GBP} [2018-03-28]  Assets:Test
+
+; You think you can do this:
+2018-03-28 * Remove this lot (wrong!)
+    Expenses:Purchase                    5.00 EUR
+    Assets:Test                         -5.00 EUR
+
+; but this does not remove the lot!
+
+; ledger --flat --lots bal assets:test
+;            -5.00 EUR
+; 10.00 EUR {0.90 GBP} [2018-03-28]  Assets:Test
+
+; Right, we removed 5.00 EUR but we still have the 10.00 EUR held at
+; a unit cost of 0.90 GBP with date 2018-03-28
+
+; Many ledger users are not aware because they never look at the
+; lot info with `--lots`.
+
+; You'd have to do:
+
+2018-03-28 * Remove this lot (correct)
+    Expenses:Purchase                      4.50 GBP
+    Assets:Test   -5.00 EUR {0.90 GBP} [2018-03-28]
+
+; Beancount handles this differently
+
+; And this is why the last transaction will generate an error
+; in beancount (convert this file with ledger2beancount and
+; check with `bean-check`).  (In fact, the other reason it
+
+; A simple conversion `A @ B` does not associate a cost.  In fact, we
+; shouldn't say "simple conversion" here.  `A @ B` means `A` at price
+; `B`.  It's a *price*.
+
+; In ledger, as we've seen, a price creates a lot (associates a cost
+; in beancount lingo).
+
+; If you want to associate a cost in beancount, you have to use
+; `A {B}`
+
+; So in the last transaction, we remove something held at a cost
+; but it doesn't exist (not in beancount because `@` doesn't
+; create a cost).  And so beancount gives an error.  (Ledger
+; generates a lot.  But even more so, you can remove lots which
+; don't exist.  Ledger allows this silently.)
+
+; This creates a cost in beancount:
+2018-03-28 * A cost
+    Assets:A                 10.00 EUR {0.90 GBP}
+    Assets:B
+
+; But do we really want to do that with currencies?  Let's say
+; your operating currency is GBP.  You travel to Spain, exchange
+; some GBP to EUR, spend some and some are left in your wallet
+; after your return.  Next year you go again and you exchange
+; some more;
+; So now you have 10 EUR at 0.90 GBP from last time and 120 EUR
+; at 0.88 GBP from this time.
+; You can track this using a cost:
+;     10.00 EUR {0.90 GBP}
+;    120.00 EUR {0.88 GBP}
+; But do you want to?
+
+; In most cases, the answer is no.  So don't use a cost in beancount.
+; Use a price.
+
+; Hmm, but now it gets tricky.
+
+; What if we have `A @ B` in ledger.  Should it be a price or a cost
+; in beancount?  As we saw in the example of our holiday in Spain,
+; we want a price.  But if I'm buying shares/stocks in a company,
+; I definitely want to retain the cost.  I own a certain number of
+; shares bought at a certain price.
+
+2018-03-28 * Shares with cost
+    Assets:A         1 "DE0002635307" {36.11 EUR}
+    Assets:B
+
+; But in ledger, many people write this as:
+
+2018-03-28 * Shares with cost
+    Assets:A         1 "DE0002635307" @ 36.11 EUR
+    Assets:B
+
+; because, as we've seen, it creates a lot with the right
+; information.
+
+; Ok, so we have:
+
+2018-03-28 * Currency -> currency
+    Assets:A                 10.00 EUR @ 0.90 GBP
+    Assets:B
+
+; and
+
+2018-03-28 * Shares with cost
+    Assets:A         1 "DE0002635307" @ 36.11 EUR
+    Assets:B
+
+; It's the same syntax but a different meaning!
+
+; Fortunately, it's fairly straightforward to differentiate.
+; ledger2beancount differentiates between "currencies" (which could
+; not have a cost) and "commodities" (which should have a cost).
+; Note that beancount itself uses these terms interchangeably, but
+; in terms of ledger2beancount there is a difference.
+;
+; If we find `A @ B`, we'll keep `A @ B` (`A` at price `B`, no
+; cost is retained) if it's a currency.  But if it's a commodity,
+; we'll convert `A @ B` to `A {B}`.
+
+; If a commodity has 3 characters (like EUR, USD, GBP), we assume
+; it's a currency.  The variable `currency_is_commodity` can override
+; this.  This is useful for ETH or BTC which have 3 characters. (You
+; may want to use XETH and XBTC btw.)
+;
+; And we have `commodity_is_currency` to say that a commodity is a
+; currency.  For example, if you track hotel points or airline miles
+; in ledger/beancount, you probably don't want to keep a cost
+; around.
+
+; Some examples:
+
+; beancount: 10.00 EUR @ 0.88 GBP
+2018-03-28 * Two currencies: don't keep cost
+    Assets:A                 10.00 EUR @ 0.88 GBP
+    Assets:B
+
+; beancount: 1 DE0002635307 {36.11 EUR}
+2018-03-28 * Commodity: keep cost
+    Assets:A         1 "DE0002635307" @ 36.11 EUR
+    Assets:B
+
+; currency_is_commodity:
+;   - BTC
+; beancount: 1 BTC {6482 EUR}
+2018-03-28 * What looks like a currency but isn't
+    Assets:A                     1 BTC @ 6482 EUR
+    Assets:B
+
+; commodity_is_currency:
+;   - MILESMORE
+; beancount: 10.00 EUR @ 3000 MILESMORE
+2018-03-28 * What looks like a commodity but isn't - get a 10 EUR voucher for 3000 Miles&More points
+    Assets:A              10.00 EUR @@ 3000 "M&M"
+    Assets:B
+
+; We hope that covers all cases!
+
+; ------------------------------------------------------------------------
+; Balance assertions
+; ------------------------------------------------------------------------
+
+; beancount has a "balance" directive
+
+; There is a subtle difference though:
+; ledger evaluates them at the end of the transaction
+; beancount evaluates balance assertions at the *beginning* of the day
+
+; ledger2beancount therefore schedules the balance assertion for the
+; day *after* the original transaction.  But this assumes that there
+; are no other transactions on the same day that change the balance
+; again for this account.
+
+2018-03-28 * Balance asserts are evaluated immediately in ledger, not so in beancount
+    Assets:Bal                          10.00 EUR = 10.00 EUR
+    Equity:Opening-Balance             -10.00 EUR
+
+; ------------------------------------------------------------------------
+; Automated transactions
+; ------------------------------------------------------------------------
+
+; Automated transactions are not supported in beancount, so ledger2beancount
+; comments them out.  You may have to write a beancount plugin.
+= expr true
+    Assets:A                            50.00 USD
+    Assets:B                           -50.00 USD
+
+; ------------------------------------------------------------------------
+; Periodic transactions
+; ------------------------------------------------------------------------
+
+; Periodic transactions are not supported in beancount, so ledger2beancount
+; comments them out.  You may have to write a beancount plugin.
+~ Yearly
+    Expenses:Auto:Repair                  $500.00
+    Assets
+
+; ------------------------------------------------------------------------
+; Inline math
+; ------------------------------------------------------------------------
+
+; Ledger and beancount both allow inline math.  ledger2beancount handles
+; simple cases only!  Basically, divisions and multiplications.  And
+
+; In beancount, the brackets are different:
+; 1 GBP @ (1/1.14 EUR) -> 1 GBP @ (1/1.14) EUR
+2018-03-26 * Simple inline math
+    Assets:Test1              1 GBP @ (1/1.14 EUR)
+    Assets:Test2                        -0.88 EUR
+
+2018-03-26 * Simple inline math
+    Assets:Test1                       (1 * 3 GBP)
+    Assets:Test2                           -3 GBP
+
+; Ledger allows *a lot*, e.g. (1 EUR + 2 EUR).  I don't know what beancount
+; allows, but ledger2beancount doesn't handle any complex expressions.
+
+; ------------------------------------------------------------------------
+
