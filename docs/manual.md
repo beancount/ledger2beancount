@@ -140,6 +140,12 @@ mappings to `account_map` to map the transformed account names to
 something different.  The mapping will work on your ledger account
 names and on the account names after the transformation.
 
+Unlike ledger, beancount expects all account names to start with one
+of five account types (`Assets`, `Liabilities`, `Equity`, `Expenses`,
+and `Income`, although this can be configured).  If you use more than
+five account types, you will have to rename them.  Currently,
+ledger2beancount doesn't have an option to map the account types.
+
 
 ### Amounts
 
