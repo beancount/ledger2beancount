@@ -646,7 +646,7 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_line $depth-1, "; $l";
 	}
-    } elsif ($l =~ /^(Y|year)\s+(\d{4})/) {  # year declaration
+    } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
     } elsif ($l =~ /^$price_RE/) {
 	$l = sprintf "%s price %s $+{value} %s", pp_date($+{date}, $year), map_commodity $+{commodity1}, map_commodity $+{commodity2};
