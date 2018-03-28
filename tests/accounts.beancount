@@ -1,6 +1,8 @@
 
 1970-01-01 open Assets:Test
   description: "Test account"
+;   alias food
+;   default
 
 1970-01-01 open Equity:Opening-Balance
   description: "opening balance..."

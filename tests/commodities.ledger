@@ -13,6 +13,8 @@ commodity AnotherAnotherAnotherAnother
 commodity EUR
     note Euro
     format 1000.00EUR
+    nomarket
+    default
 
 commodity Gandi
     note Gandi points

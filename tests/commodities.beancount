@@ -12,6 +12,8 @@
 
 1970-01-01 commodity EUR
   name: "Euro"
+;   nomarket
+;   default
 
 1970-01-01 commodity GANDI
   name: "Gandi points"
