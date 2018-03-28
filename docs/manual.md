@@ -76,8 +76,8 @@ on the example provided:
 
     ledger2beancount examples/simple.ledger > simple.beancount
 
-Afterwards, you should validate your file with `bean-check` and fix all
-errors:
+After you convert your ledger file, you should validate the generated
+beancount file with `bean-check` and fix all errors:
 
     bean-check simple.beancount
 
@@ -89,6 +89,24 @@ with a simple test case.
 
 Features
 --------
+
+ledger2beancount supports most of the syntax from ledger.  It also offers
+some features to improve the conversion from ledger to beancount.
+
+If you're new to beancount, we suggest you read this section in parallel
+to the [illustrated ledger file provided](../examples/illustrated.ledger).
+This example ledger file explains differences between ledger and beancount,
+shows how ledger syntax is converted to beancount and describes how you
+can use the features described in this section to improve the conversion
+from ledger to beancount.  The illustrated example uses the same
+subsections as this section, so it's easy to follow in parallel.
+
+You can convert the illustrated ledger file to beancount like this:
+
+    ledger2beancount --config examples/illustrated.yml examples/illustrated.ledger
+
+But please be aware that it doesn't pass `bean-check`.  See the comments in
+the file as to why.
 
 Note on **regular expressions**: many of the features described below require
 you to specify regular expressions in ledger2beancount configuration file. The

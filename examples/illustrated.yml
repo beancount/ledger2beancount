@@ -1,0 +1,94 @@
+
+date_match: (?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})
+# Date without year (if ledger's Y/year directive is used)
+date_match_no_year: (?<month>\d{2})[/-](?<day>\d{2})
+
+# Date used to open accounts
+account_open_date: "2010-03-01" # Unix epoch, just because
+
+# Date used to create commodities
+commodities_date:  "2010-03-01" # Unix epoch, just because
+
+beancount_indent: 2
+ledger_indent: 4
+
+# list of frequently used currencies (not *all* used currencies)
+operating_currencies:
+  - EUR
+
+# Set to `true` if you use option --decimal-comma in ledger
+decimal_comma: false
+
+# Any other include files listed at the top
+includes: []
+
+# mapping of ledger metadata key to corresponding beancount key
+metadata_map:
+  x-payee: payee
+  x-payer: payer
+  foo: bar
+
+# metadata tags (*after* above mapping) used for specific purposes
+payee_tag: payee
+payer_tag: payer
+
+# payee_split: a list of regular expressions which allows you
+# to split ledger's payee field into payee and narration.
+# Use named capture groups "payee" and "narration".
+payee_split:
+  - (?<narration>.*?)\s+\((?<payee>.*)\)
+
+# payee_match: a hash of regular expressions and corresponding
+# payees.  The whole ledger payee becomes the narration and
+# the matched payee from the regular expression becomes the
+# payee.
+payee_match:
+  ^Oyster top-up: TfL
+
+account_map:
+  "Equity:Opening-balance": Equity:Opening-Balance
+  Assets:MyLedger: Assets:MyBeancount
+
+# mapping of ledger commodities to valid beancount commodities
+commodity_map:
+  "$": USD
+  "£": GBP
+  "€": EUR
+  "¥": JPY
+  M&M: MILESMORE
+
+# You can set the following metadata tags to an empty string if you
+# don't want the metadata to be added to beancount.
+auxdate_tag: aux-date
+code_tag: code
+
+# Render tags as metadata instead of tags:
+# If true, tags are stored as metadata with the key "tags"
+# If false, tags are rendered as #tags after the narration
+tag_as_metadata: false
+
+# A list of regular expressions that will cause a tag to be
+# rendered as a link. (Only works if tag_as_metadata is false)
+link_match:
+  - ^\d\d\d\d-\d\d-\d\d-
+
+# A list of metadata tags whose values should be converted to
+# beancount links instead of metadata.
+# Tags are case insensitive.  Values must not contain whitespace.
+link_tags: []
+
+# A list of commodities that should be treated as commodities
+# rather than currencies even though they consist of 3 characters
+# (which is usually a characteristic of a currency).  Expects
+# beancount commodities (i.e. after transformation and mapping).
+currency_is_commodity:
+  - BTC
+  - ETH
+  - IBM
+
+# A list of commodities that should be treated as currencies
+# (in the sense that cost is not retained).  Expects beancount
+# commodities (i.e. after transformation and mapping).
+commodity_is_currency:
+  - MILESMORE
+
