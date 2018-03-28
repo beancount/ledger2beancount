@@ -610,7 +610,7 @@ print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_cur
 # and plugins must be in the top-level file)
 print "include \"$_\"\n" foreach @{$config->{includes}};
 
-if (exists $config->{plugins} && @{$config->{plugins}}) {
+if (defined $config->{plugins}) {
     print <<'EOT';
 
 ; plugins listed here because they don't work if declared in included files
