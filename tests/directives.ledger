@@ -1,8 +1,7 @@
 
-; Accounts and commodities are declared in the include files
-!include def-include1.ledger
-@include def-include2.ledger
-include def-include3.ledger
+1970-01-01 open Assets:Test
+1970-01-01 open Equity:Opening-Balance
+1970-01-01 commodity EUR
 
 = expr true
     Assets:Foo                          50.00 USD
@@ -60,4 +59,8 @@ year 2016
 2018-03-25 * Transaction with year
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
+
+!include include1.ledger
+@include include2.ledger
+include include3.ledger
 
