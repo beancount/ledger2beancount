@@ -1,19 +1,19 @@
 ; Config: amounts-decimal-comma.yml
 
-1970-01-01 open Assets:Test99:Test99
+1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
 
 2018-03-26 * "Decimal comma"
-  Assets:Test99:Test99               10.12 EUR
+  Assets:99Test:Test99               10.12 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Decimal comma, with thousand separator"
-  Assets:Test99:Test99            1000.00 EUR
+  Assets:99Test:Test99            1000.00 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Decimal comma, with thousand separator"
-  Assets:Test99:Test99            1000.00 EUR
+  Assets:99Test:Test99            1000.00 EUR
   Equity:Opening-Balance
 

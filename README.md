@@ -82,13 +82,11 @@ automatically:
    (`Liabilities:Credit Card` becomes `Liabilities:Credit-Card`)
 2. Replaces account names starting with lower case letters with
    upper case letters (`Assets:test` becomes `Assets:Test`)
-3. Moves digits from the beginning of the account name to the
-   end (`Assets:99Ranch` becomes `Assets:Ranch99`)
-4. Ensures the first letter is a letter by replacing a non-letter
-   first character with an "X".
-5. Strips accents and umlauts because they are currently not
+3. Strips accents and umlauts because they are currently not
    supported in beancount ([issue
    171](https://bitbucket.org/blais/beancount/issues/171)).
+4. Ensures the first letter is a letter or number by replacing
+   a non-letter first character with an "X".
 
 While these transformations lead to valid beancount account names,
 they might not be what you desire.  Therefore, you can add account

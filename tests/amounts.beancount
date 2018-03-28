@@ -1,5 +1,5 @@
 
-1970-01-01 open Assets:Test99:Test99
+1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Assets:Test1
 1970-01-01 open Assets:Test2
 1970-01-01 open Equity:Opening-Balance
@@ -9,83 +9,83 @@
 1970-01-01 commodity USD
 
 2018-03-26 * "Commodity after amount"
-  Assets:Test99:Test99                   1 EUR
+  Assets:99Test:Test99                   1 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity after amount, no space"
-  Assets:Test99:Test99                    1 EUR
+  Assets:99Test:Test99                    1 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount"
-  Assets:Test99:Test99                   1 EUR
+  Assets:99Test:Test99                   1 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, no space"
-  Assets:Test99:Test99              1000.00 EUR
+  Assets:99Test:Test99              1000.00 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity after amount, negative"
-  Assets:Test99:Test99                  -1 EUR
+  Assets:99Test:Test99                  -1 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity after amount, negative, no space"
-  Assets:Test99:Test99                   -1 EUR
+  Assets:99Test:Test99                   -1 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, negative"
-  Assets:Test99:Test99                  -3 EUR
+  Assets:99Test:Test99                  -3 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, negative"
-  Assets:Test99:Test99                  -2 EUR
+  Assets:99Test:Test99                  -2 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol after amount"
-  Assets:Test99:Test99                    100 USD
+  Assets:99Test:Test99                    100 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol after amount, negative"
-  Assets:Test99:Test99                     -1 USD
+  Assets:99Test:Test99                     -1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol before amount"
-  Assets:Test99:Test99                      1 USD
+  Assets:99Test:Test99                      1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol before amount, negative"
-  Assets:Test99:Test99                     -1 USD
+  Assets:99Test:Test99                     -1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol after amount, with space"
-  Assets:Test99:Test99                     1 USD
+  Assets:99Test:Test99                     1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol before amount, with space"
-  Assets:Test99:Test99                     1 USD
+  Assets:99Test:Test99                     1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol after amount, negative, with space"
-  Assets:Test99:Test99                    -1 USD
+  Assets:99Test:Test99                    -1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity symbol before amount, negative"
-  Assets:Test99:Test99                    -1 USD
+  Assets:99Test:Test99                    -1 USD
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity after amount, comma"
-  Assets:Test99:Test99               1,000 EUR
+  Assets:99Test:Test99               1,000 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, comma"
-  Assets:Test99:Test99            1,000.00 EUR
+  Assets:99Test:Test99            1,000.00 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, comma, no space"
-  Assets:Test99:Test99             1,000.00 EUR
+  Assets:99Test:Test99             1,000.00 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Commodity before amount, comma, one million"
-  Assets:Test99:Test99        1,000,000.00 EUR
+  Assets:99Test:Test99        1,000,000.00 EUR
   Equity:Opening-Balance
 
 2018-03-26 * "Simple inline math"
