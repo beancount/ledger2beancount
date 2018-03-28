@@ -462,7 +462,7 @@ beancount file.
 ### Inline math
 
 Very simple inline math is supported in postings.  Specifically, basic
-multiplications and divisiosn are supported, such as shown in the
+multiplications and divisions are supported, such as shown in the
 following transactions:
 
     2018-03-26 * Simple inline math
