@@ -1,8 +1,13 @@
+1970-01-01 open Assets:Test
+1970-01-01 open Equity:Opening-Balance
+1970-01-01 commodity EUR
 
-; Accounts and commodities are declared in the include files
-include "def-include1.beancount"
-include "def-include2.beancount"
-include "def-include3.beancount"
+1970-01-01 txn "open Assets:Test"
+
+1970-01-01 txn "open Equity:Opening-Balance"
+
+1970-01-01 txn "commodity EUR"
+
 
 ; = expr true
 ;   Assets:Foo                          50.00 USD
@@ -48,4 +53,8 @@ include "def-include3.beancount"
 2018-03-25 * "Transaction with year"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
+
+include "include1.beancount"
+include "include2.beancount"
+include "include3.beancount"
 

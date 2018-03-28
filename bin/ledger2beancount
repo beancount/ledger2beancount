@@ -89,6 +89,13 @@ my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)( 
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 
+my @output; # Used to store the output of the script
+# Store accounts and commidities encountered and declared
+# value == undef: seen
+# value == 1: declared
+my %account_declared;
+my %commodity_declared;
+
 # Declarations
 sub map_commodity($);
 
@@ -412,6 +419,7 @@ sub map_account($) {
     $account =~ s/\p{NonspacingMark}//g;
     $account =~ s/[^a-zA-Z0-9:-]/-/g; # Replace disallowed characters
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+    $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
 }
 
@@ -423,10 +431,10 @@ sub map_account($) {
 sub map_commodity($) {
     my ($commodity) = @_;
 
-    return $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
+    $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
     $commodity =~ s/(^")|("$)//g;
     # Check again after removing the quote
-    return $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
+    $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 
     # Maxium limit for beancount commodities: 24 characters
     $commodity = substr (uc $commodity, 0, 24);
@@ -439,8 +447,9 @@ sub map_commodity($) {
     $commodity =~ s/^[^\p{letter}]/X/g; # Make sure first character is a letter
     $commodity =~ s/[^\p{letter}\p{number}]$/X/g; # Make sure last character is a letter or number
 
-    return $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
+    $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 
+    $commodity_declared{$commodity} = undef if not defined $commodity_declared{$commodity};
     return $commodity;
 }
 
@@ -462,7 +471,7 @@ sub replace_commodity($) {
 sub print_line($$) {
     my ($depth, $line) = @_;
 
-    print indent($depth, $line), "\n";
+    push @output, indent($depth, $line), "\n";
 }
 
 
@@ -471,7 +480,7 @@ sub print_line($$) {
 sub print_comment_top_level($$) {
     my ($depth, $comment) = @_;
 
-    print "; ", indent($depth, $comment), "\n";
+    push @output, "; ", indent($depth, $comment), "\n";
 }
 
 
@@ -587,7 +596,7 @@ sub process_txn(@) {
 	    die "Don't know how to process transaction line: $l\n";
 	}
     }
-    print pop_txn();
+    push @output, pop_txn();
 }
 
 
@@ -661,7 +670,8 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	}
     } elsif ($l =~ /^[!@]?account\s+(.*)/) {  # account declaration
-	printf "$config->{account_open_date} open %s\n", map_account $1;
+	$account_declared{map_account $1} = 1;
+	print_line $depth, sprintf "$config->{account_open_date} open %s", map_account $1;
 	@stanza = read_stanza \@input;
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
@@ -674,7 +684,8 @@ while (@input) {
 	    }
 	}
     } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
-	printf "$config->{commodities_date} commodity %s\n", map_commodity $1;
+	$commodity_declared{map_commodity $1} = 1;
+	print_line $depth, sprintf "$config->{commodities_date} commodity %s", map_commodity $1;
 	@stanza = read_stanza \@input;
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
@@ -726,4 +737,16 @@ while (@input) {
 	print_line 0, $l;
     }
 }
+
+# Print missing account and commodity declarations
+for my $a (sort keys %account_declared) {
+    printf "$config->{account_open_date} open $a\n" if not defined $account_declared{$a};
+}
+
+for my $c (sort keys %commodity_declared) {
+    printf "$config->{commodities_date} commodity $c\n" if not defined $commodity_declared{$c};
+}
+
+# Print the converted beancount output
+print $_ for (@output);
 
