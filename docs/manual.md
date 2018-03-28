@@ -52,9 +52,9 @@ number of variables for ledger2beancount to work correctly with your
 ledger files:
 
 * `ledger_indent` sets the indentation level used in your ledger file
-  (by default 4).
+  (by default `4`).
 * `date_match` has to be configured if you don't use the date format
-  YYYY-MM-DD.
+  `YYYY-MM-DD`.
 * `decimal_comma` has to be set to `true` if you use commas as the
   decimal separator (for example, `10,12 EUR` meaning 10 Euro and
   12 cents).
@@ -94,7 +94,7 @@ automatically:
    supported in beancount ([issue
    171](https://bitbucket.org/blais/beancount/issues/171)).
 4. Ensures the first letter is a letter or number by replacing
-   a non-letter first character with an "X".
+   a non-letter first character with an `X`.
 
 While these transformations lead to valid beancount account names,
 they might not be what you desire.  Therefore, you can add account
@@ -129,7 +129,7 @@ beancount commodities.  This involves replacing all invalid characters
 with a dash (a character allowed in beancount commodities but not in
 ledger commodities), stripping quoted commodities, making the commodity
 uppercase and limiting it to 24 characters.  Furthermore, the first
-character will be replaced with an "X" if it's not a letter and the
+character will be replaced with an `X` if it's not a letter and the
 same will be done for the last character if it's not a letter or digit.
 
 If you require a mapping between ledger and beancount commodities, you
@@ -137,8 +137,8 @@ can use `commodity_map`.  You can use your ledger commodity names or
 the names after the transformation in the map to perform a mapping to
 another commodity name.
 
-Commodity symbols (like $, € and £) are supported and converted to
-their respective commodity codes (like USD, EUR, GBP).  Update
+Commodity symbols (like `$`, `€` and `£`) are supported and converted to
+their respective commodity codes (like `USD`, `EUR`, `GBP`).  Update
 `commodity_map` if you use other symbols.
 
 
@@ -153,7 +153,7 @@ flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 ### Dates
 
 ledger supports a wide range of date formats whereas beancount requires
-all dates in the format YYYY-MM-DD (ISO 8601).  The regular expression
+all dates in the format `YYYY-MM-DD` (ISO 8601).  The regular expression
 from the config variable `date_match` is used to match the date from the
 ledger file.  You can adapt it to your needs but make sure that your
 regular expression contains the named capture groups `year`, `month` and
@@ -162,7 +162,7 @@ regular expression contains the named capture groups `year`, `month` and
 Ledger allows dates without a year if the year is declared using the `Y`
 or `year` directive.  If `date_match_no_year` is set (with the capture
 groups `month` and `day`), ledger2beancount can convert such dates to
-YYYY-MM-DD.
+`YYYY-MM-DD`.
 
 
 ### Auxiliary dates
@@ -374,11 +374,11 @@ preserve the cost in other conversions.
 
 Generally, it doesn't make sense to preserve the cost for currency
 conversion (as opposed to conversions involving commodities like shares
-and stocks).  Since most currency codes consist of 3 characters (EUR,
-GBP, USD, etc), the script makes a simple conversion (`10.00 EUR @ 0.90
+and stocks).  Since most currency codes consist of 3 characters (`EUR`,
+`GBP`, `USD`, etc), the script makes a simple conversion (`10.00 EUR @ 0.90
 GBP`) if both commodities consist of 3 characters.  Otherwise it
 associates a cost (`1 LU0274208692 {48.67 EUR}`).  Since some 3 character
-symbols might be commodities instead of currencies (e.g. ETH and BTH), the
+symbols might be commodities instead of currencies (e.g. `ETH` and `BTH`), the
 `currency_is_commodity` variable can be used to treat them as commodities
 and associate a cost in conversions.  Similarly, `commodity_is_currency`
 can be used to configure commodities that should be treated as currencies
