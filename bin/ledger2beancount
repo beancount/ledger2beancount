@@ -16,6 +16,7 @@ use open qw(:std :locale);
 use Carp::Assert;
 use Config::Onion;
 use Date::Calc qw(Add_Delta_Days);
+use DateTime::Format::Strptime qw(strftime);
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
 use POSIX qw(ceil);
@@ -42,8 +43,8 @@ foreach my $config_file (@config_files) {
     last if defined $config;
 }
 
-$config->set_default(date_match => qr"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})");
-$config->set_default(date_match_no_year => qr"(?<month>\d{2})-(?<day>\d{2})");
+$config->set_default(date_format => "%Y-%m-%d");
+$config->set_default(date_format_no_year => "%m-%d");
 $config->set_default(account_open_date => "1970-01-01");
 $config->set_default(commodities_date => "1970-01-01");
 $config->set_default(payee_tag => "");
@@ -57,12 +58,9 @@ $config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "E
 $config = $config->get;
 
 # regular expression snippets used for ledger parsing
-my $date_RE = qr{$config->{date_match}};
-my $date_no_year_RE = qr{$config->{date_match_no_year}};
+my $date_RE = qr/\d+[^ =]+/;
 my $flags_RE = qr/[*!]/;
-my $txn_header_no_date_RE = qr/\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?$txn_header_no_date_RE/;
-my $txn_header_no_year_RE = qr/^(?<date>$date_no_year_RE)(=(?<auxdate>$date_no_year_RE))?$txn_header_no_date_RE/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
@@ -128,19 +126,31 @@ sub mk_beancount_string($) {
 
 # Print a date in ISO 8601 format (YYYY-MM-DD)
 sub pp_date($$) {
-    my ($date, $year) = @_;
+    my ($date_str, $year) = @_;
 
-    if ($date =~ /$date_RE/) {
-	return sprintf "%04d-%02d-%02d", $+{year}, $+{month}, $+{day};
-    } elsif ($date =~ /$date_no_year_RE/) {
+    my $date;
+
+    my $date_complete = DateTime::Format::Strptime->new(
+	pattern  => $config->{date_format},
+	on_error => "undef",
+    );
+    $date = $date_complete->parse_datetime($date_str);
+    return strftime("%F", $date) if $date;
+
+    my $date_no_year = DateTime::Format::Strptime->new(
+	pattern  => $config->{date_format_no_year},
+	on_error => "undef",
+    );
+    $date = $date_no_year->parse_datetime($date_str);
+    if ($date) {
 	if ($year) {
-	    return sprintf "%04d-%02d-%02d", $year, $+{month}, $+{day};
+	    $date->set_year($year);
+	    return strftime("%F", $date);
 	} else {
 	    die "Date without year but no Y/year directive";
 	}
     } else {
-	# This can't happen since every caller did a regex match already
-	die "Can't parse date $date";
+	die "Can't parse date $date_str";
     }
 }
 
@@ -756,7 +766,7 @@ while (@input) {
 	    # Not supported in beancount
 	    print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
-	if ($l =~ /$txn_header_RE/ || $l =~ /$txn_header_no_year_RE/) {  # txn header
+	if ($l =~ /$txn_header_RE/) {  # txn header
 	    $in_postings = 0;
 	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $+{narration};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};

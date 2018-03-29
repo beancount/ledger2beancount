@@ -23,13 +23,5 @@ while (<$input>) {
 }
 close $input;
 
-if ($format) {
-    $format =~ s/%Y/(?<year>\\d\{4\})/;
-    $format =~ s/%m/(?<month>\\d\{2\})/;
-    $format =~ s/%d/(?<day>\\d\{2\})/;
-    if ($format =~ /%/) {
-        die "ledger2beancount cannot handle your date format";
-    }
-    print "date_match: $format\n";
-}
+print "date_format: \"$format\"\n" if $format;
 

@@ -47,6 +47,7 @@ ledger2beancount uses several Perl modules:
 * Carp::Assert
 * Config::Onion
 * Date::Calc
+* DateTime::Format::Strptime
 * File::BaseDir
 * Getopt::Long::Descriptive
 * YAML::XS

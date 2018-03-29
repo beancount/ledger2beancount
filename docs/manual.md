@@ -26,7 +26,7 @@ If you use Debian, you can install the dependencies with this command:
 
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
         libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
-        libgetopt-long-descriptive-perl
+        libgetopt-long-descriptive-perl libdatetime-format-strptime-perl
 
 ledger2beancount itself consists of one script.  You can clone the
 repository and run the script directly or copy it to `$HOME/bin` or
@@ -200,16 +200,19 @@ flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 ### Dates
 
 ledger supports a wide range of date formats whereas beancount requires
-all dates in the format `YYYY-MM-DD` (ISO 8601).  The regular expression
-from the config variable `date_match` is used to match the date from the
-ledger file.  You can adapt it to your needs but make sure that your
-regular expression contains the named capture groups `year`, `month` and
-`day`.
+all dates in the format `YYYY-MM-DD` (ISO 8601).  The variable
+`date_format` has to be set if you don't use ISO 8601 for the dates in
+your ledger file.  `date_format` uses the same format as the ledger
+options `--input-date-format` and `--date-format` (see `man 1 date`).
 
 Ledger allows dates without a year if the year is declared using the `Y`
-or `year` directive.  If `date_match_no_year` is set (with the capture
-groups `month` and `day`), ledger2beancount can convert such dates to
-`YYYY-MM-DD`.
+or `year` directive.  If `date_format_no_year` is set, ledger2beancount
+can convert such dates to `YYYY-MM-DD`.
+
+While ledger2beancount itself doesn't read your ledger config file, the
+script `ledger2beancount-ledger-config` can be used to parse your ledger
+config file (`~/.ledgerrc`) or your ledger file (ledger files may contain
+ledger options) to output the correct config option for ledger2beancount.
 
 
 ### Auxiliary dates

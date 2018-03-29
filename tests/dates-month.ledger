@@ -1,0 +1,11 @@
+
+account Assets:Test
+account Equity:Opening-Balance
+
+commodity EUR
+commodity USD
+
+2018-Mar-29 * Non-ISO 8601 date
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
