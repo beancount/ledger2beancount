@@ -29,28 +29,12 @@ the converted data to `stdout`.  You can run ledger2beancount like this:
 
     ledger2beancount test.ledger > test.beancount
 
-Afterwards, please validate your file with `bean-check` and fix all errors:
 
-    bean-check test.beancount
-
-If you believe that ledger2beancount could have produced a better
-conversion or if you get an error message from ledger2beancount, please
-[file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
-with a simple test case.
-
-
-Dependencies
+Installation
 ------------
 
-ledger2beancount uses several Perl modules:
-
-* Carp::Assert
-* Config::Onion
-* Date::Calc
-* DateTime::Format::Strptime
-* File::BaseDir
-* Getopt::Long::Descriptive
-* YAML::XS
+Please see [the manual](docs/manual.md#installation) for dependencies and
+installation instructions.
 
 
 Features
