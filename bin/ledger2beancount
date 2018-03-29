@@ -792,7 +792,10 @@ while (@input) {
 	}
 	@stanza = read_stanza \@input;
 	process_txn @stanza;
+    } elsif ($l =~ /^\h*$/) {
+	print_line 0, "";
     } else {
+	print_comment_top_level 0, "ledger2beancount: Unknown line. Please report. Line: $l";
 	print_line 0, $l;
     }
 }
