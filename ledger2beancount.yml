@@ -16,6 +16,13 @@ ledger_indent: 4
 operating_currencies:
   - EUR
 
+# emit account and commodity declares
+# (Note: thee declarations done in ledger via `account` and
+# `commodity` are always converted.  If this option is true,
+# declarations are created for those which have not been
+# explicitly declared in ledger but used.)
+automatic_declarations: true
+
 # Set to `true` if you use option --decimal-comma in ledger
 decimal_comma: false
 
