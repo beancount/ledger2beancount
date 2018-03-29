@@ -184,7 +184,7 @@ beancount.
 Like accounts, ledger2beancount will convert ledger commodity
 declarations to beancount.  The `note` is converted to `name`.  As with
 account names, ledger2beancount will create `commodity` statements for
-all commoditis used in your ledger file (if `automatic_declarations`
+all commodities used in your ledger file (if `automatic_declarations`
 is `true`).
 
 ledger2beancount will automatically convert commodities to valid
