@@ -1,5 +1,7 @@
 1970-01-01 open Assets:Another:Alias
+1970-01-01 open Assets:Checking
 1970-01-01 open Assets:GG
+1970-01-01 open Assets:Savings
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test1:Test2:AA
 1970-01-01 open Assets:Test1:Test2:Another:Alias
@@ -114,4 +116,14 @@ include "include3.beancount"
 2018-03-29 * "Test apply"
   Assets:GG     10.00 EUR
   Assets:Another:Alias
+
+
+2018-03-29 * "Bucket"
+  Assets:Test                        10.00 EUR
+  Assets:Checking
+
+
+2018-03-29 * "Bucket"
+  Assets:Test                        10.00 EUR
+  Assets:Savings
 

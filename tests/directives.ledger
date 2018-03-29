@@ -121,3 +121,13 @@ alias BB=Assets:Another:Alias
     Assets:GG     10.00 EUR
     BB
 
+bucket Assets:Checking
+
+2018-03-29 * Bucket
+    Assets:Test                        10.00 EUR
+
+A Assets:Savings
+
+2018-03-29 * Bucket
+    Assets:Test                        10.00 EUR
+
