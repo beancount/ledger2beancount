@@ -101,6 +101,10 @@ my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
 # Conversion notes for users from ledger2beancount
 my @conversion_notes;
+# Keep track of all ledger accounts and commodities to check for
+# collisions after remapping is done.
+my %ledger_accounts;
+my %ledger_commodities;
 
 # Declarations
 sub map_commodity($);
@@ -447,6 +451,8 @@ sub map_account($) {
 	$account = map_account_apply $account;
     }
 
+    $ledger_accounts{$account} = 1;
+
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
     $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
@@ -466,6 +472,8 @@ sub map_account($) {
 # characters may include "_-'."
 sub map_commodity($) {
     my ($commodity) = @_;
+
+    $ledger_commodities{$commodity} = 1;
 
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
     $commodity =~ s/(^")|("$)//g;
@@ -829,6 +837,30 @@ while (@input) {
 	print_line 0, $l;
     }
 }
+
+# Check for collisions
+my %mapped_accounts;
+foreach (keys %ledger_accounts) {
+    push @{$mapped_accounts{map_account $_}}, $_;
+}
+foreach (sort keys %mapped_accounts) {
+    if (@{$mapped_accounts{$_}} > 1) {
+        print_warning "Collision for account \"$_\": " . join ", ", sort @{$mapped_accounts{$_}};
+    }
+}
+
+my %mapped_commodities;
+foreach (keys %ledger_commodities) {
+    push @{$mapped_commodities{map_commodity $_}}, $_;
+}
+foreach (sort keys %mapped_commodities) {
+    if (@{$mapped_commodities{$_}} > 1) {
+        print_warning "Collision for commodity \"$_\": " . join ", ", sort @{$mapped_commodities{$_}};
+    }
+}
+
+
+# Print everything
 
 if (@conversion_notes) {
     print ";", "-"x70, "\n";

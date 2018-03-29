@@ -1,3 +1,8 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;   - Collision for commodity "USD": $, USD
+;----------------------------------------------------------------------
+
 
 1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Assets:Test1
