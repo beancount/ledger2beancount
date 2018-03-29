@@ -599,7 +599,7 @@ sub process_txn(@) {
 }
 
 
-# Read one ledger stanza (everything intended by whitespace)
+# Read one ledger stanza (everything indented by whitespace)
 sub read_stanza($) {
     my ($input_ref) = @_;
 
