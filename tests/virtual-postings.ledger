@@ -1,0 +1,12 @@
+
+2018-03-17 * Virtual posting with parentheses
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+    (Budget:Test)                     -10.00 EUR
+
+2018-03-17 * Virtual posting with brackets
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+    [Assets:Wallet]                     7.00 EUR
+    [Equity:Opening-Balance]           -7.00 EUR
+
