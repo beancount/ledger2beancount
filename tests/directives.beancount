@@ -1,8 +1,13 @@
+1970-01-01 open Assets:Another:Alias
+1970-01-01 open Assets:GG
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test1:Test2:AA
+1970-01-01 open Assets:Test1:Test2:Another:Alias
 1970-01-01 open Assets:Test1:Test2:BB
 1970-01-01 open Assets:Test1:Test2:CC:DD
 1970-01-01 open Assets:Test1:Test2:EE:FF
+1970-01-01 open Assets:Test1:Test2:XXX:AA
+1970-01-01 open Assets:What:A:Long:Name
 1970-01-01 open Equity:Opening-Balance
 1970-01-01 commodity EUR
 
@@ -87,4 +92,26 @@ include "include3.beancount"
   Assets:Test1:Test2:CC:DD         10.00 EUR
   Assets:Test1:Test2:EE:FF
 
+
+; Test apply account and alias
+
+
+2018-03-29 * "Test apply"
+  Assets:Test1:Test2:AA            10.00 EUR
+  Assets:What:A:Long:Name
+
+
+2018-03-29 * "Test apply"
+  Assets:Test1:Test2:XXX:AA            10.00 EUR
+  Assets:Test1:Test2:Another:Alias
+
+
+2018-03-29 * "Test apply"
+  Assets:GG     10.00 EUR
+  Assets:Test1:Test2:Another:Alias
+
+
+2018-03-29 * "Test apply"
+  Assets:GG     10.00 EUR
+  Assets:Another:Alias
 

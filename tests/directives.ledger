@@ -88,3 +88,36 @@ end apply
 end apply
 end apply
 
+; Test apply account and alias
+
+alias BB=Assets:What:A:Long:Name
+!apply account Assets:
+@apply account Test1:::::::::::
+@apply account Test2
+
+2018-03-29 * Test apply
+    AA            10.00 EUR
+    BB
+
+alias BB=Another:Alias
+apply account XXX
+
+2018-03-29 * Test apply
+    AA            10.00 EUR
+    BB
+
+end apply
+end apply
+end apply
+end apply
+
+2018-03-29 * Test apply
+    Assets:GG     10.00 EUR
+    BB
+
+alias BB=Assets:Another:Alias
+
+2018-03-29 * Test apply
+    Assets:GG     10.00 EUR
+    BB
+

@@ -98,6 +98,7 @@ my %account_declared;
 my %commodity_declared;
 # Store some ledger directives relevant for processing
 my @ledger_apply; # Capture open "apply" statements
+my %ledger_alias; # Capture "alias" statements
 
 # Declarations
 sub map_commodity($);
@@ -403,6 +404,20 @@ sub map_metadata($) {
 }
 
 
+# Apply any "apply account" statements to the account
+sub map_account_apply($) {
+    my ($account) = @_;
+
+    foreach my $a (reverse @ledger_apply) {
+	if (${$a}[0] eq "account") {
+	    ${$a}[1] =~ s/:+$//;
+	    $account = ${$a}[1] . ":" . $account;
+	}
+    }
+    return $account;
+}
+
+
 # map a ledger account to a beancount account
 # ledger account: can be pretty much anything, as long as it's followed
 # by two spaces, a tab or the end of the line.
@@ -412,11 +427,10 @@ sub map_metadata($) {
 sub map_account($) {
     my ($account) = @_;
 
-    # ledger "apply account"
-    foreach my $a (reverse @ledger_apply) {
-	next unless ${$a}[0] eq "account";
-	${$a}[1] =~ s/:+$//;
-	$account = ${$a}[1] . ":" . $account;
+    if (exists $ledger_alias{$account}) {
+	$account = $ledger_alias{$account};
+    } else {
+	$account = map_account_apply $account;
     }
 
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
@@ -655,6 +669,8 @@ while (@input) {
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
 	print_comment_top_level $depth, $+{comment};
+    } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
+	$ledger_alias{$+{account}} = map_account_apply $+{val};
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account|tag)\s+(?<val>.*)/) {  # apply account|tag
 	push @ledger_apply, [$+{type}, $+{val}];
     } elsif ($l =~ /^[!@]?apply\s+.*/) {  # apply .*

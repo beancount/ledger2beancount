@@ -146,8 +146,8 @@ and `Income`, although this can be configured).  If you use more than
 five account types, you will have to rename them.  Currently,
 ledger2beancount doesn't have an option to map the account types.
 
-Ledger's `apply account` directive is supported.  The mapping of account
-names described above is done after the `apply` directive.
+Ledger's `apply account` and `alias` directives are supported.  The
+mapping of account names described above is done after these directives.
 
 
 ### Amounts
