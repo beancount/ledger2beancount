@@ -114,3 +114,11 @@ commodity EUR
     expenses:purchase                  10.00 EUR
     assets:test
 
+2018-03-29 * Mapping creations collision
+    Assets:Coll1                           1 EUR
+    Equity:Opening-Balance
+
+2018-03-29 * Mapping creations collision
+    Assets:Coll2                           1 EUR
+    Equity:Opening-Balance
+

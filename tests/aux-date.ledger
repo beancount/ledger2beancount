@@ -1,7 +1,7 @@
 
 account Assets:Commodity-Test123
 account Assets:Test
-account Equity:Opening balance
+account Equity:Opening-Balance
 
 commodity EUR
 
@@ -11,19 +11,19 @@ commodity EUR
 
 2018-03-18 * Test with posting aux date
     Assets:Test                        10.00 EUR ; [=2018-03-13]
-    Equity:Opening balance
+    Equity:Opening-Balance
 
 2018-03-18=2018-03-17 * Test with transaction and posting aux date
     Assets:Test                        10.00 EUR ; [=2018-03-13]
-    Equity:Opening balance
+    Equity:Opening-Balance
 
 2018-03-18 * Test with posting aux date plus comment
     Assets:Test                        10.00 EUR ; [=2018-03-13] ; foo
-    Equity:Opening balance
+    Equity:Opening-Balance
 
 2018-03-18 * Test with posting aux date after no amount
     Assets:Test                        10.00 EUR
-    Equity:Opening balance                       ; [=2018-03-13]
+    Equity:Opening-Balance                       ; [=2018-03-13]
 
 2018-03-27 * Account name could be mistaken for commodity
     Assets:Test                        10.00 EUR
