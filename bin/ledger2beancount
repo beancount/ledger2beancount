@@ -361,7 +361,6 @@ sub pop_txn() {
 
 # Handle metadata
 sub handle_metadata($$) {
-    #my ($depth, $key, $typed, $value) = @_;
     my ($depth, $metadata) = @_;
 
     my $key = map_metadata(lc($metadata->{key}));
