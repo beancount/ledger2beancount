@@ -6,19 +6,20 @@
 
 # convert a ledger-cli main ledger file to beancount format
 
-use strict;
 use warnings;
+use strict;
+
 use experimental 'smartmatch';
 use feature 'unicode_strings';
+use open qw(:std :locale);
 
 use Carp::Assert;
-use Date::Calc qw(Add_Delta_Days);
-use POSIX qw(ceil);
-use File::BaseDir qw/config_home/;
 use Config::Onion;
+use Date::Calc qw(Add_Delta_Days);
+use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
+use POSIX qw(ceil);
 use Unicode::Normalize;
-use open qw(:std :locale);
 
 
 my ($opt, $usage) = describe_options(
