@@ -18,9 +18,16 @@ the latest official release of beancount.
 Installation
 ------------
 
-ledger2beancount is a Perl script and relies on several Perl modules.
-Please see the [README](../README.md#dependencies) for a list of
-required modules.
+ledger2beancount is a Perl script and relies on the following Perl
+modules:
+
+* Carp::Assert
+* Config::Onion
+* Date::Calc
+* DateTime::Format::Strptime
+* File::BaseDir
+* Getopt::Long::Descriptive
+* YAML::XS
 
 If you use Debian, you can install the dependencies with this command:
 
