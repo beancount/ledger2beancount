@@ -487,6 +487,18 @@ Support for more complex inline math would require substantial changes
 to the parser.
 
 
+Unsupported features in beancount
+---------------------------------
+
+The following features are not supported in beancount and therefore
+commented out during the conversion from ledger to beancount:
+
+* Commodity conversion (`C AMOUNT1 = AMOUNT2`)
+* Commodity format (`D AMOUNT`)
+* Commodity pricing: ignore pricing (`N SYMBOL`)
+* Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
+
+
 Bugs and Contributions
 ----------------------
 
