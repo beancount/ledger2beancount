@@ -534,8 +534,7 @@ sub process_txn(@) {
 	    }
 
 	    # Replace ledger account names with corresponding beancount account names
-	    my $beancount_account = map_account $account;
-	    $l =~ s/\Q$account\E/$beancount_account/;
+	    $l =~ s/\Q$account\E/@{[map_account $account]}/;
 
 	    if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
 		# posting with balance assertion
