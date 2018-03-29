@@ -55,6 +55,8 @@ payee_split:
 payee_match:
   ^Oyster top-up: TfL
 
+# A hash of account names to be mapped to other account
+# names.
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance
 
@@ -98,4 +100,7 @@ currency_is_commodity:
 # (in the sense that cost is not retained).  Expects beancount
 # commodities (i.e. after transformation and mapping).
 commodity_is_currency:
+  - MARRIOTT
+  - MILESMORE
+  - NECTAR
 
