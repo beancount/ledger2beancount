@@ -53,6 +53,87 @@ ledger2beancount uses several Perl modules:
 * YAML::XS
 
 
+Features
+--------
+
+The majority of ledger features are supported by ledger2beancount.  Here
+is an overview of fully supported, partly supported and unsupported features.
+Please refer to [the manual](docs/manual.md#features) for more details.
+
+### Fully supported
+
+* Accounts
+  * Account declarations (`account ...`)
+  * Conversion of invalid account names
+  * Mapping of account names
+  * Directive `apply account`
+  * Account aliases (`alias`)
+* Balance assertions
+* Comments
+  * Comments in and outside of transactions
+  * Directives `comment` and `test`
+* Commodities
+  * Commodity declarations (`commodity ...`)
+  * Commodity symbols like `$`, `£` and `€`
+  * Commodities placed in front and after the amount
+  * Conversion of invalid commodities
+  * Mapping of commodities
+* Directives
+  * `bucket` / `A`
+  * `include`
+  * `Year` / `Y`
+* Flags
+  * State flags (posting flags)
+  * Transaction state (transaction flags)
+* Inline math
+  * Very simple inline math only
+* Lots
+  * Lot dates
+  * Lot notes
+  * Per unit and total costs and prices
+  * Conversion of ledger price to beancount cost
+* Metadata
+* Payees
+  * Obtain payee from metadata
+  * Split payee into payee and narration
+  * Assign payee based on narration
+* Tags
+  * Directive `apply tag`
+  * Mapping `#tags` to `^links`
+
+### Partly supported
+
+* Amounts
+  * Decimal comma (not supported in beancount)
+* Dates
+  * Auxiliary dates (no equivalence in beancount)
+  * Effective dates (no equivalence in beancount)
+* Directives
+  * `payee`: skipped (not needed in beancount)
+  * `tag`: skipped (not needed in beancount)
+* Full-line comments in transactions (not supported by beancount)
+* Tags and metadata are posting-level (not supported by beancount)
+* Transaction codes: stored as metadata (no equivalence in beancount)
+* Virtual postings: can be skipped or converted to real postings
+* Virtual posting costs: recognised but skipped (no equivalence in beancount)
+
+### Not supported
+
+* Automated transactions
+* Balance assignments
+* Directives
+  * `assert`
+  * `C` (commodity equivalences)
+  * `check`
+  * `D`
+  * `define`
+  * `expr`
+  * `N`
+  * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)
+* Fixated prices (`=$10` and the `fixed` directive)
+* Periodic transactions
+
+
 Authors
 -------
 
