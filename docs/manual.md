@@ -120,6 +120,14 @@ ledger2beancount will convert ledger account declarations to beancount
 `open` statements using the `account_open_date` variable as the opening
 date.  The `note` is used as the `description`.
 
+Unlike ledger, beancount requires declarations for all account names.
+If an account was not declared in your ledger file but used,
+ledger2beancount will automatically create an `open` statement in
+beancount.  You can turn this off by setting `automatic_declarations`
+to `false`.  This is useful if you have include files and run
+ledger2beancount several times since different `open` statements for
+the same account will result in an error from beancount.
+
 ledger2beancount replaces ledger account names with valid beancount
 accounts and therefore performs the following transformations
 automatically:
@@ -169,7 +177,10 @@ beancount.
 ### Commodities
 
 Like accounts, ledger2beancount will convert ledger commodity
-declarations to beancount.  The `note` is converted to `name`.
+declarations to beancount.  The `note` is converted to `name`.  As with
+account names, ledger2beancount will create `commodity` statements for
+all commoditis used in your ledger file (if `automatic_declarations`
+is `true`).
 
 ledger2beancount will automatically convert commodities to valid
 beancount commodities.  This involves replacing all invalid characters

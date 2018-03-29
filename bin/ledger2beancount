@@ -50,6 +50,7 @@ $config->set_default(payee_tag => "");
 $config->set_default(payer_tag => "");
 $config->set_default(ledger_indent => 4);
 $config->set_default(beancount_indent => 2);
+$config->set_default(automatic_declarations => 1);
 $config->set_default(decimal_comma => 0);
 $config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "EUR", "¥" => "JPY"});
 
@@ -800,13 +801,15 @@ while (@input) {
     }
 }
 
-# Print missing account and commodity declarations
-for my $a (sort keys %account_declared) {
-    printf "$config->{account_open_date} open $a\n" if not defined $account_declared{$a};
-}
+if ($config->{automatic_declarations}) {
+    # Print missing account and commodity declarations
+    for my $a (sort keys %account_declared) {
+	printf "$config->{account_open_date} open $a\n" if not defined $account_declared{$a};
+    }
 
-for my $c (sort keys %commodity_declared) {
-    printf "$config->{commodities_date} commodity $c\n" if not defined $commodity_declared{$c};
+    for my $c (sort keys %commodity_declared) {
+	printf "$config->{commodities_date} commodity $c\n" if not defined $commodity_declared{$c};
+    }
 }
 
 # Print the converted beancount output
