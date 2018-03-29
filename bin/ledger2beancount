@@ -99,6 +99,8 @@ my %commodity_declared;
 my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
+# Conversion notes for users from ledger2beancount
+my @conversion_notes;
 
 # Declarations
 sub map_commodity($);
@@ -518,6 +520,21 @@ sub print_comment_top_level($$) {
 }
 
 
+# Add warning to output file
+sub print_warning($) {
+    my ($warning) = @_;
+
+    push @conversion_notes, $warning;
+}
+
+# Add warning to output file, but only once
+sub print_warning_once($) {
+    my ($warning) = @_;
+
+    push @conversion_notes, $warning if !($warning ~~ @conversion_notes);
+}
+
+
 # Strip indentation from a line and return the depth and line
 sub strip_indentation($) {
     my ($line) = @_;
@@ -705,10 +722,10 @@ while (@input) {
 	    print_comment_top_level $depth-1, $l;
 	}
     } elsif ($l =~ /^[!@]?define/) {  # define
-	print_comment_top_level 0, "ledger2beancount: `define` not supported";
+	print_warning_once "The `define` directive is not supported";
 	print_comment_top_level 0, $l;
     } elsif ($l =~ /^[!@]?(fixed|endfixed)/) {  # Fixated price
-	print_comment_top_level 0, "ledger2beancount: fixated prices not supported";
+	print_warning_once "Fixated prices are not supported";
 	print_comment_top_level 0, $l;
     } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
@@ -717,6 +734,7 @@ while (@input) {
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^([=~].*)/) {  # automated transaction (=) or periodic transaction (~)
+	print_warning_once "Automated or periodic transaction skipped";
 	print_comment_top_level $depth, $1;
 	@stanza = read_stanza \@input;
 	foreach $l (@stanza) {
@@ -764,6 +782,7 @@ while (@input) {
 	# Not needed in beancount and there's no equivalent
 	next;
     } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr)/) {
+	    print_warning_once "Unsupported directive \"$1\" skipped";
 	    # Not supported in beancount
 	    print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
@@ -806,9 +825,17 @@ while (@input) {
     } elsif ($l =~ /^\h*$/) {
 	print_line 0, "";
     } else {
-	print_comment_top_level 0, "ledger2beancount: Unknown line. Please report. Line: $l";
+	print_warning "Unknown line. Please report. Line: $l";
 	print_line 0, $l;
     }
+}
+
+if (@conversion_notes) {
+    print ";", "-"x70, "\n";
+    print "; ledger2beancount conversion notes:\n";
+    print ";   - $_\n" foreach (reverse @conversion_notes);
+    print ";", "-"x70, "\n";
+    print "\n";
 }
 
 if ($config->{automatic_declarations}) {
