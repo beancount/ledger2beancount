@@ -488,6 +488,24 @@ are not supported in beancount.  They are added as comments to the
 beancount file.
 
 
+### Virtual postings
+
+Ledger's concept of [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)
+does not exist in beancount.  Ledger has two types of virtual postings:
+those in parentheses (`(Budget:Food)`) which don't have to balance and
+those in brackets (`[Budget:Food]`) which have to balance.  The former
+violate the accounting equation and can't be converted to beancount.
+The latter can be converted by making them into "real" accounts.
+ledger2beancount will do this if the `convert_virtual` option is set to
+`true`.  By default, ledger2beancount will simply skip all virtual
+postings.
+
+If you set `convert_virtual` to `true`, be aware that all account names
+have to start with one of five assets classes (`Assets`, etc).  This is
+often not the case for virtual postings, so you will have to rename or
+map these account names.
+
+
 ### Inline math
 
 Very simple inline math is supported in postings.  Specifically, basic

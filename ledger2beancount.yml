@@ -26,6 +26,11 @@ automatic_declarations: true
 # Set to `true` if you use option --decimal-comma in ledger
 decimal_comma: false
 
+# Should virtual postings be converted.  If set to true, virtual
+# postings in brackets will be made into real accounts.  (Virtual
+# postings in parentheses are alway ignored, regardless of this option)
+convert_virtual: false
+
 # Any other include files listed at the top
 includes: []
 
