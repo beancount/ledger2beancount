@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2018 Martin Michlmayr <tbm@cyrius.com>
+# License: GNU General Public License (GPL), version 3 or above
+
+# obtain configuration data from ~/.ledgerrc for ledger2beancount
+
+use strict;
+use warnings;
+
+unshift(@ARGV, "$ENV{HOME}/.ledgerrc") unless @ARGV;
+open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
+
+my $format;
+while (<$input>) {
+    if (/^--input-date-format\s+"?(.*)"?/) {
+        $format = $1;
+    } elsif (!$format && /^--date-format\s+"?(.*)"?/) {
+        $format = $1;
+    } elsif (/^--decimal-comma/) {
+        print "decimal_comma: true\n";
+    }
+}
+close $input;
+
+if ($format) {
+    $format =~ s/%Y/(?<year>\\d\{4\})/;
+    $format =~ s/%m/(?<month>\\d\{2\})/;
+    $format =~ s/%d/(?<day>\\d\{2\})/;
+    if ($format =~ /%/) {
+        die "ledger2beancount cannot handle your date format";
+    }
+    print "date_match: $format\n";
+}
+
