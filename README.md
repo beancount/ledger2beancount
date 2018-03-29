@@ -17,8 +17,8 @@ and tags on a posting-level).  ledger2beancount aims to be compatible with
 the latest official release of beancount.
 
 Please [read the manual](docs/manual.md) on how to install, configure and
-use ledger2beancount.  The supported features are documented in the
-manual, too.
+use ledger2beancount.  The [supported features](docs/manual.md#features)
+are documented in the manual, too.
 
 
 Usage
