@@ -146,6 +146,9 @@ and `Income`, although this can be configured).  If you use more than
 five account types, you will have to rename them.  Currently,
 ledger2beancount doesn't have an option to map the account types.
 
+Ledger's `apply account` directive is supported.  The mapping of account
+names described above is done after the `apply` directive.
+
 
 ### Amounts
 
@@ -330,6 +333,9 @@ not treated the same way by beancount as proper tags.
 If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
 tags are currently ignored.
+
+Ledger's `apply tag` directive is supported.  However, tags are ignored
+when `tag_as_metadata` is `true`.
 
 
 ### Links

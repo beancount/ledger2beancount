@@ -1,4 +1,8 @@
 1970-01-01 open Assets:Test
+1970-01-01 open Assets:Test1:Test2:AA
+1970-01-01 open Assets:Test1:Test2:BB
+1970-01-01 open Assets:Test1:Test2:CC:DD
+1970-01-01 open Assets:Test1:Test2:EE:FF
 1970-01-01 open Equity:Opening-Balance
 1970-01-01 commodity EUR
 
@@ -69,4 +73,18 @@
 include "include1.beancount"
 include "include2.beancount"
 include "include3.beancount"
+
+; Test apply account
+
+
+2018-03-29 * "Test apply" #bar #foo
+  test: "martin"
+  Assets:Test1:Test2:AA            10.00 EUR
+  Assets:Test1:Test2:BB
+
+2018-03-29 * "Test apply" #bar #foo
+  test: "martin"
+  Assets:Test1:Test2:CC:DD         10.00 EUR
+  Assets:Test1:Test2:EE:FF
+
 
