@@ -137,7 +137,7 @@ If an account was not declared in your ledger file but used,
 ledger2beancount will automatically create an `open` statement in
 beancount.  You can turn this off by setting `automatic_declarations`
 to `false`.  This is useful if you have include files and run
-ledger2beancount several times since different `open` statements for
+ledger2beancount several times since duplicate `open` statements for
 the same account will result in an error from beancount.
 
 ledger2beancount replaces ledger account names with valid beancount
@@ -150,7 +150,7 @@ automatically:
    upper case letters (`Assets:test` becomes `Assets:Test`)
 3. Strips accents and umlauts because they are currently not
    supported in beancount ([issue
-   171](https://bitbucket.org/blais/beancount/issues/171)).
+   161](https://bitbucket.org/blais/beancount/issues/161)).
 4. Ensures the first letter is a letter or number by replacing
    a non-letter first character with an `X`.
 
@@ -271,12 +271,12 @@ by beancount, so such declarations are ignored (they are preserved as
 comments).
 
 Since ledger has limited support for payees, ledger2beancount offers
-several features to determine the payee from on the transaction.
+several features to determine the payee from the transaction itself.
 
 You can set `payee_split` and define a list of regular expressions which
 allow you to split ledger's payee field into payee and narration.  You
 have to use regular expressions with the named capture groups `payee`
-and `narration`.  For example, given the ledger transaction
+and `narration`.  For example, given the ledger transaction header
 
     2018-03-18 * Supermarket (Tesco)
 
@@ -285,15 +285,14 @@ and the configuration
     payee_split:
       - (?<narration>.*?)\s+\((?<payee>Tesco)\)
 
-ledger2beancount will create this beancount transaction:
+ledger2beancount will create this beancount transaction header:
 
     2018-03-18 * "Tesco" "Supermarket"
 
 In other words, `payee_split` allows you to split the ledger payee
-into payee and narration in beancount.
-
-`payee_split` is a list of regular expressions and we stop when we
-find a match.
+into payee and narration in beancount.  `payee_split` is a list of
+regular expressions and ledger2beancount stops when a match is
+found.
 
 Furthermore, you can use `payee_match` to match based on the ledger
 payee field and assign payees according to the match.  This variable
@@ -312,12 +311,13 @@ to match the line and assign the payee `Transport for London`:
     2018-03-18 * "Transport for London" "Oyster card top-up"
 
 Unlike `payee_split`, the full payee field from ledger is used as the
-narration in beancount.  Again, we stop after the first match.
+narration in beancount.  Again, ledger2beancount stops after the first
+match.
 
-Please note that the `payee_match` is done after `payee_split` and we run
-`payee_match` even if `payee_split` matched.  This allows you to remove
-some information from the narration using `payee_split` while overriding
-the found payee using `payee_match`.
+Please note that the `payee_match` is done after `payee_split` and
+`payee_match` is evaluated even if `payee_split` matched.  This allows
+you to remove some information from the narration using `payee_split`
+while overriding the found payee using `payee_match`.
 
 Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in
@@ -371,6 +371,7 @@ all `tag` directives are skipped.
 ### Links
 
 Beancount differentiates between tags and links whereas ledger doesn't.
+Links can be used in beancount to link several transactions together.
 ledger2beancount offers two mechanisms to convert ledger tags and
 metadata to links.
 
@@ -430,7 +431,8 @@ are stored as metadata.
 Beancount does not have a concept of [virtual
 costs](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-posting-costs)
 ([issue 248](https://bitbucket.org/blais/beancount/issues/248)).
-ledger2beancount therefore treats them as regular costs.
+ledger2beancount therefore treats them as regular costs (or, rather,
+as regular prices).
 
 
 ### Lots
@@ -463,7 +465,7 @@ symbols might be commodities instead of currencies (e.g. `ETH` and `BTH`), the
 and associate a cost in conversions.  Similarly, `commodity_is_currency`
 can be used to configure commodities that should be treated as currencies
 in the sense that no cost is retained.  This is useful if you, for
-example, track miles or hotel points, that are sometimes redeemed for a
+example, track miles or hotel points that are sometimes redeemed for a
 cash value.  Both of these variables expect beancount commodities, i.e.
 after transformation and mapping.  (Note that beancount itself uses the
 terms "commodity" and "currency" interchangeably.)
@@ -519,10 +521,12 @@ Unsupported features in beancount
 The following features are not supported in beancount and therefore
 commented out during the conversion from ledger to beancount:
 
+* Automated transactions
 * Commodity conversion (`C AMOUNT1 = AMOUNT2`)
 * Commodity format (`D AMOUNT`)
 * Commodity pricing: ignore pricing (`N SYMBOL`)
 * Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
+* Periodic transactions
 
 
 Unsupported features in ledger2beancount
