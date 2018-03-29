@@ -1,6 +1,7 @@
 
-# Allow YYYY-MM-DD and YYYY/MM/DD
-date_match: (?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})
+date_format: "%Y-%m-%d"
+# Date without year (if ledger's Y/year directive is used)
+date_format_no_year: "%m-%d"
 
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:

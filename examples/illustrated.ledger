@@ -129,15 +129,11 @@ commodity EUR
 ; Dates
 ; ------------------------------------------------------------------------
 
-; `date_match` can be adapted to your date format if you don't use
+; `date_format` can be adapted to your date format if you don't use
 ; `YYYY-MM-DD`.  beancount only supports `YYYY-MM-DD`
-; 2018/03/28 -> 2018-03-28
-2018/03/28 * Non-standard date formats require `date_match`
-    Assets:A                            10.00 EUR
-    Assets:B
 
 ; ledger allows you to set the date so you can skip the year.
-; ledger2beancount supports this if `date_match_no_year` is set.
+; ledger2beancount supports this if `date_format_no_year` is set.
 ; A complete date in `YYYY-MM-DD` format is generated since beancount
 ; requires complete dates.
 
