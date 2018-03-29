@@ -53,7 +53,7 @@ ledger files:
 
 * `ledger_indent` sets the indentation level used in your ledger file
   (by default `4`).
-* `date_match` has to be configured if you don't use the date format
+* `date_format` has to be configured if you don't use the date format
   `YYYY-MM-DD`.
 * `decimal_comma` has to be set to `true` if you use commas as the
   decimal separator (for example, `10,12 EUR` meaning 10 Euro and
