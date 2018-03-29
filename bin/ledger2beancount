@@ -746,6 +746,9 @@ while (@input) {
     } elsif ($l =~ /^[!@]?(tag\s+.*)/) {  # tag declaration
 	# Not needed in beancount and there's no equivalent
 	next;
+    } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr)/) {
+	    # Not supported in beancount
+	    print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/ || $l =~ /$txn_header_no_year_RE/) {  # txn header
 	    $in_postings = 0;

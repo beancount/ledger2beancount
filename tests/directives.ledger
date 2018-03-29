@@ -135,3 +135,17 @@ A Assets:Savings
 @tag bar
 tag baz
 
+; timeclock
+i 2018-03-29 14:10:20 B
+o 2018-03-29 14:50:00
+I 2018-03-29 14:55:40 B
+O 2018-03-29 15:10:10
+b 2018-03-29 14:10:20
+h 2018-03-29 14:10:20
+; commodity conversion
+C 1.00 Mb = 1024 Kb
+; Default Commodity
+D 1000.00 EUR
+; Ignore pricing information
+N EUR
+
