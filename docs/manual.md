@@ -499,6 +499,18 @@ commented out during the conversion from ledger to beancount:
 * Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
 
 
+Unsupported features in ledger2beancount
+----------------------------------------
+
+The following ledger features are currently not supported by
+ledger2beancount:
+
+* Fixated prices (`=$10` syntax and the `fixed` directive)
+* The `define` directive
+
+Contributions [are welcome!](CONTRIBUTING.md)
+
+
 Bugs and Contributions
 ----------------------
 
