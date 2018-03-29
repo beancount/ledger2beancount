@@ -286,6 +286,12 @@ Y 2017
     Assets:A                            10.00 EUR
     Assets:B
 
+; In ledger, you can clare tags:
+tag foo
+; This is not required in beancount and there's no way to do it, so
+; ledger2beancount skips all tag declarations.  (It handles ledger's
+; "apply tag" correctly, though)
+
 ; ------------------------------------------------------------------------
 ; Links
 ; ------------------------------------------------------------------------

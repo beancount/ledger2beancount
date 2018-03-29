@@ -743,6 +743,9 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_comment_top_level $depth, $l;
 	}
+    } elsif ($l =~ /^[!@]?(tag\s+.*)/) {  # tag declaration
+	# Not needed in beancount and there's no equivalent
+	next;
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/ || $l =~ /$txn_header_no_year_RE/) {  # txn header
 	    $in_postings = 0;

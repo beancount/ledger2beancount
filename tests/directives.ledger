@@ -131,3 +131,7 @@ A Assets:Savings
 2018-03-29 * Bucket
     Assets:Test                        10.00 EUR
 
+!tag foo
+@tag bar
+tag baz
+
