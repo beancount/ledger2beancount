@@ -99,6 +99,7 @@ my %commodity_declared;
 # Store some ledger directives relevant for processing
 my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
+my $ledger_bucket; # Use bucket if there's only one posting
 
 # Declarations
 sub map_commodity($);
@@ -542,7 +543,7 @@ sub process_txn(@) {
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	    push_comment $depth, $+{comment};
 	} elsif ($l =~ /^$posting_RE/) {
-	    $in_postings = 1;
+	    $in_postings += 1;
 	    my $account = $+{account};
 	    my $auxdate = $+{auxdate};
 	    my $has_amount = $+{amount} ? 1 : 0;
@@ -617,6 +618,10 @@ sub process_txn(@) {
 	    die "Don't know how to process transaction line: $l\n";
 	}
     }
+    # We only saw one posting and a ledger bucket is defined
+    if ($in_postings == 1 && defined $ledger_bucket) {
+	push_line 1, map_account $ledger_bucket;
+    }
     push @output, pop_txn();
 }
 
@@ -678,6 +683,8 @@ while (@input) {
 	next;
     } elsif ($l =~ /^[!@]?end/) {  # end
 	pop @ledger_apply;
+    } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
+	$ledger_bucket = $2;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
 	@stanza = read_stanza \@input;
 	assert $input[0] =~ /^end/;
@@ -738,6 +745,7 @@ while (@input) {
 	}
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/ || $l =~ /$txn_header_no_year_RE/) {  # txn header
+	    $in_postings = 0;
 	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $+{narration};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};
 	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
