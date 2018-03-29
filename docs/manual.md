@@ -81,6 +81,11 @@ beancount file with `bean-check` and fix all errors:
 
     bean-check simple.beancount
 
+You should also inspect the generated beancount file to see if it
+looks correct to you.  Please note that ledger2beancount puts notes
+at the beginning of the generated beancount file if it encounters
+problems with the conversion.
+
 If you believe that ledger2beancount could have produced a better
 conversion or if you get an error message from ledger2beancount, please
 [file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
