@@ -90,7 +90,7 @@ my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>
 
 
 my @output; # Used to store the output of the script
-# Store accounts and commidities encountered and declared
+# Store accounts and commodities encountered and declared
 # value == undef: seen
 # value == 1: declared
 my %account_declared;
@@ -234,7 +234,7 @@ sub pp_cur_assertions() {
     return (join "\n", @cur_txn_assertions) . "\n";
 }
 
-# pretty print a single metadata key/value paris, in beancount format
+# pretty print a single metadata key/value pair, in beancount format
 sub pp_metadata($$) {
     my ($key, $value) = @_;
 
@@ -480,7 +480,7 @@ sub map_commodity($) {
     # Check again after removing the quote
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 
-    # Maxium limit for beancount commodities: 24 characters
+    # Maximum limit for beancount commodities: 24 characters
     $commodity = substr (uc $commodity, 0, 24);
     # Work around lack of Unicode support (beancount #161)
     $commodity = NFKD $commodity;
@@ -601,7 +601,7 @@ sub process_txn(@) {
 		push_assertion $+{account}, $+{assertion};
 	    } elsif ($has_amount && $l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
 		# posting with unit price and optional lot price
-		# XXX refactor/merge with previous regexp case
+		# XXX refactor/merge with previous regex case
 		my $lot_info = "";
 		$lot_info .= ", " . pp_date $+{date}, 0 if (defined $+{date});
 		$lot_info .= ", " . mk_beancount_string $+{lot_note} if (defined $+{lot_note});
