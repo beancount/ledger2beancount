@@ -337,6 +337,10 @@ tags are currently ignored.
 Ledger's `apply tag` directive is supported.  However, tags are ignored
 when `tag_as_metadata` is `true`.
 
+Note that tags can be defined in ledger using a `tag` directive.  This
+is not required in beancount and there's no equivalent directive so
+all `tag` directives are skipped.
+
 
 ### Links
 
