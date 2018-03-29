@@ -519,6 +519,8 @@ Unsupported features in ledger2beancount
 The following ledger features are currently not supported by
 ledger2beancount:
 
+* Balance assignments are currently not supported but would be
+  easy to add by using beancount's `pad`.
 * Fixated prices (`=$10` syntax and the `fixed` directive)
 * The `define` directive
 
