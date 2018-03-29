@@ -654,7 +654,7 @@ while (@input) {
 	shift @input;
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
-	    print_line $depth-1, "; $l";
+	    print_comment_top_level $depth-1, $l;
 	}
     } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
