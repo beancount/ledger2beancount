@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # ledger2beancount started as an ad hoc personal script. As such it was
-# maintained in zack's private Ledger Git repository. It was later spinned off
-# as an indepent project, when tbm started to heavily contribute to it. The
+# maintained in zack's private Ledger Git repository. It was later spun off
+# as an independent project, when tbm started to heavily contribute to it. The
 # script below was used to migrate the git history of ledger2beancount from
 # zack's private repo to a new, independent one. It is ad hoc, uninteresting,
 # and archived here just for historical reasons.
