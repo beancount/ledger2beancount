@@ -42,7 +42,13 @@ a similar location:
     git clone https://github.com/zacchiro/ledger2beancount/
     ./bin/ledger2beancount examples/simple.ledger
 
-ledger2beancount is currently not packaged for any Linux distribution.
+### Arch Linux
+
+ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger2beancount/):
+
+```
+yaourt -S ledger2beancount
+```
 
 
 Configuration
