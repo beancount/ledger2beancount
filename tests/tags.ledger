@@ -27,9 +27,3 @@ commodity EUR
     Equity:Opening-Balance            -10.00 EUR
         ; :bar:
 
-; label will be mapped to bank-label
-2018-03-17 * Map meta data
-    ; label: foo
-    Assets:Test                        10.00 EUR
-    Equity:Opening-Balance            -10.00 EUR
-
