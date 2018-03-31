@@ -259,14 +259,27 @@ sub pp_amount($$$$) {
 	map_commodity $commodity;
 }
 
-# determine whether something should be a link or a tag
-sub tag_or_link(@) {
+
+# check if a tag should be a link based on link_match
+sub is_link($) {
     my ($key) = @_;
 
     foreach my $link_RE (@{$config->{link_match}}) {
-	return '^' . $key if $key =~ /$link_RE/;
+	return 1 if $key =~ /$link_RE/;
     }
-    return "#" . $key;
+    return 0;
+}
+
+
+# format string according to whether it should be a link or a tag
+sub pp_tag_link(@) {
+    my ($key) = @_;
+
+    if (is_link $key) {
+	return "^" . $key;
+    } else {
+	return "#" . $key;
+    }
 }
 
 
@@ -274,14 +287,7 @@ sub tag_or_link(@) {
 sub pp_tags(@) {
     my @tags = @_;
 
-    # XXX workaround for the fact that per-posting tags are currently not
-    # allowed.  See:
-    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-    if ($config->{tag_as_metadata}) {
-	return "tags: \"" . join(', ', @tags) . "\"";
-    } else {
-	return join(' ', map tag_or_link($_), @tags);
-    }
+    return join(' ', map pp_tag_link($_), @tags);
 }
 
 # dump the current parsing state to stdout. Used for debugging purposes only
@@ -570,12 +576,18 @@ sub process_txn(@) {
 	if ($l =~ /^$metadata_RE/) {  # metadata comment
 	    handle_metadata $depth, \%+;
 	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {
-	    # tags comment
+	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
+	    my @ledger_tags = split /:/, $+{tags};
+	    my @tags = grep {!is_link $_} @ledger_tags;
+	    my @links = grep {is_link $_} @ledger_tags;
+	    # XXX workaround for the fact that per-posting tags are currently not
+	    # allowed.  See:
+	    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
 	    if ($config->{tag_as_metadata}) {
-		push_line $depth, pp_tags(split(/:/, $+{tags}));
+		push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
+		push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
 	    } else {
-		$cur_txn_header{tags} .= " " . pp_tags(split(/:/, $+{tags})) if $depth == 1;
+		$cur_txn_header{tags} .= " " . pp_tags @ledger_tags if $depth == 1;
 	    }
 	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment

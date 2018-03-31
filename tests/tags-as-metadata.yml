@@ -1,3 +1,6 @@
 
 tag_as_metadata: true
 
+link_match:
+  - ^\d\d\d\d-\d\d-\d\d-
+
