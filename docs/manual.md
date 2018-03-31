@@ -318,7 +318,13 @@ to match the line and assign the payee `Transport for London`:
 
 Unlike `payee_split`, the full payee field from ledger is used as the
 narration in beancount.  Again, ledger2beancount stops after the first
-match.
+match.  Beancount comes with a plugin called `fix_payees` which
+offers a similar functionality to `payee_match`: it renames payees
+based on a set of rules which allow you to match account names,
+payees and the narration.  The difference is that ledger2beancount's
+`payee_match` will write the matched payee to the beancount file
+whereas the `fix_payees` plugin leaves your input file intact and
+assigns the new payee within beancount.
 
 Please note that the `payee_match` is done after `payee_split` and
 `payee_match` is evaluated even if `payee_split` matched.  This allows
