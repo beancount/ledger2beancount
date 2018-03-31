@@ -1,3 +1,8 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;   - Tags on posting-level ignored (see tag_as_metadata)
+;----------------------------------------------------------------------
+
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
