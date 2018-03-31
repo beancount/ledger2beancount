@@ -37,3 +37,11 @@
   Equity:Opening-Balance            -10.00 EUR
     tags: "bar"
 
+2018-03-31 * "Tag on postings, without indentation"
+  tags: "foo, bar, baz"
+  Assets:Test                        10.00 EUR
+  tags: "qux"
+  links: "2018-03-08-london"
+  Equity:Opening-Balance            -10.00 EUR
+  tags: "quux, quuz"
+
