@@ -813,7 +813,7 @@ while (@input) {
 		    last;
 		}
 	    }
-	    # ledger "apply account"
+	    # ledger "apply tag"
 	    foreach my $a (reverse @ledger_apply) {
 		next unless ${$a}[0] eq "tag";
 		if ("; ${$a}[1]" =~ /$metadata_RE/) {
