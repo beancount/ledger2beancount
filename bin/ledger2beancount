@@ -587,7 +587,11 @@ sub process_txn(@) {
 		push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
 		push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
 	    } else {
-		$cur_txn_header{tags} .= " " . pp_tags @ledger_tags if $depth == 1;
+		if ($depth == 1) {
+		    $cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
+		} else {
+		    print_warning_once "Tags on posting-level ignored (see tag_as_metadata)";
+		}
 	    }
 	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
