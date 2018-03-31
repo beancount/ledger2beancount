@@ -403,7 +403,7 @@ sub handle_metadata($$) {
     } else {
 	# Check if we should store as metadata or as links
 	# We check for $depth since posting-level links are not allowed
-	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && $depth == 1 && $in_txn) {
+	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
 	    $cur_txn_header{tags} .= " ^" . $metadata->{value};
 	} else {
 	    my $value;
@@ -587,7 +587,7 @@ sub process_txn(@) {
 		push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
 		push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
 	    } else {
-		if ($depth == 1) {
+		if (!$in_postings) {
 		    $cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
 		} else {
 		    print_warning_once "Tags on posting-level ignored (see tag_as_metadata)";

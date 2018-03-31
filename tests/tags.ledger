@@ -33,3 +33,10 @@ commodity EUR
     Equity:Opening-Balance            -10.00 EUR
         ; :bar:
 
+2018-03-31 * Tag on postings, without indentation
+    ; :foo:bar:baz:
+    Assets:Test                        10.00 EUR
+    ; :qux:2018-03-08-london:
+    Equity:Opening-Balance            -10.00 EUR
+    ; :quux:quuz:
+
