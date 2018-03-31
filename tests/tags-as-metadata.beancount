@@ -17,8 +17,17 @@
 ; Equity:Opening-Balance            -10.00 EUR
 
 2018-03-17 * "Tag on transaction, one converted to a link"
-  tags: "foo, bar, 2018-02-02-brussels-fosdem, baz"
+  tags: "foo, bar, baz"
+  links: "2018-02-02-brussels-fosdem"
   Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-03-17 * "Tag on transaction, one link on posting level"
+  tags: "foo, bar, baz"
+  links: "2018-02-02-brussels-fosdem"
+  Assets:Test                        10.00 EUR
+    tags: "qux, quux, quuz"
+    links: "2018-03-08-london"
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-17 * "Tag on postings"

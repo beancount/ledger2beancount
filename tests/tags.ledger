@@ -20,6 +20,12 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2018-03-17 * Tag on transaction, one link on posting level
+    ; :foo:bar:2018-02-02-brussels-fosdem:baz:
+    Assets:Test                        10.00 EUR
+        ; :qux:quux:2018-03-08-london:quuz:
+    Equity:Opening-Balance            -10.00 EUR
+
 2018-03-17 * Tag on postings
     ; :foo:bar:baz:
     Assets:Test                        10.00 EUR
