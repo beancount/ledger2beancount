@@ -1,8 +1,17 @@
 language: python
 python:
   - "3.6"
+addons:
+  apt:
+    packages:
+      - cpanminus
+      - libcarp-assert-perl
+      - libdate-calc-perl
+      - libexperimental-perl
+      - libfile-basedir-perl
+      - libgetopt-long-descriptive-perl
+      - libyaml-libyaml-perl
 install:
-  - sudo apt-get install libcarp-assert-perl libdate-calc-perl libyaml-libyaml-perl libfile-basedir-perl libexperimental-perl libgetopt-long-descriptive-perl cpanminus
   - sudo cpanm Config::Onion
   - sudo cpanm DateTime::Format::Strptime
   - pip install beancount==2.0
