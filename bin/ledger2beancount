@@ -89,6 +89,8 @@ my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  |\t|$|\)|\])\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
+# Maximum limit for beancount commodities
+my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
 
 my @output; # Used to store the output of the script
 # Store accounts and commodities encountered and declared
@@ -481,8 +483,7 @@ sub map_commodity($) {
     # Check again after removing the quote
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 
-    # Maximum limit for beancount commodities: 24 characters
-    $commodity = substr (uc $commodity, 0, 24);
+    $commodity = substr (uc $commodity, 0, $BEANCOUNT_COMMODITY_MAX_LEN);
     # Work around lack of Unicode support (beancount #161)
     $commodity = NFKD $commodity;
     $commodity =~ s/\p{NonspacingMark}//g;
