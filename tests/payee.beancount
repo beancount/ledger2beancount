@@ -37,3 +37,13 @@
   Assets:Test                        10.00 GBP
   Equity:Opening-Balance            -10.00 GBP
 
+; Interaction of payee_split and payee_tag
+2018-03-31 * "MyEmployer" "Supermarket"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+; Interaction of payee_match and payee_tag
+2018-03-31 * "MyEmployer" "Oyster card top-up"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

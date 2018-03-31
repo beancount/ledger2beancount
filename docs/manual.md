@@ -333,7 +333,12 @@ while overriding the found payee using `payee_match`.
 
 Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in
-`payee_tag` and `payer_tag`.
+`payee_tag` and `payer_tag`.  Payees identified with these tags will
+override the payees found with `payee_split` and `payee_match` (although
+in the case of `payee_split` the narration will be modified as per the
+regular expression).  This allows you to define generic matches using
+`payee_split` and `payee_match` and override special cases using metadata
+information.
 
 
 ### Metadata

@@ -41,3 +41,15 @@ commodity GBP
     Assets:Test                        10.00 GBP
     Equity:Opening-Balance            -10.00 GBP
 
+; Interaction of payee_split and payee_tag
+2018-03-31 * Supermarket (Tesco)
+    ; X-Payee: MyEmployer
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+; Interaction of payee_match and payee_tag
+2018-03-31 * Oyster card top-up
+    ; X-Payee: MyEmployer
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
