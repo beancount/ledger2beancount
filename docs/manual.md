@@ -309,7 +309,7 @@ payees.  For example, if your ledger contains a transaction like:
 
 you can use
 
-    payee_split:
+    payee_match:
       ^Oyster card top-up: Transport for London
 
 to match the line and assign the payee `Transport for London`:
