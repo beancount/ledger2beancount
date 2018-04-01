@@ -137,6 +137,9 @@ A Assets:Savings
 @tag bar
 tag baz
 
+tag Project
+    check value =~ /^(0ad|ankur|aptosid|archlinux|chakra|debian)$/
+
 ; timeclock
 i 2018-03-29 14:10:20 B
 o 2018-03-29 14:50:00

@@ -817,7 +817,7 @@ while (@input) {
 	}
     } elsif ($l =~ /^[!@]?(tag\s+.*)/) {  # tag declaration
 	# Not needed in beancount and there's no equivalent
-	next;
+	read_stanza \@input if $input[0] =~ /^\h+/;
     } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr)/) {
 	    print_warning_once "Unsupported directive \"$1\" skipped";
 	    # Not supported in beancount
