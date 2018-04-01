@@ -95,19 +95,23 @@ include "include1.beancount"
 include "include2.beancount"
 include "include3.beancount"
 
-; Test apply account
+; Test apply account and apply tag
 
+pushtag #foo
+pushtag #bar
 
-2018-03-29 * "Test apply" #bar #foo
+2018-03-29 * "Test apply" ^2018-02-02-brussels-fosdem
   test: "martin"
   Assets:Test1:Test2:AA            10.00 EUR
   Assets:Test1:Test2:BB
 
-2018-03-29 * "Test apply" #bar #foo
+2018-03-29 * "Test apply" ^2018-02-02-brussels-fosdem
   test: "martin"
   Assets:Test1:Test2:CC:DD         10.00 EUR
   Assets:Test1:Test2:EE:FF
 
+poptag #bar
+poptag #foo
 
 ; Test apply account and alias
 
