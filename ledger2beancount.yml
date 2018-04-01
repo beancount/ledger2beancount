@@ -58,7 +58,7 @@ payee_split:
 # the matched payee from the regular expression becomes the
 # payee.
 payee_match:
-  ^Oyster top-up: TfL
+  (?i)^Oyster card top-up: TfL
 
 # A hash of account names to be mapped to other account
 # names.

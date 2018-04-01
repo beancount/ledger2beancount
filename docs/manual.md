@@ -331,6 +331,13 @@ Please note that the `payee_match` is done after `payee_split` and
 you to remove some information from the narration using `payee_split`
 while overriding the found payee using `payee_match`.
 
+The regular expressions from `payee_split` and `payee_match` are evaluated
+in a case sensitive manner by default.  If you want case insensitive
+matches, you can prefix your pattern with `(?i)`, for example:
+
+    payee_match:
+      (?i)^Oyster card top-up: Transport for London
+
 Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in
 `payee_tag` and `payer_tag`.  Payees identified with these tags will

@@ -17,6 +17,11 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+; case insensitive match
+2018-03-18 * "TfL" "oyster card top-up"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
 2018-03-18 * "Tesco" "Supermarket"
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR

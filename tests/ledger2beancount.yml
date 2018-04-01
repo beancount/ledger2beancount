@@ -17,7 +17,7 @@ payee_split:
   - (?<narration>.*?)\s+\((?<payee>Tesco)\)
 
 payee_match:
-  ^Oyster card top-up: TfL
+  (?i)^Oyster card top-up: TfL
   ^Marriott reward1.*\(£\d+\.\d+\): Creation
   ^Marriott reward2.*\(.\d+\.\d+\): Creation
 
