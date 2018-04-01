@@ -384,8 +384,11 @@ If `tag_as_metadata` is `false`, transaction tags will be put after the
 narration as tags.  Because of the limitation in beancount, posting-level
 tags are currently ignored.
 
-Ledger's `apply tag` directive is supported.  However, tags are ignored
-when `tag_as_metadata` is `true`.
+Ledger's `apply tag` directive is supported.  If the string to apply is
+metadata or a link (according to `link_match`, see below), the information
+will be added to each transaction between `apply tag` and `end tag`.
+If it's a tag, beancount's equivalent of `apply tag` is used (`pushtag`
+and `poptag`).
 
 Note that tags can be defined in ledger using a `tag` directive.  This
 is not required in beancount and there's no equivalent directive so

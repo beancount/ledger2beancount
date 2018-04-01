@@ -727,13 +727,27 @@ while (@input) {
 	print_comment_top_level $depth, $+{comment};
     } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
 	$ledger_alias{$+{account}} = map_account_apply $+{val};
-    } elsif ($l =~ /^[!@]?apply\s+(?<type>account|tag)\s+(?<val>.*)/) {  # apply account|tag
+    } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	push @ledger_apply, [$+{type}, $+{val}];
+    } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
+	# `apply tag` can be converted to beancount in three ways:
+	# * using pushtag/poptag for tags
+	# * applying links to each transactions
+	# * applying metadata to each transactions
+	if ("; $+{val}" =~ /$metadata_RE/) {
+	    push @ledger_apply, ["metadata", {%+}];
+	} elsif (is_link $+{val}) {
+	    push @ledger_apply, ["link", $+{val}];
+	} else {
+	    print_line $depth, "pushtag " . pp_tag_link $+{val};
+	    push @ledger_apply, [$+{type}, $+{val}];
+	}
     } elsif ($l =~ /^[!@]?apply\s+.*/) {  # apply .*
 	# ledger seems to silently ignore all other apply statements
 	next;
     } elsif ($l =~ /^[!@]?end/) {  # end
-	pop @ledger_apply;
+	my $a = pop @ledger_apply;
+	print_line $depth, "poptag " . pp_tag_link ${$a}[1] if ${$a}[0] eq "tag";
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
 	$ledger_bucket = $2;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
@@ -831,10 +845,9 @@ while (@input) {
 	    }
 	    # ledger "apply tag"
 	    foreach my $a (reverse @ledger_apply) {
-		next unless ${$a}[0] eq "tag";
-		if ("; ${$a}[1]" =~ /$metadata_RE/) {
-		    handle_metadata 1, \%+;
-		} else {
+		if (${$a}[0] eq "metadata") {
+		    handle_metadata 1, ${$a}[1];
+		} elsif (${$a}[0] eq "link") {
 		    $cur_txn_header{tags} .= " " . pp_tags ${$a}[1] if !$config->{tag_as_metadata};
 		}
 	    }
