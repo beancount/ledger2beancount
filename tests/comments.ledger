@@ -11,12 +11,20 @@ comment
 end comment
 
 comment
-    Comment with end, not end comment
-    Second line
-end
+Comment without indentation
+Second line
+end comment
 
 test
     Another comment
+end test
+
+test
+    test can be ended with end comment
+end comment
+
+comment
+    comment can be ended with end test
 end test
 
 !comment
@@ -24,7 +32,13 @@ end test
 end comment
 
 @comment
-    This is yet another block comment
+No indentation, followed by
+    indentation.
+end comment
+
+@comment
+    Indentation, followed by
+no indentation.
 end comment
 
 ; This is a single line comment,

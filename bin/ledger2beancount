@@ -751,12 +751,15 @@ while (@input) {
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
 	$ledger_bucket = $2;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
-	@stanza = read_stanza \@input;
-	assert $input[0] =~ /^end/;
-	shift @input;
-	foreach $l (@stanza) {
-	    ($depth, $l) = strip_indentation $l;
-	    print_comment_top_level $depth-1, $l;
+	$l = shift @input;
+	# block comments may or may not be indented.  If the first line has
+	# indentation, strip the same indentation, from all other comments.
+	my $strip_indent = $l =~ /^(\h+)/ ? $1 : "";
+	while ($l !~ /^end\s+(comment|test)/) {
+	    chomp $l;
+	    $l =~ s/^$strip_indent//;
+	    print_comment_top_level $depth, $l;
+	    $l = shift @input;
 	}
     } elsif ($l =~ /^[!@]?define/) {  # define
 	print_warning_once "The `define` directive is not supported";
