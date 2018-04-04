@@ -248,7 +248,8 @@ ledger options) to output the correct config option for ledger2beancount.
 
 Beancount currently doesn't support ledger's [auxiliary dates (or effective
 dates)](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
-(but there is a proposal to support this functionality in a different way),
+(but there is [a proposal](https://docs.google.com/document/d/1x0qqWGRHi02ef-FtUW172SHkdJ8quOZD-Xli7r4Nl_k/)
+to support this functionality in a different way),
 so these are stored as metadata according to the `auxdate_tag` variable.
 Unset the variable if you don't want auxiliary dates to be stored as
 metadata.  Account and posting-level auxiliary dates are supported.
