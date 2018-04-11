@@ -419,7 +419,7 @@ sub handle_metadata($$) {
 
 
 # map a (ledger) metadata key to the desired (beancount) metadata key. Relies
-# on the global %metadata_map hash
+# on the config variable metadata_map
 sub map_metadata($) {
     my ($key) = @_;
 
