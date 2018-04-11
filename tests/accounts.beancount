@@ -1,9 +1,9 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
-;   - Collision for account "Liabilities:Credit-Card:Test": Liabilities:Credit Card:Test, Liabilities:credit Card:test
-;   - Collision for account "Equity:Opening-Balance": Equity:Opening balance, Equity:Opening-Balance
-;   - Collision for account "Assets:Test": Assets:Test, Assets:test, assets:test
 ;   - Collision for account "Assets:Collision": Assets:Coll1, Assets:Coll2
+;   - Collision for account "Assets:Test": Assets:Test, Assets:test, assets:test
+;   - Collision for account "Equity:Opening-Balance": Equity:Opening balance, Equity:Opening-Balance
+;   - Collision for account "Liabilities:Credit-Card:Test": Liabilities:Credit Card:Test, Liabilities:credit Card:test
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Collision

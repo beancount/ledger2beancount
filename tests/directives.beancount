@@ -1,15 +1,15 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
-;   - Unsupported directive "N" skipped
-;   - Unsupported directive "D" skipped
-;   - Unsupported directive "C" skipped
-;   - Unsupported directive "h" skipped
-;   - Unsupported directive "b" skipped
-;   - Unsupported directive "O" skipped
-;   - Unsupported directive "I" skipped
-;   - Unsupported directive "o" skipped
-;   - Unsupported directive "i" skipped
 ;   - Automated or periodic transaction skipped
+;   - Unsupported directive "i" skipped
+;   - Unsupported directive "o" skipped
+;   - Unsupported directive "I" skipped
+;   - Unsupported directive "O" skipped
+;   - Unsupported directive "b" skipped
+;   - Unsupported directive "h" skipped
+;   - Unsupported directive "C" skipped
+;   - Unsupported directive "D" skipped
+;   - Unsupported directive "N" skipped
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Another:Alias
