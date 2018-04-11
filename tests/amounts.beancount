@@ -3,6 +3,13 @@
 ;   - Collision for commodity "USD": $, USD
 ;----------------------------------------------------------------------
 
+1970-01-01 open Assets:Current
+1970-01-01 open Assets:Receivable
+1970-01-01 open Assets:Rewards
+1970-01-01 open Expenses:Housing:Rent
+1970-01-01 open Expenses:Travel:Airfare
+1970-01-01 open Liabilities:BA
+1970-01-01 commodity AVIOS
 
 1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Assets:Test1
@@ -116,4 +123,15 @@
 2018-03-26 * "Simple inline math"
   Assets:Test1     44.06 USD @ (1 / 1.362) GBP
   Assets:Test2                      -32.35 GBP
+
+2018-04-10 * "Inline math: negative amounts"
+  Expenses:Travel:Airfare      (2 * 15.00) GBP
+  Expenses:Travel:Airfare       (2*4500) AVIOS
+  Assets:Rewards               (2*-4500) AVIOS
+  Liabilities:BA              (2 * -15.00) GBP
+
+2018-04-10 * "Inline math"
+  Expenses:Housing:Rent         (550.00/2) GBP
+  Assets:Receivable             (550.00/2) GBP
+  Assets:Current                   -550.00 GBP
 
