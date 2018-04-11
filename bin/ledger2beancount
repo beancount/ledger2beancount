@@ -220,7 +220,7 @@ sub pp_cur_header() {
     }
     $buf .= mk_beancount_string $cur_txn_header{narration};
     if (exists $cur_txn_header{tags}) {
-        $buf .= $cur_txn_header{tags};
+	$buf .= $cur_txn_header{tags};
     }
 
     return $buf;
@@ -249,8 +249,8 @@ sub pp_amount($$$$) {
     my ($minus, $value, $commodity, $inline_math) = @_;
 
     if ($config->{decimal_comma}) {
-        $value =~ s/\.//g;
-        $value =~ s/,/./; # issue #204
+	$value =~ s/\.//g;
+	$value =~ s/,/./; # issue #204
     }
 
     return sprintf "%s%s%s%s %s", $inline_math ? "(" : "",
@@ -559,7 +559,7 @@ sub strip_indentation($) {
     # handle line indentation once and for all
     $line =~ /^(?<indent>\s*)(?<line>.*)/;
     my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
-        # round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+	# round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
 
     return ($depth, $+{line});
 }
@@ -876,7 +876,7 @@ foreach (keys %ledger_accounts) {
 }
 foreach (sort keys %mapped_accounts) {
     if (@{$mapped_accounts{$_}} > 1) {
-        print_warning "Collision for account \"$_\": " . join ", ", sort @{$mapped_accounts{$_}};
+	print_warning "Collision for account \"$_\": " . join ", ", sort @{$mapped_accounts{$_}};
     }
 }
 
@@ -886,7 +886,7 @@ foreach (keys %ledger_commodities) {
 }
 foreach (sort keys %mapped_commodities) {
     if (@{$mapped_commodities{$_}} > 1) {
-        print_warning "Collision for commodity \"$_\": " . join ", ", sort @{$mapped_commodities{$_}};
+	print_warning "Collision for commodity \"$_\": " . join ", ", sort @{$mapped_commodities{$_}};
     }
 }
 
