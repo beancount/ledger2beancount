@@ -896,7 +896,7 @@ foreach (sort keys %mapped_commodities) {
 if (@conversion_notes) {
     print ";", "-"x70, "\n";
     print "; ledger2beancount conversion notes:\n";
-    print ";   - $_\n" foreach (reverse @conversion_notes);
+    print ";   - $_\n" foreach @conversion_notes;
     print ";", "-"x70, "\n";
     print "\n";
 }
