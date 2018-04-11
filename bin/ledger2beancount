@@ -68,12 +68,12 @@ my $tags_RE = qr/(?<tags>[\w:-]+)/;
 # two spaces, a tab or new line (see $posting_RE).
 my $account_RE = qr/[^\s]([^\t](?!  )(?!\)  )(?!\]  ))*.?/;
 my $value_RE = qr/[\d.,]+/;
-my $value_exp_RE = qr/$value_RE(\s*[\/*+-]\s*$value_RE)?/;
+my $value_exp_RE = qr/$value_RE([\h*\/+-]*$value_RE)?/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
 my $commodity_quoted_RE = qr/(["'])(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 # An unquoted commodity may not contain certain characters
-my $commodity_unquoted_RE = qr/(?!-)[^;\s0-9)("'{}@]+/;
+my $commodity_unquoted_RE = qr/(?!-)[^;\s0-9)("'{}@*\/+-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
 # Ledger supports three different amount formats:
 # [minus] amount commodity

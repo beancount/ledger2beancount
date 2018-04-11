@@ -112,3 +112,14 @@ commodity $
     Assets:Test1     44.06 USD @ (1 / 1.362 GBP)
     Assets:Test2                      -32.35 GBP
 
+2018-04-10 * Inline math: negative amounts
+    Expenses:Travel:Airfare      (2 * 15.00 GBP)
+    Expenses:Travel:Airfare       (2*4500 Avios)
+    Assets:Rewards               (2*-4500 Avios)
+    Liabilities:BA              (2 * -15.00 GBP)
+
+2018-04-10 * Inline math
+    Expenses:Housing:Rent         (550.00/2 GBP)
+    Assets:Receivable             (550.00/2 GBP)
+    Assets:Current                   -550.00 GBP
+
