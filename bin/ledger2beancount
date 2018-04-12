@@ -85,7 +85,7 @@ my $amount_mcn_RE = qr/(?<minus>-?)(?<commodity>$commodity_RE)\s*(?<num>$value_e
 my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn_RE)(\)?)/;
 my $comment_top_level_RE = qr/[;#%|*]\s*(?<comment>.*)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
-my $metadata_RE = qr/;\s*(?<key>[\w-]+):(?<typed>:)?\s*(?<value>.*)/;
+my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  |\t|$|\)|\])\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
@@ -108,6 +108,7 @@ my @conversion_notes;
 # collisions after remapping is done.
 my %ledger_accounts;
 my %ledger_commodities;
+my %ledger_metadata;
 
 # Declarations
 sub map_commodity($);
@@ -393,7 +394,7 @@ sub pop_txn() {
 sub handle_metadata($$) {
     my ($depth, $metadata) = @_;
 
-    my $key = map_metadata(lc($metadata->{key}));
+    my $key = map_metadata($metadata->{key});
     if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
 	# ASSUMPTION: payer_tag always occurs later than payee_tag, which
 	# is currently enforced in our ledger. This is to guarantee that we
@@ -420,14 +421,26 @@ sub handle_metadata($$) {
 
 # map a (ledger) metadata key to the desired (beancount) metadata key. Relies
 # on the config variable metadata_map
+# Beancount syntax: "Keys must begin with a lowercase character from a-z and
+# may contain (uppercase or lowercase) letters, numbers, dashes and
+# underscores."
 sub map_metadata($) {
     my ($key) = @_;
 
-    if (exists $config->{metadata_map}{$key}) {
-	return $config->{metadata_map}{$key};
-    } else {
-	return $key;
-    }
+    $ledger_metadata{$key} = 1;
+
+    # For backwards compatibility with older ledger2beancount configs
+    $key = $config->{metadata_map}{lc $key} if exists $config->{metadata_map}{lc $key};
+
+    $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
+    $key = lcfirst $key; # Make first letter lowercase
+    $key =~ s/^([^\p{letter}])/x$1/; # Make sure first character is a letter
+    # Work around lack of Unicode support (beancount #161)
+    $key = NFKD $key;
+    $key =~ s/\p{NonspacingMark}//g;
+    $key =~ s/[^a-zA-Z0-9_-]/-/g; # Replace disallowed characters
+    $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
+    return $key;
 }
 
 
@@ -887,6 +900,16 @@ foreach (keys %ledger_commodities) {
 foreach (sort keys %mapped_commodities) {
     if (@{$mapped_commodities{$_}} > 1) {
 	print_warning "Collision for commodity \"$_\": " . join ", ", sort @{$mapped_commodities{$_}};
+    }
+}
+
+my %mapped_metadata;
+foreach (keys %ledger_metadata) {
+    push @{$mapped_metadata{map_metadata $_}}, $_;
+}
+foreach (sort keys %mapped_metadata) {
+    if (@{$mapped_metadata{$_}} > 1) {
+	print_warning "Collision for metadata \"$_\": " . join ", ", sort @{$mapped_metadata{$_}};
     }
 }
 

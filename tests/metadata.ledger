@@ -80,3 +80,34 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2018-04-12 * Metadata starting with digit
+   ; 2012: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
+2018-04-12 * Metadata starting with digit
+   ; 2012foo: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
+2018-04-12 * Metadata starting with uppercase letter
+   ; TEST1234TEST: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
+2018-04-12 * Metadata with invalid character, leading to collision
+   ; test♚: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
+2018-04-12 * Metadata with invalid character, leading to collision
+   ; test♔: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
+; ledger reg -l "tag('test:test') =~ /foo/"
+2018-04-12 * Ledger metadata may contain a colon
+   ; test:test: foo
+   Assets:Test                         10.00 EUR
+   Assets:Test
+
