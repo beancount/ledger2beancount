@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;   - Commodity Avios renamed to AVIOS
 ;   - Collision for commodity "USD": $, USD
 ;----------------------------------------------------------------------
 

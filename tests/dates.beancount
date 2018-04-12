@@ -1,3 +1,8 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;   - Metadata key Date renamed to date
+;----------------------------------------------------------------------
+
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance

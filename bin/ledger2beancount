@@ -882,6 +882,28 @@ while (@input) {
     }
 }
 
+# Check for renames
+foreach (sort keys %ledger_accounts) {
+    my $map = map_account $_;
+    if ($_ ne $map && !($map ~~ [values %{$config->{account_map}}])) {
+        print_warning "Account $_ renamed to $map";
+    }
+}
+
+foreach (sort keys %ledger_commodities) {
+    my $map = map_commodity $_;
+    if ($_ ne $map && $_ ne qq("$map") && !($map ~~ [values %{$config->{commodity_map}}])) {
+        print_warning "Commodity $_ renamed to $map";
+    }
+}
+
+foreach (sort keys %ledger_metadata) {
+    my $map = map_metadata $_;
+    if ($_ ne $map && !($map ~~ [values %{$config->{metadata_map}}])) {
+        print_warning "Metadata key $_ renamed to $map";
+    }
+}
+
 # Check for collisions
 my %mapped_accounts;
 foreach (keys %ledger_accounts) {
