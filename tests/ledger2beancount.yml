@@ -23,10 +23,6 @@ payee_match:
 
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance
-  Assets:♚♛♕♔: Assets:Crowns
-  Assets:Test:I love ♚♛♕♔: Assets:Test:I-Love-Crowns
-  Assets:Coll1: Assets:Collision
-  Assets:Coll2: Assets:Collision
 
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:

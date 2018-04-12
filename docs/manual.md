@@ -75,6 +75,13 @@ ledger files:
   You have to set this if you use commodity codes like `€` or `£` (to
   map them to `EUR` and `GBP`, respectively).
 
+Additionally, these options are useful to configure beancount:
+
+* `operating_currencies`: a list of the currencies you frequently use.
+* `beancount_header`: a file which is embedded at the beginning of
+   the converted beancount file which can include beancount `option`
+   statements, `plugin` directives, `query` information and more.
+
 Other variables can be set to use various functionality offered by
 ledger2beancount.  Please read the [section on features](#features)
 to learn about these variables.

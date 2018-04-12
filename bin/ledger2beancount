@@ -902,17 +902,12 @@ if (@conversion_notes) {
 }
 
 print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_currencies}};
-# (due to a current beancount limitation, options
-# and plugins must be in the top-level file)
-print "include \"$_\"\n" foreach @{$config->{includes}};
 
-if (defined $config->{plugins}) {
-    print <<'EOT';
-
-; plugins listed here because they don't work if declared in included files
-; see: https://bitbucket.org/blais/beancount/issues/147
-EOT
-    print "plugin \"$_\"\n" foreach @{$config->{plugins}};
+if ($config->{beancount_header}) {
+    open my $beancount_header, $config->{beancount_header} or
+	die "Can't file beancount header: $config->{beancount_header}";
+    print foreach <$beancount_header>;
+    close $beancount_header;
 }
 
 if ($config->{automatic_declarations}) {

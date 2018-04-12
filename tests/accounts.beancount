@@ -6,6 +6,9 @@
 ;   - Collision for account "Liabilities:Credit-Card:Test": Liabilities:Credit Card:Test, Liabilities:credit Card:test
 ;----------------------------------------------------------------------
 
+
+option "title" "Test account names"
+
 1970-01-01 open Assets:Collision
 
 1970-01-01 open Assets:Test
