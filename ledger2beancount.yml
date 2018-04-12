@@ -16,6 +16,12 @@ ledger_indent: 4
 operating_currencies:
   - EUR
 
+# You can specify a file which serves as a beancount "header", i.e.
+# it's put at the beginning of the converted beancount file.  You can
+# specify options for beancount, such as `option "title"`, define
+# `plugin` directives or beancount `query` information.
+#beancount_header:
+
 # emit account and commodity declares
 # (Note: thee declarations done in ledger via `account` and
 # `commodity` are always converted.  If this option is true,
