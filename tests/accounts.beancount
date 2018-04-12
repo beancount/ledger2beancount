@@ -1,5 +1,14 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;   - Account Assets:test renamed to Assets:Test
+;   - Account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds renamed to Assets:X-DASD----------------0---ds
+;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
+;   - Account Expenses:École républicaine renamed to Expenses:Ecole-republicaine
+;   - Account Expenses:école renamed to Expenses:Ecole
+;   - Account Liabilities:Credit Card:Test renamed to Liabilities:Credit-Card:Test
+;   - Account Liabilities:credit Card:test renamed to Liabilities:Credit-Card:Test
+;   - Account assets:test renamed to Assets:Test
+;   - Account expenses:purchase renamed to Expenses:Purchase
 ;   - Collision for account "Assets:Collision": Assets:Coll1, Assets:Coll2
 ;   - Collision for account "Assets:Test": Assets:Test, Assets:test, assets:test
 ;   - Collision for account "Equity:Opening-Balance": Equity:Opening balance, Equity:Opening-Balance

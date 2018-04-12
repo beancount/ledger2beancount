@@ -1,5 +1,14 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;   - Metadata key 2012 renamed to x2012
+;   - Metadata key 2012foo renamed to x2012foo
+;   - Metadata key Date renamed to date
+;   - Metadata key Invoice renamed to invoice
+;   - Metadata key TEST1234TEST renamed to tEST1234TEST
+;   - Metadata key Trip renamed to trip
+;   - Metadata key test:test renamed to test-test
+;   - Metadata key test♔ renamed to test-
+;   - Metadata key test♚ renamed to test-
 ;   - Collision for metadata "test-": test♔, test♚
 ;----------------------------------------------------------------------
 

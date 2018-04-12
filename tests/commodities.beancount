@@ -1,5 +1,15 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;   - Commodity "A commodity" renamed to A-COMMODITY
+;   - Commodity "M&M3" renamed to M-M3
+;   - Commodity AnotherAnotherAnotherAnother renamed to ANOTHERANOTHERANOTHERANO
+;   - Commodity Aud renamed to AUD
+;   - Commodity Bär renamed to BAR
+;   - Commodity Crown♛ renamed to CROWNX
+;   - Commodity Föö renamed to FOO
+;   - Commodity Gandi renamed to GANDI
+;   - Commodity KrisFlyer renamed to KRISFLYER
+;   - Commodity krw renamed to KRW
 ;   - Collision for commodity "COLLISION": COLLA, COLLB
 ;----------------------------------------------------------------------
 
