@@ -19,9 +19,6 @@ operating_currencies:
 # Set to `true` if you use option --decimal-comma in ledger
 decimal_comma: false
 
-# Any other include files listed at the top
-includes: []
-
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
   x-payee: payee

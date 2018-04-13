@@ -37,13 +37,6 @@ decimal_comma: false
 # postings in parentheses are alway ignored, regardless of this option)
 convert_virtual: false
 
-# Any other include files listed at the top
-includes: []
-
-# Plugins to load
-plugins:
- - beancount.plugins.implicit_prices
-
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
   x-payee: payee
