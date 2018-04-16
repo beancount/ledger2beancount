@@ -83,7 +83,7 @@ my $amount_cmn_RE = qr/(?<commodity>$commodity_RE)\s*(?<minus>-?)(?<num>$value_e
 # [minus] commodity amount
 my $amount_mcn_RE = qr/(?<minus>-?)(?<commodity>$commodity_RE)\s*(?<num>$value_exp_RE)/; # -EUR 10.00
 my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn_RE)(\)?)/;
-my $comment_top_level_RE = qr/^[;#%|*]\s?(?<comment>.*)/;
+my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  |\t|$|\)|\])\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
@@ -736,8 +736,13 @@ while (@input) {
     my @stanza;
     if ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
-    } elsif ($l =~ /$comment_top_level_RE/) {
-	print_comment_top_level $depth, $+{comment};
+    } elsif ($l =~ /^$comment_top_level_RE/) {
+	# beancount issue #282
+	if ($l =~ /^\|\s?(?<comment>.*)/) {
+	    print_comment_top_level $depth, $+{comment};
+	} else {
+	    print_line $depth, $l;
+	}
     } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
 	$ledger_alias{$+{account}} = map_account_apply $+{val};
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account

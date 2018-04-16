@@ -26,10 +26,10 @@
 ; no indentation.
 
 ; This is a single line comment,
-;  and this,
-;   and this,
+#  and this,
+%   and this,
 ;    and this,
-;     and this.
+*     and this.
 
 ; This is a comment
 ; Test: not a tag
