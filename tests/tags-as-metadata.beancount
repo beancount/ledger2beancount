@@ -11,10 +11,10 @@
 
 ; See issue #3
 ; 2018-03-17 * Tag on transaction, split over two lines
-; ; :foo:bar:baz:
-; ; :second:
-; Assets:Test                        10.00 EUR
-; Equity:Opening-Balance            -10.00 EUR
+;    ; :foo:bar:baz:
+;    ; :second:
+;    Assets:Test                        10.00 EUR
+;    Equity:Opening-Balance            -10.00 EUR
 
 2018-03-17 * "Tag on transaction, one converted to a link"
   tags: "foo, bar, baz"
