@@ -1,0 +1,5 @@
+
+# A marker that tells ledger2beancount to ignore a line if the
+# marker is found.
+ignore_marker: NoL2B
+

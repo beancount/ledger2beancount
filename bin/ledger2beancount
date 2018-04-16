@@ -734,7 +734,15 @@ while (@input) {
     chomp $l;
     my $depth = 0;
     my @stanza;
-    if ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
+    # The two tests for ignore_marker have to be the first thing since they
+    # have to take precedence over other tests.
+    if ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}\s+begin/) {
+	do {
+	    $l = shift @input;
+	} while $l !~ /;\s*:?$config->{ignore_marker}\s+end/;
+    } elsif ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}/) {
+	next;
+    } elsif ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
 	print_comment_top_level $depth, $+{comment};

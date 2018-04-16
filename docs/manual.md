@@ -574,6 +574,31 @@ Support for more complex inline math would require substantial changes
 to the parser.
 
 
+### Ignoring certain lines
+
+Sometimes it makes sense to exclude certain lines from the conversion.
+For example, you may not want a specific `include` directive to be
+added to the beancount file if the file contains ledger-specific
+definitions or directives with no equivalence in beancount.
+
+ledger2beancount allows you to define a marker in the config file as
+`ignore_marker`.  If this marker is found as a ledger comment on a
+line, the line will be skipped and not added to the beancount output.
+For example, given the config setting
+
+	ignore_marker: NoL2B
+
+you could do this:
+
+	include "ledger-specific-header.ledger" ; NoL2B
+
+If you want to skip several lines, you can use this syntax:
+
+	; NoL2B begin
+	...
+	; NoL2B end
+
+
 Unsupported features in beancount
 ---------------------------------
 
