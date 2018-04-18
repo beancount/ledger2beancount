@@ -310,7 +310,7 @@ found.
 
 Furthermore, you can use `payee_match` to match based on the ledger
 payee field and assign payees according to the match.  This variable
-is a hash consisting of regular expressions and the corresponding
+is a list consisting of regular expressions and the corresponding
 payees.  For example, if your ledger contains a transaction like:
 
     2018-03-18 * Oyster card top-up
@@ -318,7 +318,7 @@ payees.  For example, if your ledger contains a transaction like:
 you can use
 
     payee_match:
-      ^Oyster card top-up: Transport for London
+      - ^Oyster card top-up: Transport for London
 
 to match the line and assign the payee `Transport for London`:
 
@@ -344,7 +344,7 @@ in a case sensitive manner by default.  If you want case insensitive
 matches, you can prefix your pattern with `(?i)`, for example:
 
     payee_match:
-      (?i)^Oyster card top-up: Transport for London
+      - (?i)^Oyster card top-up: Transport for London
 
 Finally, metadata describing a payee or payer will be used to set the
 payee.  The tags used for that information can be specified in

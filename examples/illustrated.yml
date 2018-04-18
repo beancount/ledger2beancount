@@ -35,12 +35,12 @@ payer_tag: payer
 payee_split:
   - (?<narration>.*?)\s+\((?<payee>.*)\)
 
-# payee_match: a hash of regular expressions and corresponding
+# payee_match: a list of regular expressions and corresponding
 # payees.  The whole ledger payee becomes the narration and
 # the matched payee from the regular expression becomes the
 # payee.
 payee_match:
-  ^Oyster top-up: TfL
+  - ^Oyster top-up: TfL
 
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance

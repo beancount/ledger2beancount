@@ -49,6 +49,7 @@ $config->set_default(account_open_date => "1970-01-01");
 $config->set_default(commodities_date => "1970-01-01");
 $config->set_default(payee_tag => "");
 $config->set_default(payer_tag => "");
+$config->set_default(payee_match => []);
 $config->set_default(ledger_indent => 4);
 $config->set_default(beancount_indent => 2);
 $config->set_default(automatic_declarations => 1);
@@ -58,6 +59,10 @@ $config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "E
 
 # Make config variables easier to access
 $config = $config->get;
+
+if (ref $config->{payee_match} ne ref []) {
+    die "Config variable payee_match has to be a Yaml list";
+}
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -866,10 +871,16 @@ while (@input) {
 		    last;
 		}
 	    }
-	    foreach my $custom_narration_RE (keys %{$config->{payee_match}}) {
-		if ($narration =~ /$custom_narration_RE/) {
-		    push_payee $config->{payee_match}{$custom_narration_RE};
-		    last;
+	    # Config `payee_match` is an array of hashes
+	    my @payee_match = @{$config->{payee_match}};
+	    my $match = 0;
+	    while (!$match && @payee_match) {
+		my $payee_match = shift @payee_match;
+		foreach my $custom_narration_RE (keys %{$payee_match}) {
+		    if ($narration =~ /$custom_narration_RE/) {
+			push_payee ${$payee_match}{$custom_narration_RE};
+			$match = 1;
+		    }
 		}
 	    }
 	    # ledger "apply tag"

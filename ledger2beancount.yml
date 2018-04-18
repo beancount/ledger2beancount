@@ -52,12 +52,12 @@ payer_tag: payer
 payee_split:
   - (?<narration>.*?)\s+\((?<payee>Tesco)\)
 
-# payee_match: a hash of regular expressions and corresponding
+# payee_match: a list of regular expressions and corresponding
 # payees.  The whole ledger payee becomes the narration and
 # the matched payee from the regular expression becomes the
 # payee.
 payee_match:
-  (?i)^Oyster card top-up: TfL
+  - (?i)^Oyster card top-up: TfL
 
 # A hash of account names to be mapped to other account
 # names.
