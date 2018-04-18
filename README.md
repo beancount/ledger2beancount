@@ -96,7 +96,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * `payee`: skipped (not needed in beancount)
   * `tag`: skipped (not needed in beancount)
 * Full-line comments in transactions (not supported by beancount)
-* Tags and metadata are posting-level (not supported by beancount)
+* Tags and metadata on posting-level (not supported by beancount)
 * Transaction codes: stored as metadata (no equivalence in beancount)
 * Virtual postings: can be skipped or converted to real postings
 * Virtual posting costs: recognised but skipped (no equivalence in beancount)
