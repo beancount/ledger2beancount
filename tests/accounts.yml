@@ -7,4 +7,7 @@ account_map:
   Assets:Coll1: Assets:Collision
   Assets:Coll2: Assets:Collision
   Equity:Opening-balance: Equity:Opening-Balance
+  Assets:Shorter: Assets:Short
+  Assets:Longer: Assets:MuchLonger
+  Assets:Cash: Assets:Bash
 

@@ -18,7 +18,11 @@
 
 option "title" "Test account names"
 
+1970-01-01 open Assets:A
+1970-01-01 open Assets:Bash
 1970-01-01 open Assets:Collision
+1970-01-01 open Assets:MuchLonger
+1970-01-01 open Assets:Short
 
 1970-01-01 open Assets:Test
   description: "Test account"
@@ -108,11 +112,11 @@ option "title" "Test account names"
   Equity:Opening-Balance               -10.00 EUR
 
 2018-03-26 * "Interesting account name, mapped before conversion"
-  Assets:Crowns                        10.00 EUR
+  Assets:Crowns                      10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-26 * "Interesting account name, mapped after conversion"
-  Assets:Test:I-Love-Crowns            10.00 EUR
+  Assets:Test:I-Love-Crowns          10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-26 * "Ensure first letter is upper case letter"
@@ -136,10 +140,59 @@ option "title" "Test account names"
   Assets:Test
 
 2018-03-29 * "Mapping creating collision"
-  Assets:Collision                           1 EUR
+  Assets:Collision                       1 EUR
   Equity:Opening-Balance
 
 2018-03-29 * "Mapping creating collision"
-  Assets:Collision                           1 EUR
+  Assets:Collision                       1 EUR
   Equity:Opening-Balance
+
+2018-04-18 * "Preserve whitespace: shorter"
+  Assets:Short                         10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: shorter"
+  Assets:Short    10.00 EUR
+  Assets:Test    -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: shorter"
+  Assets:Short  	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * "Preserve whitespace: shorter"
+  Assets:Short
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: longer"
+  Assets:MuchLonger                    10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+; Impossible to preserve
+2018-04-18 * "Preserve whitespace: longer"
+  Assets:MuchLonger  10.00 EUR
+  Assets:Test   -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: longer"
+  Assets:MuchLonger	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * "Preserve whitespace: longer"
+  Assets:MuchLonger
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: same"
+  Assets:Bash                          10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: same"
+  Assets:Bash  10.00 EUR
+  Assets:A    -10.00 EUR
+
+2018-04-18 * "Preserve whitespace: same"
+  Assets:Bash	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * "Preserve whitespace: same"
+  Assets:Bash
+  Assets:Test                         -10.00 EUR
 

@@ -488,6 +488,35 @@ sub map_account($) {
 }
 
 
+# Replace ledger account names with corresponding beancount account names
+# while trying to keep the whitespace intact by padding where necessary.
+sub replace_account($) {
+    my ($l) = @_;
+
+    if ($l =~ /^$posting_RE/) {
+	my $old = $+{account};
+	my $new = map_account $old;
+	if ($l !~ s/\Q$old\E$/$new/) {
+	    if (length($new) <= length($old)) {
+		$new .= " "x abs(length($new) - length($old));
+		$l =~ s/\Q$old\E/$new/;
+	    } else {
+		my $orig_old = $old;
+		$old .= " "x (length($new) - length($old));
+		# Ensure there are two spaces or a tab after the account name
+		$l =~ s/\Q$old\E  /$new  /;
+		$l =~ s/\Q$old\E\t/$new\t/;
+		# We can't preserve space
+		$l =~ s/\Q$orig_old\E/$new/;
+	    }
+	}
+	return $l;
+    } else {
+	die "Not a posting: $l";
+    }
+}
+
+
 # map a ledger commodity to a beancount commodity
 # beancount commodity: up to 24 characters long, beginning with a capital
 # letter and ending with a capital letter or a number. The middle
@@ -618,7 +647,7 @@ sub process_txn(@) {
 		    next;
 		}
 		if ($config->{convert_virtual}) {
-		    $l =~ s/\Q[$account]\E/$account/; # Make them real
+		    $l =~ s/\Q[$account]\E/$account  /; # Make them real
 		} else {
 		    print_warning_once "Virtual posting in bracket ignored (see convert_virtual option)";
 		    next;
@@ -636,8 +665,7 @@ sub process_txn(@) {
 		%metadata_posting = %+;
 	    }
 
-	    # Replace ledger account names with corresponding beancount account names
-	    $l =~ s/\Q$account\E/@{[map_account $account]}/;
+	    $l = replace_account $l;
 
 	    if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
 		# posting with balance assertion

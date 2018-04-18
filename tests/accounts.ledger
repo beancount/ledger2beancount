@@ -122,3 +122,52 @@ commodity EUR
     Assets:Coll2                           1 EUR
     Equity:Opening-Balance
 
+2018-04-18 * Preserve whitespace: shorter
+  Assets:Shorter                       10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * Preserve whitespace: shorter
+  Assets:Shorter  10.00 EUR
+  Assets:Test    -10.00 EUR
+
+2018-04-18 * Preserve whitespace: shorter
+  Assets:Shorter	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * Preserve whitespace: shorter
+  Assets:Shorter
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * Preserve whitespace: longer
+  Assets:Longer                        10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+; Impossible to preserve
+2018-04-18 * Preserve whitespace: longer
+  Assets:Longer  10.00 EUR
+  Assets:Test   -10.00 EUR
+
+2018-04-18 * Preserve whitespace: longer
+  Assets:Longer	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * Preserve whitespace: longer
+  Assets:Longer
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * Preserve whitespace: same
+  Assets:Cash                          10.00 EUR
+  Assets:Test                         -10.00 EUR
+
+2018-04-18 * Preserve whitespace: same
+  Assets:Cash  10.00 EUR
+  Assets:A    -10.00 EUR
+
+2018-04-18 * Preserve whitespace: same
+  Assets:Cash	10.00 EUR
+  Assets:Test	-10.00 EUR
+
+2018-04-18 * Preserve whitespace: same
+  Assets:Cash
+  Assets:Test                         -10.00 EUR
+
