@@ -208,7 +208,7 @@ Y 2017
 
 ; `payee_match` will assign a payee based on the match
 ; payee_match:
-;   ^Oyster top-up: TfL
+;   - ^Oyster top-up: TfL
 ; Assign payee "TfL" to everything matching "Oyster top-up".
 
 ; beancount: 2018-03-28 * "TfL" "Oyster top-up"
