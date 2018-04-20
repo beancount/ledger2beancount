@@ -9,8 +9,6 @@ account Assets:Test1
     alias food
     default
 
-include include1.ledger
-include include2.ledger  ; NoL2B
 C 1.00 Mb = 1024 Kb ; NoL2B
 
 ; NoL2B begin

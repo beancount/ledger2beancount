@@ -7,7 +7,6 @@
 ;   alias food
 ;   default
 
-include "include1.beancount"
 
 
 2018-03-17 * "Test 1"

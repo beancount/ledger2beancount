@@ -590,12 +590,14 @@ For example, given the config setting
 
 you could do this:
 
-	include "ledger-specific-header.ledger" ; NoL2B
+	C 1.00 Mb = 1024 Kb ; NoL2B
 
-If you want to skip several lines, you can use this syntax:
+If you want to skip several lines, you can use `$ignore_marker begin`
+and `$ignore_marker end`.  This syntax is also useful for ledger
+`include` directives, which don't allow a comment on the same line.
 
 	; NoL2B begin
-	...
+	include ledger-specific-header.ledger
 	; NoL2B end
 
 
