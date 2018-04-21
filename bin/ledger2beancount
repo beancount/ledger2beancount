@@ -928,6 +928,8 @@ while (@input) {
 	process_txn @stanza;
     } elsif ($l =~ /^\h*$/) {
 	print_line 0, "";
+    } elsif ($l =~ /^--/) {  # ledger option
+	next;
     } else {
 	print_warning "Unknown line. Please report. Line: $l";
 	print_line 0, $l;
