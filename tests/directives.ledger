@@ -26,33 +26,33 @@ payee KFC
 ; (no space)
 Y2014
 
-10-02 * Transaction without year
+10/02 * Transaction without year
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
-10-02=10-01 * Transaction without year, with aux date
+10/02=10/01 * Transaction without year, with aux date
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
 ; setting year 2015
 Y 2015
 
-10-02 * Transaction without year
+10/02 * Transaction without year
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
-10-02=10-01 * Transaction without year, with aux date
+10/02=10/01 * Transaction without year, with aux date
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
 ; setting year 2016
 year 2016
 
-10-02 * Transaction without year
+10/02 * Transaction without year
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
-10-02=10-01 * Transaction without year, with aux date
+10/02=10/01 * Transaction without year, with aux date
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
