@@ -11,6 +11,7 @@ addons:
       - libfile-basedir-perl
       - libgetopt-long-descriptive-perl
       - libyaml-libyaml-perl
+      - ledger
 install:
   - sudo cpanm Config::Onion
   - sudo cpanm DateTime::Format::Strptime

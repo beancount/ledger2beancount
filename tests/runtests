@@ -30,7 +30,19 @@ test_conversion () {
 	rm -f $actual
 }
 
-test_validity () {
+test_validity_ledger () {
+	file=$1
+	test=$(basename "$file")
+	printf "Validating $test... "
+	if ledger --init-file /dev/null -f $test bal > /dev/null; then
+		echo "ok"
+	else
+		echo "FAIL"
+		status=1
+	fi
+}
+
+test_validity_beancount () {
 	file=$1
 	test=$(basename "$file")
 	printf "Validating $test... "
@@ -44,12 +56,21 @@ test_validity () {
 
 export LC_ALL=C.UTF-8
 
+version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
+if [ $version -eq 2 ]; then
+	echo "Skipping ledger validation checks since version ledger 2 is too old"
+else
+	for test in `find . -name "*.ledger" | sort`; do
+		test_validity_ledger "$test"
+	done
+fi
+
 for test in `find . -name "*.ledger" | sort`; do
 	test_conversion "$test"
 done
 
 for test in `find . -name "*.beancount" | sort`; do
-	test_validity "$test"
+	test_validity_beancount "$test"
 done
 
 exit $status
