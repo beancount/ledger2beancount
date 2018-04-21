@@ -3,21 +3,19 @@
 status=0
 
 test_conversion () {
-	file=$1
-	test=$(basename "$file")
-	expected=$(echo $file | sed -e 's/.ledger$/.beancount/')
-
+	test=$1
+	expected=$(echo $test | sed -e 's/.ledger$/.beancount/')
 	actual=$(tempfile)
 
 	printf "Converting $test... "
 
 	config=ledger2beancount.yml
-	test=$(echo $test | sed 's/.ledger$//')
-	if [ -e $test.yml ]; then
-		config=$test.yml
+	t=$(echo $test | sed 's/.ledger$//')
+	if [ -e $t.yml ]; then
+		config=$t.yml
 	fi
 
-	cat $file | ../bin/ledger2beancount --config $config > $actual
+	../bin/ledger2beancount --config $config $test > $actual
 
 	if $(cmp -s $expected $actual); then
 		echo "ok"
@@ -31,8 +29,7 @@ test_conversion () {
 }
 
 test_validity_ledger () {
-	file=$1
-	test=$(basename "$file")
+	test=$1
 	printf "Validating $test... "
 	if ledger --init-file /dev/null -f $test bal > /dev/null; then
 		echo "ok"
@@ -43,8 +40,7 @@ test_validity_ledger () {
 }
 
 test_validity_beancount () {
-	file=$1
-	test=$(basename "$file")
+	test=$1
 	printf "Validating $test... "
 	if bean-check $test; then
 		echo "ok"
@@ -60,16 +56,16 @@ version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -
 if [ $version -eq 2 ]; then
 	echo "Skipping ledger validation checks since version ledger 2 is too old"
 else
-	for test in `find . -name "*.ledger" | sort`; do
+	for test in *.ledger; do
 		test_validity_ledger "$test"
 	done
 fi
 
-for test in `find . -name "*.ledger" | sort`; do
+for test in *.ledger; do
 	test_conversion "$test"
 done
 
-for test in `find . -name "*.beancount" | sort`; do
+for test in *.beancount; do
 	test_validity_beancount "$test"
 done
 
