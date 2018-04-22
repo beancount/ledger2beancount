@@ -676,7 +676,7 @@ sub process_txn(@) {
 		# posting with balance assertion
 		push_line $depth, replace_commodity $+{posting};
 		push_assertion $+{account}, $+{assertion};
-	    } elsif ($has_amount && $l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?/) {
+	    } elsif ($has_amount && $l =~ /^$posting_RE(\s+(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s+(?<lot_price>$amount_RE))?(\s*$comment_RE)?/) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regex case
 		my $lot_info = "";
@@ -709,6 +709,7 @@ sub process_txn(@) {
 			$l = sprintf "$+{posting} %s%s%s%s", "{" x length $+{at},
 			    replace_commodity $+{lot_price}, $lot_info, "}" x length $+{at};
 		    }
+		    $l .= " ; $+{comment}" if $+{comment};
 		} elsif (defined $+{lot_cost}) {
 		    $l = "$+{posting} $+{curlyopen}$+{lot_cost}$lot_info$+{curlyclose}";
 		    # ledger requires you to specify both lot cost and lot price
@@ -716,6 +717,7 @@ sub process_txn(@) {
 		    if (defined $+{lot_price} && ($+{lot_cost} ne $+{lot_price})) {
 			$l .= " $+{at} " . replace_commodity $+{lot_price};
 		    }
+		    $l .= " ; $+{comment}" if $+{comment};
 		}
 		push_line $depth, replace_commodity $l;
 	    } elsif ($has_amount) {

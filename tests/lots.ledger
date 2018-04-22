@@ -181,3 +181,28 @@ commodity XXXx
     Assets:Test                42.30 USD @@ 5641 XX
     Assets:Test                            -5641 XX
 
+2018-04-22 * Lot with comment
+    Assets:Test               10.00 EUR {0.90 GBP}   ; comment
+    Equity:Opening-Balance    -9.00 GBP
+
+2018-04-22 * Lot with comment
+    Assets:Test               10.00 EUR {0.90 GBP} @ 0.90 GBP ; comment
+    Equity:Opening-Balance    -9.00 GBP
+
+2018-04-22 * Lot with comment
+    Assets:Test               10.00 EUR {1.23 USD} [2018-03-16] @ 1.23 USD ;comment
+    Equity:Opening-Balance   -12.30 USD
+
+2018-04-22 * Lot with comment
+    Assets:Test              -10.00 EUR {0.90 GBP} [2018-03-17] @ 0.95 GBP ; comment
+    Assets:Test                9.50 GBP
+    Income:Capital-Gain       -0.50 GBP
+
+2018-04-22 * Lot with comment
+    Assets:Test               10.00 EUR {{12.30 USD}} [2018-03-16] @@ 12.30 USD ; comment
+    Equity:Opening-Balance   -12.30 USD
+
+2018-04-22 * Lot with comment
+    Assets:Test               10.00 EUR {1.23 USD} (this is a note) @ 1.23 USD ; comment
+    Equity:Opening-Balance   -12.30 USD
+
