@@ -1,7 +1,8 @@
 # ledger2beancount releases
 
-## 1.1 (unreleased)
+## 1.1 (2018-05-01)
 
+* Happy International Workers' Day release!
 * Handle block comments without indentation correctly
 * Preserve comments for postings with lots
 * Use beancount's `pushtag/poptag` for ledger's `apply tag`
