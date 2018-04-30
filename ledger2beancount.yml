@@ -1,7 +1,7 @@
 
 date_format: "%Y-%m-%d"
 # Date without year (if ledger's Y/year directive is used)
-date_format_no_year: "%m/%d"
+date_format_no_year: "%m-%d"
 
 # Date used to open accounts
 account_open_date: "1970-01-01" # Unix epoch, just because
