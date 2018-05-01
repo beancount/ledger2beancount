@@ -10,6 +10,8 @@
 * Allow option `link_match` to work with `tag_as_metadata: true`
 * Handle posting-level tags without indentation correctly with
   `tag_as_metadata: false`
+* Ensure `payee_match` is predictable
+* Preserve comments for postings with lots
 * Embed an optional beancount header to the converted file to
   specify beancount options
 * Convert ledger metadata keys to valid beancount metadata keys
