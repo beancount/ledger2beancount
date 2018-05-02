@@ -1,6 +1,9 @@
 language: python
 python:
   - "3.6"
+env:
+  - BEANCOUNT="beancount>=2.0"
+  - BEANCOUNT="hg+https://bitbucket.org/blais/beancount/"
 addons:
   apt:
     packages:
@@ -12,9 +15,12 @@ addons:
       - libgetopt-long-descriptive-perl
       - libyaml-libyaml-perl
       - ledger
+matrix:
+  allow_failures:
+  - env: BEANCOUNT="beancount>=2.0"
 install:
   - sudo cpanm Config::Onion
   - sudo cpanm DateTime::Format::Strptime
-  - pip install hg+https://bitbucket.org/blais/beancount/
+  - pip install $BEANCOUNT
 script:
   - make test
