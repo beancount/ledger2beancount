@@ -3,6 +3,7 @@
 ## 1.2 (unreleased)
 
 * Allow full-line comments in transactions (requires beancount > 2.0.0).
+* Handle tags on multiple lines when `tag_as_metadata: true`.
 
 ## 1.1 (2018-05-01)
 

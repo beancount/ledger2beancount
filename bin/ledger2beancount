@@ -200,7 +200,7 @@ sub parse_commodity($) {
 # they appear as a regular metadata ("x-payee"). The following functions
 # support the parsing state machine for this:
 my ($in_txn, $in_postings,
-    %cur_txn_header, @cur_txn_lines, @cur_txn_assertions);
+    %cur_txn_header, @cur_txn_lines, @cur_txn_assertions, @cur_txn_tags);
 
 
 # reset current parsing state, reinitializing it to the empty state
@@ -210,6 +210,7 @@ sub reset_cur_txn() {
     %cur_txn_header = ();  # txn header, i.e., its first line
     @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
     @cur_txn_assertions = ();  # balance assertions related to txn
+    @cur_txn_tags = ();  # txn (or posting) tags
 }
 reset_cur_txn();
 
@@ -270,6 +271,7 @@ sub pp_amount($$$$) {
 sub is_link($) {
     my ($key) = @_;
 
+    return 1 if $key =~ /^\^/;
     foreach my $link_RE (@{$config->{link_match}}) {
 	return 1 if $key =~ /$link_RE/;
     }
@@ -281,7 +283,9 @@ sub is_link($) {
 sub pp_tag_link(@) {
     my ($key) = @_;
 
-    if (is_link $key) {
+    if ($key =~ /^\^/) {
+	return $key;
+    } elsif (is_link $key) {
 	return "^" . $key;
     } else {
 	return "#" . $key;
@@ -392,9 +396,9 @@ sub handle_metadata($$) {
 	push_payee $metadata->{value};
     } else {
 	# Check if we should store as metadata or as links
-	# We check for $depth since posting-level links are not allowed
+	# We check for $in_postings since posting-level links are not allowed
 	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
-	    $cur_txn_header{tags} .= " ^" . $metadata->{value};
+	    push @cur_txn_tags, "^$metadata->{value}";
 	} else {
 	    my $value;
 	    if (defined($metadata->{typed})) {
@@ -595,6 +599,29 @@ sub strip_indentation($) {
     return ($depth, $+{line});
 }
 
+
+sub print_tags($@) {
+    my ($depth, @ledger_tags) = @_;
+
+    return if not scalar @ledger_tags;
+
+    my @tags = grep {!is_link $_} @ledger_tags;
+    my @links = grep {is_link $_} @ledger_tags;
+    # XXX workaround for the fact that per-posting tags are currently not
+    # allowed.  See:
+    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
+    if ($config->{tag_as_metadata}) {
+	push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
+	push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
+    } else {
+	if (!$in_postings) {
+	    $cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
+	} else {
+	    print_warning_once "Tags on posting-level ignored (see tag_as_metadata)";
+	}
+    }
+}
+
 # Process a ledger transaction
 sub process_txn(@) {
     my @txn = @_;
@@ -608,26 +635,13 @@ sub process_txn(@) {
 	    handle_metadata $depth, \%+;
 	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
-	    my @ledger_tags = split /:/, $+{tags};
-	    my @tags = grep {!is_link $_} @ledger_tags;
-	    my @links = grep {is_link $_} @ledger_tags;
-	    # XXX workaround for the fact that per-posting tags are currently not
-	    # allowed.  See:
-	    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-	    if ($config->{tag_as_metadata}) {
-		push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
-		push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
-	    } else {
-		if (!$in_postings) {
-		    $cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
-		} else {
-		    print_warning_once "Tags on posting-level ignored (see tag_as_metadata)";
-		}
-	    }
+	    push @cur_txn_tags, split /:/, $+{tags};
 	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	    push_comment $depth, $+{comment};
 	} elsif ($l =~ /^$posting_RE/) {
+	    print_tags($in_postings ? $depth+1 : $depth, @cur_txn_tags);
+	    @cur_txn_tags = ();
 	    my $account = $+{account};
 	    if ($+{virtual}) {
 		; # Ignore virtual postings with parentheses
@@ -717,6 +731,7 @@ sub process_txn(@) {
 	    die "Don't know how to process transaction line: $l\n";
 	}
     }
+    print_tags 2, @cur_txn_tags;
     # We only saw one posting and a ledger bucket is defined
     if ($in_postings == 1 && defined $ledger_bucket) {
 	push_line 1, map_account $ledger_bucket;
@@ -902,7 +917,7 @@ while (@input) {
 		if (${$a}[0] eq "metadata") {
 		    handle_metadata 1, ${$a}[1];
 		} elsif (${$a}[0] eq "link") {
-		    $cur_txn_header{tags} .= " " . pp_tags ${$a}[1] if !$config->{tag_as_metadata};
+		    push @cur_txn_tags, ${$a}[1];
 		}
 	    }
 	} elsif ($l !~ /^$date_RE/) {

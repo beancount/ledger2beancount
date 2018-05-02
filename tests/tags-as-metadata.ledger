@@ -9,12 +9,11 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
-; See issue #3
-;2018-03-17 * Tag on transaction, split over two lines
-;    ; :foo:bar:baz:
-;    ; :second:
-;    Assets:Test                        10.00 EUR
-;    Equity:Opening-Balance            -10.00 EUR
+2018-03-17 * Tag on transaction, split over two lines
+    ; :foo:bar:baz:
+    ; :second:
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
 
 2018-03-17 * Tag on transaction, one converted to a link
     ; :foo:bar:2018-02-02-brussels-fosdem:baz:
@@ -40,4 +39,34 @@ commodity EUR
     ; :qux:2018-03-08-london:
     Equity:Opening-Balance            -10.00 EUR
     ; :quux:quuz:
+
+apply tag 2018-02-02-test
+2018-05-02 * Test
+    ; :2018-01-01-new-year:
+    ; :xxx:
+    ; :yyy:
+    ; :2018-05-01-may:
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+        ; :foo:
+end apply tag
+
+2018-05-02 * Test of link_tags
+    ; invoice: Invoice123
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2018-05-02 * Metadata, some posting-level links, testing link_tags
+    ; :tag1:
+    ; :2018-01-01-new-year:
+    ; test: foo bar baz
+    ; :tag2:
+    ; trip: brussels-fosdem
+    ; :tag3:
+    ; invoice:: 4
+    Assets:Test                        10.00 EUR
+        ; test: baz
+        ; invoice:: 5
+    Equity:Opening-Balance            -10.00 EUR
+        ; invoice:: 6
 
