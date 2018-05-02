@@ -76,7 +76,7 @@ commodity_map:
 auxdate_tag: aux-date
 code_tag: code
 
-# Render tags as metadata instead of tags:
+# Render transaction-level tags as metadata instead of tags:
 # If true, tags are stored as metadata with the key "tags"
 # If false, tags are rendered as #tags after the narration
 tag_as_metadata: false
