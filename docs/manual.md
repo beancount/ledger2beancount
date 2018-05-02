@@ -112,6 +112,25 @@ conversion or if you get an error message from ledger2beancount, please
 with a simple test case.
 
 
+Beancount compatibility
+-----------------------
+
+The syntax of beancount is quite stable but it's expected to become
+slightly less restrictive as some missing features are implemented (such
+as UTF-8 for account names and tags on a posting-level).
+
+ledger2beancount aims to be compatible with the latest official release
+of beancount, but some functionality may require an unreleased version of
+beancount.  You can install the latest development version of beancount
+directly from the beancount repository:
+
+    pip3 install hg+https://bitbucket.org/blais/beancount/
+
+Currently, an unreleased version of beancount is required if you use
+full-line comments in transactions.  Support for these was added after
+beancount 2.0.0 came out.
+
+
 Features
 --------
 
@@ -461,10 +480,7 @@ would become the following in beancount:
 
 ### Comments
 
-Comments are supported.  Since beancount currently [doesn't allow
-full-line comments within
-transactions](https://bitbucket.org/blais/beancount/issues/143), these
-are stored as metadata.
+Comments are supported.
 
 
 ### Virtual costs
