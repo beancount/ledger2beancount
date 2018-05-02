@@ -55,7 +55,7 @@ end comment
 2018-03-17 * Test
     ; Another comment
     Assets:Test                        10.00 EUR ; What an "interesting" accout name
-    ; see beancount issue #143
+    ; full line posting comment
     Equity:Opening-Balance            -10.00 EUR ; Opening balance?
         ; posting-level comment
 

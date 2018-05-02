@@ -14,7 +14,9 @@ formatting, etc.) can be preserved.
 The syntax of beancount is expected to become slightly less restrictive
 as some missing features are implemented (such as UTF-8 for account names
 and tags on a posting-level).  ledger2beancount aims to be compatible with
-the latest official release of beancount.
+the latest official release of beancount, but some functionality may
+require an unreleased version of beancount.  Please check the [manual on
+compatibility with beancount](docs/manual.md#beancount-compatibility).
 
 Please [read the manual](docs/manual.md) on how to install, configure and
 use ledger2beancount.  The [supported features](docs/manual.md#features)
@@ -95,7 +97,6 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 * Directives
   * `payee`: skipped (not needed in beancount)
   * `tag`: skipped (not needed in beancount)
-* Full-line comments in transactions (not supported by beancount)
 * Tags and metadata on posting-level (not supported by beancount)
 * Transaction codes: stored as metadata (no equivalence in beancount)
 * Virtual postings: can be skipped or converted to real postings

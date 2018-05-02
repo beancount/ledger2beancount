@@ -15,6 +15,6 @@ addons:
 install:
   - sudo cpanm Config::Onion
   - sudo cpanm DateTime::Format::Strptime
-  - pip install 'beancount>=2.0'
+  - pip install hg+https://bitbucket.org/blais/beancount/
 script:
   - make test

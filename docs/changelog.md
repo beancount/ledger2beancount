@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.2 (unreleased)
+
+* Allow full-line comments in transactions (requires beancount > 2.0.0).
+
 ## 1.1 (2018-05-01)
 
 * Happy International Workers' Day release!

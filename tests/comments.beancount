@@ -37,21 +37,20 @@
 ; Another comment
 
 2018-03-17 * "Test"
-  comment: "Another comment"
+  ; Another comment
   Assets:Test                        10.00 EUR ; What an "interesting" accout name
-  comment: "see beancount issue #143"
+  ; full line posting comment
   Equity:Opening-Balance            -10.00 EUR ; Opening balance?
-    comment: "posting-level comment"
+    ; posting-level comment
 
 2018-03-17 * "Tag and comment on same line" #tag
-  comment: "comment"
+  ; comment
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-17 * "Multi-line comment"
-  comment: "
-    comment1
-    comment2"
+  ; comment1
+  ; comment2
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 

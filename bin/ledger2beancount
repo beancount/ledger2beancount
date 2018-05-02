@@ -354,28 +354,12 @@ sub push_metadata($$$) {
     push_line $depth, pp_metadata($key, $value);
 }
 
+
 # add a comment line. Wrapper around push_line() for comments
 sub push_comment($$) {
     my ($depth, $comment) = @_;
 
-    # XXX as a workaround for bug
-    # https://bitbucket.org/blais/beancount/issues/143/full-line-comments-not-allowed-within
-    # we store comments as "comment: text" metadata entries (rather than
-    # beancount comments)
-
-    if (@cur_txn_lines and
-	$cur_txn_lines[-1] =~ /^\s*comment:\s+"(?<comment>.*)"/s) {
-	# last pushed (logical) line was a comment too, treat it as a
-	# multi-line comment and append current comment payload to it
-	pop @cur_txn_lines;
-	$comment = "$+{comment}\n"
-	    . indent($depth + 1, escape_beancount_string($comment));
-	$comment = "\n" . indent($depth +1, $comment)
-	    unless $+{comment} =~ /^\n/;
-	push_metadata $depth, "comment", "\"$comment\"";
-    } else {
-	push_metadata $depth, "comment", mk_beancount_string($comment);
-    }
+    push_line $depth, "; $comment";
 }
 
 

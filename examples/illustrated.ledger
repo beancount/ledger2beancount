@@ -318,10 +318,6 @@ tag foo
     Assets:A                            10.00 EUR ; comment
     Assets:B  ; comment
 
-; However, currently you can't have a whole line consisting of only
-; a comment in a transaction.  This is allowed in ledger and will
-; hopefully be supported in beancount in the future.
-
 ; ------------------------------------------------------------------------
 ; Virtual costs
 ; ------------------------------------------------------------------------

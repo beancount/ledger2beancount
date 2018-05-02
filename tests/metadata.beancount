@@ -44,11 +44,11 @@
 
 2018-03-19 * "Metadata and comments"
   test: "foo bar baz"
-  comment: "one comment"
+  ; one comment
   Assets:Test                        10.00 EUR ; another comment
     test: "baz"
   Equity:Opening-Balance            -10.00 EUR
-  comment: "and another comment"
+  ; and another comment
 
 2018-03-19 * "Metadata, one of which should be converted to a link" #tag1 #tag2 ^brussels-fosdem #tag3
   test: "foo bar baz"
