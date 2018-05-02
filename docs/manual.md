@@ -405,17 +405,20 @@ own before the first posting but this currently doesn't work.
 2. postings can't have tags ([issue
 144](https://bitbucket.org/blais/beancount/issues/144)).
 
-Because of these limitations, ledger2beancount offers two ways to handle
-tags using the `tag_as_metadata` variable:
+Because of the first limitation, ledger2beancount offers two ways to
+handle transaction-level tags using the `tag_as_metadata` variable:
 
 If `tag_as_metadata` is `true`, tags will be stored as metadata with the
-key `tags`.  This works both for transactions and postings.  This option
-should be seen as a workaround because metadata with the key `tags` is
-not treated the same way by beancount as proper tags.
+key `tags`.  This option should be seen as a workaround because metadata
+with the key `tags` is not treated the same way by beancount as proper
+tags.
 
 If `tag_as_metadata` is `false`, transaction tags will be put after the
-narration as tags.  Because of the limitation in beancount, posting-level
-tags are currently ignored.
+narration as tags (the expected and default behaviour).
+
+Posting-level tags are currently always stored as metadata `tags`
+(regardless of `tag_as_metadata`) since postings in beancount can't have
+tags (yet).
 
 Ledger's `apply tag` directive is supported.  If the string to apply is
 metadata or a link (according to `link_match`, see below), the information

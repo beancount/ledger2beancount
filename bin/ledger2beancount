@@ -607,18 +607,14 @@ sub print_tags($@) {
 
     my @tags = grep {!is_link $_} @ledger_tags;
     my @links = grep {is_link $_} @ledger_tags;
-    # XXX workaround for the fact that per-posting tags are currently not
-    # allowed.  See:
-    # https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-    if ($config->{tag_as_metadata}) {
+    if (!$in_postings && !$config->{tag_as_metadata}) {
+	$cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
+    } else {
+	# XXX workaround for the fact that per-posting tags are currently not
+	# allowed.  See:
+	# https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
 	push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
 	push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
-    } else {
-	if (!$in_postings) {
-	    $cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
-	} else {
-	    print_warning_once "Tags on posting-level ignored (see tag_as_metadata)";
-	}
     }
 }
 
