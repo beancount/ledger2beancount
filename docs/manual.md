@@ -516,7 +516,9 @@ terms "commodity" and "currency" interchangeably.)
 
 Ledger balance assertions are converted to beancount `balance` statements.
 Please note that beancount evaluates balance assertions at the beginning of
-the day whereas ledger evaluates them at the end of the transaction.
+the day whereas ledger evaluates them at the end of the day (up to ledger
+3.1.1) or at the end of the transaction (newer versions of ledger).
+
 Therefore, we schedule the balance assertion for the day *after* the
 original transaction.  This assumes that there are no other transactions
 on the same day that change the balance again for this account.
