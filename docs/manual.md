@@ -482,6 +482,10 @@ would become the following in beancount:
 
 Comments are supported.
 
+Currently, beancount doesn't accept top-level comments with the `|` marker
+([issue 282](https://bitbucket.org/blais/beancount/issues/282)).
+ledger2beancount changes such comments to use the `;` marker.
+
 
 ### Virtual costs
 
