@@ -59,13 +59,8 @@ commodity_map:
 auxdate_tag: aux-date
 code_tag: code
 
-# Render tags as metadata instead of tags:
-# If true, tags are stored as metadata with the key "tags"
-# If false, tags are rendered as #tags after the narration
-tag_as_metadata: false
-
 # A list of regular expressions that will cause a tag to be
-# rendered as a link. (Only works if tag_as_metadata is false)
+# rendered as a link.
 link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 

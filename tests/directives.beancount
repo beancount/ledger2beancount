@@ -26,6 +26,8 @@
 1970-01-01 open Assets:What:A:Long:Name
 1970-01-01 open Equity:Opening-Balance
 1970-01-01 commodity EUR
+; Beancount: 2.1.0
+
 
 1970-01-01 txn "open Assets:Test"
 
@@ -100,12 +102,14 @@ include "include3.beancount"
 pushtag #foo
 pushtag #bar
 
-2018-03-29 * "Test apply" ^2018-02-02-brussels-fosdem
+2018-03-29 * "Test apply"
+  ^2018-02-02-brussels-fosdem
   test: "martin"
   Assets:Test1:Test2:AA            10.00 EUR
   Assets:Test1:Test2:BB
 
-2018-03-29 * "Test apply" ^2018-02-02-brussels-fosdem
+2018-03-29 * "Test apply"
+  ^2018-02-02-brussels-fosdem
   test: "martin"
   Assets:Test1:Test2:CC:DD         10.00 EUR
   Assets:Test1:Test2:EE:FF
