@@ -117,6 +117,7 @@ my %ledger_metadata;
 
 # Declarations
 sub map_commodity($);
+sub print_tags($@);
 
 
 # indent some content at a given depth in beancount style
@@ -210,7 +211,7 @@ sub reset_cur_txn() {
     %cur_txn_header = ();  # txn header, i.e., its first line
     @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
     @cur_txn_assertions = ();  # balance assertions related to txn
-    @cur_txn_tags = ();  # txn (or posting) tags
+    @cur_txn_tags = ();  # posting tags
 }
 reset_cur_txn();
 
@@ -398,7 +399,7 @@ sub handle_metadata($$) {
 	# Check if we should store as metadata or as links
 	# We check for $in_postings since posting-level links are not allowed
 	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
-	    push @cur_txn_tags, "^$metadata->{value}";
+	    print_tags $depth, "^$metadata->{value}";
 	} else {
 	    my $value;
 	    if (defined($metadata->{typed})) {
@@ -607,8 +608,8 @@ sub print_tags($@) {
 
     my @tags = grep {!is_link $_} @ledger_tags;
     my @links = grep {is_link $_} @ledger_tags;
-    if (!$in_postings && !$config->{tag_as_metadata}) {
-	$cur_txn_header{tags} .= " " . pp_tags @ledger_tags;
+    if (!$in_postings) {
+	$cur_txn_header{tags} .= "\n" . indent $depth, pp_tags @ledger_tags;
     } else {
 	# XXX workaround for the fact that per-posting tags are currently not
 	# allowed.  See:
@@ -631,12 +632,16 @@ sub process_txn(@) {
 	    handle_metadata $depth, \%+;
 	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
-	    push @cur_txn_tags, split /:/, $+{tags};
+	    if ($in_postings) {
+		push @cur_txn_tags, split /:/, $+{tags};
+	    } else {
+		print_tags $depth, split /:/, $+{tags};
+	    }
 	    push_comment $depth, $+{comment} if $+{comment} ne "";
 	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	    push_comment $depth, $+{comment};
 	} elsif ($l =~ /^$posting_RE/) {
-	    print_tags($in_postings ? $depth+1 : $depth, @cur_txn_tags);
+	    print_tags $depth+1, @cur_txn_tags;
 	    @cur_txn_tags = ();
 	    my $account = $+{account};
 	    if ($+{virtual}) {
@@ -913,7 +918,7 @@ while (@input) {
 		if (${$a}[0] eq "metadata") {
 		    handle_metadata 1, ${$a}[1];
 		} elsif (${$a}[0] eq "link") {
-		    push @cur_txn_tags, ${$a}[1];
+		    print_tags 1, ${$a}[1];
 		}
 	    }
 	} elsif ($l !~ /^$date_RE/) {

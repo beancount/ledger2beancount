@@ -1,3 +1,5 @@
+; Beancount: 2.1.0
+
 --input-date-format %Y-%m-%d
 --input-date-format %m-%d
 

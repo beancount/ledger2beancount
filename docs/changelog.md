@@ -2,8 +2,10 @@
 
 ## 1.2 (unreleased)
 
-* Allow full-line comments in transactions (requires beancount > 2.0.0).
-* Handle tags on multiple lines when `tag_as_metadata: true`.
+* Updates for beancount 2.1.0:
+    * Allow full-line comments in transactions
+    * Allow transaction tags and links on multiple lines
+* Handle posting tags on multiple lines
 * Always convert posting-level tags to metadata.
 
 ## 1.1 (2018-05-01)

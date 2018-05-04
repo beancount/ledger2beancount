@@ -44,7 +44,8 @@
   Equity:Opening-Balance            -10.00 EUR ; Opening balance?
     ; posting-level comment
 
-2018-03-17 * "Tag and comment on same line" #tag
+2018-03-17 * "Tag and comment on same line"
+  #tag
   ; comment
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR

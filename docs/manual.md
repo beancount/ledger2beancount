@@ -127,8 +127,9 @@ directly from the beancount repository:
     pip3 install hg+https://bitbucket.org/blais/beancount/
 
 Currently, an unreleased version of beancount is required if you use
-full-line comments in transactions.  Support for these was added after
-beancount 2.0.0 came out.
+full-line comments in transactions and transaction tags on multiple
+lines.  Support for these features was added after beancount 2.0.0 came
+out.
 
 
 Features
@@ -395,30 +396,12 @@ but you should make sure the values are valid in beancount.
 
 ### Tags
 
-Beancount currently has two limitations regarding tags:
-
-1. they have to be on the same line as the narration ([issue
-99](https://bitbucket.org/blais/beancount/issues/99)), which means the
-line can get very long.  It would be good to put tags on a line on its
-own before the first posting but this currently doesn't work.
-
-2. postings can't have tags ([issue
-144](https://bitbucket.org/blais/beancount/issues/144)).
-
-Because of the first limitation, ledger2beancount offers two ways to
-handle transaction-level tags using the `tag_as_metadata` variable:
-
-If `tag_as_metadata` is `true`, tags will be stored as metadata with the
-key `tags`.  This option should be seen as a workaround because metadata
-with the key `tags` is not treated the same way by beancount as proper
-tags.
-
-If `tag_as_metadata` is `false`, transaction tags will be put after the
-narration as tags (the expected and default behaviour).
-
-Posting-level tags are currently always stored as metadata `tags`
-(regardless of `tag_as_metadata`) since postings in beancount can't have
-tags (yet).
+Beancount allows tags for transactions but currently doesn't support
+tags for postings ([issue
+144](https://bitbucket.org/blais/beancount/issues/144)).  Because of
+this, posting-level tags are currently stored as metadata with the key
+`tags`.  This should be seen as a workaround because metadata with the
+key `tags` is not treated the same way by beancount as proper tags.
 
 Ledger's `apply tag` directive is supported.  If the string to apply is
 metadata or a link (according to `link_match`, see below), the information
