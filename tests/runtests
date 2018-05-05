@@ -2,6 +2,13 @@
 
 status=0
 
+# We need sort from coreutils for -V
+case `uname -s` in
+	Linux*) SORT=sort ;;
+	Darwin*) SORT=gsort ;;
+	*) SORT=sort ;;
+esac
+
 test_conversion () {
 	test=$1
 	expected=$(echo $test | sed -e 's/.ledger$/.beancount/')
@@ -42,6 +49,18 @@ test_validity_ledger () {
 test_validity_beancount () {
 	test=$1
 	printf "Validating $test... "
+
+	# Ensure beancount is new enough
+	needed=$(grep "^; Beancount:" $test | head -n 1 | sed 's/^; Beancount:\s*//')
+	if [ -n "$needed" ]; then
+		beancount=$(bean-check --version 2>/dev/null | cut -d' ' -f2)
+		latest=$(printf "$needed\n$beancount" | $SORT -V | tail -n 1)
+		if [ "$beancount" != "$latest" ]; then
+			echo "skipping since beancount is too old"
+			return
+		fi
+	fi
+
 	if bean-check $test; then
 		echo "ok"
 	else

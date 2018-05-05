@@ -15,9 +15,6 @@ addons:
       - libgetopt-long-descriptive-perl
       - libyaml-libyaml-perl
       - ledger
-matrix:
-  allow_failures:
-  - env: BEANCOUNT="beancount>=2.0"
 install:
   - sudo cpanm Config::Onion
   - sudo cpanm DateTime::Format::Strptime

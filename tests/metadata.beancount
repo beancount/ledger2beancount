@@ -12,6 +12,7 @@
 ;   - Collision for metadata "test-": test♔, test♚
 ;----------------------------------------------------------------------
 
+; Beancount: 2.1.0
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
