@@ -9,10 +9,8 @@ Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
-The syntax of beancount is expected to become slightly less restrictive
-as some missing features are implemented (such as UTF-8 for account names
-and tags on a posting-level).  ledger2beancount aims to be compatible with
-the latest official release of beancount.
+ledger2beancount aims to be compatible with the latest official release of
+beancount.
 
 
 Installation
@@ -117,7 +115,7 @@ Beancount compatibility
 
 The syntax of beancount is quite stable but it's expected to become
 slightly less restrictive as some missing features are implemented (such
-as UTF-8 for account names and tags on a posting-level).
+as posting-level tags).
 
 ledger2beancount aims to be compatible with the latest official release
 of beancount, but some functionality may require an unreleased version of
@@ -126,10 +124,13 @@ directly from the beancount repository:
 
     pip3 install hg+https://bitbucket.org/blais/beancount/
 
-Currently, an unreleased version of beancount is required if you use
-full-line comments in transactions and transaction tags on multiple
-lines.  Support for these features was added after beancount 2.0.0 came
-out.
+Currently, an unreleased version of beancount is required if you use:
+
+* UTF-8 letters and digits in account names
+* Full-line comments in transactions
+* Transaction tags on multiple lines
+
+Support for these features was added after beancount 2.0.0 came out.
 
 
 Features
@@ -181,10 +182,7 @@ automatically:
    (`Liabilities:Credit Card` becomes `Liabilities:Credit-Card`)
 2. Replaces account names starting with lower case letters with
    upper case letters (`Assets:test` becomes `Assets:Test`)
-3. Strips accents and umlauts because they are currently not
-   supported in beancount ([issue
-   161](https://bitbucket.org/blais/beancount/issues/161)).
-4. Ensures the first letter is a letter or number by replacing
+3. Ensures the first letter is a letter or number by replacing
    a non-letter first character with an `X`.
 
 While these transformations lead to valid beancount account names,

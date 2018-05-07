@@ -1,3 +1,4 @@
+; Beancount: 2.1.0
 
 account Assets:Test
     note Test account

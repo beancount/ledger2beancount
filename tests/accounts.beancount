@@ -3,8 +3,8 @@
 ;   - Account Assets:test renamed to Assets:Test
 ;   - Account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds renamed to Assets:X-DASD----------------0---ds
 ;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
-;   - Account Expenses:École républicaine renamed to Expenses:Ecole-republicaine
-;   - Account Expenses:école renamed to Expenses:Ecole
+;   - Account Expenses:École républicaine renamed to Expenses:École-républicaine
+;   - Account Expenses:école renamed to Expenses:École
 ;   - Account Liabilities:Credit Card:Test renamed to Liabilities:Credit-Card:Test
 ;   - Account Liabilities:credit Card:test renamed to Liabilities:Credit-Card:Test
 ;   - Account assets:test renamed to Assets:Test
@@ -23,6 +23,7 @@ option "title" "Test account names"
 1970-01-01 open Assets:Collision
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
+; Beancount: 2.1.0
 
 1970-01-01 open Assets:Test
   description: "Test account"
@@ -37,8 +38,8 @@ option "title" "Test account names"
 1970-01-01 open Assets:Vouchers:99test
 1970-01-01 open Assets:X-DASD----------------0---ds
 1970-01-01 open Assets:Xfoo:Xbar
-1970-01-01 open Expenses:Ecole-republicaine
-1970-01-01 open Expenses:Ecole
+1970-01-01 open Expenses:École-républicaine
+1970-01-01 open Expenses:École
 1970-01-01 open Assets:Crowns
 1970-01-01 open Assets:Test:I-Love-Crowns
 1970-01-01 open Assets:Commodity-Test123
@@ -124,11 +125,11 @@ option "title" "Test account names"
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-26 * "Drop accents"
-  Expenses:Ecole-republicaine        10.00 EUR
+  Expenses:École-républicaine        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-26 * "Ensure first letter is upper case letter"
-  Expenses:Ecole                     10.00 EUR
+  Expenses:École                     10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-27 * "Account name could be mistaken for commodity"

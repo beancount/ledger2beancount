@@ -457,7 +457,7 @@ sub map_account_apply($) {
 # by two spaces, a tab or the end of the line.
 # beancount accounts: "account names begin with a capital letter or a
 # number and are followed letters, numbers or dash (-) characters. All
-# other characters are disallowed."
+# other characters are disallowed." (Letters and numbers may be UTF-8)
 sub map_account($) {
     my ($account) = @_;
 
@@ -472,10 +472,7 @@ sub map_account($) {
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
     $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
-    # Work around lack of Unicode support (beancount #161)
-    $account = NFKD $account;
-    $account =~ s/\p{NonspacingMark}//g;
-    $account =~ s/[^a-zA-Z0-9:-]/-/g; # Replace disallowed characters
+    $account =~ s/[^\p{letter}\p{number}:-]/-/g; # Replace disallowed characters
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
