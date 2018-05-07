@@ -45,12 +45,8 @@ account Liabilities:Credit Card_Test
     Assets:MyLedger                     10.00 EUR
     Assets:B
 
-; Beancount currently doesn't support UTF-8 in account names.  Therefore,
-; ledger2beancount strips away accents and umlauts:
-
-; Assets:Föö -> Assets:Foo
-; Assets:École -> Assets:Ecole
-2018-03-28 * No accents or umlauts in account names
+; Account names may contain UTF-8 letters but commodities must not
+2018-03-28 * Account names may contain UTF-8 letters
     Assets:Föö                          10.00 EUR
     Assets:École
 
