@@ -53,9 +53,8 @@ test_validity_beancount () {
 	# Ensure beancount is new enough
 	needed=$(grep "^; Beancount:" $test | head -n 1 | sed 's/^; Beancount:\s*//')
 	if [ -n "$needed" ]; then
-		beancount=$(bean-check --version 2>/dev/null | cut -d' ' -f2)
-		latest=$(printf "$needed\n$beancount" | $SORT -V | tail -n 1)
-		if [ "$beancount" != "$latest" ]; then
+		latest=$(printf "$needed\n$beancount_version" | $SORT -V | tail -n 1)
+		if [ "$beancount_version" != "$latest" ]; then
 			echo "skipping since beancount is too old"
 			return
 		fi
@@ -71,8 +70,8 @@ test_validity_beancount () {
 
 export LC_ALL=C.UTF-8
 
-version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
-if [ $version -eq 2 ]; then
+ledger_version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
+if [ $ledger_version -eq 2 ]; then
 	echo "Skipping ledger validation checks since version ledger 2 is too old"
 else
 	for test in *.ledger; do
@@ -84,6 +83,7 @@ for test in *.ledger; do
 	test_conversion "$test"
 done
 
+beancount_version=$(bean-check --version 2>/dev/null | cut -d' ' -f2)
 for test in *.beancount; do
 	test_validity_beancount "$test"
 done
