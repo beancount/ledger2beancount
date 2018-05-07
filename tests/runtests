@@ -72,7 +72,7 @@ export LC_ALL=C.UTF-8
 
 ledger_version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
 if [ $ledger_version -eq 2 ]; then
-	echo "Skipping ledger validation checks since version ledger 2 is too old"
+	echo "Skipping ledger validation checks since ledger 2 is too old"
 else
 	for test in *.ledger; do
 		test_validity_ledger "$test"
