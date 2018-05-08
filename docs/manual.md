@@ -27,6 +27,11 @@ modules:
 * Getopt::Long::Descriptive
 * YAML::XS
 
+You can install the required Perl modules with
+[cpanminus](https://metacpan.org/pod/distribution/App-cpanminus/bin/cpanm):
+
+    cpanm --installdeps .
+
 If you use Debian, you can install the dependencies with this command:
 
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
