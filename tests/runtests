@@ -70,8 +70,10 @@ test_validity_beancount () {
 
 export LC_ALL=C.UTF-8
 
-ledger_version=$(ledger --version | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
-if [ $ledger_version -eq 2 ]; then
+ledger_version=$(ledger --version 2>/dev/null | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d . -f 1)
+if [ -z $ledger_version ]; then
+	echo "Skipping ledger validation checks since ledger is not installed"
+elif [ $ledger_version -eq 2 ]; then
 	echo "Skipping ledger validation checks since ledger 2 is too old"
 else
 	for test in *.ledger; do
