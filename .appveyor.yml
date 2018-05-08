@@ -1,0 +1,18 @@
+build: false
+cache:
+  - C:\strawberry
+environment:
+  PYTHON: 'C:\Python36'
+
+install:
+  - if not exist "C:\strawberry" cinst strawberryperl
+  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - cd C:\projects\%APPVEYOR_PROJECT_NAME%
+  - cpanm --notest --installdeps .
+  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - python -m pip install -U hg+https://bitbucket.org/blais/beancount/
+
+build_script:
+  - cd tests
+  - runtests.bat
+

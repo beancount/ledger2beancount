@@ -12,6 +12,10 @@ trim_trailing_whitespace = true
 [Makefile]
 indent_style = tab
 
+[*.bat]
+indent_size = 4
+indent_style = space
+
 [*.ledger]
 indent_size = 4
 indent_style = space
