@@ -53,6 +53,13 @@ ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger
 yaourt -S ledger2beancount
 ```
 
+### Microsoft Windows
+
+You can install [Strawberry Perl](http://strawberryperl.com/) on Windows
+and use `cpanm` as described above to install the required Perl modules.
+ledger2beancount is not packaged for Windows but you can clone this Git
+repository and run the script.
+
 
 Configuration
 -------------
