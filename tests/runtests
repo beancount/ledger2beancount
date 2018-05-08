@@ -12,7 +12,7 @@ esac
 test_conversion () {
 	test=$1
 	expected=$(echo $test | sed -e 's/.ledger$/.beancount/')
-	actual=$(tempfile)
+	actual=$(mktemp)
 
 	printf "Converting $test... "
 
