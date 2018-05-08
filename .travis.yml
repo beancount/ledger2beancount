@@ -16,8 +16,8 @@ addons:
       - libyaml-libyaml-perl
       - ledger
 install:
-  - sudo cpanm Config::Onion
-  - sudo cpanm DateTime::Format::Strptime
+  - sudo cpanm --notest Config::Onion
+  - sudo cpanm --notest DateTime::Format::Strptime
   - pip install $BEANCOUNT
 script:
   - make test
