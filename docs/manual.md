@@ -136,13 +136,15 @@ directly from the beancount repository:
 
     pip3 install hg+https://bitbucket.org/blais/beancount/
 
-Currently, an unreleased version of beancount is required if you use:
+Currently, there are no features that require an unreleased version of
+beancount.
+
+ledger2beancount is largely compatible with Beancount 2.0.  If you
+use the following features, you need Beancount 2.1:
 
 * UTF-8 letters and digits in account names
 * Full-line comments in transactions
 * Transaction tags on multiple lines
-
-Support for these features was added after beancount 2.0.0 came out.
 
 
 Features
