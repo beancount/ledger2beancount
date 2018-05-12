@@ -2,7 +2,7 @@ language: python
 python:
   - "3.6"
 env:
-  - BEANCOUNT="beancount>=2.0"
+  - BEANCOUNT="beancount>=2.1.2"
   - BEANCOUNT="hg+https://bitbucket.org/blais/beancount/"
 addons:
   apt:
