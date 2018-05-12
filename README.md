@@ -11,13 +11,6 @@ Conversion is based on (concrete) syntax, so that information that are not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
-The syntax of beancount is expected to become slightly less restrictive
-as some missing features are implemented (such as posting-level tags).
-ledger2beancount aims to be compatible with the latest official release
-of beancount, but some functionality may require an unreleased version
-of beancount.  Please check the [manual on compatibility with
-beancount](docs/manual.md#beancount-compatibility).
-
 Please [read the manual](docs/manual.md) on how to install, configure and
 use ledger2beancount.  The [supported features](docs/manual.md#features)
 are documented in the manual, too.
