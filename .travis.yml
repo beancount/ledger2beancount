@@ -11,16 +11,9 @@ addons:
   apt:
     packages:
       - cpanminus
-      - libcarp-assert-perl
-      - libdate-calc-perl
-      - libexperimental-perl
-      - libfile-basedir-perl
-      - libgetopt-long-descriptive-perl
-      - libyaml-libyaml-perl
       - ledger
 install:
-  - sudo cpanm --notest Config::Onion
-  - sudo cpanm --notest DateTime::Format::Strptime
+  - sudo cpanm --notest --installdeps .
   - pip install $BEANCOUNT
 script:
   - make test
