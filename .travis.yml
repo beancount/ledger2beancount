@@ -4,6 +4,9 @@ python:
 env:
   - BEANCOUNT="beancount>=2.1.2"
   - BEANCOUNT="hg+https://bitbucket.org/blais/beancount/"
+matrix:
+  allow_failures:
+  - env: BEANCOUNT="hg+https://bitbucket.org/blais/beancount/"
 addons:
   apt:
     packages:
