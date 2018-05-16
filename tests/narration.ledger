@@ -8,3 +8,17 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+; empty narration
+2018-05-16
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+; empty narration with flag
+2018-05-16 *
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 *No space between flag and narration
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+

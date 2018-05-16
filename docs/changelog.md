@@ -8,6 +8,7 @@
     * Allow transaction tags and links on multiple lines
 * Handle posting tags on multiple lines
 * Always convert posting-level tags to metadata.
+* Improve parsing of the transaction header
 
 ## 1.1 (2018-05-01)
 

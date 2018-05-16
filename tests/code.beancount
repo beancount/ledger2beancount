@@ -22,3 +22,23 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+2018-05-16 * "Code without space"
+  code: "1201"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 * "Code without space"
+  code: "AT20"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 txn "Code without space, no flag"
+  code: "1201"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 txn "Code without space, no flag"
+  code: "AT20"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
