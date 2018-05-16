@@ -19,3 +19,19 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2018-05-16 *(1201)Code without space
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 *(AT20)Code without space
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 (1201)Code without space, no flag
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2018-05-16 (AT20)Code without space, no flag
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+

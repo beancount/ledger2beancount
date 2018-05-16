@@ -67,7 +67,7 @@ if (ref $config->{payee_match} ne ref []) {
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
 my $flags_RE = qr/[*!]/;
-my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?\s*(?<flag>$flags_RE)?(\s+\((?<code>.*?)\))?\s+(?<narration>.*)/;
+my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?(\s+|$)(?<flag>$flags_RE)?(\s*\((?<code>[^)]*)\))?\s*(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
