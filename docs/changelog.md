@@ -1,13 +1,13 @@
 # ledger2beancount releases
 
-## 1.2 (unreleased)
+## 1.2 (2018-05-17)
 
 * Updates for beancount 2.1.0:
   * Allow UTF-8 letters and digits in account names
   * Allow full-line comments in transactions
   * Allow transaction tags and links on multiple lines
 * Handle posting tags on multiple lines
-* Always convert posting-level tags to metadata.
+* Always convert posting-level tags to metadata
 * Improve parsing of the transaction header
 
 ## 1.1 (2018-05-01)
@@ -28,7 +28,7 @@
 * Add conversion notes when accounts, commodities or metadata
   keys are automatically renamed by ledger2beancount
 * Add capability to ignore certain lines
-* Keep whitespace intact when renaming account names.
+* Keep whitespace intact when renaming account names
 * Improve documentation on assigning payees based on transactions
 * Add more test cases
 * Run the test suite only if something has changed
