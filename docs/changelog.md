@@ -3,9 +3,9 @@
 ## 1.2 (unreleased)
 
 * Updates for beancount 2.1.0:
-    * Allow UTF-8 letters and digits in account names
-    * Allow full-line comments in transactions
-    * Allow transaction tags and links on multiple lines
+  * Allow UTF-8 letters and digits in account names
+  * Allow full-line comments in transactions
+  * Allow transaction tags and links on multiple lines
 * Handle posting tags on multiple lines
 * Always convert posting-level tags to metadata.
 * Improve parsing of the transaction header
