@@ -660,7 +660,10 @@ sub process_txn(@) {
 	    # Strip the auxdate info
 	    $l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
 
-	    # Check for posting-level metadata
+	    # Check for posting-level tags and metadata
+	    if ($l =~ s/^($posting_RE)(\s*;\s*:$tags_RE:)/$1/) {
+		push @cur_txn_tags, split /:/, $+{tags};
+	    }
 	    my %metadata_posting;
 	    if ($l =~ s/^($posting_RE)(\s*$metadata_RE)/$1/) {
 		%metadata_posting = %+;

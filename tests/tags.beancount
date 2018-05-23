@@ -43,3 +43,19 @@
   Equity:Opening-Balance            -10.00 EUR
     tags: "quux, quuz"
 
+2018-05-23 * "Tag on postings, same line"
+  #foo #bar #baz
+  Assets:Test                        10.00 EUR
+    tags: "qux"
+    links: "2018-03-08-london"
+  Equity:Opening-Balance            -10.00 EUR
+    tags: "quux, quuz"
+
+2018-05-23 * "Tag on postings, same and next line"
+  #foo #bar #baz
+  Assets:Test                        10.00 EUR
+    tags: "qux, foo"
+    links: "2018-03-08-london"
+  Equity:Opening-Balance            -10.00 EUR
+    tags: "quux, quuz"
+
