@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.3 (unreleased)
+
+* Handle tags on the same line as postings correctly
+
 ## 1.2 (2018-05-17)
 
 * Updates for beancount 2.1.0:
