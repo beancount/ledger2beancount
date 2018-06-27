@@ -49,10 +49,6 @@ a similar location:
 
 ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger2beancount/):
 
-```
-yaourt -S ledger2beancount
-```
-
 ### Microsoft Windows
 
 You can install [Strawberry Perl](http://strawberryperl.com/) on Windows
