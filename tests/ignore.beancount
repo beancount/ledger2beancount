@@ -7,6 +7,8 @@
 ;   alias food
 ;   default
 
+1970-01-01 open Liabilities:CreditCard
+
 
 
 2018-03-17 * "Test 1"
@@ -16,4 +18,11 @@
 2018-03-17 * "Test 3"
   Assets:Test3                       10.00 EUR
   Equity:Opening-Balance
+
+2014-07-09 event "location" "Paris, France"
+2018-09-01 event "location" "Bologna, Italy"
+
+2013-11-03 note Liabilities:CreditCard "Called about fraud"
+2013-11-03 note Liabilities:CreditCard "Called about fraud"
+2013-11-03 note Liabilities:CreditCard "Called about fraud"
 
