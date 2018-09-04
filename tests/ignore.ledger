@@ -9,6 +9,8 @@ account Assets:Test1
     alias food
     default
 
+account Liabilities:CreditCard
+
 C 1.00 Mb = 1024 Kb ; NoL2B
 
 ; NoL2B begin
@@ -31,4 +33,13 @@ account Assets:Test2
 2018-03-17 * Test 3
     Assets:Test3                       10.00 EUR
     Equity:Opening-Balance
+
+; L2Bonly begin
+;2014-07-09 event "location" "Paris, France"
+; 2018-09-01 event "location" "Bologna, Italy"
+; L2Bonly end
+
+; 2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
+# 2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
+*2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
 

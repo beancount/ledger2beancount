@@ -88,7 +88,7 @@ my $amount_cmn_RE = qr/(?<commodity>$commodity_RE)\s*(?<minus>-?)(?<num>$value_e
 # [minus] commodity amount
 my $amount_mcn_RE = qr/(?<minus>-?)(?<commodity>$commodity_RE)\s*(?<num>$value_exp_RE)/; # -EUR 10.00
 my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn_RE)(\)?)/;
-my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*)/;
+my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  |\t|$|\)|\])\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
@@ -777,6 +777,16 @@ while (@input) {
 	} while $l !~ /;\s*:?$config->{ignore_marker}\s+end/;
     } elsif ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}/) {
 	next;
+    } elsif ($config->{keep_marker} && $l =~ /;\s*:?$config->{keep_marker}\s+begin/) {
+	$l = shift @input;
+	do {
+	    if ($l =~ /^$comment_top_level_RE$/) {
+		print_line $depth, $+{comment};
+	    }
+	    $l = shift @input;
+	} while $l !~ /;\s*:?$config->{keep_marker}\s+end/;
+    } elsif ($config->{keep_marker} && $l =~ /^$comment_top_level_RE\s*;\s*:?$config->{keep_marker}/) {
+	print_line $depth, $+{comment};
     } elsif ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
 	print_line $depth, "include \"$+{filename}.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {

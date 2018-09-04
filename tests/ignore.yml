@@ -2,4 +2,8 @@
 # A marker that tells ledger2beancount to ignore a line if the
 # marker is found.
 ignore_marker: NoL2B
+# A marker that tells ledger2beancount to take a line from
+# the input that is commented out, uncomment it and display
+# it in the output.
+keep_marker: L2Bonly
 

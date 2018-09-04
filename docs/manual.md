@@ -616,6 +616,29 @@ and `$ignore_marker end`.  This syntax is also useful for ledger
 	include ledger-specific-header.ledger
 	; NoL2B end
 
+Since some people use ledger and beancount in parallel using
+ledger2beancount, it is sometimes useful to put beancount-specific
+commands in the input file.  Of course, they may not be valid in ledger.
+Therefore, you can put a commented out line in the ledger input, mark it
+with the `$keep_marker` and ledger2beancount will uncomment the line and
+put it in the output.
+
+Given the input
+
+	; 2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
+
+ledger2beancount will add the following line to the beancount output:
+
+	2013-11-03 note Liabilities:CreditCard "Called about fraud"
+
+You can also use `$keep_marker begin` and `$keep_marker end` to denote
+multiple lines that should be included in the output:
+
+	; L2Bonly begin
+	; 2014-07-09 event "location" "Paris, France"
+	; 2018-09-01 event "location" "Bologna, Italy"
+	; L2Bonly end
+
 
 Unsupported features in beancount
 ---------------------------------
