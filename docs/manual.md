@@ -56,6 +56,11 @@ and use `cpanm` as described above to install the required Perl modules.
 ledger2beancount is not packaged for Windows but you can clone this Git
 repository and run the script.
 
+### Mac OS
+
+You can install `cpanm` from Homebrew:
+
+    brew install cpanminus
 
 Configuration
 -------------
