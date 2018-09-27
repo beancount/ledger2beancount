@@ -10,6 +10,7 @@ use warnings;
 use strict;
 
 use experimental 'smartmatch';
+use utf8;
 use feature 'unicode_strings';
 use open qw(:std :locale);
 

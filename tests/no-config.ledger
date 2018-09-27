@@ -1,0 +1,9 @@
+
+2018-09-27 * Test conversion of built-in commodity codes
+    Assets:Test                        €10.00
+    Assets:Test                       €-10.00
+    Assets:Test                        £10.00
+    Assets:Test                       £-10.00
+    Assets:Test                        $10.00
+    Assets:Test                       $-10.00
+
