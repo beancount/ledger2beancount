@@ -79,7 +79,7 @@ my $value_exp_RE = qr/$value_RE([\h*\/+-]*$value_RE)?/;
 # between quotes.
 my $commodity_quoted_RE = qr/(["'])(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 # An unquoted commodity may not contain certain characters
-my $commodity_unquoted_RE = qr/(?!-)[^;\s0-9)("'{}@*\/+-]+/;
+my $commodity_unquoted_RE = qr/(?!-)[^;\s0-9)("'{}@*\/+,.-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
 # Ledger supports three different amount formats:
 # [minus] amount commodity
@@ -261,6 +261,10 @@ sub pp_amount($$$$) {
 	$value =~ s/\.//g;
 	$value =~ s/,/./; # issue #204
     }
+
+    # ledger allows amounts without a leading zero (e.g. 0.10) but
+    # beancount doesn't.
+    $value = "0$value" if $value =~ /^[\.,]/;
 
     return sprintf "%s%s%s%s %s", $inline_math ? "(" : "",
 	$minus =~ "^-" ? "-" : "", $value,

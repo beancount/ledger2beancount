@@ -123,3 +123,13 @@ commodity $
     Assets:Receivable             (550.00/2 GBP)
     Assets:Current                   -550.00 GBP
 
+2018-09-27 * Test amounts without digits before point separator
+    Assets:Test                        €.10
+    Assets:Test                       €-.10
+    Assets:Test                        £.10
+    Assets:Test                       -£.10
+    Assets:Test                        $.10
+    Assets:Test                      $-0.10
+    Assets:Test     19,200 CZK @ $.04585052
+    Assets:Test                    -$880.33
+
