@@ -3,6 +3,7 @@
 ## 1.3 (unreleased)
 
 * Handle tags on the same line as postings correctly
+* Handle amounts without leading zeroes
 
 ## 1.2 (2018-05-17)
 

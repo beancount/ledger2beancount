@@ -1,3 +1,11 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;   - Collision for commodity "EUR": EUR, €
+;----------------------------------------------------------------------
+
+1970-01-01 open Assets:Test
+1970-01-01 commodity GBP
+1970-01-01 commodity USD
 
 1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Equity:Opening-Balance
@@ -15,4 +23,12 @@
 2018-03-26 * "Decimal comma, with thousand separator"
   Assets:99Test:Test99            1000.00 EUR
   Equity:Opening-Balance
+
+2018-09-27 * "Test amounts without digits before comma separator"
+  Assets:Test                        0.10 EUR
+  Assets:Test                       -0.10 EUR
+  Assets:Test                        0.10 GBP
+  Assets:Test                       -0.10 GBP
+  Assets:Test                        0.10 USD
+  Assets:Test                      -0.10 USD
 

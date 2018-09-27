@@ -17,3 +17,11 @@ commodity EUR
     Assets:99Test:Test99            EUR 1.000,00
     Equity:Opening-Balance
 
+2018-09-27 * Test amounts without digits before comma separator
+    Assets:Test                        €,10
+    Assets:Test                       €-,10
+    Assets:Test                        £,10
+    Assets:Test                       £-,10
+    Assets:Test                        $,10
+    Assets:Test                      $-0,10
+
