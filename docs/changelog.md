@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.3 (unreleased)
+## 1.3 (2018-09-29)
 
 * Handle tags on the same line as postings correctly
 * Allow (commented) beancount entries in ledger input file
