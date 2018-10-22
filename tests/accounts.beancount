@@ -19,6 +19,7 @@
 option "title" "Test account names"
 
 1970-01-01 open Assets:A
+1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Bash
 1970-01-01 open Assets:Collision
 1970-01-01 open Assets:MuchLonger
@@ -196,4 +197,36 @@ option "title" "Test account names"
 2018-04-18 * "Preserve whitespace: same"
   Assets:Bash
   Assets:Test                         -10.00 EUR
+
+2018-10-22 txn "Whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank 	            -10.00 EUR
+
+2018-10-22 txn "Whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank   	            -10.00 EUR
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank 
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank	
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank 	
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank   
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank  	
+
+2018-10-22 txn "Trailing whitespace is not part of account name"
+  Assets:Test                      10.00 EUR
+  Assets:Bank   	
 

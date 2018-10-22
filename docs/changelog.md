@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.4 (unreleased)
+
+* Don't parse trailing whitespace as part of the account name
+
 ## 1.3 (2018-09-29)
 
 * Handle tags on the same line as postings correctly
