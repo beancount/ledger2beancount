@@ -172,3 +172,35 @@ commodity EUR
   Assets:Cash
   Assets:Test                         -10.00 EUR
 
+2018-10-22 Whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    Assets:Bank 	            -10.00 EUR
+
+2018-10-22 Whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    [Assets:Bank] 	            -10.00 EUR
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    Assets:Bank 
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    Assets:Bank	
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    Assets:Bank 	
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    [Assets:Bank] 
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    [Assets:Bank]	
+
+2018-10-22 Trailing whitespace is not part of account name
+    Assets:Test                      10.00 EUR
+    [Assets:Bank] 	
+

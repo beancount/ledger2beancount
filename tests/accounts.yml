@@ -1,6 +1,8 @@
 
 beancount_header: accounts.header
 
+convert_virtual: true
+
 account_map:
   Assets:♚♛♕♔: Assets:Crowns
   Assets:Test:I love ♚♛♕♔: Assets:Test:I-Love-Crowns
