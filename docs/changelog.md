@@ -4,6 +4,7 @@
 
 * Don't parse trailing whitespace as part of the account name
 * Replace commodities in lot costs
+* Avoid mangling of lot cost with other lot information
 
 ## 1.3 (2018-09-29)
 
