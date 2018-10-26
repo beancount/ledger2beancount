@@ -23,7 +23,7 @@ operating_currencies:
 #beancount_header:
 
 # emit account and commodity declares
-# (Note: thee declarations done in ledger via `account` and
+# (Note: the declarations done in ledger via `account` and
 # `commodity` are always converted.  If this option is true,
 # declarations are created for those which have not been
 # explicitly declared in ledger but used.)
@@ -34,7 +34,7 @@ decimal_comma: false
 
 # Should virtual postings be converted.  If set to true, virtual
 # postings in brackets will be made into real accounts.  (Virtual
-# postings in parentheses are alway ignored, regardless of this option)
+# postings in parentheses are always ignored, regardless of this option)
 convert_virtual: false
 
 # mapping of ledger metadata key to corresponding beancount key
