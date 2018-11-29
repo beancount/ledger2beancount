@@ -47,7 +47,19 @@
   Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {0.90 GBP}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
   Assets:Test               10.00 EUR {{9 GBP}}
+  Equity:Opening-Balance    -9.00 GBP
+
+2018-03-17 * "Test"
+  Assets:Test               10.00 EUR {0.90 GBP}
   Equity:Opening-Balance    -9.00 GBP
 
 2018-03-17 * "Test"
@@ -216,6 +228,10 @@
   Assets:Test               10.00 EUR {1.23 USD, "this is a note"} ; comment
   Equity:Opening-Balance   -12.30 USD
 
+2018-04-22 * "Lot with comment, no space"
+  Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @ 1.30 USD ; comment
+  Assets:Bank
+
 2018-10-22 * "Commodity conversion of lot cost"
   Expenses:Test              2361.00 EUR {1.3831 USD} @ 1.4056 USD
   Expenses:Currency              53.12 USD
@@ -225,7 +241,15 @@
   Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12} @ 1.30 USD
   Assets:Bank
 
+2018-10-23 * "Lot information, no space"
+  Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12} @ 1.30 USD
+  Assets:Bank
+
 2018-10-23 * "Lot information"
+  Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12} @ 1.30 USD
+  Assets:Bank
+
+2018-10-23 * "Lot information, no space"
   Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12} @ 1.30 USD
   Assets:Bank
 
