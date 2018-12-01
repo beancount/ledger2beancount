@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.4 (unreleased)
+## 1.4 (2018-12-01)
 
 * Don't parse trailing whitespace as part of the account name
 * Replace commodities in lot costs
