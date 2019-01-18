@@ -18,3 +18,22 @@ commodity $
     Assets:Test2                          $10.00 = $10.00
     Equity:Opening-Balance               -$10.00
 
+2019-01-18 KFC
+    Expenses:Food                         $20.00
+    Assets:Cash                          $-20.00 = $-20.00
+
+2019-01-19 KFC
+    Expenses:Food                         $20.00
+    Expenses:Drinks                        $3.00
+    Assets:Cash                                  = $-43.00
+
+; account name needs mapping
+2019-01-20 KFC
+    Expenses:Food and drink              $20.00
+    Expenses:Tips                         $3.00
+    Assets:wallet cash                          = $-23.00
+
+2019-01-21 Adjustment
+    Assets:Cash                                 = $500.00
+    Equity:Adjustments
+
