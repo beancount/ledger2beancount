@@ -2,6 +2,8 @@
 
 ## 1.5 (unreleased)
 
+* Replace commodities in balance assertions
+
 ## 1.4 (2018-12-01)
 
 * Don't parse trailing whitespace as part of the account name
