@@ -627,6 +627,20 @@ sub print_tags($@) {
 sub process_txn(@) {
     my @txn = @_;
 
+    # Count total postings and postings that have amounts.  This is needed
+    # to distinguish different kinds of balance assignments.
+    my $total_postings = 0;
+    my $postings_with_amount = 0;
+    my @accounts;
+    foreach my $l (@txn) {
+	my ($depth, $l) = strip_indentation($l);
+	if ($l =~ /^$posting_RE/) {
+	    $total_postings++;
+	    $postings_with_amount++ if $+{amount};
+	    push @accounts, $+{account};
+	}
+    }
+
     foreach my $l (@txn) {
 	# print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
@@ -661,7 +675,7 @@ sub process_txn(@) {
 		    next;
 		}
 	    }
-	    $in_postings += 1;
+	    $in_postings = 1;
 	    my $postdate = $+{postdate};
 	    my $auxdate = $+{auxdate};
 	    my $has_amount = $+{amount} ? 1 : 0;
@@ -683,6 +697,20 @@ sub process_txn(@) {
 		# posting with balance assertion
 		push_line $depth, replace_commodity $+{posting};
 		push_assertion $+{account}, replace_commodity $+{assertion};
+		if ($total_postings == 2 && $postings_with_amount == 0) {
+		    # We have two postings, i.e. two accounts; remove the current
+		    # account from the list of accounts to find out which account
+		    # we have to pad against.
+		    @accounts = grep { $_ ne $+{account} } @accounts;
+		    print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, map_account $+{account}, map_account $accounts[0];
+		    print_line 0, pp_cur_assertions;
+		    # Skip transaction (the transaction itself is just two
+		    # null postings, which are not valid in beancount)
+		    pop_txn();
+		    return;
+		} elsif ($total_postings > 2 && ($total_postings-$postings_with_amount) == 2) {
+		    print_warning_once "Balance assignments with 2 null postings not supported";
+		}
 	    } elsif ($has_amount && $l =~ /^$posting_RE(\s*(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s*(?<lot_price>$amount_RE))?(\s*$comment_RE)?/) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regex case
@@ -753,7 +781,7 @@ sub process_txn(@) {
     }
     print_tags 2, @cur_txn_tags;
     # We only saw one posting and a ledger bucket is defined
-    if ($in_postings == 1 && defined $ledger_bucket) {
+    if ($total_postings == 1 && defined $ledger_bucket) {
 	push_line 1, map_account $ledger_bucket;
     }
     push @output, pop_txn();

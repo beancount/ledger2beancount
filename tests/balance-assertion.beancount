@@ -1,3 +1,16 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;   - Account Assets:wallet cash renamed to Assets:Wallet-cash
+;   - Account Expenses:Food and drink renamed to Expenses:Food-and-drink
+;----------------------------------------------------------------------
+
+1970-01-01 open Assets:Cash
+1970-01-01 open Assets:Wallet-cash
+1970-01-01 open Equity:Adjustments
+1970-01-01 open Expenses:Drinks
+1970-01-01 open Expenses:Food
+1970-01-01 open Expenses:Food-and-drink
+1970-01-01 open Expenses:Tips
 
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test2
@@ -24,4 +37,29 @@
   Equity:Opening-Balance               -10.00 USD
 
 2019-01-19 balance Assets:Test2  10.00 USD
+
+2019-01-18 txn "KFC"
+  Expenses:Food                         20.00 USD
+  Assets:Cash                          -20.00 USD
+
+2019-01-19 balance Assets:Cash  -20.00 USD
+
+2019-01-19 txn "KFC"
+  Expenses:Food                         20.00 USD
+  Expenses:Drinks                        3.00 USD
+  Assets:Cash                                  
+
+2019-01-20 balance Assets:Cash  -43.00 USD
+
+; account name needs mapping
+2019-01-20 txn "KFC"
+  Expenses:Food-and-drink              20.00 USD
+  Expenses:Tips                         3.00 USD
+  Assets:Wallet-cash                          
+
+2019-01-21 balance Assets:Wallet-cash  -23.00 USD
+
+2019-01-21 pad Assets:Cash Equity:Adjustments
+2019-01-22 balance Assets:Cash  500.00 USD
+
 

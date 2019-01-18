@@ -542,16 +542,51 @@ after transformation and mapping.  (Note that beancount itself uses the
 terms "commodity" and "currency" interchangeably.)
 
 
-### Balance assertions
+### Balance assertions and assignments
 
-Ledger balance assertions are converted to beancount `balance` statements.
-Please note that beancount evaluates balance assertions at the beginning of
-the day whereas ledger evaluates them at the end of the day (up to ledger
-3.1.1) or at the end of the transaction (newer versions of ledger).
+Ledger [balance assertions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Balance-assertions)
+are converted to beancount `balance` statements.
 
+Please note that beancount evaluates balance assertions at the beginning
+of the day whereas ledger evaluates them at the end of the day (up to
+ledger 3.1.1) or at the end of the transaction (newer versions of ledger).
 Therefore, we schedule the balance assertion for the day *after* the
 original transaction.  This assumes that there are no other transactions
 on the same day that change the balance again for this account.
+
+In addition to balance assertions, ledger also supports [balance
+assignments](https://www.ledger-cli.org/3.0/doc/ledger3.html#Balance-assignments).
+ledger2beancount can handle some, but not all types of balance
+assertions.  The most simple case is something like:
+
+    2012-03-10 KFC
+        Expenses:Food                $20.00
+        Assets:Cash                         = $50.00
+
+which can be handled like a balance assertion.  However, ledger also
+allows transactions with two null postings when there's a balance
+assignment, as in:
+
+    2012-03-10 KFC
+        Expenses:Food                $20.00
+        Expenses:Drink
+        Assets:Cash                         = $50.00
+
+This can't be handled by ledger2beancount.  While ledger can calculate
+how much you spent in `Assets:Cash` and balance it with `Expenses:Drink`,
+ledger2beancount can't.  The transformation of this transaction will lead
+to two null postings, which `bean-check` will flag as invalid.
+
+Finally, ledger allows [transactions solely consisting of two null
+postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Resetting-a-balance)
+when one has a balance assignment:
+
+    2012-03-10 Adjustment
+        Assets:Cash                         = $500.00
+        Equity:Adjustments
+
+ledger2beancount will create a beancount `pad` statement, followed by a
+`balance` statement the following day, to set the correct balance.
 
 
 ### Automated transactions
@@ -690,8 +725,6 @@ Unsupported features in ledger2beancount
 The following ledger features are currently not supported by
 ledger2beancount:
 
-* Balance assignments are currently not supported but would be
-  easy to add by using beancount's `pad`.
 * Fixated prices (`=$10` syntax and the `fixed` directive)
 * The `define` directive
 

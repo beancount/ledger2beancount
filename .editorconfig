@@ -30,6 +30,9 @@ trim_trailing_whitespace = false
 [tests/accounts.beancount]
 trim_trailing_whitespace = false
 
+[tests/balance-assertion.beancount]
+trim_trailing_whitespace = false
+
 [tests/metadata.beancount]
 trim_trailing_whitespace = false
 

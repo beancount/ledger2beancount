@@ -47,6 +47,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * Mapping of account names
   * Directive `apply account`
   * Account aliases (`alias`)
+* Balance assignments
 * Balance assertions
 * Comments
   * Comments in and outside of transactions
@@ -99,7 +100,6 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 ### Not supported
 
 * Automated transactions
-* Balance assignments
 * Directives
   * `assert`
   * `C` (commodity equivalences)
