@@ -29,3 +29,11 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Assets:Commodity-Test123                     ; [=2018-03-13]
 
+2019-01-16 * Posting date using comment
+    Assets:Test                        10.00 EUR ; [2017-03-04]
+    Equity:Opening-Balance            -10.00 EUR ; [2017-07-08]
+
+2019-01-16 * Posting date and aux date using comment
+    Assets:Test                        10.00 EUR ; [2017-03-04=2017-03-05]
+    Equity:Opening-Balance            -10.00 EUR ; [2017-07-08=2017-07-09]
+

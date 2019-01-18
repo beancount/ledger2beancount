@@ -278,6 +278,13 @@ Ledger allows dates without a year if the year is declared using the `Y`
 or `year` directive.  If `date_format_no_year` is set, ledger2beancount
 can convert such dates to `YYYY-MM-DD`.
 
+Posting-level dates are recognized by ledger2beancount and stored as
+metadata according to the `postdate_tag` (`date` by default) but this
+has no effect in beancount.  There is
+[a proposal](https://docs.google.com/document/d/1x0qqWGRHi02ef-FtUW172SHkdJ8quOZD-Xli7r4Nl_k/)
+to support this functionality in a different way, but this is not
+implemented in beancount yet.
+
 While ledger2beancount itself doesn't read your ledger config file, the
 script `ledger2beancount-ledger-config` can be used to parse your ledger
 config file (`~/.ledgerrc`) or your ledger file (ledger files may contain
