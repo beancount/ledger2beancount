@@ -85,6 +85,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 * Amounts
   * Decimal comma (not supported in beancount)
 * Dates
+  * Dates on posting-level (no equivalence in beancount)
   * Auxiliary dates (no equivalence in beancount)
   * Effective dates (no equivalence in beancount)
 * Directives

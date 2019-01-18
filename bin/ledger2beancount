@@ -92,7 +92,7 @@ my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  | \t|\t|\s*$|\)|\])\s*(?<amount>$amount_RE)?(?<auxdatestrip>\s*;\s*\[=(?<auxdate>$date_RE)\])?)/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  | \t|\t|\s*$|\)|\])\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 # Maximum limit for beancount commodities
@@ -660,10 +660,11 @@ sub process_txn(@) {
 		}
 	    }
 	    $in_postings += 1;
+	    my $postdate = $+{postdate};
 	    my $auxdate = $+{auxdate};
 	    my $has_amount = $+{amount} ? 1 : 0;
 	    # Strip the auxdate info
-	    $l =~ s/\s*\Q$+{auxdatestrip}\E// if $+{auxdatestrip};
+	    $l =~ s/\s*\Q$+{datestrip}\E// if $+{datestrip};
 
 	    # Check for posting-level tags and metadata
 	    if ($l =~ s/^($posting_RE)(\s*;\s*:$tags_RE:)/$1/) {
@@ -730,6 +731,7 @@ sub process_txn(@) {
 		push_line $depth, $l;
 	    }
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
+	    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $postdate, 0 if defined $postdate && defined $config->{postdate_tag};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
 	    push_line 0, "";
