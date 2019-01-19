@@ -16,6 +16,9 @@ ledger_indent: 4
 operating_currencies:
   - EUR
 
+# Attempt to parse hledger specific features
+hledger: true
+
 # You can specify a file which serves as a beancount "header", i.e.
 # it's put at the beginning of the converted beancount file.  You can
 # specify options for beancount, such as `option "title"`, define

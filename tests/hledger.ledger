@@ -1,0 +1,41 @@
+
+; Payee and narration
+
+2015/5/30 foo | bar
+    Assets:A        10.00 EUR
+    Assets:B       -10.00 EUR
+
+2015/5/30 foo|bar
+    Assets:A        10.00 EUR
+    Assets:B       -10.00 EUR
+
+2015/5/30 foo| bar
+    Assets:A        10.00 EUR
+    Assets:B       -10.00 EUR
+
+2015/5/30 foo | bar | baz
+    Assets:A        10.00 EUR
+    Assets:B       -10.00 EUR
+
+; Posting level dates as comments
+
+2015/5/30 date as comment
+    expenses:food     $10   ; food purchased on saturday 05/30
+    assets:checking         ; bank cleared it on monday, date:2005/6/01
+
+2015/5/30 date as comment without year
+    expenses:food     $10   ; food purchased on saturday 05/30
+    assets:checking         ; bank cleared it on monday, date:6/1
+
+2015/5/30 date2 as comment
+    expenses:food     $10   ; food purchased on saturday 05/30
+    assets:checking         ; bank cleared it on monday, date2:2005/6/2
+
+2015/5/30 date and date2 as comment
+    expenses:food     $10   ; food purchased on saturday 05/30
+    assets:checking         ; bank cleared it on monday, date:2005/6/01 date2:2005/6/2
+
+2015/5/30 date and date2 as comment, in reverse order
+    expenses:food     $10   ; food purchased on saturday 05/30
+    assets:checking         ; bank cleared it on monday, date2:2005/6/02, date:2005/6/1
+

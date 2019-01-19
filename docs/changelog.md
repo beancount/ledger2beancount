@@ -4,6 +4,7 @@
 
 * Replace commodities in balance assertions
 * Add support for posting-level dates
+* Add support for hledger features
 
 ## 1.4 (2018-12-01)
 
