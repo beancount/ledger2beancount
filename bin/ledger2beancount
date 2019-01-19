@@ -67,8 +67,10 @@ if (ref $config->{payee_match} ne ref []) {
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
+my $hledger_date_RE = qr#(\d{4}[./-])?\d{1,2}[./-]\d{1,2}#;
 my $flags_RE = qr/[*!]/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?(\s+|$)(?<flag>$flags_RE)?(\s*\((?<code>[^)]*)\))?\s*(?<narration>.*)/;
+my $hledger_payee_narration_RE = qr/(?<payee>[^|]+?)\s*\|\s*(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
@@ -733,6 +735,16 @@ sub process_txn(@) {
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $postdate, 0 if defined $postdate && defined $config->{postdate_tag};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
+	    if ($config->{hledger} && $l =~ /$comment_RE/) {
+		my $comment = $+{comment};
+		my $year = $1 if $cur_txn_header{date} =~ /^(\d{4})-/;
+		if (defined $config->{postdate_tag} && $comment =~ /date:($hledger_date_RE)/) {
+		    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $1, $year;
+		}
+		if (defined $config->{auxdate_tag} && $comment =~ /date2:($hledger_date_RE)/) {
+		    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $1, $year;
+		}
+	    }
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
 	    push_line 0, "";
 	} else {  # there shouldn't be anything
@@ -911,6 +923,10 @@ while (@input) {
 	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
 	    # Determine payee based on the narration field
 	    my $narration = $+{narration};
+	    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
+		push_payee $+{payee};
+		$cur_txn_header{narration} = $+{narration};
+	    }
 	    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
 		if ($narration =~ /$custom_narration_RE/) {
 		    push_payee $+{payee};

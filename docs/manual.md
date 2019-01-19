@@ -293,9 +293,9 @@ ledger options) to output the correct config option for ledger2beancount.
 
 ### Auxiliary dates
 
-Beancount currently doesn't support ledger's [auxiliary dates (or effective
-dates)](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
-(but there is [a proposal](https://docs.google.com/document/d/1x0qqWGRHi02ef-FtUW172SHkdJ8quOZD-Xli7r4Nl_k/)
+Beancount currently doesn't support ledger's [auxiliary dates](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
+(or effective dates; also known as date2 in hledger) (but there is
+[a proposal](https://docs.google.com/document/d/1x0qqWGRHi02ef-FtUW172SHkdJ8quOZD-Xli7r4Nl_k/)
 to support this functionality in a different way),
 so these are stored as metadata according to the `auxdate_tag` variable.
 Unset the variable if you don't want auxiliary dates to be stored as
@@ -323,6 +323,10 @@ but this also overrides the free-form text to describe the transaction.
 Payees can also be declared explicitly in ledger but this is not required
 by beancount, so such declarations are ignored (they are preserved as
 comments).
+
+hledger allows the separation of payee and narration using the pipe
+character (`payee | narration`).  This is supported by ledger2beancount
+if the `hledger` option is enabled.
 
 Since ledger has limited support for payees, ledger2beancount offers
 several features to determine the payee from the transaction itself.
@@ -600,6 +604,20 @@ following transactions:
 
 Support for more complex inline math would require substantial changes
 to the parser.
+
+
+### hledger syntax
+
+The syntax of [hledger](http://hledger.org/) is largely compatible with
+that of ledger.  If the `hledger` config option is set to `true`,
+ledger2beancount will look for some hledger specific features:
+
+1) hledger allows the [separation of a transaction's description into
+   payee and note](http://hledger.org/journal.html#payee-and-note)
+   (narration) using the pipe character (`payee | narration`).
+
+2) hledger allows `date:` and `date2:` to specify [posting dates](http://hledger.org/journal.html#posting-dates)
+   in posting comments in addition to ledger's `[date=date2]` syntax.
 
 
 ### Ignoring certain lines

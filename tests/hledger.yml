@@ -1,0 +1,9 @@
+
+date_format: "%Y/%m/%d"
+date_format_no_year: "%m/%d"
+
+hledger: true
+
+postdate_tag: date
+auxdate_tag: aux-date
+
