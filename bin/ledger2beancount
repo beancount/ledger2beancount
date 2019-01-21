@@ -755,8 +755,6 @@ sub process_txn(@) {
 		    $l .= " ; $+{comment}" if $+{comment};
 		}
 		push_line $depth, replace_commodity $l;
-	    } elsif ($has_amount) {
-		push_line $depth, replace_commodity $l;
 	    } else {
 		push_line $depth, $l;
 	    }
