@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright (C) 2016-2018 Stefano Zacchiroli <zack@upsilon.cc>
-#           (C) 2018 Martin Michlmayr <tbm@cyrius.com>
+#           (C) 2018-2019 Martin Michlmayr <tbm@cyrius.com>
 # License: GNU General Public License (GPL), version 3 or above
 
 # convert a ledger-cli main ledger file to beancount format
@@ -698,10 +698,6 @@ sub process_txn(@) {
 	    # Strip the auxdate info
 	    $l =~ s/\s*\Q$+{datestrip}\E// if $+{datestrip};
 
-	    # Check for posting-level tags and metadata
-	    if ($l =~ s/^($posting_RE)(\s*;\s*:$tags_RE:)/$1/) {
-		push @cur_txn_tags, split /:/, $+{tags};
-	    }
 	    my %metadata_posting;
 	    if ($l =~ s/^($posting_RE)(\s*$metadata_RE)/$1/) {
 		%metadata_posting = %+;
@@ -709,25 +705,7 @@ sub process_txn(@) {
 
 	    $l = replace_account $l;
 
-	    if ($l =~ /^$posting_RE\s*=\s*(?<assertion>$amount_RE)/) {
-		# posting with balance assertion
-		push_line $depth, replace_commodity $+{posting};
-		push_assertion $+{account}, replace_commodity $+{assertion};
-		if ($total_postings == 2 && $postings_with_amount == 0) {
-		    # We have two postings, i.e. two accounts; remove the current
-		    # account from the list of accounts to find out which account
-		    # we have to pad against.
-		    @accounts = grep { $_ ne $+{account} } @accounts;
-		    print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, map_account $+{account}, map_account $accounts[0];
-		    print_line 0, pp_cur_assertions;
-		    # Skip transaction (the transaction itself is just two
-		    # null postings, which are not valid in beancount)
-		    pop_txn();
-		    return;
-		} elsif ($total_postings > 2 && ($total_postings-$postings_with_amount) == 2) {
-		    print_warning_once "Balance assignments with 2 null postings not supported";
-		}
-	    } elsif ($has_amount && $l =~ /^$posting_RE(\s*(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s*(?<lot_price>$amount_RE))?(\s*$comment_RE)?/) {
+	    if ($l =~ /^$posting_RE(\s*(?<curlyopen>\{\{?)\s*(?<lot_cost>$amount_RE)\s*(?<curlyclose>\}\}?))?\s*(\[(?<date>$date_RE)\])?\s*(\((?<lot_note>[^@].*)\))?\s*(\(?(?<at>@@?)\)?\s*(?<lot_price>$amount_RE))?(\s*=\s*(?<assertion>$amount_RE))?(\s*$comment_RE)?/) {
 		# posting with unit price and optional lot price
 		# XXX refactor/merge with previous regex case
 		my $lot_info = "";
@@ -760,7 +738,6 @@ sub process_txn(@) {
 			$l = sprintf "$+{posting} %s%s%s%s", "{" x length $+{at},
 			    replace_commodity $+{lot_price}, $lot_info, "}" x length $+{at};
 		    }
-		    $l .= " ; $+{comment}" if $+{comment};
 		} elsif (defined $+{lot_cost}) {
 		    $l = "$+{posting} $+{curlyopen}" . replace_commodity($+{lot_cost}) . "$lot_info$+{curlyclose}";
 		    # ledger requires you to specify both lot cost and lot price
@@ -768,11 +745,38 @@ sub process_txn(@) {
 		    if (defined $+{lot_price} && ($+{lot_cost} ne $+{lot_price})) {
 			$l .= " $+{at} " . replace_commodity $+{lot_price};
 		    }
-		    $l .= " ; $+{comment}" if $+{comment};
+		} else {
+		    $l = $+{posting};
 		}
-		push_line $depth, replace_commodity $l;
+		if ($+{comment}) {
+		    my $comment = handle_comment $depth, "; $+{comment}";
+		    $l .= " ; $comment" if $comment;
+		}
+		if ($+{assertion}) {
+		    push_assertion $+{account}, replace_commodity $+{assertion};
+		    if ($total_postings == 2 && $postings_with_amount == 0) {
+			# We have two postings, i.e. two accounts; remove the current
+			# account from the list of accounts to find out which account
+			# we have to pad against.
+			@accounts = grep { $_ ne $+{account} } @accounts;
+			print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, map_account $+{account}, map_account $accounts[0];
+			print_line 0, pp_cur_assertions;
+			# Skip transaction (the transaction itself is just two
+			# null postings, which are not valid in beancount)
+			pop_txn();
+			return;
+		    } elsif ($total_postings > 2 && ($total_postings-$postings_with_amount) == 2) {
+			print_warning_once "Balance assignments with 2 null postings not supported";
+		    }
+		    $l =~ s/\s*=\s*\Q$+{assertion}\E//;
+		}
+		if ($has_amount) {
+		    push_line $depth, replace_commodity $l;
+		} else {
+		    push_line $depth, $l;
+		}
 	    } else {
-		push_line $depth, $l;
+		die "Can't parse: $l";
 	    }
 	    handle_metadata $depth+1, \%metadata_posting if exists $metadata_posting{key};
 	    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $postdate, 0 if defined $postdate && defined $config->{postdate_tag};

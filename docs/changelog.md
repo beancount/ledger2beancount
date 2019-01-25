@@ -7,6 +7,7 @@
 * Add support for hledger features
 * Add support for balance assignments
 * Handle comments on the same line as the payee
+* Handle comments and tags on postings with balance assertions
 
 ## 1.4 (2018-12-01)
 

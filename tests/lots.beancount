@@ -261,3 +261,18 @@
   Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12}
   Assets:Bank
 
+2019-01-25 * "Lot information - with tag"
+  Expenses:Test         416.00 EUR {1.2937 USD, 2012-05-12}
+    tags: "foo, bar"
+  Assets:Bank
+
+2019-01-25 * "Cost - with tag"
+  Assets:Test               10.00 EUR {{9 GBP}}
+    tags: "foo, bar"
+  Equity:Opening-Balance    -9.00 GBP
+
+2019-01-25 * "Conversion - with tag"
+  Assets:Test        1 LU0274208692 {{48.67 EUR}}
+    tags: "foo, bar"
+  Equity:Opening-Balance   -48.67 EUR
+

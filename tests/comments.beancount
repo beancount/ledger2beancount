@@ -58,11 +58,11 @@
 
 2018-03-27 * "Account name could be mistaken for commodity"
   Assets:Test                        10.00 EUR
-  Assets:Commodity-Test123       ; comment
+  Assets:Commodity-Test123        ; comment
 
 2018-03-27 * "Account name could be mistaken for commodity"
   Assets:Test                        10.00 EUR
-  Assets:Commodity-Test123  ; comment
+  Assets:Commodity-Test123   ; comment
 
 2019-01-25 * "A payee can contain ; without problems"
   Assets:Test                        10.00 EUR

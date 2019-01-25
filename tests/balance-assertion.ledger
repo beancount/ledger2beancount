@@ -1,6 +1,8 @@
 
 account Assets:Test
 account Assets:Test2
+account Assets:Test3
+account Assets:Test4
 account Equity:Opening-Balance
 
 commodity EUR
@@ -36,4 +38,12 @@ commodity $
 2019-01-21 Adjustment
     Assets:Cash                                 = $500.00
     Equity:Adjustments
+
+2019-01-25 * Balance assertion with comment
+    Assets:Test3                       10.00 EUR = 10.00 EUR ; comment
+    Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * Balance assertion with tag
+    Assets:Test4                       10.00 EUR = 10.00 EUR ; :foo:
+    Equity:Opening-Balance            -10.00 EUR
 
