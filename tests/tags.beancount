@@ -59,3 +59,27 @@
   Equity:Opening-Balance            -10.00 EUR
     tags: "quux, quuz"
 
+; This is not a tag; you need two spaces before the comment
+2019-01-25 * "Just a payee description ; :foo:"
+  #bar #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * "Tag on same line as payee"
+  #foo
+  #bar #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * "Tag on same line as payee"
+  #foo
+  #bar #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * "Comment and tag on same line as payee" ; comment
+  #foo
+  #bar #baz
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

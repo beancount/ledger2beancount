@@ -64,3 +64,15 @@
   Assets:Test                        10.00 EUR
   Assets:Commodity-Test123  ; comment
 
+2019-01-25 * "A payee can contain ; without problems"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * "You can put a comment on the same line as the payee" ; comment
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-25 * "You can put a comment on the same line as the payee" ; this is a comment
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

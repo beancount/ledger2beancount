@@ -6,6 +6,7 @@
 * Add support for posting-level dates
 * Add support for hledger features
 * Add support for balance assignments
+* Handle comments on the same line as the payee
 
 ## 1.4 (2018-12-01)
 

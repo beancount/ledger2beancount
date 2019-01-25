@@ -230,6 +230,9 @@ sub pp_cur_header() {
 	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
     $buf .= mk_beancount_string $cur_txn_header{narration};
+    if (exists $cur_txn_header{comment}) {
+	$buf .= " ; " . $cur_txn_header{comment};
+    }
     if (exists $cur_txn_header{tags}) {
 	$buf .= $cur_txn_header{tags};
     }
@@ -372,6 +375,26 @@ sub push_comment($$) {
     my ($depth, $comment) = @_;
 
     push_line $depth, "; $comment";
+}
+
+
+# Process comments; in particular, look for tags
+sub handle_comment($$) {
+    my ($depth, $l) = @_;
+
+    if ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
+	or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
+	if ($in_postings) {
+	    push @cur_txn_tags, split /:/, $+{tags};
+	} else {
+	    print_tags $depth, split /:/, $+{tags};
+	}
+	return $+{comment};
+    } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
+	return $+{comment};
+    } else {
+	die "Can't process comment: $l";
+    }
 }
 
 
@@ -648,16 +671,9 @@ sub process_txn(@) {
 
 	if ($l =~ /^$metadata_RE/) {  # metadata comment
 	    handle_metadata $depth, \%+;
-	} elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	    or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
-	    if ($in_postings) {
-		push @cur_txn_tags, split /:/, $+{tags};
-	    } else {
-		print_tags $depth, split /:/, $+{tags};
-	    }
-	    push_comment $depth, $+{comment} if $+{comment} ne "";
-	} elsif ($l =~ /^$comment_RE/) {  # (every other) comment
-	    push_comment $depth, $+{comment};
+	} elsif ($l =~ /^$comment_RE/) {
+	    my $comment = handle_comment $depth, $l;
+	    push_comment $depth, $comment if $comment;
 	} elsif ($l =~ /^$posting_RE/) {
 	    print_tags $depth+1, @cur_txn_tags;
 	    @cur_txn_tags = ();
@@ -944,11 +960,15 @@ while (@input) {
     } elsif ($l =~ /^[0-9]/) {
 	if ($l =~ /$txn_header_RE/) {  # txn header
 	    $in_postings = 0;
-	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $+{narration};
+	    # You can have a comment on the same line as the payee
+	    my ($narration, $comment) = split /  +;\s*|\t+;\s*/, $+{narration}, 2;
+	    $narration = "" if not $narration;
+	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
+	    $comment = handle_comment $depth + 1, "; $comment" if $comment;
+	    $cur_txn_header{comment} = $comment if $comment;
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};
 	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};
 	    # Determine payee based on the narration field
-	    my $narration = $+{narration};
 	    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
 		push_payee $+{payee};
 		$cur_txn_header{narration} = $+{narration};
