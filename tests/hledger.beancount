@@ -2,6 +2,10 @@
 ; ledger2beancount conversion notes:
 ;   - Account assets:checking renamed to Assets:Checking
 ;   - Account expenses:food renamed to Expenses:Food
+;   - Metadata key 2012 renamed to x2012
+;   - Metadata key 2012foo renamed to x2012foo
+;   - Metadata key TEST1234TEST renamed to tEST1234TEST
+;   - Metadata key test♚ renamed to test-
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:A
@@ -33,28 +37,113 @@
 
 2015-05-30 txn "date as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, date:2005/6/01
+  Assets:Checking          ; bank cleared it on monday, 
     date: 2005-06-01
 
 2015-05-30 txn "date as comment without year"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, date:6/1
+  Assets:Checking          ; bank cleared it on monday, 
     date: 2015-06-01
 
 2015-05-30 txn "date2 as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, date2:2005/6/2
+  Assets:Checking          ; bank cleared it on monday, 
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, date:2005/6/01 date2:2005/6/2
+  Assets:Checking          ; bank cleared it on monday, 
     date: 2005-06-01
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment, in reverse order"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, date2:2005/6/02, date:2005/6/1
-    date: 2005-06-01
+  Assets:Checking          ; bank cleared it on monday, 
     aux-date: 2005-06-02
+    date: 2005-06-01
+
+2015-05-30 txn "date and date2 on next line"
+  aux-date: 2005-06-02
+  date: 2005-06-01
+  ; bank cleared it on monday. 
+  Expenses:Food     10 USD
+  Assets:Checking
+
+2015-05-30 txn "date and date2 on next line"
+  Expenses:Food     10 USD
+    aux-date: 2005-06-02
+    date: 2005-06-01
+    ; bank cleared it on monday. 
+  Assets:Checking
+
+2015-05-30 txn "date and date2 on next line"
+  Expenses:Food     10 USD
+  Assets:Checking
+    aux-date: 2005-06-02
+    date: 2005-06-01
+    ; bank cleared it on monday. 
+
+; Tags
+
+2019-01-28 txn "Tag test"
+  #sometag
+  #foo
+  #bar
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  #sometag
+  #foo
+  #bar
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "ledger tag"
+  tag1: "tag2:"
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  #foo
+  #bar
+  sometag: "foo"
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  #bar
+  sometag: "this is a value"
+  foo: "another value"
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "Tag test" ; a comment containing 
+  #tag1
+  tag2: "some value ..."
+  Assets:A                 10.00 EUR
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  #bar
+  sometag: "this is a value"
+  foo: "another value"
+  test-: "foo"
+  Assets:A                 10.00 EUR
+    tEST1234TEST: "foo"
+    test-: "foo"
+    x2012: "foo"
+    x2012foo: "foo"
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  Assets:A                 10.00 EUR
+    tags: "sometag, foo, bar"
+  Assets:B
+
+2019-01-28 txn "Tag test"
+  Assets:A                 10.00 EUR
+    sometag: "foo"
+    tags: "foo, bar"
+  Assets:B
 

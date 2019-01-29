@@ -72,6 +72,7 @@ my $flags_RE = qr/[*!]/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?(\s+|$)(?<flag>$flags_RE)?(\s*\((?<code>[^)]*)\))?\s*(?<narration>.*)/;
 my $hledger_payee_narration_RE = qr/(?<payee>[^|]+?)\s*\|\s*(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
+my $hledger_tags_RE = qr/(?<tags>[^ ]+:.*)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
 my $account_RE = qr/[^\s]([^\t](?!(\]|\))?(  | \t|\s*$)))*.?/;
@@ -94,6 +95,7 @@ my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
+my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  | \t|\t|\s*$|\)|\])\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
@@ -379,6 +381,16 @@ sub push_comment($$) {
 }
 
 
+sub push_deferred_meta($) {
+    my ($depth) = @_;
+
+    foreach (@cur_txn_meta) {
+	push_line $depth, $_;
+    }
+    @cur_txn_meta = ();
+}
+
+
 # Handle metadata
 sub handle_metadata($$$) {
     my ($depth, $metadata, $defer) = @_;
@@ -412,12 +424,56 @@ sub handle_metadata($$$) {
 }
 
 
+# Process hledger tags
+# hledger tags can have values (metadata) or not (tags)
+sub handle_hledger_tags($$$) {
+    my ($depth, $l, $defer) = @_;
+
+    # hledger doesn't know the ledger :foo:bar: syntax.  However, this
+    # is parsed as tag "foo" (without the colon!) with value "bar:".
+    $l =~ s/^://;
+
+    foreach $_ (split /\s*,\s*/, $l) {
+	if (/$hledger_metadata_RE/) {
+	    if ($+{key} eq "date" || $+{key} eq "date2") {
+		my $key = $+{key};
+		my $date = $+{value};
+		my $year = $1 if $cur_txn_header{date} =~ /^(\d{4})-/;
+		if ($date !~ /^$hledger_date_RE/) {
+		    die "Can't parse date after hledger tag $key: $date";
+		}
+		if (defined $config->{postdate_tag} && $key eq "date") {
+		    push @cur_txn_meta, pp_metadata $config->{postdate_tag}, pp_date $date, $year;
+		}
+		if (defined $config->{auxdate_tag} && $key eq "date2") {
+		    push @cur_txn_meta, pp_metadata $config->{auxdate_tag}, pp_date $date, $year;
+		}
+		push_deferred_meta $depth if !$defer;
+	    } else {
+		handle_metadata $in_postings ? 2 : 1, \%+, $defer;
+	    }
+	} else {
+	    s/:$//;
+	    # The $in_postings check is a workaround since there are no posting-level tags
+	    if ($defer || $in_postings) {
+		push @cur_txn_tags, $_;
+	    } else {
+		print_tags $depth, $_;
+	    }
+	}
+    }
+}
+
+
 # Process comments; in particular, look for tags
 # Returns the comment (after stripping tags)
 sub handle_comment($$$) {
     my ($depth, $l, $defer) = @_;
 
-    if ($l =~ /^$metadata_RE/) {  # metadata comment
+    if ($config->{hledger} && $l =~ /;\s*(?<comment>.*?)$hledger_tags_RE/) {
+	handle_hledger_tags $depth, $+{tags}, $defer;
+	return $+{comment};
+    } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
 	handle_metadata $in_postings ? 2 : 1, \%+, $defer;
 	return;
     } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
@@ -782,22 +838,9 @@ sub process_txn(@) {
 		die "Can't parse: $l";
 	    }
 	    # Show all metadata that was on the same line as the posting
-	    foreach (@cur_txn_meta) {
-		push_line $depth + 1, $_;
-	    }
-	    @cur_txn_meta = ();
+	    push_deferred_meta $depth + 1;
 	    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $postdate, 0 if defined $postdate && defined $config->{postdate_tag};
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
-	    if ($config->{hledger} && $l =~ /$comment_RE/) {
-		my $comment = $+{comment};
-		my $year = $1 if $cur_txn_header{date} =~ /^(\d{4})-/;
-		if (defined $config->{postdate_tag} && $comment =~ /date:($hledger_date_RE)/) {
-		    push_metadata $depth + 1, $config->{postdate_tag}, pp_date $1, $year;
-		}
-		if (defined $config->{auxdate_tag} && $comment =~ /date2:($hledger_date_RE)/) {
-		    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date $1, $year;
-		}
-	    }
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
 	    push_line 0, "";
 	} else {  # there shouldn't be anything

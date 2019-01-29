@@ -33,9 +33,66 @@
 
 2015/5/30 date and date2 as comment
     expenses:food     $10   ; food purchased on saturday 05/30
-    assets:checking         ; bank cleared it on monday, date:2005/6/01 date2:2005/6/2
+    assets:checking         ; bank cleared it on monday, date:2005/6/01, date2:2005/6/2
 
 2015/5/30 date and date2 as comment, in reverse order
     expenses:food     $10   ; food purchased on saturday 05/30
     assets:checking         ; bank cleared it on monday, date2:2005/6/02, date:2005/6/1
+
+2015/5/30 date and date2 on next line
+    ; bank cleared it on monday. date2:2005/6/02, date:2005/6/1
+    expenses:food     $10
+    assets:checking
+
+2015/5/30 date and date2 on next line
+    expenses:food     $10
+      ; bank cleared it on monday. date2:2005/6/02, date:2005/6/1
+    assets:checking
+
+2015/5/30 date and date2 on next line
+    expenses:food     $10
+    assets:checking
+      ; bank cleared it on monday. date2:2005/6/02, date:2005/6/1
+
+; Tags
+
+2019/01/28 Tag test  ; sometag:, foo:, bar:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 Tag test  ; sometag: , foo:, bar:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 ledger tag  ; :tag1:tag2:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 Tag test  ;sometag: foo , foo:, bar:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 Tag test  ; sometag: this is a value, foo:another value, bar:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 Tag test  ; a comment containing tag1:, tag2: some value ...
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2019/01/28 Tag test  ; sometag: this is a value, foo:another value, bar:, test♚: foo
+    Assets:A                 10.00 EUR
+        ; TEST1234TEST: foo
+        ; test♚: foo
+        ; 2012: foo
+        ; 2012foo: foo
+    Assets:B
+
+2019/01/28 Tag test
+    Assets:A                 10.00 EUR ; sometag: , foo:, bar:
+    Assets:B
+
+2019/01/28 Tag test
+    Assets:A                 10.00 EUR ;sometag: foo , foo:, bar:
+    Assets:B
 
