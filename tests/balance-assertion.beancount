@@ -17,6 +17,7 @@
 1970-01-01 open Assets:Test3
 1970-01-01 open Assets:Test4
 1970-01-01 open Assets:Test5
+1970-01-01 open Assets:Test6
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
@@ -85,4 +86,8 @@
   Equity:Opening-Balance            -10.00 EUR
 
 2019-01-30 balance Assets:Test5  10.00 EUR
+
+2019-01-29 pad Assets:Test6 Equity:Adjustments
+2019-01-30 balance Assets:Test6  500.00 USD
+
 

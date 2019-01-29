@@ -4,6 +4,7 @@ account Assets:Test2
 account Assets:Test3
 account Assets:Test4
 account Assets:Test5
+account Assets:Test6
 account Equity:Opening-Balance
 
 commodity EUR
@@ -51,4 +52,9 @@ commodity $
 2019-01-29 * Balance assertion with metadata
     Assets:Test5                       10.00 EUR = 10.00 EUR ; foo: bar
     Equity:Opening-Balance            -10.00 EUR
+
+2019-01-29 Adjustment
+    ; :foo:
+    Assets:Test6                                = $500.00
+    Equity:Adjustments
 
