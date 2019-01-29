@@ -112,3 +112,7 @@ commodity EUR
    Assets:Test                         10.00 EUR
    Assets:Test
 
+2019-01-28 * Metadata on null posting
+   Assets:Test                         10.00 EUR
+   Assets:Test               ; foo: bar
+

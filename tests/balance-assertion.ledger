@@ -3,6 +3,7 @@ account Assets:Test
 account Assets:Test2
 account Assets:Test3
 account Assets:Test4
+account Assets:Test5
 account Equity:Opening-Balance
 
 commodity EUR
@@ -45,5 +46,9 @@ commodity $
 
 2019-01-25 * Balance assertion with tag
     Assets:Test4                       10.00 EUR = 10.00 EUR ; :foo:
+    Equity:Opening-Balance            -10.00 EUR
+
+2019-01-29 * Balance assertion with metadata
+    Assets:Test5                       10.00 EUR = 10.00 EUR ; foo: bar
     Equity:Opening-Balance            -10.00 EUR
 

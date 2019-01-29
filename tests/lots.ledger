@@ -263,3 +263,15 @@ commodity XXXx
     Assets:Test        1 "LU0274208692" @@ 48.67 EUR ; :foo:bar:
     Equity:Opening-Balance   -48.67 EUR
 
+2019-01-28 * Lot information - with metadata
+    Expenses:Test         €416.00 {$1.2937} [2012-05-12] ; foo: bar
+    Assets:Bank
+
+2019-01-28 * Cost - with metadata
+    Assets:Test               10.00 EUR {{ 9 GBP}} ; foo: bar
+    Equity:Opening-Balance    -9.00 GBP
+
+2019-01-28 * Conversion - with metadata
+    Assets:Test        1 "LU0274208692" @@ 48.67 EUR ; foo: bar
+    Equity:Opening-Balance   -48.67 EUR
+

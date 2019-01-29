@@ -34,7 +34,7 @@
 2018-03-19 * "Metadata on next line of posting, no space"
   test: "foo bar baz"
   Assets:Test                        10.00 EUR
-  test: "bar"
+    test: "bar"
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-19 * "Metadata on next line of posting, with space"
@@ -127,4 +127,9 @@
   test-test: "foo"
   Assets:Test                         10.00 EUR
   Assets:Test
+
+2019-01-28 * "Metadata on null posting"
+  Assets:Test                         10.00 EUR
+  Assets:Test               
+    foo: "bar"
 

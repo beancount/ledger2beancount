@@ -7,7 +7,8 @@
 * Add support for hledger features
 * Add support for balance assignments
 * Handle comments on the same line as the payee
-* Handle comments and tags on postings with balance assertions
+* Handle comments, tags and metadata on postings with balance assertions
+* Handle metadata on postings with cost or price information.
 
 ## 1.4 (2018-12-01)
 

@@ -16,6 +16,7 @@
 1970-01-01 open Assets:Test2
 1970-01-01 open Assets:Test3
 1970-01-01 open Assets:Test4
+1970-01-01 open Assets:Test5
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
@@ -77,4 +78,11 @@
   Equity:Opening-Balance            -10.00 EUR
 
 2019-01-26 balance Assets:Test4  10.00 EUR
+
+2019-01-29 * "Balance assertion with metadata"
+  Assets:Test5                       10.00 EUR
+    foo: "bar"
+  Equity:Opening-Balance            -10.00 EUR
+
+2019-01-30 balance Assets:Test5  10.00 EUR
 
