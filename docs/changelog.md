@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.5 (unreleased)
+## 1.5 (2019-01-30)
 
 * Replace commodities in balance assertions
 * Add support for posting-level dates
@@ -8,7 +8,7 @@
 * Add support for balance assignments
 * Handle comments on the same line as the payee
 * Handle comments, tags and metadata on postings with balance assertions
-* Handle metadata on postings with cost or price information.
+* Handle metadata on postings with cost or price information
 * Handle simple implicit conversions
 
 ## 1.4 (2018-12-01)
