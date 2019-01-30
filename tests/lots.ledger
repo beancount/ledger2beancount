@@ -275,3 +275,21 @@ commodity XXXx
     Assets:Test        1 "LU0274208692" @@ 48.67 EUR ; foo: bar
     Equity:Opening-Balance   -48.67 EUR
 
+2019-01-29 * Implicit conversion
+    Assets:A                  10.00 EUR
+    Assets:B                 -11.42 USD
+
+2019-01-29 * Implicit conversion
+    ; :foo:
+    Assets:A                   10.00 EUR
+    Assets:B                  -11.42 USD
+
+2019-01-29 * Implicit conversion
+    Assets:A                  10.00 EUR ; :foo:
+    Assets:B                 -11.42 USD
+
+2019-01-29 * Implicit conversion
+    ; :foo:
+    Assets:A                     10 EUR
+    Assets:B                 -11.42 USD ; foo: bar
+

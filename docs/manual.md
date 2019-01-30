@@ -641,6 +641,24 @@ Support for more complex inline math would require substantial changes
 to the parser.
 
 
+## Implicit conversions
+
+ledger allows implicit conversions under some circumstances, such as in
+this example:
+
+    2019-01-29 * Implicit conversion
+        Assets:A                 10.00 EUR
+        Assets:B                -11.42 USD
+
+They are generally a bad idea since they make it very easy to hide
+problems that are hard to track down.  beancount doesn't support
+implicit conversions.
+
+ledger2beancount supports implicit conversions if there are only two
+postings in a transaction (the most common case).  More complex
+implicit conversations are not supported.
+
+
 ### hledger syntax
 
 The syntax of [hledger](http://hledger.org/) is largely compatible with

@@ -9,6 +9,7 @@
 * Handle comments on the same line as the payee
 * Handle comments, tags and metadata on postings with balance assertions
 * Handle metadata on postings with cost or price information.
+* Handle simple implicit conversions
 
 ## 1.4 (2018-12-01)
 
