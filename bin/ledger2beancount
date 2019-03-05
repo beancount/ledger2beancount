@@ -135,6 +135,7 @@ sub indent($$) {
 
 sub escape_beancount_string($) {
     my ($s) = @_;
+    $s =~ s/\\/\\\\/g;
     $s =~ s/"/\\"/g;
     return $s;
 }

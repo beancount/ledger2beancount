@@ -3,6 +3,7 @@
 ## 1.6 (unreleased)
 
 * Don't parse trailing tabs as part of the account name
+* Escape backslashes in the narration
 
 ## 1.5 (2019-01-30)
 

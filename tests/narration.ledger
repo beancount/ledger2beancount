@@ -22,3 +22,15 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2019-03-05 Foo\
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2019-03-05 Foo\ bar
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2019-03-05 Foo\ "
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
