@@ -213,3 +213,64 @@ commodity EUR
     Assets:Bank	                         -10.00 EUR
     (Assets:Bank)	                       2.00 EUR
 
+account Assets:Bank (Debian)
+account Assets:Bank [Debian]
+account Assets:Bank Debian)bar
+account Assets:Bank Debian]bar
+
+2018-01-02 * Account name with brackets
+    Expenses:Foo                      10.00 USD
+    Assets:Bank (Debian)             -10.00 USD
+
+2018-01-02 * Account name with brackets
+    Expenses:Foo                      10.00 USD
+    Assets:Bank [Debian]             -10.00 USD
+
+2018-01-02 * Account name with brackets
+    Expenses:Foo                      10.00 USD
+    Assets:Bank Debian)bar           -10.00 USD
+
+2018-01-02 * Account name with brackets
+    Expenses:Foo                      10.00 USD
+    Assets:Bank Debian]bar           -10.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                      -10.00 USD
+    (Assets:Bank (Debian))            -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                      -10.00 USD
+    (Assets:Bank [Debian])            -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                      -10.00 USD
+    (Assets:Bank Debian)bar)          -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                      -10.00 USD
+    (Assets:Bank Debian]bar)          -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                       -8.00 USD
+    [Assets:Bank (Debian)]            -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                       -8.00 USD
+    [Assets:Bank [Debian]]            -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                       -8.00 USD
+    [Assets:Bank Debian)bar]          -2.00 USD
+
+2018-01-02 * Account name with brackets, as virtual posting
+    Expenses:Foo                      10.00 USD
+    Assets:Bank                       -8.00 USD
+    [Assets:Bank Debian]bar]          -2.00 USD
+

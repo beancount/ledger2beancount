@@ -2,6 +2,7 @@
 
 ## 1.6 (unreleased)
 
+* Handle account names that contain brackets
 * Don't parse trailing tabs as part of the account name
 * Escape backslashes in the narration
 

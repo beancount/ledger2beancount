@@ -75,7 +75,9 @@ my $tags_RE = qr/(?<tags>[\w:-]+)/;
 my $hledger_tags_RE = qr/(?<tags>[^ ]+:.*)/;
 # An account can be pretty much anything but it has to be followed by
 # two spaces, a tab or new line (see $posting_RE).
-my $account_RE = qr/[^\s;]([^\t](?!(\]|\))?(  | \t|\t|\s*$)))*.?/;
+# To keep the regex simpler, we parse the () and [] for virtual accounts
+# as part of the account name and strip these brackets later.
+my $account_RE = qr/[^\s;]([^\t](?!(  | \t|\t|\s*$)))*.?/;
 my $value_RE = qr/[\d.,]+/;
 my $value_exp_RE = qr/$value_RE([\h*\/+-]*$value_RE)?/;
 # A quoted commodity ("LU0274208692") can contain anything
@@ -96,7 +98,7 @@ my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
 my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<virtual>[(\[]\s?)?(?<account>$account_RE)(  | \t|\t|\s*$|\)|\])\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  | \t|\t|\s*$)\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
 
 # Maximum limit for beancount commodities
@@ -743,13 +745,14 @@ sub process_txn(@) {
 	    print_tags $depth+1, @cur_txn_tags;
 	    @cur_txn_tags = ();
 	    my $account = $+{account};
-	    if ($+{virtual}) {
-		; # Ignore virtual postings with parentheses
-		if ($+{virtual} =~ /^\(/) {
-		    print_warning_once "Virtual posting in parentheses ignored";
-		    next;
-		}
+	    # Check for virtual accounts
+	    if ($account =~ /^\(/) {
+		# Ignore virtual postings with parentheses
+		print_warning_once "Virtual posting in parentheses ignored";
+		next;
+	    } elsif ($account =~ /^\[(.*)\]/) {
 		if ($config->{convert_virtual}) {
+		    $account = $1;
 		    $l =~ s/\Q[$account]\E/$account  /; # Make them real
 		} else {
 		    print_warning_once "Virtual posting in bracket ignored (see convert_virtual option)";

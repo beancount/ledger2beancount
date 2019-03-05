@@ -12,4 +12,6 @@ account_map:
   Assets:Shorter: Assets:Short
   Assets:Longer: Assets:MuchLonger
   Assets:Cash: Assets:Bash
+  Assets:Bank (Debian): Assets:Bank:Debian
+  Assets:Bank Debian]bar: Assets:Bank:Debian:Bar
 
