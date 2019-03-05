@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;   - Virtual posting in parentheses ignored
 ;   - Account Assets:test renamed to Assets:Test
 ;   - Account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds renamed to Assets:X-DASD----------------0---ds
 ;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
@@ -229,4 +230,12 @@ option "title" "Test account names"
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
   Assets:Bank   	
+
+2019-02-28 txn "Tab after account name"
+  Assets:Test                           10.00 EUR
+  Assets:Bank	                         -10.00 EUR
+
+2019-02-28 txn "Tab after account name"
+  Assets:Test                           10.00 EUR
+  Assets:Bank	                         -10.00 EUR
 

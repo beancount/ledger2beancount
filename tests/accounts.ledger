@@ -204,3 +204,12 @@ commodity EUR
     Assets:Test                      10.00 EUR
     [Assets:Bank] 	
 
+2019-02-28 Tab after account name
+    Assets:Test                           10.00 EUR
+    Assets:Bank	                         -10.00 EUR
+
+2019-02-28 Tab after account name
+    Assets:Test                           10.00 EUR
+    Assets:Bank	                         -10.00 EUR
+    (Assets:Bank)	                       2.00 EUR
+
