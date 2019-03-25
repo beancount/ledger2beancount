@@ -1,0 +1,55 @@
+
+2012-04-10 My Broker
+    Assets:Brokerage            10 AAPL @ =$50.00
+    Assets:Brokerage:Cash       $-500.00
+
+2012-04-11 My Broker
+    Assets:Brokerage            10 AAPL {=$50.00}
+    Assets:Brokerage:Cash       $-500.00
+
+; Only apply fixated to CAD, not to EUR
+
+apply fixed CAD $0.90
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD {$0.20}
+    Expenses:Food            15.50 CAD {$0.20}
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD
+    Expenses:Food            15.50 CAD
+
+2012-04-11 Second day Dinner in Canada
+    Assets:Wallet           -25.75 CAD
+    Expenses:Food            25.75 CAD
+
+2012-04-11 Paid in EUR
+    Assets:Wallet           -25.75 EUR
+    Expenses:Food            25.75 EUR
+
+end apply fixed
+
+; Apply fixated to CAD and EUR
+
+apply fixed CAD $0.90
+apply fixed EUR 0.40 CAD
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD {$0.20}
+    Expenses:Food            15.50 CAD {$0.20}
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD
+    Expenses:Food            15.50 CAD
+
+2012-04-11 Second day Dinner in Canada
+    Assets:Wallet           -25.75 CAD
+    Expenses:Food            25.75 CAD
+
+2012-04-11 Paid in EUR
+    Assets:Wallet           -25.75 EUR
+    Expenses:Food            25.75 EUR
+
+end apply fixed
+end apply fixed
+
