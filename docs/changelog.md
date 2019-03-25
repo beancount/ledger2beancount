@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.6 (unreleased)
+## 1.6 (2019-03-25)
 
 * Add support for fixated prices and costs
 * Handle account names that contain brackets
