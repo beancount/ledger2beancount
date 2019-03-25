@@ -659,6 +659,20 @@ postings in a transaction (the most common case).  More complex
 implicit conversations are not supported.
 
 
+### Fixated prices and costs
+
+ledger allows you to ["fix" the cost or price](https://www.ledger-cli.org/3.0/doc/ledger3.html#Fixated-prices-and-costs)
+at the time of a transaction, which means the amount will not be revalued
+subsequently when the price of the commodity changes in the `pricedb`.
+beancount doesn't have a notion of a fixated price or cost.
+
+However, you can achieve the same result in beancount.  ledger2beancount
+will always convert ledger fixated prices and costs to costs in
+beancount.  This way, the original cost is always attached to the
+transaction.  You can then use `SUM(COST(position))` to get the original
+value.
+
+
 ### hledger syntax
 
 The syntax of [hledger](http://hledger.org/) is largely compatible with
@@ -746,7 +760,6 @@ Unsupported features in ledger2beancount
 The following ledger features are currently not supported by
 ledger2beancount:
 
-* Fixated prices (`=$10` syntax and the `fixed` directive)
 * The `define` directive
 
 Contributions [are welcome!](CONTRIBUTING.md)

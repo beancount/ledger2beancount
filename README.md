@@ -92,6 +92,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 * Directives
   * `payee`: skipped (not needed in beancount)
   * `tag`: skipped (not needed in beancount)
+* Fixated prices (`=$10` and the `fixed` directive)
 * Tags and links on posting-level (not supported by beancount)
 * Transaction codes: stored as metadata (no equivalence in beancount)
 * Virtual postings: can be skipped or converted to real postings
@@ -109,7 +110,6 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * `expr`
   * `N`
   * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)
-* Fixated prices (`=$10` and the `fixed` directive)
 * Periodic transactions
 
 
