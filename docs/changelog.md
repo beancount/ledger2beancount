@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.7 (unreleased)
+
+* Don't misparse account and commodity with mixed tab/space separators
+
 ## 1.6 (2019-03-25)
 
 * Add support for fixated prices and costs

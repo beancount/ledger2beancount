@@ -643,8 +643,8 @@ sub map_commodity($) {
 sub replace_commodity($) {
     my ($s) = @_;
 
-    if ($s =~ /(  |\t)$amount_RE/) {
-	$s =~ s/(  |\t)$amount_RE/$1@{[pp_amount $+{minus}, $+{num}, $+{commodity}, $+{inline_math}]}/;
+    if ($s =~ /(  |\t|\t )$amount_RE/) {
+	$s =~ s/(  |\t|\t )$amount_RE/$1@{[pp_amount $+{minus}, $+{num}, $+{commodity}, $+{inline_math}]}/;
     } elsif ($s =~ /$amount_RE/) {
 	$s =~ s/$amount_RE/@{[pp_amount $+{minus}, $+{num}, $+{commodity}, $+{inline_math}]}/;
     }

@@ -300,3 +300,7 @@ option "title" "Test account names"
   Assets:Bank                       -8.00 USD
   Assets:Bank:Debian:Bar            -2.00 USD
 
+2019-03-27 txn "Don't confuse account and amount due to tabs"
+  Assets:Bank 	 -35.00 EUR
+  Expenses:Foo	 35.00 EUR
+
