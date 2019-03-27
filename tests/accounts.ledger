@@ -278,3 +278,7 @@ account Assets:Bank Debian]bar
 	Assets:Bank 	 -35.00 EUR
 	Expenses:Foo	 35.00 EUR
 
+2019-03-27 Invalid account: root is not valid, needs subaccount
+	Assets:Bank     42.00 EUR
+	Income
+

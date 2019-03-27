@@ -573,6 +573,13 @@ sub map_account($) {
     $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
     $account =~ s/[^\p{letter}\p{number}:-]/-/g; # Replace disallowed characters
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+    my $root = $1 if $account =~ /([^:]+)/;
+    # beancount doesn't allow just a root account (e.g. Income) as an
+    # account name.  It has to be Income:Subaccount
+    if ($account eq $root) {
+	print_warning_once("Account $account not allowed; it needs a subaccount, e.g. $account:Subaccount");
+	$account .= ":Subaccount";
+    }
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
 }
