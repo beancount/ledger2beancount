@@ -207,10 +207,13 @@ something different.  The mapping will work on your ledger account
 names and on the account names after the transformation.
 
 Unlike ledger, beancount expects all account names to start with one
-of five account types (`Assets`, `Liabilities`, `Equity`, `Expenses`,
-and `Income`, although this can be configured).  If you use more than
-five account types, you will have to rename them.  Currently,
-ledger2beancount doesn't have an option to map the account types.
+of five account types, also known as root names.  The default root names
+are `Assets`, `Liabilities`, `Equity`, `Expenses`, and `Income`.  If you
+want to use other root names, you can configure them using the beancount
+options `name_assets`, `name_liabilities`, `name_equity`,
+`name_expenses`, and `name_income`.  If you use more than five root names,
+you will have to rename them.  Currently, ledger2beancount doesn't have
+an option to map root names.
 
 Ledger's `apply account` and `alias` directives are supported.  The
 mapping of account names described above is done after these directives.
