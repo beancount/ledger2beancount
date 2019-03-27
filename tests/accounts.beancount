@@ -1,7 +1,8 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
 ;   - Virtual posting in parentheses ignored
-;   - Account Income not allowed; it needs a subaccount, e.g. Income:Subaccount
+;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
+;   - Non-standard root name Revenue used; please set name_* option
 ;   - Account Assets:Bank Debian)bar renamed to Assets:Bank-Debian-bar
 ;   - Account Assets:Bank [Debian] renamed to Assets:Bank--Debian-
 ;   - Account Assets:test renamed to Assets:Test
@@ -9,9 +10,9 @@
 ;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
 ;   - Account Expenses:École républicaine renamed to Expenses:École-républicaine
 ;   - Account Expenses:école renamed to Expenses:École
-;   - Account Income renamed to Income:Subaccount
 ;   - Account Liabilities:Credit Card:Test renamed to Liabilities:Credit-Card:Test
 ;   - Account Liabilities:credit Card:test renamed to Liabilities:Credit-Card:Test
+;   - Account Revenue renamed to Revenue:Subaccount
 ;   - Account assets:test renamed to Assets:Test
 ;   - Account expenses:purchase renamed to Expenses:Purchase
 ;   - Collision for account "Assets:Collision": Assets:Coll1, Assets:Coll2
@@ -22,6 +23,7 @@
 
 
 option "title" "Test account names"
+option "name_income" "Revenue"
 
 1970-01-01 open Assets:A
 1970-01-01 open Assets:Bank
@@ -30,7 +32,9 @@ option "title" "Test account names"
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
 1970-01-01 open Expenses:Foo
-1970-01-01 open Income:Subaccount
+1970-01-01 open Revenue:Interest
+1970-01-01 open Revenue:Salary
+1970-01-01 open Revenue:Subaccount
 1970-01-01 commodity USD
 ; Beancount: 2.1.0
 
@@ -309,5 +313,13 @@ option "title" "Test account names"
 
 2019-03-27 txn "Invalid account: root is not valid, needs subaccount"
   Assets:Bank     42.00 EUR
-  Income:Subaccount
+  Revenue:Subaccount
+
+2019-03-27 txn "Non-standard root name"
+  Assets:Bank                      100.00 EUR
+  Revenue:Salary                  -100.00 EUR
+
+2019-03-27 txn "Non-standard root name (after mapping)"
+  Assets:Bank                        1.00 EUR
+  Revenue:Interest                  -1.00 EUR
 

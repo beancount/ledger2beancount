@@ -4,6 +4,7 @@
 
 * Don't misparse account and commodity with mixed tab/space separators
 * Rename account names consisting of a root name without subaccount
+* Warn when non-standard root names are used
 
 ## 1.6 (2019-03-25)
 

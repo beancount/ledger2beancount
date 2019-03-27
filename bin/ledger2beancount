@@ -104,6 +104,8 @@ my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>
 # Maximum limit for beancount commodities
 my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
 
+my @beancount_root_names = qw/Assets Liabilities Equity Income Expenses/;
+
 my @output; # Used to store the output of the script
 # Store accounts and commodities encountered and declared
 # value == undef: seen
@@ -579,6 +581,9 @@ sub map_account($) {
     if ($account eq $root) {
 	print_warning_once("Account $account not allowed; it needs a subaccount, e.g. $account:Subaccount");
 	$account .= ":Subaccount";
+    }
+    if (!($root ~~ @beancount_root_names)) {
+	print_warning_once("Non-standard root name $root used; please set name_* option");
     }
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;

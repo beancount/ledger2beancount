@@ -280,5 +280,13 @@ account Assets:Bank Debian]bar
 
 2019-03-27 Invalid account: root is not valid, needs subaccount
 	Assets:Bank     42.00 EUR
-	Income
+	Revenue
+
+2019-03-27 Non-standard root name
+    Assets:Bank                      100.00 EUR
+    Revenue:Salary                  -100.00 EUR
+
+2019-03-27 Non-standard root name (after mapping)
+    Assets:Bank                        1.00 EUR
+    Income:Interest                   -1.00 EUR
 
