@@ -12,15 +12,15 @@ use strict;
 use experimental 'smartmatch';
 use utf8;
 use feature 'unicode_strings';
-use open qw(:std :locale);
+use open qw/:std :locale/;
 
 use Carp::Assert;
 use Config::Onion;
-use Date::Calc qw(Add_Delta_Days);
-use DateTime::Format::Strptime qw(strftime);
+use Date::Calc qw/Add_Delta_Days/;
+use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
-use POSIX qw(ceil);
+use POSIX qw/ceil/;
 use Unicode::Normalize;
 
 
