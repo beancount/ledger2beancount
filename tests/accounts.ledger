@@ -20,6 +20,10 @@ account Assets:Test:I love ♚♛♕♔
 account Assets:Commodity-Test123
 account expenses:purchase
 
+; These accounts lead to name collision
+account Expenses:Foo:Travel
+account Expenses:Bar:Travel
+
 commodity EUR
 
 2018-03-17 * Test 1
@@ -289,4 +293,12 @@ account Assets:Bank Debian]bar
 2019-03-27 Non-standard root name (after mapping)
     Assets:Bank                        1.00 EUR
     Income:Interest                   -1.00 EUR
+
+2019-04-06 * Name collision and account declarations
+    Expenses:Foo:Travel               11.00 EUR
+    Assets:Bank                      -11.00 EUR
+
+2019-04-06 * Name collision and account declarations
+    Expenses:Foo:Travel               22.00 EUR
+    Assets:Bank                      -22.00 EUR
 

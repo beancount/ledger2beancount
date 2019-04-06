@@ -15,4 +15,6 @@ account_map:
   Assets:Bank (Debian): Assets:Bank:Debian
   Assets:Bank Debian]bar: Assets:Bank:Debian:Bar
   Income:Interest: Revenue:Interest
+  Expenses:Foo:Travel: Expenses:Travel
+  Expenses:Bar:Travel: Expenses:Travel
 

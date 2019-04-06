@@ -1015,9 +1015,16 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	}
     } elsif ($l =~ /^[!@]?account\s+(.*)/) {  # account declaration
-	$account_declared{map_account $1} = 1;
-	print_line $depth, sprintf "$config->{account_open_date} open %s", map_account $1;
+	my $account = map_account $1;
 	@stanza = read_stanza \@input;
+	# Avoid duplicate account declarations if two accounts are mapped
+	# to the same account and both have account declarations.
+	if ($account_declared{$account}) {
+	    print_warning_once "Skipped second account declaration for $account (old $1)";
+	    next;
+	}
+	$account_declared{$account} = 1;
+	print_line $depth, sprintf "$config->{account_open_date} open %s", $account;
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note
