@@ -765,7 +765,7 @@ ledger2beancount:
 
 * The `define` directive
 
-Contributions [are welcome!](CONTRIBUTING.md)
+Contributions [are welcome!](contributing.md)
 
 
 Bugs and Contributions
@@ -776,6 +776,6 @@ ledger to beancount could be improved, please [open an
 issue](https://github.com/zacchiro/ledger2beancount/issues).  Please
 include a small test case so we can reproduce the problem.
 
-See [the contributing guide](CONTRIBUTING.md) for more information on
+See [the contributing guide](contributing.md) for more information on
 how to contribute to ledger2beancount.
 
