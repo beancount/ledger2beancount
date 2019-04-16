@@ -520,9 +520,7 @@ sub pop_txn() {
 # may contain (uppercase or lowercase) letters, numbers, dashes and
 # underscores."
 sub map_metadata($) {
-    my ($key) = @_;
-
-    $ledger_metadata{$key} = 1;
+    my ($key) = my ($ledger_key) = @_;
 
     # For backwards compatibility with older ledger2beancount configs
     $key = $config->{metadata_map}{lc $key} if exists $config->{metadata_map}{lc $key};
@@ -535,6 +533,13 @@ sub map_metadata($) {
     $key =~ s/\p{NonspacingMark}//g;
     $key =~ s/[^a-zA-Z0-9_-]/-/g; # Replace disallowed characters
     $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
+
+    # payee_tag and payer_tag don't show up in the beancount file, so
+    # no need to warn about them.
+    if ($key ne $config->{payee_tag} and $key ne $config->{payer_tag}) {
+	$ledger_metadata{$ledger_key} = 1;
+    }
+
     return $key;
 }
 
