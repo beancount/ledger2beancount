@@ -302,3 +302,15 @@ account Assets:Bank Debian]bar
     Expenses:Foo:Travel               22.00 EUR
     Assets:Bank                      -22.00 EUR
 
+2019-04-17 * Mass rename of accounts using account_regex
+    Accrued:Accounts Receivable:Foo   10.00 EUR
+    Revenue:Foo                      -10.00 EUR
+
+2019-04-17 * Mass rename of accounts using account_regex
+    Accrued:Accounts Receivable:Bar   10.00 EUR
+    Revenue:Foo                      -10.00 EUR
+
+2019-04-17 * Mass rename of accounts using account_regex - leads to a name that requires further changes
+    Accrued:Accounts Payable:Baz      10.00 EUR
+    Expenses:Foo                     -10.00 EUR
+

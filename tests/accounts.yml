@@ -18,3 +18,7 @@ account_map:
   Expenses:Foo:Travel: Expenses:Travel
   Expenses:Bar:Travel: Expenses:Travel
 
+account_regex:
+  ^Accrued:Accounts Payable:(.*): Liabilities:Accounts Payable:$1
+  ^Accrued:Accounts Receivable:(.*): Assets:Accounts-Receivable:$1
+

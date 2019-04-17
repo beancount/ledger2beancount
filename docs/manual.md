@@ -25,6 +25,7 @@ modules:
 * DateTime::Format::Strptime
 * File::BaseDir
 * Getopt::Long::Descriptive
+* String::Interpolate
 * YAML::XS
 
 You can install the required Perl modules with
@@ -37,6 +38,8 @@ If you use Debian, you can install the dependencies with this command:
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
         libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
         libgetopt-long-descriptive-perl libdatetime-format-strptime-perl
+
+Note that String::Interpolate is currently not packaged for Debian.
 
 ledger2beancount itself consists of one script.  You can clone the
 repository and run the script directly or copy it to `$HOME/bin` or
@@ -215,9 +218,17 @@ of five account types, also known as root names.  The default root names
 are `Assets`, `Liabilities`, `Equity`, `Expenses`, and `Income`.  If you
 want to use other root names, you can configure them using the beancount
 options `name_assets`, `name_liabilities`, `name_equity`,
-`name_expenses`, and `name_income`.  If you use more than five root names,
-you will have to rename them.  Currently, ledger2beancount doesn't have
-an option to map root names.
+`name_expenses`, and `name_income`.
+
+If you use more than five root names, you will have to rename them.
+ledger2beancount offers the `account_regex` option to mass rename
+account names.  If you use the top-level root name `Accrued` to
+track accounts payable and accounts receivable, you can rename them
+with this `account_regex` config option:
+
+    account_regex:
+      ^Accrued:Accounts Payable:(.*): Liabilities:Accounts-Payable:$1
+      ^Accrued:Accounts Receivable:(.*): Assets:Accounts-Receivable:$1
 
 Ledger's `apply account` and `alias` directives are supported.  The
 mapping of account names described above is done after these directives.

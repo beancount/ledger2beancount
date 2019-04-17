@@ -4,6 +4,7 @@
 ;   - Virtual posting in parentheses ignored
 ;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
 ;   - Non-standard root name Revenue used; please set name_* option
+;   - Account Accrued:Accounts Payable:Baz renamed to Liabilities:Accounts-Payable:Baz
 ;   - Account Assets:Bank Debian)bar renamed to Assets:Bank-Debian-bar
 ;   - Account Assets:Bank [Debian] renamed to Assets:Bank--Debian-
 ;   - Account Assets:test renamed to Assets:Test
@@ -28,12 +29,16 @@ option "title" "Test account names"
 option "name_income" "Revenue"
 
 1970-01-01 open Assets:A
+1970-01-01 open Assets:Accounts-Receivable:Bar
+1970-01-01 open Assets:Accounts-Receivable:Foo
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Bash
 1970-01-01 open Assets:Collision
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
 1970-01-01 open Expenses:Foo
+1970-01-01 open Liabilities:Accounts-Payable:Baz
+1970-01-01 open Revenue:Foo
 1970-01-01 open Revenue:Interest
 1970-01-01 open Revenue:Salary
 1970-01-01 open Revenue:Subaccount
@@ -335,4 +340,16 @@ option "name_income" "Revenue"
 2019-04-06 * "Name collision and account declarations"
   Expenses:Travel                   22.00 EUR
   Assets:Bank                      -22.00 EUR
+
+2019-04-17 * "Mass rename of accounts using account_regex"
+  Assets:Accounts-Receivable:Foo    10.00 EUR
+  Revenue:Foo                      -10.00 EUR
+
+2019-04-17 * "Mass rename of accounts using account_regex"
+  Assets:Accounts-Receivable:Bar    10.00 EUR
+  Revenue:Foo                      -10.00 EUR
+
+2019-04-17 * "Mass rename of accounts using account_regex - leads to a name that requires further changes"
+  Liabilities:Accounts-Payable:Baz  10.00 EUR
+  Expenses:Foo                     -10.00 EUR
 

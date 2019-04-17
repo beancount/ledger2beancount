@@ -67,6 +67,11 @@ payee_match:
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance
 
+# A hash of regular expressions to replace account names.
+account_regex:
+  ^Accrued:Accounts Payable:(.*): Liabilities:Accounts-Payable:$1
+  ^Accrued:Accounts Receivable:(.*): Assets:Accounts-Receivable:$1
+
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:
   "$": USD

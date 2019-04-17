@@ -21,6 +21,7 @@ use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
 use POSIX qw/ceil/;
+use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
 
 
@@ -565,7 +566,7 @@ sub map_account_apply($) {
 # number and are followed letters, numbers or dash (-) characters. All
 # other characters are disallowed." (Letters and numbers may be UTF-8)
 sub map_account($) {
-    my ($account) = @_;
+    my ($account) = my ($ledger_account) = @_;
 
     if (exists $ledger_alias{$account}) {
 	$account = $ledger_alias{$account};
@@ -575,7 +576,16 @@ sub map_account($) {
 
     $ledger_accounts{$account} = 1;
 
+    # Map accounts according to the config
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
+    foreach $_ (sort keys %{$config->{account_regex}}) {
+	if ($account =~ s/$_/safe_interpolate($config->{account_regex}{$_})/eg) {
+	    $config->{account_map}{$ledger_account} = $account;
+	    last;
+	}
+    }
+
+    # Ensure account names are valid in beancount
     $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/:[^\p{letter}\p{number}]/:X/g; # Make sure first character is a letter or number
     $account =~ s/[^\p{letter}\p{number}:-]/-/g; # Replace disallowed characters
