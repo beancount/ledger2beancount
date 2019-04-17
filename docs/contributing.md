@@ -1,8 +1,13 @@
 Bugs and Contributions
 ======================
 
-If you'd like to contribute to ledger2beancount, please submit a [pull
-request on GitHub](https://github.com/zacchiro/ledger2beancount/pulls)
+If you find any bugs in ledger2beancount or believe the conversion from
+ledger to beancount could be improved, please [open an
+issue](https://github.com/zacchiro/ledger2beancount/issues).  Please
+include a small test case so we can reproduce the problem.
+
+If you'd like to contribute code to ledger2beancount, please submit a
+[pull request on GitHub](https://github.com/zacchiro/ledger2beancount/pulls)
 or send a `git format-patch` patch (series) to the authors via email
 (see the `AUTHORS` file).
 
