@@ -53,18 +53,18 @@ ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger
 
 ledger2beancount is [available in Debian](https://packages.debian.org/ledger2beancount)
 
+### macOS
+
+You can install `cpanm` from Homebrew:
+
+    brew install cpanminus
+
 ### Microsoft Windows
 
 You can install [Strawberry Perl](http://strawberryperl.com/) on Windows
 and use `cpanm` as described above to install the required Perl modules.
 ledger2beancount is not packaged for Windows but you can clone this Git
 repository and run the script.
-
-### macOS
-
-You can install `cpanm` from Homebrew:
-
-    brew install cpanminus
 
 Configuration
 -------------
