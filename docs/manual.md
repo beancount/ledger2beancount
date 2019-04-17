@@ -648,7 +648,7 @@ Support for more complex inline math would require substantial changes
 to the parser.
 
 
-## Implicit conversions
+### Implicit conversions
 
 ledger allows implicit conversions under some circumstances, such as in
 this example:
