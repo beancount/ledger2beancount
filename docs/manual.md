@@ -47,7 +47,7 @@ a similar location:
 
 ### Arch Linux
 
-ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger2beancount/):
+ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger2beancount/).
 
 ### Debian
 
