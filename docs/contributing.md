@@ -1,4 +1,4 @@
-Bugs and Contributions
+Bugs and contributions
 ======================
 
 If you find any bugs in ledger2beancount or believe the conversion from
