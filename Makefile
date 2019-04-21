@@ -1,4 +1,4 @@
-all:
+all: test docs
 
 L2C = bin/ledger2beancount
 TEST_DEPS = $(wildcard tests/*) $(L2C)
@@ -11,7 +11,22 @@ test-stamp: $(TEST_DEPS)
 
 check: test
 
-clean:
-	rm -f test-stamp
+docs/ledger2beancount.1: docs/ledger2beancount.1.scd
+	scdoc < $< > $@
 
-.PHONY: all check clean test
+docs/ledger2beancount.5: docs/ledger2beancount.5.scd
+	scdoc < $< > $@
+
+docs/manual.pdf: docs/manual.md
+	pandoc -f markdown+definition_lists $< -o $@
+
+pdf: docs/manual.pdf
+
+man: docs/ledger2beancount.1 docs/ledger2beancount.5
+
+docs: pdf man
+
+clean:
+	rm -f test-stamp docs/ledger2beancount.1 docs/ledger2beancount.5 docs/manual.pdf
+
+.PHONY: all check clean test pdf man docs
