@@ -1,3 +1,15 @@
+---
+title: ledger2beancount
+subtitle: Ledger to Beancount converter
+author:
+    - Stefano Zacchiroli
+    - Martin Michlmayr
+keywords: ledger, beancount, conversion, accounting, bookkeeping
+date: April 2019
+documentclass: scrartcl
+toc: true
+---
+
 ledger2beancount
 ================
 
