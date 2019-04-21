@@ -8,6 +8,7 @@
 * Avoid duplicate open directives for accounts with name collisions
 * Don't warn for renamed tags that won't show up in the beancount file
 * Add `account_regex` option to mass rename account names
+* Add man page
 
 ## 1.6 (2019-03-25)
 
