@@ -8,7 +8,6 @@ test-stamp: $(TEST_DEPS)
 	cd tests && ./runtests
 	touch $@
 
-
 check: test
 
 docs/ledger2beancount.1: docs/ledger2beancount.1.scd
