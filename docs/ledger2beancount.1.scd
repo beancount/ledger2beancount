@@ -22,7 +22,9 @@ comments, formatting, etc.) can be preserved.
 # OPTIONS
 
 *-c, --config*
-	Specify a configuration file.
+	Specify a configuration file.  The options of the configuration
+	file are described in *ledger2beancount*(5) and the
+	*ledger2beancount* manual.
 
 *-h, --help*
 	Show help message and quit.
@@ -68,7 +70,7 @@ Stefano Zacchiroli and Martin Michlmayr
 
 # SEE ALSO
 
-*ledger*(1), *bean-check*(1)
+*ledger2beancount*(5), *ledger*(1), *bean-check*(1)
 
 The full documentation for *ledger2beancount* can be found in its manual.
 
