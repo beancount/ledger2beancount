@@ -54,7 +54,7 @@ ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger
 
 ### Debian
 
-ledger2beancount is [available in Debian](https://packages.debian.org/ledger2beancount)
+ledger2beancount is [available in Debian](https://packages.debian.org/ledger2beancount).
 
 ### macOS
 
