@@ -789,7 +789,7 @@ ledger2beancount:
 
 * The `define` directive
 
-Contributions [are welcome!](contributing.md)
+Contributions [are welcome!](https://github.com/zacchiro/ledger2beancount/blob/master/docs/contributing.md)
 
 
 # Configuration options
