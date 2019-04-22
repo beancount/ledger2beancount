@@ -163,7 +163,11 @@ sub pp_date($$) {
 	on_error => "undef",
     );
     $date = $date_complete->parse_datetime($date_str);
-    return strftime("%F", $date) if $date;
+    if ($date) {
+	return strftime("%F", $date);
+    } elsif (length $date_str >= 6) {
+	die "Can't parse date $date_str (set date_format and date_format_no_year)";
+    }
 
     my $date_no_year = DateTime::Format::Strptime->new(
 	pattern  => $config->{date_format_no_year},
@@ -178,7 +182,7 @@ sub pp_date($$) {
 	    die "Date without year but no Y/year directive: $date_str";
 	}
     } else {
-	die "Can't parse date $date_str (set date_format and date_format_no_year)";
+	die "Can't parse date $date_str (set date_format_no_year)";
     }
 }
 
