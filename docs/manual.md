@@ -11,8 +11,7 @@ urlcolor: blue
 toc: true
 ---
 
-ledger2beancount
-================
+# Introduction
 
 ledger2beancount is a script to automatically convert
 [Ledger](https://www.ledger-cli.org/)-based textual ledgers to
@@ -26,8 +25,7 @@ ledger2beancount aims to be compatible with the latest official release of
 beancount.
 
 
-Installation
-------------
+# Installation
 
 ledger2beancount is a Perl script and relies on the following Perl
 modules:
@@ -61,29 +59,28 @@ a similar location:
     git clone https://github.com/zacchiro/ledger2beancount/
     ./bin/ledger2beancount examples/simple.ledger
 
-### Arch Linux
+## Arch Linux
 
 ledger2beancount is available on [AUR](https://aur.archlinux.org/packages/ledger2beancount/).
 
-### Debian
+## Debian
 
 ledger2beancount is [available in Debian](https://packages.debian.org/ledger2beancount).
 
-### macOS
+## macOS
 
 You can install `cpanm` from Homebrew:
 
     brew install cpanminus
 
-### Microsoft Windows
+## Microsoft Windows
 
 You can install [Strawberry Perl](http://strawberryperl.com/) on Windows
 and use `cpanm` as described above to install the required Perl modules.
 ledger2beancount is not packaged for Windows but you can clone this Git
 repository and run the script.
 
-Configuration
--------------
+# Configuration
 
 ledger2beancount can use a configuration file.  It will search for
 the config file `ledger2beancount.yml` in the current working directory.
@@ -121,8 +118,7 @@ configuration options](#configuration-options) at the end of the
 manual.
 
 
-Usage
------
+# Usage
 
 ledger2beancount accepts input from `stdin` or from a file and will write
 the converted data to `stdout`.  You can run ledger2beancount like this
@@ -146,8 +142,7 @@ conversion or if you get an error message from ledger2beancount, please
 with a simple test case.
 
 
-Beancount compatibility
------------------------
+# Beancount compatibility
 
 The syntax of beancount is quite stable but it's expected to become
 slightly less restrictive as some missing features are implemented (such
@@ -171,8 +166,7 @@ use the following features, you need Beancount 2.1:
 * Transaction tags on multiple lines
 
 
-Features
---------
+# Features
 
 ledger2beancount supports most of the syntax from ledger.  It also offers
 some features to improve the conversion from ledger to beancount.
@@ -198,7 +192,7 @@ expected syntax (and semantics) for all such values is that of
 [Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
 
 
-### Accounts
+## Accounts
 
 ledger2beancount will convert ledger account declarations to beancount
 `open` statements using the `account_open_date` variable as the opening
@@ -250,7 +244,7 @@ Ledger's `apply account` and `alias` directives are supported.  The
 mapping of account names described above is done after these directives.
 
 
-### Amounts
+## Amounts
 
 In ledger, amounts can be placed after the amount.  This is converted
 to beancount with the the amount first, followed by the commodity.
@@ -266,7 +260,7 @@ Commas as separators for thousands (e.g. `1,000,000`) are supported by
 beancount.
 
 
-### Commodities
+## Commodities
 
 Like accounts, ledger2beancount will convert ledger commodity
 declarations to beancount.  The `note` is converted to `name`.  As with
@@ -292,7 +286,7 @@ their respective commodity codes (like `USD`, `EUR`, `GBP`).  Update
 `commodity_map` if you use other symbols.
 
 
-### Flags
+## Flags
 
 ledger2beancount supports both transaction flags ([transaction
 state](https://www.ledger-cli.org/3.0/doc/ledger3.html#Transaction-state))
@@ -300,7 +294,7 @@ and account flags ([state
 flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 
 
-### Dates
+## Dates
 
 ledger supports a wide range of date formats whereas beancount requires
 all dates in the format `YYYY-MM-DD` (ISO 8601).  The variable
@@ -325,7 +319,7 @@ config file (`~/.ledgerrc`) or your ledger file (ledger files may contain
 ledger options) to output the correct config option for ledger2beancount.
 
 
-### Auxiliary dates
+## Auxiliary dates
 
 Beancount currently doesn't support ledger's [auxiliary dates](https://www.ledger-cli.org/3.0/doc/ledger3.html#Auxiliary-dates)
 (or effective dates; also known as date2 in hledger) (but there is
@@ -336,21 +330,21 @@ Unset the variable if you don't want auxiliary dates to be stored as
 metadata.  Account and posting-level auxiliary dates are supported.
 
 
-### Transaction codes
+## Transaction codes
 
 Beancount doesn't support ledger's [transaction
 codes](https://www.ledger-cli.org/3.0/doc/ledger3.html#Codes).  These are
 therefore stored as metatags if `code_tag` is set.
 
 
-### Narration
+## Narration
 
 The ledger payee information, which is generally used as free-form text
 to describe the transaction, is stored in beancount's narration field
 and properly quoted.
 
 
-### Payees
+## Payees
 
 Ledger has limited support for payees.  A `payee` metadata key can be set
 but this also overrides the free-form text to describe the transaction.
@@ -434,7 +428,7 @@ regular expression).  This allows you to define generic matches using
 information.
 
 
-### Metadata
+## Metadata
 
 Account and posting metadata are converted to beancount syntax.  Metadata
 keys used in ledger can be converted to different keys in beancount using
@@ -452,7 +446,7 @@ ledger2beancount also supports
 but you should make sure the values are valid in beancount.
 
 
-### Tags
+## Tags
 
 Beancount allows tags for transactions but currently doesn't support
 tags for postings ([issue
@@ -472,7 +466,7 @@ is not required in beancount and there's no equivalent directive so
 all `tag` directives are skipped.
 
 
-### Links
+## Links
 
 Beancount differentiates between tags and links whereas ledger doesn't.
 Links can be used in beancount to link several transactions together.
@@ -522,7 +516,7 @@ would become the following in beancount:
     2018-02-02 * "Train Brussels airport to city" ^2018-02-02-brussels-fosdem #debian
 
 
-### Comments
+## Comments
 
 Comments are supported.
 
@@ -531,7 +525,7 @@ Currently, beancount doesn't accept top-level comments with the `|` marker
 ledger2beancount changes such comments to use the `;` marker.
 
 
-### Virtual costs
+## Virtual costs
 
 Beancount does not have a concept of [virtual
 costs](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-posting-costs)
@@ -540,7 +534,7 @@ ledger2beancount therefore treats them as regular costs (or, rather,
 as regular prices).
 
 
-### Lots
+## Lots
 
 Lot costs and prices are supported, including per-unit and total lot
 costs.  Lot dates and lot notes are converted to beancount.
@@ -576,7 +570,7 @@ after transformation and mapping.  (Note that beancount itself uses the
 terms "commodity" and "currency" interchangeably.)
 
 
-### Balance assertions and assignments
+## Balance assertions and assignments
 
 Ledger [balance assertions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Balance-assertions)
 are converted to beancount `balance` statements.
@@ -623,7 +617,7 @@ ledger2beancount will create a beancount `pad` statement, followed by a
 `balance` statement the following day, to set the correct balance.
 
 
-### Automated transactions
+## Automated transactions
 
 Ledger's [automated
 transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Automated-Transactions)
@@ -631,7 +625,7 @@ are not supported in beancount.  They are added as comments to the
 beancount file.
 
 
-### Periodic transactions
+## Periodic transactions
 
 Ledger's [periodic
 transactions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Periodic-Transactions)
@@ -639,7 +633,7 @@ are not supported in beancount.  They are added as comments to the
 beancount file.
 
 
-### Virtual postings
+## Virtual postings
 
 Ledger's concept of [virtual postings](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-postings)
 does not exist in beancount.  Ledger has two types of virtual postings:
@@ -657,7 +651,7 @@ often not the case for virtual postings, so you will have to rename or
 map these account names.
 
 
-### Inline math
+## Inline math
 
 Very simple inline math is supported in postings.  Specifically, basic
 multiplications and divisions are supported, such as shown in the
@@ -675,7 +669,7 @@ Support for more complex inline math would require substantial changes
 to the parser.
 
 
-### Implicit conversions
+## Implicit conversions
 
 ledger allows implicit conversions under some circumstances, such as in
 this example:
@@ -693,7 +687,7 @@ postings in a transaction (the most common case).  More complex
 implicit conversations are not supported.
 
 
-### Fixated prices and costs
+## Fixated prices and costs
 
 ledger allows you to ["fix" the cost or price](https://www.ledger-cli.org/3.0/doc/ledger3.html#Fixated-prices-and-costs)
 at the time of a transaction, which means the amount will not be revalued
@@ -707,7 +701,7 @@ transaction.  You can then use `SUM(COST(position))` to get the original
 value.
 
 
-### hledger syntax
+## hledger syntax
 
 The syntax of [hledger](http://hledger.org/) is largely compatible with
 that of ledger.  If the `hledger` config option is set to `true`,
@@ -724,7 +718,7 @@ ledger2beancount will look for some hledger specific features:
    hledger vs `:tag1:tag2:tag3:` in ledger.
 
 
-### Ignoring certain lines
+## Ignoring certain lines
 
 Sometimes it makes sense to exclude certain lines from the conversion.
 For example, you may not want a specific `include` directive to be
@@ -774,8 +768,9 @@ multiple lines that should be included in the output:
 	; L2Bonly end
 
 
-Unsupported features in beancount
----------------------------------
+# Unsupported features
+
+## Unsupported in beancount
 
 The following features are not supported in beancount and therefore
 commented out during the conversion from ledger to beancount:
@@ -787,9 +782,7 @@ commented out during the conversion from ledger to beancount:
 * Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
 * Periodic transactions
 
-
-Unsupported features in ledger2beancount
-----------------------------------------
+## Unsupported in ledger2beancount
 
 The following ledger features are currently not supported by
 ledger2beancount:
@@ -799,10 +792,9 @@ ledger2beancount:
 Contributions [are welcome!](contributing.md)
 
 
-Configuration options
----------------------
+# Configuration options
 
-### Input options
+## Input options
 
 The following options may be needed for ledger2beancount to interpret
 your ledger files correctly.
@@ -830,7 +822,7 @@ hledger
 :   Tells ledger2beancount whether to attempt to parse hledger-specific
     features.
 
-### Other options
+## Other options
 
 beancount_indent
 
@@ -960,8 +952,7 @@ commodity_is_currency
     commodities (i.e. after transformation and mapping).
 
 
-Bugs and contributions
-----------------------
+# Bugs and contributions
 
 If you find any bugs in ledger2beancount or believe the conversion from
 ledger to beancount could be improved, please [open an
