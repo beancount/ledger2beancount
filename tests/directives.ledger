@@ -64,6 +64,54 @@ year 2016
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+; setting year 2018
+
+apply year 2018
+
+10-02 * Transaction without year
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+10-02=10-01 * Transaction without year, with aux date
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2015-03-25 * Transaction with year
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply
+
+; apply year can be nested
+
+apply year 2013
+
+04-13 Test apply year - 2013
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+apply year 2014
+
+apply year 2015
+
+04-13 Test apply year - 2015
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply
+
+04-13 Test apply year - 2014
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply
+
+04-13 Test apply year - 2013
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply
+
 !include include1.ledger
 @include include2.ledger
 include include3.ledger

@@ -2,6 +2,7 @@
 
 ## 1.8 (unreleased)
 
+* Add support for `apply year`
 * Handle fixated commodity and postings without amount
 * Improve behaviour for invalid `end` without `apply`
 

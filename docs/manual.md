@@ -302,9 +302,9 @@ all dates in the format `YYYY-MM-DD` (ISO 8601).  The variable
 your ledger file.  `date_format` uses the same format as the ledger
 options `--input-date-format` and `--date-format` (see `man 1 date`).
 
-Ledger allows dates without a year if the year is declared using the `Y`
-or `year` directive.  If `date_format_no_year` is set, ledger2beancount
-can convert such dates to `YYYY-MM-DD`.
+Ledger allows dates without a year if the year is declared using the
+`Y`, `year` and `apply year` directives.  If `date_format_no_year` is
+set, ledger2beancount can convert such dates to `YYYY-MM-DD`.
 
 Posting-level dates are recognized by ledger2beancount and stored as
 metadata according to the `postdate_tag` (`date` by default) but this

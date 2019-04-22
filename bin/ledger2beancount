@@ -990,13 +990,26 @@ while (@input) {
 	    print_line $depth, "pushtag " . pp_tag_link $+{val};
 	    push @ledger_apply, [$+{type}, $+{val}];
 	}
+    } elsif ($l =~ /^[!@]?apply\s+(?<type>year)\s+(?<val>\d+)/) {  # apply year
+	$year = $+{val};
+	push @ledger_apply, [$+{type}, $+{val}];
     } elsif ($l =~ /^[!@]?apply\s+.*/) {  # apply .*
 	# ledger seems to silently ignore all other apply statements
 	next;
     } elsif ($l =~ /^[!@]?end/) {  # end
 	next if !@ledger_apply; # end without any apply
 	my $a = pop @ledger_apply;
-	print_line $depth, "poptag " . pp_tag_link ${$a}[1] if ${$a}[0] eq "tag";
+	if (${$a}[0] eq "tag") {
+	    print_line $depth, "poptag " . pp_tag_link ${$a}[1]
+	} elsif (${$a}[0] eq "year") {
+	    # apply year can be nested, so restore the previous year
+	    foreach my $a (reverse @ledger_apply) {
+		if (${$a}[0] eq "year") {
+		    $year = ${$a}[1];
+		    last;
+		}
+	    }
+	}
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
 	$ledger_bucket = $2;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment

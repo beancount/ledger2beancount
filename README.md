@@ -61,7 +61,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 * Directives
   * `bucket` / `A`
   * `include`
-  * `Year` / `Y`
+  * `Year` / `Y`, `apply year`
 * Flags
   * State flags (posting flags)
   * Transaction state (transaction flags)
