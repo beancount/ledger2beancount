@@ -994,6 +994,7 @@ while (@input) {
 	# ledger seems to silently ignore all other apply statements
 	next;
     } elsif ($l =~ /^[!@]?end/) {  # end
+	next if !@ledger_apply; # end without any apply
 	my $a = pop @ledger_apply;
 	print_line $depth, "poptag " . pp_tag_link ${$a}[1] if ${$a}[0] eq "tag";
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket

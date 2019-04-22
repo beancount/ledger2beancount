@@ -3,6 +3,7 @@
 ## 1.8 (unreleased)
 
 * Handle fixated commodity and postings without amount
+* Improve behaviour for invalid `end` without `apply`
 
 ## 1.7 (2019-04-22)
 
