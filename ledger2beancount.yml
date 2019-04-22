@@ -45,7 +45,7 @@ metadata_map:
   x-payee: payee
   x-payer: payer
 
-# metadata tags (*after* above mapping) used for specific purposes
+# metadata tags (*after* above mapping) used to set payee
 payee_tag: payee
 payer_tag: payer
 

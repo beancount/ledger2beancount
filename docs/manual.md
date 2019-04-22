@@ -892,11 +892,11 @@ metadata_map
 
 payee_tag
 
-:   Specify metadata tags (after the mapping done by `metadata_map`) used to set the payee.
+:   Specify a metadata tag (after the mapping done by `metadata_map`) used to set the payee.
 
 payer_tag
 
-:   Specify metadata tags (after the mapping done by `metadata_map`) used to set the payee.
+:   Specify a metadata tag (after the mapping done by `metadata_map`) used to set the payee.
 
 payee_split
 
