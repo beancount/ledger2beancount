@@ -27,6 +27,10 @@ apply fixed CAD $0.90
     Assets:Wallet           -25.75 EUR
     Expenses:Food            25.75 EUR
 
+2012-04-11 Paid in EUR
+    Assets:Wallet           -25.75 EUR
+    Expenses:Food
+
 end apply fixed
 
 ; Apply fixated to CAD and EUR
@@ -46,9 +50,17 @@ apply fixed EUR 0.40 CAD
     Assets:Wallet           -25.75 CAD
     Expenses:Food            25.75 CAD
 
+2012-04-11 Second day Dinner in Canada
+    Assets:Wallet           -25.75 CAD
+    Expenses:Food
+
 2012-04-11 Paid in EUR
     Assets:Wallet           -25.75 EUR
     Expenses:Food            25.75 EUR
+
+2012-04-11 Paid in EUR
+    Assets:Wallet           -25.75 EUR
+    Expenses:Food
 
 end apply fixed
 end apply fixed

@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.8 (unreleased)
+
+* Handle fixated commodity and postings without amount
+
 ## 1.7 (2019-04-22)
 
 * Don't misparse account and commodity with mixed tab/space separators

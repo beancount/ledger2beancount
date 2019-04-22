@@ -34,6 +34,10 @@
   Assets:Wallet           -25.75 EUR
   Expenses:Food            25.75 EUR
 
+2012-04-11 txn "Paid in EUR"
+  Assets:Wallet           -25.75 EUR
+  Expenses:Food
+
 
 ; Apply fixated to CAD and EUR
 
@@ -50,8 +54,16 @@
   Assets:Wallet           -25.75 CAD {0.90 USD}
   Expenses:Food            25.75 CAD {0.90 USD}
 
+2012-04-11 txn "Second day Dinner in Canada"
+  Assets:Wallet           -25.75 CAD {0.90 USD}
+  Expenses:Food
+
 2012-04-11 txn "Paid in EUR"
   Assets:Wallet           -25.75 EUR {0.40 CAD}
   Expenses:Food            25.75 EUR {0.40 CAD}
+
+2012-04-11 txn "Paid in EUR"
+  Assets:Wallet           -25.75 EUR {0.40 CAD}
+  Expenses:Food
 
 

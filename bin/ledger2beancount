@@ -838,7 +838,7 @@ sub process_txn(@) {
 		} else {
 		    $l = $+{posting};
 		}
-		if (!defined $+{lot_cost}) {
+		if ($+{commodity} && !defined $+{lot_cost}) {
 		    # Apply any fixated costs if needed
 		    foreach my $a (reverse @ledger_apply) {
 			if (${$a}[0] eq "fixed") {
