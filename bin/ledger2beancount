@@ -175,10 +175,10 @@ sub pp_date($$) {
 	    $date->set_year($year);
 	    return strftime("%F", $date);
 	} else {
-	    die "Date without year but no Y/year directive";
+	    die "Date without year but no Y/year directive: $date_str";
 	}
     } else {
-	die "Can't parse date $date_str";
+	die "Can't parse date $date_str (set date_format and date_format_no_year)";
     }
 }
 
