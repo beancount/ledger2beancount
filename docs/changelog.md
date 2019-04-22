@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.7 (unreleased)
+## 1.7 (2019-04-22)
 
 * Don't misparse account and commodity with mixed tab/space separators
 * Rename account names consisting of a root name without subaccount
