@@ -3,6 +3,7 @@
 ## 1.8 (unreleased)
 
 * Add support for `apply year`
+* Fix incorrect account mapping of certain accounts
 * Handle fixated commodity and postings without amount
 * Improve behaviour for invalid `end` without `apply`
 * Improve error message when date can't be parsed

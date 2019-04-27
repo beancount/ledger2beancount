@@ -625,10 +625,10 @@ sub replace_account($) {
 		my $orig_old = $old;
 		$old .= " "x (length($new) - length($old));
 		# Ensure there are two spaces or a tab after the account name
-		$l =~ s/\Q$old\E  /$new  /;
-		$l =~ s/\Q$old\E\t/$new\t/;
+		return $l if $l =~ s/\Q$old\E  /$new  /;
+		return $l if $l =~ s/\Q$old\E\t/$new\t/;
 		# We can't preserve space
-		$l =~ s/\Q$orig_old\E/$new/;
+		return $l if $l =~ s/\Q$orig_old\E/$new/;
 	    }
 	}
 	return $l;

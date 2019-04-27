@@ -314,3 +314,7 @@ account Assets:Bank Debian]bar
     Accrued:Accounts Payable:Baz      10.00 EUR
     Expenses:Foo                     -10.00 EUR
 
+2019-04-27 * Rename account to something which contains original account name
+    Assets:Bank                       10.00 EUR
+    Trading:Currency                 -10.00 EUR
+

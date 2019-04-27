@@ -36,6 +36,7 @@ option "name_income" "Revenue"
 1970-01-01 open Assets:Collision
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
+1970-01-01 open Equity:Trading:Currency
 1970-01-01 open Expenses:Foo
 1970-01-01 open Liabilities:Accounts-Payable:Baz
 1970-01-01 open Revenue:Foo
@@ -352,4 +353,8 @@ option "name_income" "Revenue"
 2019-04-17 * "Mass rename of accounts using account_regex - leads to a name that requires further changes"
   Liabilities:Accounts-Payable:Baz  10.00 EUR
   Expenses:Foo                     -10.00 EUR
+
+2019-04-27 * "Rename account to something which contains original account name"
+  Assets:Bank                       10.00 EUR
+  Equity:Trading:Currency          -10.00 EUR
 

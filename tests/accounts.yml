@@ -17,6 +17,7 @@ account_map:
   Income:Interest: Revenue:Interest
   Expenses:Foo:Travel: Expenses:Travel
   Expenses:Bar:Travel: Expenses:Travel
+  Trading:Currency: Equity:Trading:Currency
 
 account_regex:
   ^Accrued:Accounts Payable:(.*): Liabilities:Accounts Payable:$1
