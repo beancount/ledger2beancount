@@ -3,7 +3,7 @@
 ;   - Skipped second account declaration for Expenses:Travel (old Expenses:Bar:Travel)
 ;   - Virtual posting in parentheses ignored
 ;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
-;   - Non-standard root name Revenue used; please set name_* option
+;   - Non-standard root name Revenue used; please set beancount options name_*
 ;   - Account Accrued:Accounts Payable:Baz renamed to Liabilities:Accounts-Payable:Baz
 ;   - Account Assets:Bank Debian)bar renamed to Assets:Bank-Debian-bar
 ;   - Account Assets:Bank [Debian] renamed to Assets:Bank--Debian-

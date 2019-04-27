@@ -602,7 +602,7 @@ sub map_account($) {
 	$account .= ":Subaccount";
     }
     if (!($root ~~ @beancount_root_names)) {
-	print_warning_once("Non-standard root name $root used; please set name_* option");
+	print_warning_once("Non-standard root name $root used; please set beancount options name_*");
     }
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
