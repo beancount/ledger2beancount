@@ -695,7 +695,11 @@ sub print_line($$) {
 sub print_comment_top_level($$) {
     my ($depth, $comment) = @_;
 
-    push @output, "; ", indent($depth, $comment), "\n";
+    if (!$comment) {
+	push @output, ";\n";
+    } else {
+	push @output, "; ", indent($depth, $comment), "\n";
+    }
 }
 
 
