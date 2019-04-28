@@ -123,3 +123,11 @@ commodity M♛O
     Assets:Test                          1 COLLB
     Equity:Opening-Balance
 
+2018-04-28 * Commodity with only 1 letter
+    Assets:Test                              1 C
+    Equity:Opening-Balance
+
+2018-04-28 * Commodity with only 1 letter
+    Assets:Test                              1 ♛
+    Equity:Opening-Balance
+

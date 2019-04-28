@@ -661,6 +661,7 @@ sub map_commodity($) {
     $commodity =~ s/[^a-zA-Z0-9_'.-]/-/g; # Replace disallowed characters
     $commodity =~ s/^[^\p{letter}]/X/g; # Make sure first character is a letter
     $commodity =~ s/[^\p{letter}\p{number}]$/X/g; # Make sure last character is a letter or number
+    $commodity .= "X" if length $commodity == 1;
 
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 

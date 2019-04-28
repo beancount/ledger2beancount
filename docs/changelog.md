@@ -12,6 +12,7 @@
 * Don't assume all filenames for `include` end in `.ledger`
 * Support `price` directives with commodity symbols
 * Don't misparse balance assignment as commodity
+* Ensure all beancount commodities have at least 2 characters
 
 ## 1.7 (2019-04-22)
 

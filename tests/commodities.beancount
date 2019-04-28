@@ -5,6 +5,7 @@
 ;   - Commodity AnotherAnotherAnotherAnother renamed to ANOTHERANOTHERANOTHERANO
 ;   - Commodity Aud renamed to AUD
 ;   - Commodity Bär renamed to BAR
+;   - Commodity C renamed to CX
 ;   - Commodity Crown♛ renamed to CROWNX
 ;   - Commodity Föö renamed to FOO
 ;   - Commodity Gandi renamed to GANDI
@@ -13,7 +14,9 @@
 ;   - Collision for commodity "COLLISION": COLLA, COLLB
 ;----------------------------------------------------------------------
 
+1970-01-01 commodity AA
 1970-01-01 commodity COLLISION
+1970-01-01 commodity CX
 
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test123
@@ -136,5 +139,13 @@
 
 2018-03-29 * "Mapping creating collision"
   Assets:Test                          1 COLLISION
+  Equity:Opening-Balance
+
+2018-04-28 * "Commodity with only 1 letter"
+  Assets:Test                              1 CX
+  Equity:Opening-Balance
+
+2018-04-28 * "Commodity with only 1 letter"
+  Assets:Test                              1 AA
   Equity:Opening-Balance
 

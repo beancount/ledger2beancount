@@ -275,6 +275,9 @@ ledger commodities), stripping quoted commodities, making the commodity
 uppercase and limiting it to 24 characters.  Furthermore, the first
 character will be replaced with an `X` if it's not a letter and the
 same will be done for the last character if it's not a letter or digit.
+Finally, all beancount commodities currently have to consist of at least
+two characters ([issue
+192](https://bitbucket.org/blais/beancount/issues/192)).
 
 If you require a mapping between ledger and beancount commodities, you
 can use `commodity_map`.  You can use your ledger commodity names or
