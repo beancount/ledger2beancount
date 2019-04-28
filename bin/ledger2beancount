@@ -1095,10 +1095,19 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_comment_top_level $depth, $l;
 	}
+    } elsif ($l =~ /^[!@]?(python)/) {  # Python
+	# The python directive is special in the sense that empty
+	# lines don't end the directive.
+	do {
+	    print_comment_top_level $depth, $l;
+	    $l = shift @input;
+	    chomp $l;
+	} while ($l =~ /^(\s+|$)/ && @input);
+	unshift @input, $l;
     } elsif ($l =~ /^[!@]?(tag\s+.*)/) {  # tag declaration
 	# Not needed in beancount and there's no equivalent
 	read_stanza \@input if $input[0] =~ /^\h+/;
-    } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr)/) {
+    } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr|eval|value)/) {
 	    print_warning_once "Unsupported directive \"$1\" skipped";
 	    # Not supported in beancount
 	    print_comment_top_level $depth, $l;

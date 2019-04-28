@@ -10,6 +10,9 @@
 ;   - Unsupported directive "C" skipped
 ;   - Unsupported directive "D" skipped
 ;   - Unsupported directive "N" skipped
+;   - Unsupported directive "eval" skipped
+;   - The `define` directive is not supported
+;   - Unsupported directive "value" skipped
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Another:Alias
@@ -205,4 +208,28 @@ poptag #foo
 ; D 1000.00 EUR
 ; Ignore pricing information
 ; N EUR
+
+; python
+;   def print_type(val):
+;     print type(val), val
+;
+; eval print_type(true)
+
+; python
+;     def option_pyfirst(context):
+;         print "In --pyfirst (from %s)" % context
+;
+;     def option_pysecond(context, val):
+;         print "In --pysecond=%s (from %s)" % (val, context)
+2019-04-28 * "Transactions can follow python without empty line"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+; define myfunc_seven(s, d, t) = 7 EUR
+
+;; The 'value' directive sets the valuation used for all commodities used in
+;; the rest of the daat stream.  This is the fallback, if nothing more
+;; specific is found.
+
+; value myfunc_seven
 

@@ -90,8 +90,11 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * Auxiliary dates (no equivalence in beancount)
   * Effective dates (no equivalence in beancount)
 * Directives
+  * `eval`: skipped (not supported in beancount)
   * `payee`: skipped (not needed in beancount)
+  * `python`: skipped (not supported in beancount)
   * `tag`: skipped (not needed in beancount)
+  * `value`: skipped (not supported in beancount)
 * Fixated prices (`=$10` and the `fixed` directive)
 * Tags and links on posting-level (not supported by beancount)
 * Transaction codes: stored as metadata (no equivalence in beancount)

@@ -8,6 +8,7 @@
 * Improve behaviour for invalid `end` without `apply`
 * Improve error message when date can't be parsed
 * Deal with account names consisting of a single letter
+* Skip ledger directives `eval`, `python`, and `value`
 
 ## 1.7 (2019-04-22)
 
