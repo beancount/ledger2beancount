@@ -1,3 +1,4 @@
+1970-01-01 commodity JPY
 1970-01-01 commodity MILESMORE4
 1970-01-01 commodity UR
 1970-01-01 commodity USD
@@ -12,6 +13,7 @@
 2018-03-21 price EUR 0.87 GBP
 2018-03-21 price UR 0.015 USD
 2018-03-21 price MILESMORE4 0.01 USD
+2019-04-28 price EUR 124.56 JPY
 
 2018-03-21 * "Virtual cost (@)"
   Assets:Test                10.00 EUR @ 0.90 GBP

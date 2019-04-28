@@ -100,7 +100,7 @@ my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
 my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  | \t|\t|\s*$)\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
-my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<value>$value_RE)\s+(?<commodity2>$commodity_RE)/;
+my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<commodity2>.*)/;
 
 # Maximum limit for beancount commodities
 my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
@@ -1042,7 +1042,12 @@ while (@input) {
     } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
     } elsif ($l =~ /^$price_RE/) {
-	$l = sprintf "%s price %s $+{value} %s", pp_date($+{date}, $year), map_commodity $+{commodity1}, map_commodity $+{commodity2};
+	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};
+	if ($+{commodity2} =~ /$amount_RE/) {
+	    $l .= "$+{num} " . map_commodity $+{commodity};
+	} else {
+	    die "Can't parse second commodity in price directive: $+{commodity2}";
+	}
 	$l =~ s/"//g;
 	print_line $depth, $l;
     } elsif ($l =~ /^([=~].*)/) {  # automated transaction (=) or periodic transaction (~)

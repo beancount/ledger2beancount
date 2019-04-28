@@ -10,6 +10,7 @@
 * Deal with account names consisting of a single letter
 * Skip ledger directives `eval`, `python`, and `value`
 * Don't assume all filenames for `include` end in `.ledger`
+* Support `price` directives with commodity symbols
 
 ## 1.7 (2019-04-22)
 
