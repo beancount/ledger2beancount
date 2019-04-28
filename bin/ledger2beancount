@@ -1126,7 +1126,7 @@ while (@input) {
 	# Not needed in beancount and there's no equivalent
 	read_stanza \@input if $input[0] =~ /^\h+/;
     } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr|eval|value)(\s|$)/) {
-	    print_warning_once "Unsupported directive \"$1\" skipped";
+	    print_warning_once "Unsupported directive `$1` skipped";
 	    # Not supported in beancount
 	    print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
@@ -1218,7 +1218,7 @@ foreach (keys %ledger_accounts) {
 }
 foreach (sort keys %mapped_accounts) {
     if (@{$mapped_accounts{$_}} > 1) {
-	print_warning "Collision for account \"$_\": " . join ", ", sort @{$mapped_accounts{$_}};
+	print_warning "Collision for account $_: " . join ", ", sort @{$mapped_accounts{$_}};
     }
 }
 
@@ -1228,7 +1228,7 @@ foreach (keys %ledger_commodities) {
 }
 foreach (sort keys %mapped_commodities) {
     if (@{$mapped_commodities{$_}} > 1) {
-	print_warning "Collision for commodity \"$_\": " . join ", ", sort @{$mapped_commodities{$_}};
+	print_warning "Collision for commodity $_: " . join ", ", sort @{$mapped_commodities{$_}};
     }
 }
 
@@ -1238,7 +1238,7 @@ foreach (keys %ledger_metadata) {
 }
 foreach (sort keys %mapped_metadata) {
     if (@{$mapped_metadata{$_}} > 1) {
-	print_warning "Collision for metadata \"$_\": " . join ", ", sort @{$mapped_metadata{$_}};
+	print_warning "Collision for metadata $_: " . join ", ", sort @{$mapped_metadata{$_}};
     }
 }
 
@@ -1248,6 +1248,7 @@ foreach (sort keys %mapped_metadata) {
 if (@conversion_notes) {
     print ";", "-"x70, "\n";
     print "; ledger2beancount conversion notes:\n";
+    print ";\n";
     print ";   - $_\n" foreach @conversion_notes;
     print ";", "-"x70, "\n";
     print "\n";

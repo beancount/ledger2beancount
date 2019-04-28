@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Account assets:checking renamed to Assets:Checking
 ;   - Account expenses:food renamed to Expenses:Food
 ;   - Metadata key 2012 renamed to x2012

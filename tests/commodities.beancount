@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Skipped second commodity declaration for USD (old USD)
 ;   - Commodity "A commodity" renamed to A-COMMODITY
 ;   - Commodity "M&M3" renamed to M-M3
@@ -12,8 +13,8 @@
 ;   - Commodity Gandi renamed to GANDI
 ;   - Commodity KrisFlyer renamed to KRISFLYER
 ;   - Commodity krw renamed to KRW
-;   - Collision for commodity "COLLISION": COLLA, COLLB
-;   - Collision for commodity "USD": $, USD
+;   - Collision for commodity COLLISION: COLLA, COLLB
+;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
 1970-01-01 commodity AA

@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Metadata key 2012 renamed to x2012
 ;   - Metadata key 2012foo renamed to x2012foo
 ;   - Metadata key Date renamed to date
@@ -9,7 +10,7 @@
 ;   - Metadata key test:test renamed to test-test
 ;   - Metadata key test♔ renamed to test-
 ;   - Metadata key test♚ renamed to test-
-;   - Collision for metadata "test-": test♔, test♚
+;   - Collision for metadata test-: test♔, test♚
 ;----------------------------------------------------------------------
 
 ; Beancount: 2.1.0

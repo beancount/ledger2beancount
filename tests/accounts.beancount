@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Skipped second account declaration for Expenses:Travel (old Expenses:Bar:Travel)
 ;   - Virtual posting in parentheses ignored
 ;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
@@ -17,11 +18,11 @@
 ;   - Account Revenue renamed to Revenue:Subaccount
 ;   - Account assets:test renamed to Assets:Test
 ;   - Account expenses:purchase renamed to Expenses:Purchase
-;   - Collision for account "Assets:Collision": Assets:Coll1, Assets:Coll2
-;   - Collision for account "Assets:Test": Assets:Test, Assets:test, assets:test
-;   - Collision for account "Equity:Opening-Balance": Equity:Opening balance, Equity:Opening-Balance
-;   - Collision for account "Expenses:Travel": Expenses:Bar:Travel, Expenses:Foo:Travel
-;   - Collision for account "Liabilities:Credit-Card:Test": Liabilities:Credit Card:Test, Liabilities:credit Card:test
+;   - Collision for account Assets:Collision: Assets:Coll1, Assets:Coll2
+;   - Collision for account Assets:Test: Assets:Test, Assets:test, assets:test
+;   - Collision for account Equity:Opening-Balance: Equity:Opening balance, Equity:Opening-Balance
+;   - Collision for account Expenses:Travel: Expenses:Bar:Travel, Expenses:Foo:Travel
+;   - Collision for account Liabilities:Credit-Card:Test: Liabilities:Credit Card:Test, Liabilities:credit Card:test
 ;----------------------------------------------------------------------
 
 

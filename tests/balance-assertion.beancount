@@ -1,5 +1,6 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Account Assets:wallet cash renamed to Assets:Wallet-cash
 ;   - Account Expenses:Food and drink renamed to Expenses:Food-and-drink
 ;----------------------------------------------------------------------

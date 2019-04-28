@@ -1,9 +1,10 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Commodity Avios renamed to AVIOS
-;   - Collision for commodity "EUR": EUR, €
-;   - Collision for commodity "GBP": GBP, £
-;   - Collision for commodity "USD": $, USD
+;   - Collision for commodity EUR: EUR, €
+;   - Collision for commodity GBP: GBP, £
+;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Current

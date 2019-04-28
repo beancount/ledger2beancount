@@ -1,6 +1,7 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
-;   - Collision for commodity "EUR": EUR, €
+;
+;   - Collision for commodity EUR: EUR, €
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Test

@@ -1,18 +1,19 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
+;
 ;   - Automated or periodic transaction skipped
-;   - Unsupported directive "i" skipped
-;   - Unsupported directive "o" skipped
-;   - Unsupported directive "I" skipped
-;   - Unsupported directive "O" skipped
-;   - Unsupported directive "b" skipped
-;   - Unsupported directive "h" skipped
-;   - Unsupported directive "C" skipped
-;   - Unsupported directive "D" skipped
-;   - Unsupported directive "N" skipped
-;   - Unsupported directive "eval" skipped
+;   - Unsupported directive `i` skipped
+;   - Unsupported directive `o` skipped
+;   - Unsupported directive `I` skipped
+;   - Unsupported directive `O` skipped
+;   - Unsupported directive `b` skipped
+;   - Unsupported directive `h` skipped
+;   - Unsupported directive `C` skipped
+;   - Unsupported directive `D` skipped
+;   - Unsupported directive `N` skipped
+;   - Unsupported directive `eval` skipped
 ;   - The `define` directive is not supported
-;   - Unsupported directive "value" skipped
+;   - Unsupported directive `value` skipped
 ;   - The `def` directive is not supported
 ;----------------------------------------------------------------------
 
