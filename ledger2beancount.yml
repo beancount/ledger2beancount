@@ -17,7 +17,7 @@ operating_currencies:
   - EUR
 
 # Attempt to parse hledger specific features
-hledger: true
+hledger: false
 
 # You can specify a file which serves as a beancount "header", i.e.
 # it's put at the beginning of the converted beancount file.  You can
