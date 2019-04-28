@@ -970,8 +970,10 @@ while (@input) {
 	} while $l !~ /;\s*:?$config->{keep_marker}\s+end/;
     } elsif ($config->{keep_marker} && $l =~ /^$comment_top_level_RE\s*;\s*:?$config->{keep_marker}/) {
 	print_line $depth, $+{comment};
-    } elsif ($l =~ /^[!@]?include\s+(?<filename>.*)\.ledger/) {  # include
-	print_line $depth, "include \"$+{filename}.beancount\"";
+    } elsif ($l =~ /^[!@]?include\s+(?<filename>.*)/) {  # include
+	my $filename = $+{filename};
+	$filename =~ s/(.ledger|.dat)$//;
+	print_line $depth, "include \"$filename.beancount\"";
     } elsif ($l =~ /^$comment_top_level_RE/) {
 	# beancount issue #282
 	if ($l =~ /^\|\s?(?<comment>.*)/) {

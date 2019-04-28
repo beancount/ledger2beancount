@@ -9,6 +9,7 @@
 * Improve error message when date can't be parsed
 * Deal with account names consisting of a single letter
 * Skip ledger directives `eval`, `python`, and `value`
+* Don't assume all filenames for `include` end in `.ledger`
 
 ## 1.7 (2019-04-22)
 
