@@ -4,6 +4,7 @@
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Test
+1970-01-01 commodity FRF
 1970-01-01 commodity GBP
 1970-01-01 commodity USD
 
@@ -11,6 +12,8 @@
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
+
+2002-01-01 price EUR 6.55957 FRF
 
 2018-03-26 * "Decimal comma"
   Assets:99Test:Test99               10.12 EUR

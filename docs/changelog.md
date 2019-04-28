@@ -11,6 +11,7 @@
 * Skip ledger directives `eval`, `python`, and `value`
 * Don't assume all filenames for `include` end in `.ledger`
 * Support `price` directives with commodity symbols
+* Support decimal commas in `price` directives
 * Don't misparse balance assignment as commodity
 * Ensure all beancount commodities have at least 2 characters
 * Don't misparse certain metadata as implicit conversion

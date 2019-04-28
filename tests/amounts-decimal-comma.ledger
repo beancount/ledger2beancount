@@ -5,6 +5,8 @@ account Equity:Opening-Balance
 
 commodity EUR
 
+P 2002-01-01 € 6,55957 FRF
+
 2018-03-26 * Decimal comma
     Assets:99Test:Test99               10,12 EUR
     Equity:Opening-Balance

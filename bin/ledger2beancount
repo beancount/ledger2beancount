@@ -1045,7 +1045,7 @@ while (@input) {
     } elsif ($l =~ /^$price_RE/) {
 	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};
 	if ($+{commodity2} =~ /$amount_RE/) {
-	    $l .= "$+{num} " . map_commodity $+{commodity};
+	    $l .= pp_amount $+{minus}, $+{num}, $+{commodity}, $+{inline_math};
 	} else {
 	    die "Can't parse second commodity in price directive: $+{commodity2}";
 	}
