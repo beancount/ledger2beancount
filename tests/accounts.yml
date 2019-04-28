@@ -18,6 +18,8 @@ account_map:
   Expenses:Foo:Travel: Expenses:Travel
   Expenses:Bar:Travel: Expenses:Travel
   Trading:Currency: Equity:Trading:Currency
+  A: Assets:Aaa
+  B: Assets:Bbb
 
 account_regex:
   ^Accrued:Accounts Payable:(.*): Liabilities:Accounts Payable:$1

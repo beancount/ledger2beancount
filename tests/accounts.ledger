@@ -318,3 +318,7 @@ account Assets:Bank Debian]bar
     Assets:Bank                       10.00 EUR
     Trading:Currency                 -10.00 EUR
 
+2019-04-28 * Account name with only one letter
+    A                                 10.00 EUR
+    B
+
