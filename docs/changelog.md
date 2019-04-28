@@ -11,6 +11,7 @@
 * Skip ledger directives `eval`, `python`, and `value`
 * Don't assume all filenames for `include` end in `.ledger`
 * Support `price` directives with commodity symbols
+* Don't misparse balance assignment as commodity
 
 ## 1.7 (2019-04-22)
 

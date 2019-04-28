@@ -58,3 +58,11 @@ commodity $
     Assets:Test6                                = $500.00
     Equity:Adjustments
 
+2019-04-20 Wallet
+    Assets:Wallet                     500.00 THB
+    Equity:Opening-Balance
+
+2019-04-28 Food
+    Expenses:Food                      10.00 THB
+    Assets:Wallet                                = 490.00 THB
+
