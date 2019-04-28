@@ -293,3 +293,8 @@ commodity XXXx
     Assets:A                     10 EUR
     Assets:B                 -11.42 USD ; foo: bar
 
+2019-04-28 * Don't parse the value: 30 DM as implicit conversion
+    Expenses:Food             20.00 USD
+    ; VALUE:: 30 DM
+    Assets:Cash              -20.00 USD
+

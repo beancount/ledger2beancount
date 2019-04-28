@@ -908,7 +908,7 @@ sub process_txn(@) {
 	my $commodity1;
 	foreach my $l (@cur_txn_lines) {
 	    # Parse beancount posting to get the amount and commodity
-	    if ($l =~ /^\s+([*!]\s+)?[\p{Letter}][^\s]+\s+-?([\d.]+ ([A-Z][A-Z0-9_'.-]*[A-Z0-9](\s*[@\{])?))/) {
+	    if ($l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+-?([\d.]+ ([A-Z][A-Z0-9_'.-]*[A-Z0-9](\s*[@\{])?))/) {
 		last if $4; # skip if we have a cost or price
 		my $match = $2;
 		if (!$amount1) {
