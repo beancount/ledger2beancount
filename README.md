@@ -110,7 +110,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * `C` (commodity equivalences)
   * `check`
   * `D`
-  * `define`
+  * `define` and `def`
   * `expr`
   * `N`
   * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)

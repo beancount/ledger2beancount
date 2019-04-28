@@ -17,6 +17,7 @@
 * Don't misparse certain metadata as implicit conversion
 * Avoid duplicate `commodity` directives for commodities with name collisions
 * Recognise deferred postings
+* Recognise `def` directive
 
 ## 1.7 (2019-04-22)
 

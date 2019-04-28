@@ -1037,8 +1037,8 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	    $l = shift @input;
 	}
-    } elsif ($l =~ /^[!@]?define/) {  # define
-	print_warning_once "The `define` directive is not supported";
+    } elsif ($l =~ /^[!@]?(define|def)\s/) {  # define
+	print_warning_once "The `$1` directive is not supported";
 	print_comment_top_level 0, $l;
     } elsif ($l =~ /^[!@]?(fixed|endfixed)/) {  # Fixated price
 	print_warning_once "Fixated prices are not supported";

@@ -13,6 +13,7 @@
 ;   - Unsupported directive "eval" skipped
 ;   - The `define` directive is not supported
 ;   - Unsupported directive "value" skipped
+;   - The `def` directive is not supported
 ;----------------------------------------------------------------------
 
 1970-01-01 open Assets:Another:Alias
@@ -232,4 +233,6 @@ poptag #foo
 ;; specific is found.
 
 ; value myfunc_seven
+
+; def foo=200 USD
 
