@@ -10,6 +10,12 @@ commodity AnotherAnotherAnotherAnother
 @commodity Chase
 !commodity "DE0002635307"
 
+commodity $
+    value 0.90 EUR
+
+commodity USD
+    alias FOO
+
 commodity EUR
     note Euro
     format 1000.00EUR

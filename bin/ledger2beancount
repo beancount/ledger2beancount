@@ -1081,9 +1081,16 @@ while (@input) {
 	    }
 	}
     } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
-	$commodity_declared{map_commodity $1} = 1;
-	print_line $depth, sprintf "$config->{commodities_date} commodity %s", map_commodity $1;
+	my $commodity = map_commodity $1;
 	@stanza = read_stanza \@input;
+	# Avoid duplicate commodity declarations if two commodities are
+	# mapped to the same commodity and both have commodity declarations.
+	if ($commodity_declared{$commodity}) {
+	    print_warning_once "Skipped second commodity declaration for $commodity (old $1)";
+	    next;
+	}
+	$commodity_declared{$commodity} = 1;
+	print_line $depth, sprintf "$config->{commodities_date} commodity $commodity";
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note
