@@ -41,6 +41,7 @@ option "name_income" "Revenue"
 1970-01-01 open Equity:Trading:Currency
 1970-01-01 open Expenses:Foo
 1970-01-01 open Liabilities:Accounts-Payable:Baz
+1970-01-01 open Liabilities:MasterCard
 1970-01-01 open Revenue:Foo
 1970-01-01 open Revenue:Interest
 1970-01-01 open Revenue:Salary
@@ -363,4 +364,8 @@ option "name_income" "Revenue"
 2019-04-28 * "Account name with only one letter"
   Assets:Aaa                        10.00 EUR
   Assets:Bbb
+
+2019-04-28 txn "Deferred account"
+  Liabilities:MasterCard           150.00 EUR
+  Assets:Bank                     -150.00 EUR
 

@@ -781,7 +781,7 @@ sub process_txn(@) {
 	    print_tags $depth+1, @cur_txn_tags;
 	    @cur_txn_tags = ();
 	    my $account = $+{account};
-	    # Check for virtual accounts
+	    # Check for virtual and deferred accounts
 	    if ($account =~ /^\(/) {
 		# Ignore virtual postings with parentheses
 		print_warning_once "Virtual posting in parentheses ignored";
@@ -794,6 +794,9 @@ sub process_txn(@) {
 		    print_warning_once "Virtual posting in bracket ignored (see convert_virtual option)";
 		    next;
 		}
+	    } elsif ($account =~ /^<(.*)>/) {
+		    $account = $1;
+		    $l =~ s/\Q<$account>\E/$account  /;
 	    }
 	    $in_postings = 1;
 	    my $postdate = $+{postdate};

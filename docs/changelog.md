@@ -16,6 +16,7 @@
 * Ensure all beancount commodities have at least 2 characters
 * Don't misparse certain metadata as implicit conversion
 * Avoid duplicate `commodity` directives for commodities with name collisions
+* Recognise deferred postings
 
 ## 1.7 (2019-04-22)
 

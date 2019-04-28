@@ -89,6 +89,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
   * Dates on posting-level (no equivalence in beancount)
   * Auxiliary dates (no equivalence in beancount)
   * Effective dates (no equivalence in beancount)
+* Deferred postings (no equivalence in beancount)
 * Directives
   * `eval`: skipped (not supported in beancount)
   * `payee`: skipped (not needed in beancount)

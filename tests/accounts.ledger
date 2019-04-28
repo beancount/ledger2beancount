@@ -322,3 +322,7 @@ account Assets:Bank Debian]bar
     A                                 10.00 EUR
     B
 
+2019-04-28 Deferred account
+    Liabilities:MasterCard           150.00 EUR
+    <Assets:Bank>                   -150.00 EUR
+
