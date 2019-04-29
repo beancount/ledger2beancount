@@ -533,6 +533,7 @@ sub map_metadata($) {
     $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
     $key = lcfirst $key; # Make first letter lowercase
     $key =~ s/^([^\p{letter}])/x$1/; # Make sure first character is a letter
+    $key .= "x" if length $key == 1;
     # Work around lack of Unicode support (beancount #161)
     $key = NFKD $key;
     $key =~ s/\p{NonspacingMark}//g;

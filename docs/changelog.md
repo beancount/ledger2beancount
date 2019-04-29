@@ -14,6 +14,7 @@
 * Support decimal commas in `price` directives
 * Don't misparse balance assignment as commodity
 * Ensure all beancount commodities have at least 2 characters
+* Ensure all beancount metadata keys have at least 2 characters
 * Don't misparse certain metadata as implicit conversion
 * Avoid duplicate `commodity` directives for commodities with name collisions
 * Recognise deferred postings

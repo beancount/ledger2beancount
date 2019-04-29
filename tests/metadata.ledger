@@ -116,3 +116,8 @@ commodity EUR
    Assets:Test                         10.00 EUR
    Assets:Test               ; foo: bar
 
+2019-04-29 * Metadata key with one letter
+   Assets:Test                         10.00 EUR
+   ; a: books
+   Assets:Test                        -10.00 EUR
+

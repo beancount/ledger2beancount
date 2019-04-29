@@ -7,6 +7,7 @@
 ;   - Metadata key Invoice renamed to invoice
 ;   - Metadata key TEST1234TEST renamed to tEST1234TEST
 ;   - Metadata key Trip renamed to trip
+;   - Metadata key a renamed to ax
 ;   - Metadata key test:test renamed to test-test
 ;   - Metadata key test♔ renamed to test-
 ;   - Metadata key test♚ renamed to test-
@@ -133,4 +134,9 @@
   Assets:Test                         10.00 EUR
   Assets:Test               
     foo: "bar"
+
+2019-04-29 * "Metadata key with one letter"
+  Assets:Test                         10.00 EUR
+    ax: "books"
+  Assets:Test                        -10.00 EUR
 
