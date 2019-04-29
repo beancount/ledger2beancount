@@ -8,6 +8,7 @@
 * Improve behaviour for invalid `end` without `apply`
 * Improve error message when date can't be parsed
 * Deal with account names consisting of a single letter
+* Ensure account names don't end with a colon
 * Skip ledger directives `eval`, `python`, and `value`
 * Don't assume all filenames for `include` end in `.ledger`
 * Support `price` directives with commodity symbols

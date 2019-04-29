@@ -11,6 +11,7 @@
 ;   - Account Assets:test renamed to Assets:Test
 ;   - Account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds renamed to Assets:X-DASD----------------0---ds
 ;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
+;   - Account Expenses:Baz: renamed to Expenses:Baz
 ;   - Account Expenses:École républicaine renamed to Expenses:École-républicaine
 ;   - Account Expenses:école renamed to Expenses:École
 ;   - Account Liabilities:Credit Card:Test renamed to Liabilities:Credit-Card:Test
@@ -40,6 +41,7 @@ option "name_income" "Revenue"
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
 1970-01-01 open Equity:Trading:Currency
+1970-01-01 open Expenses:Baz
 1970-01-01 open Expenses:Foo
 1970-01-01 open Liabilities:Accounts-Payable:Baz
 1970-01-01 open Liabilities:MasterCard
@@ -369,4 +371,8 @@ option "name_income" "Revenue"
 2019-04-28 txn "Deferred account"
   Liabilities:MasterCard           150.00 EUR
   Assets:Bank                     -150.00 EUR
+
+2019-04-29 * "Strange but legal name in ledger - illegal in beancount"
+  Expenses:Baz                     100.00 EUR
+  Assets:Bank                     -100.00 EUR
 

@@ -594,6 +594,7 @@ sub map_account($) {
     $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/(^|:)[^\p{letter}\p{number}]/$1X/g; # Make sure first character is a letter or number
     $account =~ s/[^\p{letter}\p{number}:-]/-/g; # Replace disallowed characters
+    $account =~ s/:+$//g; # Ensure account doesn't end in a colon; this is unusual but legal in ledger
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
     my $root = $1 if $account =~ /([^:]+)/;
     # beancount doesn't allow just a root account (e.g. Income) as an

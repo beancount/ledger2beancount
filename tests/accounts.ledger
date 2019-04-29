@@ -326,3 +326,7 @@ account Assets:Bank Debian]bar
     Liabilities:MasterCard           150.00 EUR
     <Assets:Bank>                   -150.00 EUR
 
+2019-04-29 * Strange but legal name in ledger - illegal in beancount
+    Expenses:Baz:                    100.00 EUR
+    Assets:Bank                     -100.00 EUR
+
