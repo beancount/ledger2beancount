@@ -48,9 +48,11 @@ If you use Debian, you can install the dependencies with this command:
 
     sudo apt install libcarp-assert-perl libconfig-onion-perl \
         libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
-        libgetopt-long-descriptive-perl libdatetime-format-strptime-perl
+        libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
+        libstring-interpolate-perl
 
-Note that String::Interpolate is currently not packaged for Debian.
+Note that String::Interpolate (libstring-interpolate-perl) is not in
+Debian stable.
 
 ledger2beancount itself consists of one script.  You can clone the
 repository and run the script directly or copy it to `$HOME/bin` or
