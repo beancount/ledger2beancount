@@ -1,5 +1,4 @@
 
-requires 'Carp::Assert';
 requires 'Config::Onion';
 requires 'Date::Calc';
 requires 'DateTime::Format::Strptime', '>= 1.58';

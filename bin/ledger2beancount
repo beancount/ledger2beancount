@@ -14,7 +14,6 @@ use utf8;
 use feature 'unicode_strings';
 use open qw/:std :locale/;
 
-use Carp::Assert;
 use Config::Onion;
 use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;

@@ -30,7 +30,6 @@ beancount.
 ledger2beancount is a Perl script and relies on the following Perl
 modules:
 
-* Carp::Assert
 * Config::Onion
 * Date::Calc
 * DateTime::Format::Strptime
@@ -46,8 +45,8 @@ You can install the required Perl modules with
 
 If you use Debian, you can install the dependencies with this command:
 
-    sudo apt install libcarp-assert-perl libconfig-onion-perl \
-        libdate-calc-perl libfile-basedir-perl libyaml-libyaml-perl \
+    sudo apt install libconfig-onion-perl libdate-calc-perl \
+        libfile-basedir-perl libyaml-libyaml-perl \
         libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
         libstring-interpolate-perl
 
