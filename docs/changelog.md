@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.8 (unreleased)
+## 1.8 (2019-06-12)
 
 * Add support for `apply year`
 * Fix incorrect account mapping of certain accounts
