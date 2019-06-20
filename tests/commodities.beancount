@@ -23,11 +23,11 @@
 
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test123
-1970-01-01 open Expenses:Gandi
+1970-01-01 open Expenses:Gandi ; test comment
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity A-COMMODITY
-1970-01-01 commodity ANOTHER
+1970-01-01 commodity ANOTHER ; just a comment
 1970-01-01 commodity ANOTHERANOTHERANOTHERANO
 1970-01-01 commodity UR
 1970-01-01 commodity DE0002635307

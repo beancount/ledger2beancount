@@ -1,11 +1,11 @@
 
 account Assets:Test
 account Assets:Test123
-account Expenses:Gandi
+account Expenses:Gandi  ; test comment
 account Equity:Opening-Balance
 
 commodity "A commodity"
-commodity "Another commodity"
+commodity "Another commodity" ; just a comment
 commodity AnotherAnotherAnotherAnother
 @commodity Chase
 !commodity "DE0002635307"

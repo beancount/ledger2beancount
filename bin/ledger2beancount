@@ -1064,7 +1064,19 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	}
     } elsif ($l =~ /^[!@]?account\s+(.*)/) {  # account declaration
-	my $account = map_account $1;
+	my ($account, $comment);
+	# account foo ; bar
+	# In ledger, this is parsed as account "foo ; bar"; in hledger as
+	# account "foo" with comment "bar".
+	# If there are two spaces, ledger will also parse it part of the
+	# account name, but such an account name is invalid so treat it
+	# as a comment.
+	if ($config->{hledger}) {
+	    ($account, $comment) = split /\s*;\s*/, $1, 2;
+	} else {
+	    ($account, $comment) = split /\s\s+;\s*/, $1, 2;
+	}
+	$account = map_account $account;
 	@stanza = read_stanza \@input;
 	# Avoid duplicate account declarations if two accounts are mapped
 	# to the same account and both have account declarations.
@@ -1073,7 +1085,7 @@ while (@input) {
 	    next;
 	}
 	$account_declared{$account} = 1;
-	print_line $depth, sprintf "$config->{account_open_date} open %s", $account;
+	print_line $depth, sprintf "$config->{account_open_date} open %s%s", $account, $comment ? " ; $comment" : "";
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note
@@ -1085,7 +1097,15 @@ while (@input) {
 	    }
 	}
     } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
-	my $commodity = map_commodity $1;
+	my ($commodity, $comment);
+	$commodity = $1;
+	if ($commodity =~ /^(".*")(.*)/) {
+	    $commodity = $1;
+	    $comment = $1 if $2 =~ /\s*;\s*(.*)/;
+	} else {
+	    ($commodity, $comment) = split /\s*;\s*/, $commodity, 2;
+	}
+	$commodity = map_commodity $commodity;
 	@stanza = read_stanza \@input;
 	# Avoid duplicate commodity declarations if two commodities are
 	# mapped to the same commodity and both have commodity declarations.
@@ -1094,7 +1114,7 @@ while (@input) {
 	    next;
 	}
 	$commodity_declared{$commodity} = 1;
-	print_line $depth, sprintf "$config->{commodities_date} commodity $commodity";
+	print_line $depth, sprintf "$config->{commodities_date} commodity %s%s", $commodity, $comment ? " ; $comment" : "";
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note

@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 1.9 (unreleased)
+
+* Handle comments in `account` and `commodity` declarations
+
 ## 1.8 (2019-06-12)
 
 * Add support for `apply year`
