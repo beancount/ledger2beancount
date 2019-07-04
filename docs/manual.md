@@ -142,6 +142,10 @@ conversion or if you get an error message from ledger2beancount, please
 [file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
 with a simple test case.
 
+You can pipe the output of ledger2beancount to beancount's bean-format
+if you want to use the conversion as an opportunity to reformat your
+file.
+
 
 # Beancount compatibility
 
