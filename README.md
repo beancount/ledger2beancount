@@ -104,6 +104,7 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 
 ### Not supported
 
+* Amounts without commodities
 * Automated transactions
 * Directives
   * `assert`
