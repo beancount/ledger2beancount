@@ -21,6 +21,10 @@
 1970-01-01 open Assets:Test4
 1970-01-01 open Assets:Test5
 1970-01-01 open Assets:Test6
+1970-01-01 open Assets:Test7
+1970-01-01 open Assets:Test8
+1970-01-01 open Assets:Test9
+1970-01-01 open Income:Test
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
@@ -103,4 +107,29 @@
   Assets:Wallet                                
 
 2019-04-29 balance Assets:Wallet  490.00 THB
+
+2020-02-15 txn "Specify amount"
+  Assets:Test7                       20.00 EUR
+  Equity:Opening-Balance            -20.00 EUR
+
+2020-02-16 balance Assets:Test7  20.00 EUR
+
+
+2020-02-15 txn "Specify amount"
+  Assets:Test8                       30.00 EUR
+  Equity:Opening-Balance            -30.00 EUR
+
+2020-02-16 balance Assets:Test8  30.00 EUR
+
+
+2020-02-15 txn "Specify amount"
+  Assets:Test9                       40.00 EUR
+  Equity:Opening-Balance            -40.00 EUR
+
+
+2020-02-15 * "Balance assertion with a single posting - use bucket to balance"
+  Assets:Test9                        5.00 EUR
+  Income:Test
+
+2020-02-16 balance Assets:Test9  45.00 EUR
 

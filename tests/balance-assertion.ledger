@@ -5,6 +5,10 @@ account Assets:Test3
 account Assets:Test4
 account Assets:Test5
 account Assets:Test6
+account Assets:Test7
+account Assets:Test8
+account Assets:Test9
+account Income:Test
 account Equity:Opening-Balance
 
 commodity EUR
@@ -65,4 +69,27 @@ commodity $
 2019-04-28 Food
     Expenses:Food                      10.00 THB
     Assets:Wallet                                = 490.00 THB
+
+2020-02-15 Specify amount
+    Assets:Test7                       20.00 EUR
+    Equity:Opening-Balance            -20.00 EUR
+
+2020-02-15 * Balance assertion with 0 value
+    Assets:Test7                        0.00 EUR = 20.00 EUR
+
+2020-02-15 Specify amount
+    Assets:Test8                       30.00 EUR
+    Equity:Opening-Balance            -30.00 EUR
+
+2020-02-15 * Balance assigment with a single posting
+    Assets:Test8                                 = 30.00 EUR
+
+2020-02-15 Specify amount
+    Assets:Test9                       40.00 EUR
+    Equity:Opening-Balance            -40.00 EUR
+
+bucket Income:Test
+
+2020-02-15 * Balance assertion with a single posting - use bucket to balance
+    Assets:Test9                        5.00 EUR = 45.00 EUR
 

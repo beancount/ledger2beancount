@@ -2,6 +2,7 @@
 
 # Copyright (C) 2016-2018 Stefano Zacchiroli <zack@upsilon.cc>
 #           (C) 2018-2019 Martin Michlmayr <tbm@cyrius.com>
+#           (C) 2020 Software in the Public Interest, Inc.
 # License: GNU General Public License (GPL), version 3 or above
 
 # convert a ledger-cli main ledger file to beancount format
@@ -902,9 +903,21 @@ sub process_txn(@) {
 	}
     }
     print_tags 2, @cur_txn_tags;
-    if ($total_postings == 1 && defined $ledger_bucket) {
-	# We only saw one posting and a ledger bucket is defined
-	push_line 1, map_account $ledger_bucket;
+    if ($total_postings == 1) {
+	if (defined $ledger_bucket) {
+	    # We only saw one posting and a ledger bucket is defined
+	    push_line 1, map_account $ledger_bucket;
+	} else {
+	    # Transactions can have a single posting as long as the
+	    # amount is 0 (otherwise it would fail to balance).  This
+	    # can be used to add standalone balance assertions.
+	    # In theory, we should check that the amount == 0, but
+	    # the transaction would fail to balance in ledger if
+	    # that wasn't the case.
+	    print_line 0, pp_cur_assertions if @cur_txn_assertions;
+	    pop_txn();
+	    return;
+	}
     } elsif ($total_postings == 2 && $postings_with_amount == 2) {
 	# Handle implicit conversions.  We only support simple implicit
 	# conversions with 2 postings.
