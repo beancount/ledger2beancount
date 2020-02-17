@@ -1,5 +1,10 @@
 ; Beancount: 2.1.0
 
+; -*- ledger -*-
+;; -*- ledger -*-
+
+* -*- ledger -*-
+
 account Assets:Test
 account Equity:Opening-Balance
 account Assets:Commodity-Test123

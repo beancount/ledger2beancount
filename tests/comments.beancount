@@ -1,5 +1,10 @@
 ; Beancount: 2.1.0
 
+; -*- mode: beancount -*-
+;; -*- mode: beancount -*-
+
+* -*- mode: beancount -*-
+
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
 1970-01-01 open Assets:Commodity-Test123

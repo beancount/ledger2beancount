@@ -997,6 +997,8 @@ while (@input) {
 	if ($l =~ /^\|\s?(?<comment>.*)/) {
 	    print_comment_top_level $depth, $+{comment};
 	} else {
+	    # Rewrite the Emacs modeline
+	    $l =~ s/-\*- ledger -\*-/-*- mode: beancount -*-/;
 	    print_line $depth, $l;
 	}
     } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
