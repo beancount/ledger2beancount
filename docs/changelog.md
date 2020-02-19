@@ -4,6 +4,7 @@
 
 * Handle comments in `account` and `commodity` declarations
 * Handle transactions with a single posting (without `bucket`)
+* Handle empty metadata values
 * Rewrite Emacs modeline
 
 ## 1.8 (2019-06-12)

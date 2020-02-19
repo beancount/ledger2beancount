@@ -97,7 +97,7 @@ my $amount_mcn_RE = qr/(?<minus>-?)(?<commodity>$commodity_RE)\s*(?<num>$value_e
 my $amount_RE = qr/(?<inline_math>\(?)($amount_mnc_RE|$amount_cmn_RE|$amount_mcn_RE)(\)?)/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
-my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?\s+(?<value>.*)/;
+my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
 my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
 my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  | \t|\t|\s*$)\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<commodity2>.*)/;
@@ -418,11 +418,12 @@ sub handle_metadata($$$) {
 	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
 	    print_tags $depth, "^$metadata->{value}";
 	} else {
-	    my $value;
+	    # Metadata values can be empty
+	    my $value = $metadata->{value} ? $metadata->{value} : "";
 	    if (defined($metadata->{typed})) {
-		$value = parse_ledger_value $metadata->{value};
+		$value = parse_ledger_value $value;
 	    } else {
-		$value = mk_beancount_string $metadata->{value};
+		$value = mk_beancount_string $value;
 	    }
 	    if ($defer) {
 		push @cur_txn_meta, pp_metadata($key, $value);

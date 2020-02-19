@@ -140,3 +140,18 @@
     ax: "books"
   Assets:Test                        -10.00 EUR
 
+2020-02-18 * "Empty (but defined tag)"
+  check_memo: ""
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-02-18 * "Empty (but defined tag) with trailing whitespace"
+  check_memo: ""
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-02-18 * "No space -> not recognized by ledger as metadata"
+  ; check_memo:bar
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
