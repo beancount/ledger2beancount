@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 1.9 (unreleased)
+## 2.0 (2020-02-22)
 
 * Handle comments in `account` and `commodity` declarations
 * Handle transactions with a single posting (without `bucket`)
