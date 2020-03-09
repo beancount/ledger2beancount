@@ -29,7 +29,7 @@
 
 2018-03-19 * "Metadata after posting, no amount"
   test: "foo bar baz"
-  Assets:Test          
+  Assets:Test
     test: "foo"
   Equity:Opening-Balance            -10.00 EUR
 
@@ -132,7 +132,7 @@
 
 2019-01-28 * "Metadata on null posting"
   Assets:Test                         10.00 EUR
-  Assets:Test               
+  Assets:Test
     foo: "bar"
 
 2019-04-29 * "Metadata key with one letter"

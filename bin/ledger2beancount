@@ -99,7 +99,7 @@ my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
 my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
-my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  | \t|\t|\s*$)\s*(?<amount>$amount_RE)?(?<datestrip>\s*;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?)/;
+my $posting_RE = qr/(?<posting>((?<flag>$flags_RE)\s+)?(?<account>$account_RE)(  | \t|\t|\s*$)\s*(?<amount>$amount_RE)?)$comment_RE?/;
 my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<commodity2>.*)/;
 
 # Maximum limit for beancount commodities
@@ -802,11 +802,9 @@ sub process_txn(@) {
 		    $l =~ s/\Q<$account>\E/$account  /;
 	    }
 	    $in_postings = 1;
-	    my $postdate = $+{postdate};
-	    my $auxdate = $+{auxdate};
+	    my $postdate;
+	    my $auxdate;
 	    my $has_amount = $+{amount} ? 1 : 0;
-	    # Strip the auxdate info
-	    $l =~ s/\s*\Q$+{datestrip}\E// if $+{datestrip};
 
 	    $l = replace_account $l;
 
@@ -864,8 +862,21 @@ sub process_txn(@) {
 		    }
 		}
 		if ($+{comment}) {
+		    # Ideally, handling of postdates and auxdates would be
+		    # done in handle_comment but this is difficult because
+		    # push_deferred_meta has to be called before push_metadata
+		    # of postdate and auxdate.
+		    $+{comment} =~ /(^\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?(\s*;?\s*(?<comment>.*))/;
+		    $auxdate = $+{auxdate};
+		    $postdate = $+{postdate};
 		    my $comment = handle_comment $depth, "; $+{comment}", 1;
-		    $l .= " ; $comment" if $comment;
+		    if ($comment) {
+			$l .= " ; $comment" if $comment;
+		    } else {
+			# We removed all comments so strip trailing whitespace
+			# in case there's an account with no amount
+			$l =~ s/\s+$//;
+		    }
 		}
 		if ($+{assertion}) {
 		    push_assertion $+{account}, replace_commodity $+{assertion};

@@ -50,3 +50,23 @@
     date: 2017-07-08
     aux-date: 2017-07-09
 
+2020-03-09 * "Test with posting date and comment"
+  Assets:Test                        10.00 EUR ; Foo Bar
+    date: 2018-03-13
+  Equity:Opening-Balance
+
+2020-03-09 * "Test with posting date and comment, but no amount"
+  Assets:Test                                   ; Foo Bar
+    date: 2018-03-13
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-03-09 * "Test with posting aux date and comment"
+  Assets:Test                        10.00 EUR ; Foo Bar
+    aux-date: 2018-03-13
+  Equity:Opening-Balance
+
+2020-03-09 * "Test with posting aux date and comment, but no amount"
+  Assets:Test                                   ; Foo Bar
+    aux-date: 2018-03-13
+  Equity:Opening-Balance            -10.00 EUR
+

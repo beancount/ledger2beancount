@@ -37,3 +37,19 @@ commodity EUR
     Assets:Test                        10.00 EUR ; [2017-03-04=2017-03-05]
     Equity:Opening-Balance            -10.00 EUR ; [2017-07-08=2017-07-09]
 
+2020-03-09 * Test with posting date and comment
+    Assets:Test                        10.00 EUR ; [2018-03-13] Foo Bar
+    Equity:Opening-Balance
+
+2020-03-09 * Test with posting date and comment, but no amount
+    Assets:Test                                  ; [2018-03-13] Foo Bar
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-03-09 * Test with posting aux date and comment
+    Assets:Test                        10.00 EUR ; [=2018-03-13] Foo Bar
+    Equity:Opening-Balance
+
+2020-03-09 * Test with posting aux date and comment, but no amount
+    Assets:Test                                  ; [=2018-03-13] Foo Bar
+    Equity:Opening-Balance            -10.00 EUR
+

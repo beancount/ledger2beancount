@@ -39,9 +39,6 @@ trim_trailing_whitespace = false
 [tests/metadata.ledger]
 trim_trailing_whitespace = false
 
-[tests/metadata.beancount]
-trim_trailing_whitespace = false
-
 [tests/spacing.ledger]
 trim_trailing_whitespace = false
 

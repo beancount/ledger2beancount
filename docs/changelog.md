@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.1 (unreleased)
+
+* Handle postings with posting dates and comments but no amount
+
 ## 2.0 (2020-02-22)
 
 * Handle comments in `account` and `commodity` declarations
