@@ -11,7 +11,7 @@ If you'd like to contribute code to ledger2beancount, please submit a
 or send a `git format-patch` patch (series) to the authors via email
 (see the `AUTHORS` file).
 
-Please move sure you add a test case under `tests` and update the
+Please make sure you add a test case under `tests` and update the
 documentation (`docs/manual.md`, and possibly `README.md` and
 `examples/illustrated.md`).
 
