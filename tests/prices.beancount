@@ -1,8 +1,3 @@
-1970-01-01 commodity JPY
-1970-01-01 commodity MILESMORE4
-1970-01-01 commodity UR
-1970-01-01 commodity USD
-
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
@@ -10,6 +5,11 @@
 1970-01-01 commodity ETH
 1970-01-01 commodity EUR
 1970-01-01 commodity GBP
+
+1970-01-01 commodity JPY
+1970-01-01 commodity MILESMORE4
+1970-01-01 commodity UR
+1970-01-01 commodity USD
 
 2018-03-21 price EUR 0.87 GBP
 2018-03-21 price UR 0.015 USD

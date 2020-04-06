@@ -4,17 +4,17 @@
 ;   - Collision for commodity EUR: EUR, €
 ;----------------------------------------------------------------------
 
-1970-01-01 open Assets:Test
-
-1970-01-01 commodity FRF
-1970-01-01 commodity GBP
-1970-01-01 commodity USD
-
 
 1970-01-01 open Assets:99Test:Test99
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
+
+1970-01-01 open Assets:Test
+
+1970-01-01 commodity FRF
+1970-01-01 commodity GBP
+1970-01-01 commodity USD
 
 2002-01-01 price EUR 6.55957 FRF
 

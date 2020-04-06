@@ -7,6 +7,16 @@
 ;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
+
+1970-01-01 open Assets:99Test:Test99
+1970-01-01 open Assets:Test1
+1970-01-01 open Assets:Test2
+1970-01-01 open Equity:Opening-Balance
+
+1970-01-01 commodity EUR
+1970-01-01 commodity GBP
+1970-01-01 commodity USD
+
 1970-01-01 open Assets:Current
 1970-01-01 open Assets:Receivable
 1970-01-01 open Assets:Rewards
@@ -17,16 +27,6 @@
 
 1970-01-01 commodity AVIOS
 1970-01-01 commodity CZK
-
-
-1970-01-01 open Assets:99Test:Test99
-1970-01-01 open Assets:Test1
-1970-01-01 open Assets:Test2
-1970-01-01 open Equity:Opening-Balance
-
-1970-01-01 commodity EUR
-1970-01-01 commodity GBP
-1970-01-01 commodity USD
 
 2018-03-26 * "Commodity after amount"
   Assets:99Test:Test99                   1 EUR

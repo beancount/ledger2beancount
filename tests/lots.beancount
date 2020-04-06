@@ -7,14 +7,6 @@
 ;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
-1970-01-01 open Assets:A
-1970-01-01 open Assets:B
-1970-01-01 open Assets:Bank
-1970-01-01 open Assets:Cash
-1970-01-01 open Expenses:Currency
-1970-01-01 open Expenses:Food
-1970-01-01 open Expenses:Test
-
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance
@@ -28,6 +20,14 @@
 1970-01-01 commodity USD
 1970-01-01 commodity AA
 1970-01-01 commodity XXXX
+
+1970-01-01 open Assets:A
+1970-01-01 open Assets:B
+1970-01-01 open Assets:Bank
+1970-01-01 open Assets:Cash
+1970-01-01 open Expenses:Currency
+1970-01-01 open Expenses:Food
+1970-01-01 open Expenses:Test
 
 2018-03-17 * "Opening balance"
   Assets:Test              100.00 EUR {{90.00 GBP}}

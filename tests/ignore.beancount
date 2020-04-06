@@ -1,8 +1,3 @@
-1970-01-01 open Assets:Test3
-1970-01-01 open Equity:Opening-Balance
-
-1970-01-01 commodity EUR
-
 
 1970-01-01 open Assets:Test1
   description: "Test account"
@@ -12,6 +7,11 @@
 1970-01-01 open Liabilities:CreditCard
 
 
+
+1970-01-01 open Assets:Test3
+1970-01-01 open Equity:Opening-Balance
+
+1970-01-01 commodity EUR
 
 2018-03-17 * "Test 1"
   Assets:Test1                       10.00 EUR

@@ -17,10 +17,6 @@
 ;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
-1970-01-01 commodity AA
-1970-01-01 commodity COLLISION
-1970-01-01 commodity CX
-
 
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Test123
@@ -60,6 +56,10 @@
 
 1970-01-01 commodity MOETZ
 1970-01-01 commodity MOO
+
+1970-01-01 commodity AA
+1970-01-01 commodity COLLISION
+1970-01-01 commodity CX
 
 2018-03-17 * "Test quoted commodity"
   Assets:Test                      1 DE0002635307

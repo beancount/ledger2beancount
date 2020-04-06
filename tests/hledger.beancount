@@ -9,17 +9,17 @@
 ;   - Metadata key test♚ renamed to test-
 ;----------------------------------------------------------------------
 
+
+1970-01-01 open Assets:A ; foo
+
+; Payee and narration
+
 1970-01-01 open Assets:B
 1970-01-01 open Assets:Checking
 1970-01-01 open Expenses:Food
 
 1970-01-01 commodity EUR
 1970-01-01 commodity USD
-
-
-1970-01-01 open Assets:A ; foo
-
-; Payee and narration
 
 2015-05-30 txn "foo" "bar"
   Assets:A        10.00 EUR
