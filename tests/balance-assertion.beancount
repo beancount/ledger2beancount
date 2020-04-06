@@ -112,8 +112,11 @@
   Assets:Test7                       20.00 EUR
   Equity:Opening-Balance            -20.00 EUR
 
-2020-02-16 balance Assets:Test7  20.00 EUR
+2020-02-15 * "Balance assertion with 0 value"
+  Assets:Test7                        0.00 EUR
+  Assets:Test7
 
+2020-02-16 balance Assets:Test7  20.00 EUR
 
 2020-02-15 txn "Specify amount"
   Assets:Test8                       30.00 EUR

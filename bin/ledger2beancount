@@ -772,6 +772,7 @@ sub process_txn(@) {
 	}
     }
 
+    my $has_amount;
     foreach my $l (@txn) {
 	# print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
@@ -804,7 +805,7 @@ sub process_txn(@) {
 	    $in_postings = 1;
 	    my $postdate;
 	    my $auxdate;
-	    my $has_amount = $+{amount} ? 1 : 0;
+	    $has_amount = $+{amount} ? 1 : 0;
 
 	    $l = replace_account $l;
 
@@ -926,9 +927,18 @@ sub process_txn(@) {
 	    # In theory, we should check that the amount == 0, but
 	    # the transaction would fail to balance in ledger if
 	    # that wasn't the case.
-	    print_line 0, pp_cur_assertions if @cur_txn_assertions;
-	    pop_txn();
-	    return;
+	    # If there's an amount (it has to be zero), print
+	    # the transaction (using a second posting with the
+	    # same account name) because it might contain an
+	    # interesting narration.  If there's no amount,
+	    # just use the balance assertion.
+	    if ($has_amount) {
+		push_line 1, map_account $accounts[0];
+	    } else {
+		print_line 0, pp_cur_assertions if @cur_txn_assertions;
+		pop_txn();
+		return;
+	    }
 	}
     } elsif ($total_postings == 2 && $postings_with_amount == 2) {
 	# Handle implicit conversions.  We only support simple implicit
