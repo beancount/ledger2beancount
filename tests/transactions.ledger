@@ -1,3 +1,6 @@
+; SPDX-FileCopyrightText: © 2020 Martin Michlmayr <tbm@cyrius.com>
+;
+; SPDX-License-Identifier: GPL-3.0-or-later
 
 2019-02-15 * A transaction with a single posting - only allowed when amount == 0
     Assets:Test                         0.00 EUR

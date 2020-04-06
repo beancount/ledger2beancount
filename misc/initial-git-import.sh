@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# SPDX-FileCopyrightText: © 2018 Stefano Zacchiroli <zack@upsilon.cc>
+
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # ledger2beancount started as an ad hoc personal script. As such it was
 # maintained in zack's private Ledger Git repository. It was later spun off
 # as an independent project, when tbm started to heavily contribute to it. The

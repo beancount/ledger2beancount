@@ -1,3 +1,6 @@
+; SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+;
+; SPDX-License-Identifier: GPL-3.0-or-later
 
 2018-09-27 * Test conversion of built-in commodity codes
     Assets:Test                        €10.00

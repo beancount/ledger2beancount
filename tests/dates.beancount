@@ -4,6 +4,9 @@
 ;   - Metadata key Date renamed to date
 ;----------------------------------------------------------------------
 
+; SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+;
+; SPDX-License-Identifier: GPL-3.0-or-later
 
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Opening-Balance

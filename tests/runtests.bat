@@ -1,4 +1,8 @@
 
+:: SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+
+:: SPDX-License-Identifier: GPL-3.0-or-later
+
 setlocal enableDelayedExpansion
 
 :: Set UTF-8 locale
