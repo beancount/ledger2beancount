@@ -345,6 +345,10 @@ so these are stored as metadata according to the `auxdate_tag` variable.
 Unset the variable if you don't want auxiliary dates to be stored as
 metadata.  Account and posting-level auxiliary dates are supported.
 
+The [effective_date plugin for beancount](https://github.com/redstreet/beancount_plugins_redstreet/tree/master/effective_date)
+can be used to split postings which contain metadata with auxiliary dates
+into two postings.
+
 
 ## Transaction codes
 
