@@ -759,19 +759,19 @@ ledger2beancount allows you to define a marker in the config file as
 line, the line will be skipped and not added to the beancount output.
 For example, given the config setting
 
-	ignore_marker: NoL2B
+    ignore_marker: NoL2B
 
 you could do this:
 
-	C 1.00 Mb = 1024 Kb ; NoL2B
+    C 1.00 Mb = 1024 Kb ; NoL2B
 
 If you want to skip several lines, you can use `$ignore_marker begin`
 and `$ignore_marker end`.  This syntax is also useful for ledger
 `include` directives, which don't allow a comment on the same line.
 
-	; NoL2B begin
-	include ledger-specific-header.ledger
-	; NoL2B end
+    ; NoL2B begin
+    include ledger-specific-header.ledger
+    ; NoL2B end
 
 Since some people use ledger and beancount in parallel using
 ledger2beancount, it is sometimes useful to put beancount-specific
@@ -782,19 +782,19 @@ put it in the output.
 
 Given the input
 
-	; 2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
+    ; 2013-11-03 note Liabilities:CreditCard "Called about fraud" ; L2Bonly
 
 ledger2beancount will add the following line to the beancount output:
 
-	2013-11-03 note Liabilities:CreditCard "Called about fraud"
+    2013-11-03 note Liabilities:CreditCard "Called about fraud"
 
 You can also use `$keep_marker begin` and `$keep_marker end` to denote
 multiple lines that should be included in the output:
 
-	; L2Bonly begin
-	; 2014-07-09 event "location" "Paris, France"
-	; 2018-09-01 event "location" "Bologna, Italy"
-	; L2Bonly end
+    ; L2Bonly begin
+    ; 2014-07-09 event "location" "Paris, France"
+    ; 2018-09-01 event "location" "Bologna, Italy"
+    ; L2Bonly end
 
 
 # Unsupported features
