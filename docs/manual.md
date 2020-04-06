@@ -8,7 +8,7 @@ author:
     - Stefano Zacchiroli
     - Martin Michlmayr
 keywords: ledger, beancount, conversion, accounting, bookkeeping
-date: February 2020
+date: April 2020
 documentclass: scrartcl
 urlcolor: blue
 toc: true

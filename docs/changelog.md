@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.1 (unreleased)
+## 2.1 (2020-04-06)
 
 * Handle postings with posting dates and comments but no amount
 * Show transactions with only one posting (without `bucket`)
