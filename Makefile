@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2016 Stefano Zacchiroli <zack@upsilon.cc>
+# SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 all: test docs
 
 L2C = bin/ledger2beancount

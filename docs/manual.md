@@ -1,4 +1,7 @@
 ---
+# SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 title: ledger2beancount
 subtitle: Ledger to Beancount converter
 author:

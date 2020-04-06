@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 
-# Copyright (C) 2018 Martin Michlmayr <tbm@cyrius.com>
-# License: GNU General Public License (GPL), version 3 or above
+# SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 # obtain configuration data from ~/.ledgerrc for ledger2beancount
 
