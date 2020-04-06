@@ -7,7 +7,9 @@
 1970-01-01 open Assets:Test
 1970-01-01 open Assets:Wallet
 1970-01-01 open Equity:Opening-Balance
+
 1970-01-01 commodity EUR
+
 
 2018-03-17 * "Virtual posting with parentheses"
   Assets:Test                        10.00 EUR

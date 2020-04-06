@@ -2,10 +2,12 @@
 1970-01-01 open Assets:Brokerage:Cash
 1970-01-01 open Assets:Wallet
 1970-01-01 open Expenses:Food
+
 1970-01-01 commodity AAPL
 1970-01-01 commodity CAD
 1970-01-01 commodity EUR
 1970-01-01 commodity USD
+
 
 2012-04-10 txn "My Broker"
   Assets:Brokerage            10 AAPL {50.00 USD}

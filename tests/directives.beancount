@@ -30,7 +30,9 @@
 1970-01-01 open Assets:Test1:Test2:XXX:AA
 1970-01-01 open Assets:What:A:Long:Name
 1970-01-01 open Equity:Opening-Balance
+
 1970-01-01 commodity EUR
+
 ; Beancount: 2.1.0
 
 

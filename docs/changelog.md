@@ -4,6 +4,7 @@
 
 * Handle postings with posting dates and comments but no amount
 * Show transactions with only one posting (without `bucket`)
+* Adding spacing between automatic declarations
 
 ## 2.0 (2020-02-22)
 

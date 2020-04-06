@@ -1323,12 +1323,24 @@ if ($config->{beancount_header}) {
 
 if ($config->{automatic_declarations}) {
     # Print missing account and commodity declarations
+    my $out;
+
+    $out = "";
     for my $a (sort keys %account_declared) {
-	printf "$config->{account_open_date} open $a\n" if not defined $account_declared{$a};
+	$out .= sprintf "$config->{account_open_date} open $a\n" if not defined $account_declared{$a};
+    }
+    if ($out) {
+	print $out;
+	print "\n";
     }
 
+    $out = "";
     for my $c (sort keys %commodity_declared) {
-	printf "$config->{commodities_date} commodity $c\n" if not defined $commodity_declared{$c};
+	$out .= sprintf "$config->{commodities_date} commodity $c\n" if not defined $commodity_declared{$c};
+    }
+    if ($out) {
+	print $out;
+	print "\n";
     }
 }
 
