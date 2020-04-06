@@ -352,6 +352,15 @@ Beancount doesn't support ledger's [transaction
 codes](https://www.ledger-cli.org/3.0/doc/ledger3.html#Codes).  These are
 therefore stored as metatags if `code_tag` is set.
 
+While these ledger codes can be integers (e.g. check numbers), there's no
+such requirement in ledger and they can be any string.  Therefore,
+ledger2beancount stores them as strings in beancount.  If you'd like to
+change the type from string to integer, you can simply post-process the
+generated beancount file to remove the quotation marks around the codes.
+For example, if `code_tag` is set to `code`, you can use this Perl call:
+
+    perl -pi -e 's/^(\s+code: )"(\d+)"$/$1$2/' *.beancount
+
 
 ## Narration
 
