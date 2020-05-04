@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.2 (unreleased)
+
+* Show warning for unknown `apply` directive
+
 ## 2.1 (2020-04-06)
 
 * Handle postings with posting dates and comments but no amount

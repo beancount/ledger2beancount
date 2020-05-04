@@ -1063,8 +1063,9 @@ while (@input) {
 	$after_auto = 1;
 	$year = $+{val};
 	push @ledger_apply, [$+{type}, $+{val}];
-    } elsif ($l =~ /^[!@]?apply\s+.*/) {  # apply .*
+    } elsif ($l =~ /^[!@]?(apply\s+.*)/) {  # apply .*
 	# ledger seems to silently ignore all other apply statements
+	print_warning_once "Unknown '$1' directive found";
 	next;
     } elsif ($l =~ /^[!@]?end/) {  # end
 	next if !@ledger_apply; # end without any apply
