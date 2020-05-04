@@ -72,3 +72,13 @@
   Expenses:Food
 
 
+
+2012-04-10 txn "Lunch in Canada"
+  Assets:Wallet           -15.50 CAD {0.20 USD}
+  Expenses:Food            15.50 CAD {0.20 USD}
+
+2012-04-10 txn "Lunch in Canada"
+  Assets:Wallet           -15.50 CAD {0.85 USD}
+  Expenses:Food            15.50 CAD {0.85 USD}
+
+

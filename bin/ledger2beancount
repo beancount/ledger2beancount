@@ -1042,9 +1042,9 @@ while (@input) {
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	$after_auto = 1;
 	push @ledger_apply, [$+{type}, $+{val}];
-    } elsif ($l =~ /^[!@]?apply\s+(?<type>fixed)\s+(?<val>.*)/) {  # apply fixed
+    } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<val>.*)/) {  # apply fixed
 	$after_auto = 1;
-	push @ledger_apply, [$+{type}, $+{val}];
+	push @ledger_apply, ["fixed", $+{val}];
     } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
 	$after_auto = 1;
 	# `apply tag` can be converted to beancount in three ways:

@@ -68,3 +68,15 @@ apply fixed EUR 0.40 CAD
 end apply fixed
 end apply fixed
 
+apply rate CAD $0.85
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD {$0.20}
+    Expenses:Food            15.50 CAD {$0.20}
+
+2012-04-10 Lunch in Canada
+    Assets:Wallet           -15.50 CAD
+    Expenses:Food            15.50 CAD
+
+end apply fixed
+

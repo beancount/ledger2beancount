@@ -3,6 +3,7 @@
 ## 2.2 (unreleased)
 
 * Show warning for unknown `apply` directive
+* Recognize `apply rate` directive (an alias of `apply fixed`)
 
 ## 2.1 (2020-04-06)
 
