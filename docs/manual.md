@@ -357,7 +357,7 @@ into two postings.
 
 Beancount doesn't support ledger's [transaction
 codes](https://www.ledger-cli.org/3.0/doc/ledger3.html#Codes).  These are
-therefore stored as metatags if `code_tag` is set.
+therefore stored as metadata if `code_tag` is set.
 
 While these ledger codes can be integers (e.g. check numbers), there's no
 such requirement in ledger and they can be any string.  Therefore,
