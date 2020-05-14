@@ -33,13 +33,13 @@ beancount.
 ledger2beancount is a Perl script and relies on the following Perl
 modules:
 
-* Config::Onion
-* Date::Calc
-* DateTime::Format::Strptime
-* File::BaseDir
-* Getopt::Long::Descriptive
-* String::Interpolate
-* YAML::XS
+* `Config::Onion`
+* `Date::Calc`
+* `DateTime::Format::Strptime`
+* `File::BaseDir`
+* `Getopt::Long::Descriptive`
+* `String::Interpolate`
+* `YAML::XS`
 
 You can install the required Perl modules with
 [cpanminus](https://metacpan.org/pod/distribution/App-cpanminus/bin/cpanm):
@@ -53,8 +53,8 @@ If you use Debian, you can install the dependencies with this command:
         libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
         libstring-interpolate-perl
 
-Note that String::Interpolate (libstring-interpolate-perl) is not in
-Debian stable.
+Note that `String::Interpolate` (`libstring-interpolate-perl`) is not
+in Debian stable.
 
 ledger2beancount itself consists of one script.  You can clone the
 repository and run the script directly or copy it to `$HOME/bin` or
