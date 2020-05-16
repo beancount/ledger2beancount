@@ -7,7 +7,7 @@ date_format_no_year: "%m-%d"
 account_open_date: "1970-01-01" # Unix epoch, just because
 
 # Date used to create commodities
-commodities_date:  "1970-01-01" # Unix epoch, just because
+commodities_date: "1970-01-01" # Unix epoch, just because
 
 beancount_indent: 2
 ledger_indent: 4
