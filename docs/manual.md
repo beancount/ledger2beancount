@@ -255,7 +255,7 @@ mapping of account names described above is done after these directives.
 ## Amounts
 
 In ledger, amounts can be placed after the commodity.  This is converted
-to beancount with the the amount first, followed by the commodity.
+to beancount with the amount first, followed by the commodity.
 
 If you use commas as the decimal separator (i.e. values like `10,12`,
 using the ledger option `--decimal-comma`) you have to set the
