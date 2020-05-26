@@ -6,7 +6,7 @@
 
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# convert a ledger-cli main ledger file to beancount format
+# convert a ledger-cli file to beancount format
 
 use warnings;
 use strict;
