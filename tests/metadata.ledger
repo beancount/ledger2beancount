@@ -139,3 +139,49 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food                      10.00 EUR
+      ; foo: bar
+   (Expenses:Virtual)                   2.00 EUR
+      ; foo: baz
+
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food                      10.00 EUR
+      ; foo: bar
+   (Expenses:Virtual)                   2.00 EUR
+      ; Some comment
+      ; foo: baz
+
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food                      10.00 EUR
+      ; foo: bar
+   (Expenses:Virtual)                   2.00 EUR
+      ; foo: baz
+      ; Some comment
+
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food
+      ; foo: bar
+   [Expenses:Virtual]                   2.00 EUR
+      ; foo: baz
+
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food
+      ; foo: bar
+   [Expenses:Virtual]                   2.00 EUR
+      ; Some comment
+      ; foo: baz
+
+2020-05-29 * Metadata on virtual posting should be ignored
+    Assets:Cash                       -10.00 EUR
+    Expenses:Food
+      ; foo: bar
+   [Expenses:Virtual]                   2.00 EUR
+      ; foo: baz
+      ; Some comment
+

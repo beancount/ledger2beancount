@@ -786,14 +786,25 @@ sub process_txn(@) {
     }
 
     my $has_amount;
+    my $skipped_posting = 0;
     foreach my $l (@txn) {
 	# print "D: line: ", "\n"; dump_cur_txn(); print "\n";
 
 	(my $depth, $l) = strip_indentation($l);
 
 	if ($l =~ /^$comment_RE/) {
-	    my $comment = handle_comment $depth, $l, 0;
-	    push_comment $depth, $comment if $comment;
+	    # If there's a virtual posting that is ignored, we have to
+	    # discard the meta-data associated with the posting on
+	    # following lines (if there's any).  But there might be
+	    # comments worth preserving.  So just preserve all ledger
+	    # comments (i.e. comments and meta-data) as is.
+	    if ($skipped_posting) {
+		push_line $depth, $l;
+		print_warning_once "Comment or meta-data on virtual posting preserved as comment";
+	    } else {
+		my $comment = handle_comment $depth, $l, 0;
+		push_comment $depth, $comment if $comment;
+	    }
 	} elsif ($l =~ /^$posting_RE/) {
 	    print_tags $depth+1, @cur_txn_tags;
 	    @cur_txn_tags = ();
@@ -802,6 +813,7 @@ sub process_txn(@) {
 	    if ($account =~ /^\(/) {
 		# Ignore virtual postings with parentheses
 		print_warning_once "Virtual posting in parentheses ignored";
+		$skipped_posting = 1;
 		next;
 	    } elsif ($account =~ /^\[(.*)\]/) {
 		if ($config->{convert_virtual}) {
@@ -809,12 +821,14 @@ sub process_txn(@) {
 		    $l =~ s/\Q[$account]\E/$account  /; # Make them real
 		} else {
 		    print_warning_once "Virtual posting in bracket ignored (see convert_virtual option)";
+		    $skipped_posting = 1;
 		    next;
 		}
 	    } elsif ($account =~ /^<(.*)>/) {
 		    $account = $1;
 		    $l =~ s/\Q<$account>\E/$account  /;
 	    }
+	    $skipped_posting = 0; # reset variable with each posting
 	    $in_postings = 1;
 	    my $postdate;
 	    my $auxdate;
