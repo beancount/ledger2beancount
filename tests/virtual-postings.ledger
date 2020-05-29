@@ -36,3 +36,29 @@
       ; foo: baz
       ; Some comment
 
+2020-05-30 * Metadata on virtual posting
+   [Expenses:Virtual]                  2.00 EUR
+      ; foo: baz
+    Expenses:Food
+      ; foo: bar
+    Assets:Cash                       -10.00 EUR
+      ; xyz: abc
+
+2020-05-30 * Metadata on virtual posting
+   [Expenses:Virtual]                   2.00 EUR
+      ; Some comment
+      ; foo: baz
+    Expenses:Food
+      ; foo: bar
+    Assets:Cash                       -10.00 EUR
+      ; xyz: abc
+
+2020-05-30 * Metadata on virtual posting
+   [Expenses:Virtual]                   2.00 EUR
+      ; foo: baz
+      ; Some comment
+    Expenses:Food
+      ; foo: bar
+    Assets:Cash                       -10.00 EUR
+      ; xyz: abc
+

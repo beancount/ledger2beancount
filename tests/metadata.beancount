@@ -204,3 +204,49 @@
     ; foo: baz
     ; Some comment
 
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
+  Expenses:Food                      10.00 EUR
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; Some comment
+    ; foo: baz
+  Expenses:Food                      10.00 EUR
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
+    ; Some comment
+  Expenses:Food                      10.00 EUR
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
+  Expenses:Food
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; Some comment
+    ; foo: baz
+  Expenses:Food
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
+2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
+    ; Some comment
+  Expenses:Food
+    foo: "bar"
+  Assets:Cash                       -10.00 EUR
+    xyz: "abc"
+
