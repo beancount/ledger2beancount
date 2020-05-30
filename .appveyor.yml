@@ -14,7 +14,7 @@ install:
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   - cpanm --notest --installdeps .
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - python -m pip install -U hg+https://bitbucket.org/blais/beancount/
+  - python -m pip install -U git+https://github.com/beancount/beancount/
 
 build_script:
   - cd tests
