@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.2 (unreleased)
+## 2.2 (2020-05-30)
 
 * Show warning for unknown `apply` directive
 * Recognize `apply rate` directive (an alias of `apply fixed`)
