@@ -883,7 +883,9 @@ multiple lines that should be included in the output:
 The following features are not supported in beancount and therefore
 commented out during the conversion from ledger to beancount:
 
+* Amounts without commodities
 * Automated transactions
+* Checks and assertions (`check` and `assert`)
 * Commodity conversion (`C AMOUNT1 = AMOUNT2`)
 * Commodity format (`D AMOUNT`)
 * Commodity pricing: ignore pricing (`N SYMBOL`)
