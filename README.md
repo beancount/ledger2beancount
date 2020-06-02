@@ -35,7 +35,7 @@ installation instructions.
 Features
 --------
 
-The majority of ledger features are supported by ledger2beancount.  Here
+The majority of features from ledger are supported by ledger2beancount.  Here
 is an overview of fully supported, partly supported and unsupported features.
 Please refer to [the manual](docs/manual.md#features) for more details.
 
