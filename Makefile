@@ -22,7 +22,7 @@ docs/ledger2beancount.5: docs/ledger2beancount.5.scd
 	scdoc < $< > $@
 
 docs/manual.pdf: docs/manual.md
-	pandoc -f markdown+definition_lists $< -o $@
+	pandoc -f markdown+definition_lists+backtick_code_blocks $< -o $@
 
 pdf: docs/manual.pdf
 
