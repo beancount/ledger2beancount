@@ -16,9 +16,9 @@ toc: true
 
 # ledger2beancount
 
-ledger2beancount is a script to automatically convert
-[Ledger](https://www.ledger-cli.org/)-based textual ledgers to
-[Beancount](http://furius.ca/beancount/) ones.
+[ledger2beancount](https://github.com/zacchiro/ledger2beancount/) is a
+script to automatically convert [Ledger](https://www.ledger-cli.org/)-based
+textual ledgers to [Beancount](http://furius.ca/beancount/) ones.
 
 Conversion is based on (concrete) syntax, so that information that is not
 meaningful for accounting reasons but still valuable (e.g., comments,
