@@ -27,8 +27,9 @@ sudo apt install libconfig-onion-perl libdate-calc-perl \
     libstring-interpolate-perl
 ```
 
-Note that `String::Interpolate` (`libstring-interpolate-perl`) is not
-in Debian stable.
+Note that `String::Interpolate` (`libstring-interpolate-perl`) was not
+released as part of Debian 10 (buster) but is available via
+[buster-backports](https://backports.debian.org/).
 
 ledger2beancount itself consists of one script.  You can clone the
 repository and run the script directly or copy it to `$HOME/bin` or
