@@ -1,5 +1,4 @@
-Bugs and contributions
-======================
+# Bugs and contributions
 
 If you find any bugs in ledger2beancount or believe the conversion from
 ledger to beancount could be improved, please [open an
@@ -12,7 +11,7 @@ or send a `git format-patch` patch (series) to the authors via email
 (see the `AUTHORS` file).
 
 Please make sure you add a test case under `tests` and update the
-documentation (`docs/manual.md`, and possibly `README.md` and
+documentation (`docs/`, and possibly `README.md` and
 `examples/illustrated.md`).
 
 You can run the test suite with `make test`.

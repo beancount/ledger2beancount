@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.3 (unreleased)
+
+* Convert documentation to `mkdocs`
+
 ## 2.2 (2020-05-30)
 
 * Show warning for unknown `apply` directive
