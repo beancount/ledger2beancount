@@ -316,7 +316,7 @@ Beancount is more restrictive than ledger in what it allows as metadata
 keys.  ledger2beancount will automatically convert metadata keys to valid
 beancount metadata keys.  This involves replacing all invalid characters
 with a dash and making sure the first character is a lowercase letter
-(either by lowercasing a letter or adding the prefix `x`).
+(either by making the letter into lowercase or adding the prefix `x`).
 
 ledger2beancount also supports
 [typed metadata](https://www.ledger-cli.org/3.0/doc/ledger3.html#Typed-metadata)
@@ -585,7 +585,7 @@ this example:
 ```
 
 They are generally a bad idea since they make it very easy to hide
-problems that are hard to track down.  beancount doesn't support
+problems that are hard to track down.  Beancount doesn't support
 implicit conversions.
 
 ledger2beancount supports implicit conversions if there are only two

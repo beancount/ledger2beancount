@@ -49,7 +49,7 @@
 ## 1.7 (2019-04-22)
 
 * Don't misparse account and commodity with mixed tab/space separators
-* Rename account names consisting of a root name without subaccount
+* Rename account names consisting of a root name without sub-account
 * Warn when non-standard root names are used
 * Avoid duplicate open directives for accounts with name collisions
 * Don't warn for renamed tags that won't show up in the beancount file
