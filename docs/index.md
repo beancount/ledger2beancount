@@ -7,7 +7,7 @@ subtitle: Ledger to Beancount converter
 author:
     - Stefano Zacchiroli
     - Martin Michlmayr
-keywords: ledger, beancount, conversion, accounting, bookkeeping
+keywords: ledger, beancount, converter, conversion, accounting, bookkeeping, finance
 date: June 2020
 documentclass: scrartcl
 urlcolor: blue
