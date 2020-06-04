@@ -7,8 +7,8 @@ include a small test case so we can reproduce the problem.
 
 If you'd like to contribute code to ledger2beancount, please submit a
 [pull request on GitHub](https://github.com/beancount/ledger2beancount/pulls)
-or send a `git format-patch` patch (series) to the authors via email
-(see the `AUTHORS` file).
+or send a `git format-patch` patch (series) to [the authors via
+email](authors.md).
 
 Please make sure you add a test case under `tests` and update the
 documentation (`docs/`, and possibly `README.md` and
