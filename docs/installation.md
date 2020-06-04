@@ -63,6 +63,11 @@ and use `cpanm` as described above to install the required Perl modules.
 ledger2beancount is not packaged for Windows but you can clone this Git
 repository and run the script.
 
+## pkgsrc
+
+ledger2beancount is [available for pkgsrc](https://pkgsrc.se/finance/ledger2beancount)
+which is used on NetBSD and other operating systems.
+
 ## Ubuntu
 
 ledger2beancount is [available in Ubuntu](https://packages.ubuntu.com/ledger2beancount).
