@@ -22,7 +22,7 @@ problems with the conversion.
 
 If you believe that ledger2beancount could have produced a better
 conversion or if you get an error message from ledger2beancount, please
-[file a bug](https://github.com/zacchiro/ledger2beancount/issues) along
+[file a bug](https://github.com/beancount/ledger2beancount/issues) along
 with a simple test case.
 
 You can pipe the output of ledger2beancount to beancount's bean-format

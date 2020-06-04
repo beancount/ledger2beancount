@@ -4,7 +4,7 @@ ledger2beancount supports most of the syntax from ledger.  It also offers
 some features to improve the conversion from ledger to beancount.
 
 If you're new to beancount, we suggest you read this section in parallel
-to the [illustrated ledger file](https://github.com/zacchiro/ledger2beancount/blob/master/examples/illustrated.ledger).
+to the [illustrated ledger file](https://github.com/beancount/ledger2beancount/blob/master/examples/illustrated.ledger).
 This example ledger file explains differences between ledger and beancount,
 shows how ledger syntax is converted to beancount and describes how you
 can use the features described in this section to improve the conversion

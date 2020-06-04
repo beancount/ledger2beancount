@@ -64,7 +64,7 @@ _$HOME/.config/ledger2beancount/config.yml_
 If you find any bugs in *ledger2beancount* or believe the conversion
 from *ledger* to *beancount* could be improved, please open an issue on
 GitHub:
-	https://github.com/zacchiro/ledger2beancount/issues
+	https://github.com/beancount/ledger2beancount/issues
 
 Please include a small test case so we can reproduce the problem.
 

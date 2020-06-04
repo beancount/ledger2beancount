@@ -36,7 +36,7 @@ repository and run the script directly or copy it to `$HOME/bin` or
 a similar location:
 
 ```shell
-git clone https://github.com/zacchiro/ledger2beancount/
+git clone https://github.com/beancount/ledger2beancount/
 ./bin/ledger2beancount examples/simple.ledger
 ```
 
