@@ -21,7 +21,7 @@ But please be aware that it doesn't pass `bean-check`.  See the comments in
 the file as to why.
 
 Note on **regular expressions**: many of the features described below require
-you to specify regular expressions in ledger2beancount configuration file. The
+you to specify regular expressions in ledger2beancount configuration file.  The
 expected syntax (and semantics) for all such values is that of
 [Perl regular expressions](https://perldoc.perl.org/perlre.html#Regular-Expressions).
 
