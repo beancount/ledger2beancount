@@ -17,6 +17,7 @@ addons:
     packages:
       - cpanminus
       - ledger
+      - yamllint
 install:
   - sudo cpanm --notest --installdeps .
   - pip install $BEANCOUNT
@@ -24,3 +25,4 @@ install:
 script:
   - make test
   - mkdocs build
+  - find -name "*.yml" -exec yamllint {} \;
