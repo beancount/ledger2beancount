@@ -1,8 +1,7 @@
 [![Build Status](https://travis-ci.org/zacchiro/ledger2beancount.svg?branch=master)](https://travis-ci.org/zacchiro/ledger2beancount)
 
 
-ledger2beancount
-================
+# ledger2beancount
 
 A script to automatically convert [Ledger](https://www.ledger-cli.org/)-based
 textual ledgers to [Beancount](http://furius.ca/beancount/) ones.
@@ -16,8 +15,7 @@ use ledger2beancount.  The [supported features](docs/manual.md#features)
 are documented in the manual, too.
 
 
-Usage
------
+## Usage
 
 ledger2beancount accepts input from `stdin` or from a file and will write
 the converted data to `stdout`.  You can run ledger2beancount like this:
@@ -25,15 +23,13 @@ the converted data to `stdout`.  You can run ledger2beancount like this:
     ledger2beancount test.ledger > test.beancount
 
 
-Installation
-------------
+## Installation
 
 Please see [the manual](docs/manual.md#installation) for dependencies and
 installation instructions.
 
 
-Features
---------
+## Features
 
 The majority of features from ledger are supported by ledger2beancount.  Here
 is an overview of fully supported, partly supported and unsupported features.
@@ -118,15 +114,13 @@ Please refer to [the manual](docs/manual.md#features) for more details.
 * Periodic transactions
 
 
-Authors
--------
+## Authors
 
 * Stefano Zacchiroli `<zack@upsilon.cc>`
 * Martin Michlmayr `<tbm@cyrius.com>`
 
 
-License
--------
+## License
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
