@@ -27,6 +27,7 @@ nav:
     - About:
           - Release notes: changelog.md
           - Bugs and contributions: contributing.md
+          - Authors and contributors: authors.md
           - License and copyright: license.md
 
 markdown_extensions:
