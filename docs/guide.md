@@ -410,7 +410,8 @@ would become the following in beancount:
 
 ## Comments
 
-Comments are supported.
+ledger2beancount supports all types of comments from ledger, including
+comments between transactions, on postings and between postings.
 
 Currently, beancount doesn't accept top-level comments with the `|` marker
 ([issue 282](https://github.com/beancount/beancount/issues/282)).
