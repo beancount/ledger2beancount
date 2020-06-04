@@ -23,7 +23,7 @@ nav:
           - Usage: usage.md
           - Configuration: configuration.md
     - Guides:
-      - User guide: guide.md
+          - User guide: guide.md
     - About:
           - Release notes: changelog.md
           - Bugs and contributions: contributing.md
@@ -42,4 +42,3 @@ plugins:
               - "*.1"
               - "*.5"
               - "*.scd"
-

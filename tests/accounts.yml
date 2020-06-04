@@ -1,4 +1,4 @@
-
+---
 beancount_header: accounts.header
 
 convert_virtual: true
@@ -24,4 +24,3 @@ account_map:
 account_regex:
   ^Accrued:Accounts Payable:(.*): Liabilities:Accounts Payable:$1
   ^Accrued:Accounts Receivable:(.*): Assets:Accounts-Receivable:$1
-

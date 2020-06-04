@@ -1,3 +1,4 @@
+---
 # SPDX-FileCopyrightText: © 2018 Stefano Zacchiroli <zack@upsilon.cc>
 # SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
 #
@@ -10,7 +11,7 @@ env:
   - BEANCOUNT="git+https://github.com/beancount/beancount/"
 matrix:
   allow_failures:
-  - env: BEANCOUNT="git+https://github.com/beancount/beancount/"
+    - env: BEANCOUNT="git+https://github.com/beancount/beancount/"
 addons:
   apt:
     packages:

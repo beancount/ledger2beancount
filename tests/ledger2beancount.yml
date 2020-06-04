@@ -1,4 +1,4 @@
-
+---
 date_format: "%Y-%m-%d"
 # Date without year (if ledger's Y/year directive is used)
 date_format_no_year: "%m-%d"
@@ -61,4 +61,3 @@ commodity_is_currency:
   - AA
   - MR
   - XXXX
-

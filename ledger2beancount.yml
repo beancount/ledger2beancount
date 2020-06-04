@@ -1,13 +1,13 @@
-
+---
 date_format: "%Y-%m-%d"
 # Date without year (if ledger's Y/year directive is used)
 date_format_no_year: "%m-%d"
 
 # Date used to open accounts
-account_open_date: "1970-01-01" # Unix epoch, just because
+account_open_date: "1970-01-01"  # Unix epoch, just because
 
 # Date used to create commodities
-commodities_date: "1970-01-01" # Unix epoch, just because
+commodities_date: "1970-01-01"  # Unix epoch, just because
 
 beancount_indent: 2
 ledger_indent: 4
@@ -23,7 +23,7 @@ hledger: false
 # it's put at the beginning of the converted beancount file.  You can
 # specify options for beancount, such as `option "title"`, define
 # `plugin` directives or beancount `query` information.
-#beancount_header:
+# beancount_header:
 
 # emit account and commodity declares
 # (Note: the declarations done in ledger via `account` and
@@ -114,9 +114,9 @@ commodity_is_currency:
 
 # A marker that tells ledger2beancount to ignore a line if the
 # marker is found.
-#ignore_marker: NoL2B
+# ignore_marker: NoL2B
+#
 # A marker that tells ledger2beancount to take a line from
 # the input that is commented out, uncomment it and display
 # it in the output.
 keep_marker: L2Bonly
-

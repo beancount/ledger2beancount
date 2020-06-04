@@ -1,3 +1,4 @@
+---
 # SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,7 +11,7 @@ environment:
 
 install:
   - if not exist "C:\strawberry" cinst strawberryperl
-  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;%PATH%
   - cd C:\projects\%APPVEYOR_PROJECT_NAME%
   - cpanm --notest --installdeps .
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
@@ -19,4 +20,3 @@ install:
 build_script:
   - cd tests
   - runtests.bat
-
