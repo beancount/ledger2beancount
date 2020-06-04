@@ -10,10 +10,6 @@ Conversion is based on (concrete) syntax, so that information that is not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
-Please [read the manual](docs/manual.md) on how to install, configure and
-use ledger2beancount.  The [supported features](docs/manual.md#features)
-are documented in the manual, too.
-
 
 ## Usage
 
@@ -25,15 +21,16 @@ the converted data to `stdout`.  You can run ledger2beancount like this:
 
 ## Installation
 
-Please see [the manual](docs/manual.md#installation) for dependencies and
-installation instructions.
+Please see [the installation information](docs/installation.md) for
+dependencies and installation instructions.
 
 
 ## Features
 
 The majority of features from ledger are supported by ledger2beancount.  Here
 is an overview of fully supported, partly supported and unsupported features.
-Please refer to [the manual](docs/manual.md#features) for more details.
+Please refer to [the user guide](docs/guide.md) for more details on how to
+use ledger2beancount and to configure it to your needs.
 
 ### Fully supported
 
