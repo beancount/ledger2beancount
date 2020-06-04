@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: © 2020 Martin Michlmayr <tbm@cyrius.com>
+
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+find -name "*.md" -exec aspell -d en --home-dir=. -x --mode markdown check {} \;
+find -name "*.scd" -exec aspell -d en --home-dir=. -x check {} \;
+
+find \( -name "*.md" -or -name "*.scd" \) -exec anorack {} \;
+
+find \( -name "*.md" -or -name "*.scd" \) -exec spellintian {} \;
+
