@@ -63,7 +63,7 @@ end comment
 
 2018-03-17 * Test
     ; Another comment
-    Assets:Test                        10.00 EUR ; What an "interesting" accout name
+    Assets:Test                        10.00 EUR ; What an "interesting" account name
     ; full line posting comment
     Equity:Opening-Balance            -10.00 EUR ; Opening balance?
         ; posting-level comment
