@@ -3,6 +3,7 @@
 ## 2.3 (unreleased)
 
 * Convert documentation to `mkdocs`
+* Make parsing of numbers more strict
 
 ## 2.2 (2020-05-30)
 
