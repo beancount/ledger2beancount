@@ -283,7 +283,7 @@ sub pp_amount($$$$) {
 	$number =~ s/,/./; # issue #204
     }
 
-    # ledger allows amounts without a leading zero (e.g. 0.10) but
+    # ledger allows amounts without a leading zero (e.g. .10) but
     # beancount doesn't.
     $number = "0$number" if $number =~ /^[\.,]/;
 
