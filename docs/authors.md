@@ -11,6 +11,7 @@ We have also had contributions and input from:
 
 * Alen Siljak (bug reports)
 * Ben Creasy (fixes)
+* Colin Dean (bug reports)
 * Jelmer Vernooĳ (package for Debian)
 * Johannes Raufeisen (bug reports)
 * John Wiegley (help with compatibility with ledger)

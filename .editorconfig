@@ -31,12 +31,6 @@ indent_style = space
 [tests/accounts.ledger]
 trim_trailing_whitespace = false
 
-[tests/accounts.beancount]
-trim_trailing_whitespace = false
-
-[tests/balance-assertion.beancount]
-trim_trailing_whitespace = false
-
 [tests/hledger.beancount]
 trim_trailing_whitespace = false
 

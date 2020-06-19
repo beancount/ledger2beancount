@@ -193,7 +193,7 @@ option "name_income" "Revenue"
   Assets:Test    -10.00 EUR
 
 2018-04-18 * "Preserve whitespace: shorter"
-  Assets:Short  	10.00 EUR
+  Assets:Short	  10.00 EUR
   Assets:Test	-10.00 EUR
 
 2018-04-18 * "Preserve whitespace: shorter"
@@ -239,31 +239,31 @@ option "name_income" "Revenue"
 
 2018-10-22 txn "Whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank   	            -10.00 EUR
+  Assets:Bank 	              -10.00 EUR
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank 
+  Assets:Bank
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank	
+  Assets:Bank
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank 	
+  Assets:Bank
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank   
+  Assets:Bank
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank  	
+  Assets:Bank
 
 2018-10-22 txn "Trailing whitespace is not part of account name"
   Assets:Test                      10.00 EUR
-  Assets:Bank   	
+  Assets:Bank
 
 2019-02-28 txn "Tab after account name"
   Assets:Test                           10.00 EUR

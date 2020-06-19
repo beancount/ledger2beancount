@@ -6,6 +6,7 @@ modules:
 * `Config::Onion`
 * `Date::Calc`
 * `DateTime::Format::Strptime`
+* `enum`
 * `File::BaseDir`
 * `Getopt::Long::Descriptive`
 * `String::Interpolate`
@@ -24,7 +25,7 @@ If you use Debian, you can install the dependencies with this command:
 sudo apt install libconfig-onion-perl libdate-calc-perl \
     libfile-basedir-perl libyaml-libyaml-perl \
     libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
-    libstring-interpolate-perl
+    libstring-interpolate-perl libenum-perl
 ```
 
 Note that `String::Interpolate` (`libstring-interpolate-perl`) was not

@@ -63,7 +63,7 @@
 2019-01-19 txn "KFC"
   Expenses:Food                         20.00 USD
   Expenses:Drinks                        3.00 USD
-  Assets:Cash                                  
+  Assets:Cash
 
 2019-01-20 balance Assets:Cash  -43.00 USD
 
@@ -71,7 +71,7 @@
 2019-01-20 txn "KFC"
   Expenses:Food-and-drink              20.00 USD
   Expenses:Tips                         3.00 USD
-  Assets:Wallet-cash                          
+  Assets:Wallet-cash
 
 2019-01-21 balance Assets:Wallet-cash  -23.00 USD
 
@@ -109,7 +109,7 @@
 
 2019-04-28 txn "Food"
   Expenses:Food                      10.00 THB
-  Assets:Wallet                                
+  Assets:Wallet
 
 2019-04-29 balance Assets:Wallet  490.00 THB
 

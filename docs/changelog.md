@@ -2,6 +2,7 @@
 
 ## 2.3 (unreleased)
 
+* Improve parsing of postings for accuracy and speed
 * Convert documentation to `mkdocs`
 * Make parsing of numbers more strict
 
