@@ -80,8 +80,8 @@ my $hledger_tags_RE = qr/(?<tags>[^ ]+:.*)/;
 # To keep the regex simpler, we parse the () and [] for virtual accounts
 # as part of the account name and strip these brackets later.
 my $account_RE = qr/[^\s;][^\t]*?/;
-my $value_RE = qr/[\d.,]+/;
-my $value_exp_RE = qr/$value_RE([\h*\/+-]*$value_RE)?/;
+my $number_RE = qr/[\d.,]+/;
+my $value_exp_RE = qr/$number_RE([\h*\/+-]*$number_RE)?/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
 my $commodity_quoted_RE = qr/(["'])(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
@@ -274,21 +274,21 @@ sub pp_metadata($$) {
     return "$key: $value";
 }
 
-# Print an amount ([minus] value commodity)
+# Print an amount ([minus] number commodity)
 sub pp_amount($$$$) {
-    my ($minus, $value, $commodity, $inline_math) = @_;
+    my ($minus, $number, $commodity, $inline_math) = @_;
 
     if ($config->{decimal_comma}) {
-	$value =~ s/\.//g;
-	$value =~ s/,/./; # issue #204
+	$number =~ s/\.//g;
+	$number =~ s/,/./; # issue #204
     }
 
     # ledger allows amounts without a leading zero (e.g. 0.10) but
     # beancount doesn't.
-    $value = "0$value" if $value =~ /^[\.,]/;
+    $number = "0$number" if $number =~ /^[\.,]/;
 
     return sprintf "%s%s%s%s %s", $inline_math ? "(" : "",
-	$minus =~ "^-" ? "-" : "", $value,
+	$minus =~ "^-" ? "-" : "", $number,
 	$inline_math ? ")" : "",
 	map_commodity $commodity;
 }
