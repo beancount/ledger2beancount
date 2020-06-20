@@ -127,6 +127,17 @@ my %ledger_accounts;
 my %ledger_commodities;
 my %ledger_metadata;
 
+# Date parsing functions
+my $date_complete = DateTime::Format::Strptime->new(
+    pattern  => $config->{date_format},
+    on_error => "undef",
+);
+
+my $date_no_year = DateTime::Format::Strptime->new(
+    pattern  => $config->{date_format_no_year},
+    on_error => "undef",
+);
+
 # Declarations
 sub map_commodity($);
 sub print_tags($@);
@@ -160,10 +171,6 @@ sub pp_date($$) {
 
     my $date;
 
-    my $date_complete = DateTime::Format::Strptime->new(
-	pattern  => $config->{date_format},
-	on_error => "undef",
-    );
     $date = $date_complete->parse_datetime($date_str);
     if ($date) {
 	return strftime("%F", $date);
@@ -171,10 +178,6 @@ sub pp_date($$) {
 	die "Can't parse date $date_str (set date_format and date_format_no_year)";
     }
 
-    my $date_no_year = DateTime::Format::Strptime->new(
-	pattern  => $config->{date_format_no_year},
-	on_error => "undef",
-    );
     $date = $date_no_year->parse_datetime($date_str);
     if ($date) {
 	if ($year) {
