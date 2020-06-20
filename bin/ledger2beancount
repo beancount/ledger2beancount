@@ -21,6 +21,7 @@ use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
+use Memoize;
 use POSIX qw/ceil/;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
@@ -190,6 +191,7 @@ sub pp_date($$) {
 	die "Can't parse date $date_str (set date_format_no_year)";
     }
 }
+memoize('pp_date');
 
 
 # parse a ledger value. Usually to extract "semantic" values from typed
