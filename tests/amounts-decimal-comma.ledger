@@ -150,3 +150,35 @@ P 2002-01-01 € 6,55957 FRF
     Assets:Test                        $,10
     Assets:Test                      $-0,10
 
+2020-06-22 Paycheck
+    Income:Salary                   -4000,00 USD
+    Assets:Bank                      4000,00 USD
+    Income:401k:Match        ($-4.000,00 * 0,05)
+    Assets:Investments        ($4.000,00 * 0,05)
+
+2020-06-22 Paycheck
+    Income:Salary                   -4000,00 USD
+    Assets:Bank                      4000,00 USD
+    Income:401k:Match      (-4000,00 USD * 0,05)
+    Assets:Investments      (4000,00 USD * 0,05)
+
+2020-06-22 Inline math
+    Assets:Test1              ((4,00 * $100,00))
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1              ((4,00) * $100,00)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1         ((4,00*2,00) * $100,00)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1  ((4,00 USD*2,00) * 100,00 USD)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1              (2,00 USD * -4,00)
+    Assets:Test2
+

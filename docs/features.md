@@ -29,7 +29,6 @@ The majority of features from ledger are supported by ledger2beancount.
   * State flags (posting flags)
   * Transaction state (transaction flags)
 * Inline math
-  * Very simple inline math only
 * Lots
   * Lot dates
   * Lot notes

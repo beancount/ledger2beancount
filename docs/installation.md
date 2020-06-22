@@ -9,6 +9,8 @@ modules:
 * `enum`
 * `File::BaseDir`
 * `Getopt::Long::Descriptive`
+* `List::MoreUtils`
+* `Regexp::Common`
 * `String::Interpolate`
 * `YAML::XS`
 
@@ -25,7 +27,8 @@ If you use Debian, you can install the dependencies with this command:
 sudo apt install libconfig-onion-perl libdate-calc-perl \
     libfile-basedir-perl libyaml-libyaml-perl \
     libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
-    libstring-interpolate-perl libenum-perl
+    libstring-interpolate-perl libenum-perl liblist-moreutils-perl \
+    libregexp-common-perl
 ```
 
 Note that `String::Interpolate` (`libstring-interpolate-perl`) was not

@@ -556,22 +556,30 @@ map these account names.
 
 ## Inline math
 
-Very simple inline math is supported in postings.  Specifically, basic
-multiplications and divisions are supported, such as shown in the
-following transactions:
+Ledger supports inline math in transactions:
 
 ```ledger
 2018-03-26 * Simple inline math
     Assets:Test1            1 GBP @ (1/1.14 EUR)
     Assets:Test2                       -0.88 EUR
-
-2018-03-26 * Simple inline math
-    Assets:Test1                     (1 * 3 GBP)
-    Assets:Test2                          -3 GBP
 ```
 
-Support for more complex inline math would require substantial changes
-to the parser.
+Beancount also supports inline math, but support is limited to the basic
+arithmetic operations.  Basic math is converted by ledger2beancount to
+the format expected by beancount.  Specifically, the commodity is moved
+from the inline math construct in order to create the "number commodity"
+format expected by beancount:
+
+```beancount
+2018-03-26 * "Simple inline math"
+  Assets:Test1            1 GBP @ (1/1.14) EUR
+  Assets:Test2                       -0.88 EUR
+```
+
+Ledger additionally supports functions in inline math, such as `abs`,
+`rounded`, and `roundto`.  Such complex inline math is not supported
+by beancount.  It will result in a conversion note and an invalid
+beancount file.
 
 
 ## Implicit conversions

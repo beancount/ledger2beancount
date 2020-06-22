@@ -4,6 +4,7 @@
 
 * Improve speed of ledger2beancount significantly
 * Improve parsing of postings for accuracy and speed
+* Improve support for inline math
 * Convert documentation to `mkdocs`
 * Make parsing of numbers more strict
 

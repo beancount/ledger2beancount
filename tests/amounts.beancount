@@ -20,12 +20,16 @@
 1970-01-01 commodity GBP
 1970-01-01 commodity USD
 
+1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Current
+1970-01-01 open Assets:Investments
 1970-01-01 open Assets:Receivable
 1970-01-01 open Assets:Rewards
 1970-01-01 open Assets:Test
 1970-01-01 open Expenses:Housing:Rent
 1970-01-01 open Expenses:Travel:Airfare
+1970-01-01 open Income:401k:Match
+1970-01-01 open Income:Salary
 1970-01-01 open Liabilities:BA
 
 1970-01-01 commodity AVIOS
@@ -155,4 +159,36 @@
   Assets:Test                      -0.10 USD
   Assets:Test     19,200 CZK @ 0.04585052 USD
   Assets:Test                    -880.33 USD
+
+2020-06-22 txn "Paycheck"
+  Income:Salary                   -4000.00 USD
+  Assets:Bank                      4000.00 USD
+  Income:401k:Match         (-4000.00 * 0.05) USD
+  Assets:Investments         (4000.00 * 0.05) USD
+
+2020-06-22 txn "Paycheck"
+  Income:Salary                   -4000.00 USD
+  Assets:Bank                      4000.00 USD
+  Income:401k:Match      (-4000.00* 0.05) USD
+  Assets:Investments      (4000.00* 0.05) USD
+
+2020-06-22 txn "Inline math"
+  Assets:Test1              ((4.00 *100.00)) USD
+  Assets:Test2
+
+2020-06-22 txn "Inline math"
+  Assets:Test1              ((4.00) *100.00) USD
+  Assets:Test2
+
+2020-06-22 txn "Inline math"
+  Assets:Test1         ((4.00*2.00) *100.00) USD
+  Assets:Test2
+
+2020-06-22 txn "Inline math"
+  Assets:Test1  ((4.00*2.00) * 100.00) USD
+  Assets:Test2
+
+2020-06-22 txn "Inline math"
+  Assets:Test1              (2.00* -4.00) USD
+  Assets:Test2
 

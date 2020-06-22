@@ -21,13 +21,15 @@ use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
+use List::MoreUtils qw(uniq);
 use Memoize;
 use POSIX qw/ceil/;
+use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
 
 use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
-            COST PRICE ASSERTION MATH NUMBER CURRENCY DATE NOTE FIXATED);
+            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED);
 
 my ($opt, $usage) = describe_options(
     "ledger2beancount %o <ledger-file>",
@@ -274,12 +276,7 @@ sub pp_metadata($$) {
 sub pp_amount($) {
     my ($amount) = @_;
 
-    my $number = $amount->[NUMBER];
-    if (defined $amount->[MATH]) {
-	$number = "(" . $amount->[MATH] . $number . ")";
-    }
-
-    return sprintf "%s %s", $number, $amount->[CURRENCY];
+    return sprintf "%s %s", $amount->[NUMBER], $amount->[CURRENCY];
 }
 
 
@@ -731,28 +728,41 @@ sub get_amount($);
 
 # Parse inline math
 sub get_value_expr($) {
-    my ($math, $l) = @_;
-    $l = "" if !defined $l;
+    my ($l) = @_;
 
-    my $amount;
-    # We only support very basic inline math at the moment
-    if ($math =~ /^(?<math>$number_RE+\s*[*\/+-]\s*)(?<amount>.*)/) {
-	$math = $+{math};
-	$amount = $+{amount};
-    } else {
-	die "Cannot parse inline math: $math";
+    if ($l !~ /^(?<math>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
+	die "Cannot parse inline math from $l\n";
     }
-    my $rest;
-    ($amount, $rest) = get_amount $amount;
-    if ($rest) {
-	die "Cannot parse inline math: $math; rest: $rest";
-    }
+    my $math = $+{math};
+    my $rest = $+{rest};
+
     if ($config->{decimal_comma}) {
 	$math =~ s/\.//g;
 	$math =~ tr/,/./; # issue #204
     }
-    $amount->[MATH] = $math;
-    return $amount, $l;
+
+    # We have to move the commodity from within the inline math construct
+    # to after (outside) the inline math since beancount expects the
+    # format "number currency" (where number can be basic math).
+    # The easiest way to do this is to remove all arithmetic operations
+    # and see what's left over.  If there's a single term at the end,
+    # that's the commodity we need.  If there are multiple, beancount
+    # can't handle it.
+    my $terms = $math;
+    $terms =~ s/[.\d\(\)\*\/+-]/ /g;
+    $terms =~ s/^\s+//;
+    my @terms = uniq split /\s+/, $terms;
+    if (scalar @terms == 0) {
+	die "Failed to find commodity in inline math: $math\n";
+    } elsif (scalar @terms == 1) {
+	$math =~ s/\s*\Q$terms[0]\E\s*//g;
+    } else {
+	print_warning_once("Complex inline math not supported in beancount: $math");
+    }
+    my $amount;
+    $amount->[NUMBER] = $math;
+    $amount->[CURRENCY] = map_commodity $terms[0];
+    return $amount, $rest;
 }
 
 
@@ -761,8 +771,8 @@ sub get_amount($) {
     my ($l) = @_;
 
     # Inline math
-    if ($l =~ /^\((?<math>[^)]+)\)\s*(?<rest>.*)/) {
-	return get_value_expr $+{math}, $+{rest};
+    if ($l =~ /^\(/) {
+	return get_value_expr $l;
     }
 
     my $amount;

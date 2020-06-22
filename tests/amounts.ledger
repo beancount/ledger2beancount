@@ -136,3 +136,35 @@ commodity $
     Assets:Test     19,200 CZK @ $.04585052
     Assets:Test                    -$880.33
 
+2020-06-22 Paycheck
+    Income:Salary                   -4000.00 USD
+    Assets:Bank                      4000.00 USD
+    Income:401k:Match         ($-4000.00 * 0.05)
+    Assets:Investments         ($4000.00 * 0.05)
+
+2020-06-22 Paycheck
+    Income:Salary                   -4000.00 USD
+    Assets:Bank                      4000.00 USD
+    Income:401k:Match      (-4000.00 USD * 0.05)
+    Assets:Investments      (4000.00 USD * 0.05)
+
+2020-06-22 Inline math
+    Assets:Test1              ((4.00 * $100.00))
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1              ((4.00) * $100.00)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1         ((4.00*2.00) * $100.00)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1  ((4.00 USD*2.00) * 100.00 USD)
+    Assets:Test2
+
+2020-06-22 Inline math
+    Assets:Test1              (2.00 USD * -4.00)
+    Assets:Test2
+
