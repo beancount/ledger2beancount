@@ -432,6 +432,11 @@ as regular prices).
 Lot costs and prices are supported, including per-unit and total lot
 costs.  Lot dates and lot notes are converted to beancount.
 
+Ledger allows [lot value expressions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Lot-value-expressions)
+to indicate how to calculate the value of commodities.  Lot value
+expressions are ignored by ledger2beancount since there's no
+equivalence in beancount.
+
 The behaviour of ledger and beancount is different when it comes to
 costs.  In ledger, the statement
 

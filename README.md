@@ -89,6 +89,7 @@ use ledger2beancount and to configure it to your needs.
   * `tag`: skipped (not needed in beancount)
   * `value`: skipped (not supported in beancount)
 * Fixated prices (`=$10` and the `fixed` directive)
+* Lot value expressions (no equivalence in beancount)
 * Tags and links on posting-level (not supported by beancount)
 * Transaction codes: stored as metadata (no equivalence in beancount)
 * Virtual postings: can be skipped or converted to real postings

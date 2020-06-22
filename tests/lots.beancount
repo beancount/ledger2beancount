@@ -1,6 +1,8 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
 ;
+;   - Lot value expressions not supported in beancount: 2 EUR
+;   - Lot value expressions not supported in beancount: ten_dollars
 ;   - Commodity XXXx renamed to XXXX
 ;   - Metadata key VALUE renamed to vALUE
 ;   - Collision for commodity EUR: EUR, €
@@ -12,6 +14,7 @@
 ; SPDX-License-Identifier: GPL-3.0-or-later
 
 1970-01-01 open Assets:Test
+1970-01-01 open Assets:Brokerage
 1970-01-01 open Equity:Opening-Balance
 1970-01-01 open Income:Capital-Gain
 
@@ -31,6 +34,8 @@
 1970-01-01 open Expenses:Currency
 1970-01-01 open Expenses:Food
 1970-01-01 open Expenses:Test
+
+1970-01-01 commodity AAPL
 
 2018-03-17 * "Opening balance"
   Assets:Test              100.00 EUR {{90.00 GBP}}
@@ -325,4 +330,23 @@
   Expenses:Food             20.00 USD
     vALUE: 30 DM
   Assets:Cash              -20.00 USD
+
+2012-03-02 txn "KFC"
+  Expenses:Food      1 USD {{0.90 EUR}}
+  Assets:Cash
+
+2012-04-10 txn "My Broker"
+  Assets:Brokerage                     375.00 USD
+  Assets:Brokerage         -5 AAPL {50.00 USD} @@ 375.00 USD
+  Income:Capital-Gain                 -125.00 USD
+
+2012-04-10 txn "My Broker"
+  Assets:Brokerage                     375.00 USD
+  Assets:Brokerage        -5 AAPL {50.00 USD} @@ 375.00 USD
+  Income:Capital-Gain                 -125.00 USD
+
+2012-04-10 txn "My Broker"
+  Assets:Brokerage                     375.00 USD
+  Assets:Brokerage        -5 AAPL {50.00 USD} @@ 375.00 USD
+  Income:Capital-Gain                 -125.00 USD
 

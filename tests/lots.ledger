@@ -3,6 +3,7 @@
 ; SPDX-License-Identifier: GPL-3.0-or-later
 
 account Assets:Test
+account Assets:Brokerage
 account Equity:Opening-Balance
 account Income:Capital-Gain
 
@@ -300,4 +301,23 @@ commodity XXXx
     Expenses:Food             20.00 USD
     ; VALUE:: 30 DM
     Assets:Cash              -20.00 USD
+
+2012-03-02 KFC
+    Expenses:Food      $1 {{0.90 EUR}} ((2 EUR))
+    Assets:Cash
+
+2012-04-10 My Broker
+    Assets:Brokerage                     $375.00
+    Assets:Brokerage         -5 AAPL {$50.00} ((ten_dollars)) @@ $375.00
+    Income:Capital-Gain                 $-125.00
+
+2012-04-10 My Broker
+    Assets:Brokerage                     $375.00
+    Assets:Brokerage        -5 AAPL {$50.00} ((market)) @@ $375.00
+    Income:Capital-Gain                 $-125.00
+
+2012-04-10 My Broker
+    Assets:Brokerage                     $375.00
+    Assets:Brokerage        -5 AAPL {$50.00} (( market )) @@ $375.00
+    Income:Capital-Gain                 $-125.00
 

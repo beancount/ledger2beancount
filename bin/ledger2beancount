@@ -835,9 +835,23 @@ sub get_lot($) {
 	$lot->[DATE] = pp_date $+{date}, 0;
     }
 
-    if ($l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
+    if ($l !~ /^\(\(/ && $l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[NOTE] = $+{note};
+    }
+
+    if ($l =~ /^\(\(/ && $l =~ /^(?<valuation>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
+	$l = $+{rest};
+	my $valuation = $+{valuation};
+	$valuation =~ s/^\(\(//;
+	$valuation =~ s/\)\)$//;
+	$valuation =~ s/^\s+//;
+	$valuation =~ s/\s+$//;
+	# Print a warning unless it's "market" which is the default
+	# behaviour anyway.
+	if ($valuation ne "market") {
+	    print_warning_once "Lot value expressions not supported in beancount: $valuation";
+	}
     }
 
     if (!($lot->[AMOUNT] || $lot->[DATE] || $lot->[NOTE])) {
