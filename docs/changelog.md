@@ -9,6 +9,7 @@
 * Add support for lot value expressions
 * Convert documentation to `mkdocs`
 * Make parsing of numbers more strict
+* Fix behaviour of dates without year
 
 ## 2.2 (2020-05-30)
 

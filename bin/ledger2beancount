@@ -183,12 +183,8 @@ sub pp_date($$) {
 
     $date = $date_no_year->parse_datetime($date_str);
     if ($date) {
-	if ($year) {
-	    $date->set_year($year);
-	    return strftime("%F", $date);
-	} else {
-	    die "Date without year but no Y/year directive: $date_str";
-	}
+	$date->set_year($year);
+	return strftime("%F", $date);
     } else {
 	die "Can't parse date $date_str (set date_format_no_year)";
     }
@@ -1219,7 +1215,12 @@ open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
 my @input = <$input>;
 close $input;
 
-my $year; # To store year declaration
+# To store year declaration
+my $year = POSIX::strftime "%Y", localtime;
+# The year to be used if there's no "apply year" in force; this is either
+# the current year (or no date was specified) or whatever was last
+# specified using the Y/year directive.
+my $year_no_apply = POSIX::strftime "%Y", localtime;
 
 while (@input) {
     my $l = shift @input;
@@ -1295,12 +1296,15 @@ while (@input) {
 	    print_line $depth, "poptag " . pp_tag_link ${$a}[1]
 	} elsif (${$a}[0] eq "year") {
 	    # apply year can be nested, so restore the previous year
+	    my $found = 0;
 	    foreach my $a (reverse @ledger_apply) {
 		if (${$a}[0] eq "year") {
 		    $year = ${$a}[1];
+		    $found = 1;
 		    last;
 		}
 	    }
+	    $year = $year_no_apply if !$found;
 	}
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
 	$ledger_bucket = $2;
@@ -1323,6 +1327,7 @@ while (@input) {
 	print_comment_top_level 0, $l;
     } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
+	$year_no_apply = $2;
     } elsif ($l =~ /^$price_RE/) {
 	$after_auto = 1;
 	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};

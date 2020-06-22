@@ -144,6 +144,10 @@
   Equity:Opening-Balance            -10.00 EUR
 
 
+2016-04-13 txn "Test year after apply year - should be back to last year directive: 2016"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
 include "include1.beancount"
 include "include2.beancount"
 include "include3.beancount"
