@@ -2,6 +2,7 @@
 ;
 ; SPDX-License-Identifier: GPL-3.0-or-later
 
+account Assets:Bank
 account Assets:Test
 account Equity:Opening-Balance
 
@@ -45,4 +46,12 @@ P 2019-04-28 17:12:15 EUR ¥124.56
 2020-06-22 * Lot date and virtual price
     Assets:Test               10.00 EUR {1.23 USD} [2020-06-21] (@@) 1.30 USD
     Equity:Opening-Balance
+
+2020-06-22 * Lot note followed by virtual price
+    Assets:Test               10.00 EUR {1.23 USD} (this is a note) (@) 1.30 USD
+    Assets:Bank
+
+2020-06-22 * Lot note followed by virtual price
+    Assets:Test               10.00 EUR {1.23 USD} (this is a note) (@@) 1.30 USD
+    Assets:Bank
 

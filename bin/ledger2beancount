@@ -843,9 +843,11 @@ sub get_lot($) {
 
     # A lot note: (note).  Don't confuse with a ((lot value expression))
     # (see below) or a virtual price: (@).
-    if ($l !~ /^\(\(/ && $l !~ /^\(@/ && $l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
+    if ($l !~ /^\(\(/ && $l !~ /^\(@/ && $l =~ /^(?<note>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[NOTE] = $+{note};
+	$lot->[NOTE] =~ s/^\(//;
+	$lot->[NOTE] =~ s/\)$//;
     }
 
     # A lot value expression: ((market))
