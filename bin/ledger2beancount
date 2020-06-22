@@ -820,6 +820,11 @@ sub get_lot($) {
 
     my $lot;
 
+    # A lot can contain various information but pretty much everything
+    # is optional.  The order is fixed, though: cost, date, note and
+    # lot value expressions.
+
+    # First, look for a cost: {...} or {{...}}
     if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[TYPE] = $+{type};
@@ -830,16 +835,19 @@ sub get_lot($) {
 	}
     }
 
+    # A lot date: dates are always in square brackets [date]
     if ($l =~ /^\[(?<date>\d+[^ =\]]+)\]\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[DATE] = pp_date $+{date}, 0;
     }
 
+    # A lot note: (note).  Don't confuse with a ((lot value expression)) below
     if ($l !~ /^\(\(/ && $l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[NOTE] = $+{note};
     }
 
+    # A lot value expression: ((market))
     if ($l =~ /^\(\(/ && $l =~ /^(?<valuation>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	my $valuation = $+{valuation};
@@ -854,6 +862,7 @@ sub get_lot($) {
 	}
     }
 
+    # We must have found *something*
     if (!($lot->[AMOUNT] || $lot->[DATE] || $lot->[NOTE])) {
 	die "Cannot parse lot from $l_orig\n";
     }
@@ -869,34 +878,53 @@ sub parse_posting($) {
     my $posting;
     $posting->[TYPE] = POSTING;
 
+    # We parse from left to right since there is a specific order to
+    # everything.  When we parse something, we put the rest of the
+    # line back into $l.
+
+    # Flag: ! or *
     if ($l =~ /^([!*])\s*(.*)/) {
 	$posting->[FLAG] = $1;
 	$l = $2;
     }
 
+    # Account: an account can be pretty much anything, but we know:
+    # * It's the first thing after a flag.
+    # * It ends with two spaces, a tab or the end of line
     if ($l =~ /^(.*?)((  |\t| \t|\s*$)\h*)(.*)/) {
 	$posting->[ACCOUNT] = $1;
 	$posting->[WHITESPACE] = $2;
 	$l = $4;
     }
 
+    # Next we probably have an amount, but this is not necessarily
+    # the case: it could also be a balance assignment (=) or a
+    # comment (;).  If it's neither of those two, it has to be
+    # an amount.
     if ($l =~ /^[^=;]/) {
 	($posting->[AMOUNT], $l) = get_amount $l;
     }
 
+    # Amounts can be followed by lot information: either
+    # a cost ({}, {{}}) or a note (()).  But don't confuse
+    # a note which starts with ( with a virtual price: (@)
     if ($l =~ /^[{(]/ && $l !~ /^\(@/) {
 	($posting->[COST], $l) = get_lot $l;
     }
 
+    # A price: either @, @@, (@), or (@@)
     if ($l =~ /^\(?(@@?)\)?\s*(.*)/) {
 	$posting->[PRICE]->[TYPE] = $1;
 	($posting->[PRICE]->[AMOUNT], $l) = get_amount $2;
     }
 
+    # An assertion (if there's no amount) or balance assignment
+    # (if there's no amount).  Starts with =
     if ($l =~ /^=\s*(.*)/) {
 	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
     }
 
+    # A comment: starts with ;
     if ($l =~ /^;(.*)/) {
 	$l = "";
 	$posting->[COMMENT] = $1;
