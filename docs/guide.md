@@ -568,11 +568,12 @@ Beancount also supports inline math, but support is limited to the basic
 arithmetic operations.  Basic math is converted by ledger2beancount to
 the format expected by beancount.  Specifically, the commodity is moved
 from the inline math construct in order to create the "number commodity"
-format expected by beancount:
+format expected by beancount.  Since beancount doesn't require round
+brackets to denote inline math, they are dropped as well, resulting in:
 
 ```beancount
 2018-03-26 * "Simple inline math"
-  Assets:Test1            1 GBP @ (1/1.14) EUR
+  Assets:Test1              1 GBP @ 1/1.14 EUR
   Assets:Test2                       -0.88 EUR
 ```
 

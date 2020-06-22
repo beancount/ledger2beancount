@@ -736,6 +736,10 @@ sub get_value_expr($) {
     my $math = $+{math};
     my $rest = $+{rest};
 
+    # Strip the outer () since beancount doesn't require them.
+    $math =~ s/^\(//;
+    $math =~ s/\)$//;
+
     if ($config->{decimal_comma}) {
 	$math =~ s/\.//g;
 	$math =~ tr/,/./; # issue #204
