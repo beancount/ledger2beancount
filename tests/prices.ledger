@@ -30,3 +30,19 @@ P 2019-04-28 17:12:15 EUR ¥124.56
     Assets:Test               1.00 ETH (@@) 6500.00 EUR
     Equity:Opening-Balance    -6500.00 EUR
 
+2020-06-22 * Lot and virtual price
+    Assets:Test               10.00 EUR {1.23 USD} (@) 1.30 USD
+    Equity:Opening-Balance
+
+2020-06-22 * Lot date and virtual price
+    Assets:Test               10.00 EUR {1.23 USD} [2020-06-21] (@) 1.30 USD
+    Equity:Opening-Balance
+
+2020-06-22 * Lot and virtual price
+    Assets:Test               10.00 EUR {1.23 USD} (@@) 1.30 USD
+    Equity:Opening-Balance
+
+2020-06-22 * Lot date and virtual price
+    Assets:Test               10.00 EUR {1.23 USD} [2020-06-21] (@@) 1.30 USD
+    Equity:Opening-Balance
+

@@ -841,8 +841,9 @@ sub get_lot($) {
 	$lot->[DATE] = pp_date $+{date}, 0;
     }
 
-    # A lot note: (note).  Don't confuse with a ((lot value expression)) below
-    if ($l !~ /^\(\(/ && $l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
+    # A lot note: (note).  Don't confuse with a ((lot value expression))
+    # (see below) or a virtual price: (@).
+    if ($l !~ /^\(\(/ && $l !~ /^\(@/ && $l =~ /\((?<note>.*)\)\s*(?<rest>.*)/) {
 	$l = $+{rest};
 	$lot->[NOTE] = $+{note};
     }
