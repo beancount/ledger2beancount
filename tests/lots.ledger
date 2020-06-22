@@ -321,3 +321,13 @@ commodity XXXx
     Assets:Brokerage        -5 AAPL {$50.00} (( market )) @@ $375.00
     Income:Capital-Gain                 $-125.00
 
+2020-06-20 Lot value expression and virtual price
+    Assets:Brokerage                     $375.00
+    Assets:Brokerage        -5 AAPL {$50.00} ((market)) (@) $75.00
+    Income:Capital-Gain                 $-125.00
+
+2020-06-20 Lot value expression and virtual price
+    Assets:Brokerage                     $375.00
+    Assets:Brokerage        -5 AAPL {$50.00} ((market)) (@@) $375.00
+   Income:Capital-Gain                 $-125.00
+
