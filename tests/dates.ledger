@@ -21,3 +21,29 @@ commodity USD
     Assets:Test               10.00 EUR {1.23 USD} [2018/03/16] @ 1.23 USD
     Equity:Opening-Balance   -12.30 USD
 
+2020/6/2 * Date %Y/%m/%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2020/06/23 * Date %Y/%m/%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2020/6/2 * Date %Y-%m-%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2020/06/23 * Date %Y-%m-%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+year 2020
+
+6/2 Date %m/%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+06/23 Date %m/%d
+    Assets:Test                        10.00 EUR
+    Assets:Test
+

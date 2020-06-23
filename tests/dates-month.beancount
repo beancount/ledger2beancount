@@ -13,3 +13,28 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+2020-06-02 * "Date %Y/%m/%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2020-06-23 * "Date %Y/%m/%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2020-06-02 * "Date %Y-%m-%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2020-06-23 * "Date %Y-%m-%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+
+2020-06-02 txn "Date %m/%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2020-06-23 txn "Date %m/%d"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+

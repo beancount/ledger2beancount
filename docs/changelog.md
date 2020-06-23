@@ -11,6 +11,7 @@
 * Convert documentation to `mkdocs`
 * Make parsing of numbers more strict
 * Fix behaviour of dates without year
+* Accept default ledger date formats without configuration
 
 ## 2.2 (2020-05-30)
 

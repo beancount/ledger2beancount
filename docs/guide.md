@@ -146,10 +146,17 @@ flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 ## Dates
 
 ledger supports a wide range of date formats whereas beancount requires
-all dates in the format `YYYY-MM-DD` (ISO 8601).  The variable
-`date_format` has to be set if you don't use ISO 8601 for the dates in
-your ledger file.  `date_format` uses the same format as the ledger
-options `--input-date-format` and `--date-format` (see `man 1 date`).
+all dates in the format `YYYY-MM-DD` (ISO 8601).  ledger2beancount
+automatically recognizes the default date formats from ledger:
+
+* `YYYY-YY-DD`
+* `YYYY/MM/DD`
+* `MM/DD` (without year)
+
+The variable `date_format` has to be set if you don't use any of these
+date formats in your ledger file.  `date_format` uses the same format
+as the ledger options `--input-date-format` and `--date-format` (see
+`man 1 date`).
 
 Ledger allows dates without a year if the year is declared using the
 `Y`, `year` and `apply year` directives.  If `date_format_no_year` is

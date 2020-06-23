@@ -141,6 +141,11 @@ my $date_no_year = DateTime::Format::Strptime->new(
     on_error => "undef",
 );
 
+my $date_iso = DateTime::Format::Strptime->new(
+    pattern  => "%Y-%m-%d",
+    on_error => "undef",
+);
+
 # Declarations
 sub map_commodity($);
 sub print_tags($@);
@@ -174,6 +179,21 @@ sub pp_date($$) {
 
     my $date;
 
+    # Try the date formats built into ledger
+    my $date_str_iso;
+    if ($date_str =~ /^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2}$)/) {
+	# Formats %Y/%m/%d and %Y-%m-%d
+	$date_str_iso = sprintf "%4d-%02d-%02d", $1, $2, $3;
+    } elsif ($date_str =~ /^(\d{1,2})\/(\d{1,2})$/) {
+	# Format %m/%d
+	$date_str_iso = sprintf "%4d-%02d-%02d", $year, $1, $2;
+    }
+    if ($date_str_iso) {
+	$date = $date_iso->parse_datetime($date_str_iso);
+	return strftime("%F", $date) if $date;
+    }
+
+    # Try the configured date forms
     $date = $date_complete->parse_datetime($date_str);
     if ($date) {
 	return strftime("%F", $date);
