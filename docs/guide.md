@@ -98,7 +98,7 @@ beancount.
 Ledger allows amounts without commodities, e.g.:
 
 ```ledger
-Assets:Test                         10.00
+    Assets:Test                         10.00
 ```
 
 While this is allowed in ledger (but not in beancount), it's not
@@ -441,14 +441,14 @@ The behaviour of ledger and beancount is different when it comes to
 costs.  In ledger, the statement
 
 ```ledger
-Assets:Test          10.00 EUR @ 0.90 GBP
+    Assets:Test          10.00 EUR @ 0.90 GBP
 ```
 
 creates the lot `10.00 EUR {0.90 GBP}`.  In beancount, this is not the
 case and a cost is only associated if done so explicitly:
 
 ```beancount
-Assets:Test          10.00 EUR {0.90 GBP}
+  Assets:Test          10.00 EUR {0.90 GBP}
 ```
 
 This makes automatic conversion tricky because some statements should be
