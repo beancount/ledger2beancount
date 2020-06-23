@@ -471,6 +471,34 @@ cash value.  Both of these variables expect beancount commodities, i.e.
 after transformation and mapping.  (Note that beancount itself uses the
 terms "commodity" and "currency" interchangeably.)
 
+Finally, lots are possible without a cost.  For example, you can use
+a lot note to track a specific voucher:
+
+```ledger
+2020-06-23 * Voucher
+    Assets:Voucher        100.00 EUR (48H5)
+    Assets:Cash          -100.00 EUR
+```
+
+The same appears to be allowed in beancount (but [look at this
+issue](https://github.com/beancount/beancount/issues/482)) and
+ledger2beancount makes the syntax conversion automatically.
+However, ledger also allows the creation of a lot with just a date:
+
+```ledger
+2020-06-23 * Voucher
+    Assets:Voucher        100.00 EUR [2020-06-22]
+    Assets:Cash          -100.00 EUR
+```
+
+Beancount does not allow a lot with a date but no cost.  Therefore, the
+amount is used as the cost:
+
+```beancount
+2020-06-23 * "Voucher"
+  Assets:Voucher        100.00 EUR {{100.00 EUR, 2020-06-22}}
+  Assets:Cash          -100.00 EUR
+```
 
 ## Balance assertions and assignments
 

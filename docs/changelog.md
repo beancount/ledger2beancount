@@ -5,6 +5,7 @@
 * Improve speed of ledger2beancount significantly
 * Improve parsing of postings for accuracy and speed
 * Improve support for inline math
+* Handle lots without cost
 * Fix parsing of lot notes followed by a virtual price
 * Add support for lot value expressions
 * Convert documentation to `mkdocs`

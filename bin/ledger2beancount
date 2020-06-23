@@ -280,10 +280,11 @@ sub pp_amount($) {
 sub pp_lot($) {
     my ($lot) = @_;
 
-    my $info = pp_amount $lot->[AMOUNT];
-    $info .= ", " . $lot->[DATE] if defined $lot->[DATE];
-    $info .= ", \"" . $lot->[NOTE] . "\"" if defined $lot->[NOTE];
-    return $info;
+    my @info;
+    push @info, pp_amount $lot->[AMOUNT] if defined $lot->[AMOUNT];
+    push @info, $lot->[DATE] if defined $lot->[DATE];
+    push @info, '"' . $lot->[NOTE] . '"' if defined $lot->[NOTE];
+    return join ", ", @info;
 }
 
 
@@ -291,9 +292,10 @@ sub pp_lot($) {
 sub pp_cost($) {
     my ($lot) = @_;
 
-    my $info = "{" x length $lot->[TYPE];
+    my $num = defined $lot->[TYPE] ? length $lot->[TYPE] : 1;
+    my $info = "{" x $num;
     $info .= pp_lot $lot;
-    $info .= "}" x length $lot->[TYPE];
+    $info .= "}" x $num;
     return $info;
 }
 
@@ -833,36 +835,41 @@ sub get_lot($) {
     my ($l) = @_;
     my $l_orig = $l;
 
-    my $lot;
+    my ($amount, $cost, $date);
 
     # A lot can contain various information but pretty much everything
-    # is optional.  The order is fixed, though: cost, date, note and
-    # lot value expressions.
+    # apart from the amount is optional.  The order is fixed, though:
+    # amount, cost, date, note and lot value expressions.  If no
+    # optional information is specified, it's merely an amount and not
+    # a lot.
 
-    # First, look for a cost: {...} or {{...}}
+    # Find the amount
+    ($amount, $l) = get_amount $l;
+
+    # Look for a cost: {...} or {{...}}
     if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?\s*(?<rest>.*)/) {
 	$l = $+{rest};
-	$lot->[TYPE] = $+{type};
+	$cost->[TYPE] = $+{type};
 	my $rest;
-	($lot->[AMOUNT], $rest) = get_amount $+{amount};
+	($cost->[AMOUNT], $rest) = get_amount $+{amount};
 	if ($rest) {
-	    die "Amount in lot had a rest: $rest";
+	    die "Cost in lot had a rest: $rest";
 	}
     }
 
     # A lot date: dates are always in square brackets [date]
     if ($l =~ /^\[(?<date>\d+[^ =\]]+)\]\s*(?<rest>.*)/) {
 	$l = $+{rest};
-	$lot->[DATE] = pp_date $+{date}, 0;
+	$date = pp_date $+{date}, 0;
     }
 
     # A lot note: (note).  Don't confuse with a ((lot value expression))
     # (see below) or a virtual price: (@).
     if ($l !~ /^\(\(/ && $l !~ /^\(@/ && $l =~ /^(?<note>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
 	$l = $+{rest};
-	$lot->[NOTE] = $+{note};
-	$lot->[NOTE] =~ s/^\(//;
-	$lot->[NOTE] =~ s/\)$//;
+	$cost->[NOTE] = $+{note};
+	$cost->[NOTE] =~ s/^\(//;
+	$cost->[NOTE] =~ s/\)$//;
     }
 
     # A lot value expression: ((market))
@@ -880,12 +887,18 @@ sub get_lot($) {
 	}
     }
 
-    # We must have found *something*
-    if (!($lot->[AMOUNT] || $lot->[DATE] || $lot->[NOTE])) {
-	die "Cannot parse lot from $l_orig\n";
+    # A date without a cost is not valid in beancount, so add the
+    # amount as the cost, which essentially means that the cost
+    # is 1.00 of the currency.
+    if ($date) {
+	if (!defined $cost->[AMOUNT]) {
+	    $cost->[TYPE] = "{{";
+	    $cost->[AMOUNT] = $amount;
+	}
+	$cost->[DATE] = $date;
     }
 
-    return $lot, $l;
+    return $amount, $cost, $l;
 }
 
 
@@ -915,19 +928,12 @@ sub parse_posting($) {
 	$l = $4;
     }
 
-    # Next we probably have an amount, but this is not necessarily
+    # Next we probably have an amount or a lot, but this is not necessarily
     # the case: it could also be a balance assignment (=) or a
     # comment (;).  If it's neither of those two, it has to be
     # an amount.
     if ($l =~ /^[^=;]/) {
-	($posting->[AMOUNT], $l) = get_amount $l;
-    }
-
-    # Amounts can be followed by lot information: either
-    # a cost ({}, {{}}) or a note (()).  But don't confuse
-    # a note which starts with ( with a virtual price: (@)
-    if ($l =~ /^[{(]/ && $l !~ /^\(@/) {
-	($posting->[COST], $l) = get_lot $l;
+	($posting->[AMOUNT], $posting->[COST], $l) = get_lot $l;
     }
 
     # A price: either @, @@, (@), or (@@)
@@ -1080,7 +1086,7 @@ sub process_txn(@) {
 		$l .= " " . pp_cost $i->[COST];
 		# ledger requires you to specify both lot cost and lot price
 		# due to a bug.  If both are the same, don't put in the price.
-		if (defined $i->[PRICE] && (pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT])) {
+		if (defined $i->[PRICE]->[AMOUNT] && (!defined $i->[COST]->[AMOUNT] || pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT])) {
 		    $l .= " " . pp_price $i->[PRICE];
 		}
 	    }
