@@ -1266,7 +1266,7 @@ my $year = POSIX::strftime "%Y", localtime;
 # The year to be used if there's no "apply year" in force; this is either
 # the current year (or no date was specified) or whatever was last
 # specified using the Y/year directive.
-my $year_no_apply = POSIX::strftime "%Y", localtime;
+my $year_no_apply = $year;
 
 while (@input) {
     my $l = shift @input;
