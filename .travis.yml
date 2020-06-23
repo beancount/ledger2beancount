@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
+dist: focal
 language: python
 python:
   - "3.6"
