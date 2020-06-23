@@ -42,12 +42,18 @@ test_conversion () {
 test_validity_ledger () {
 	test=$1
 	printf "Validating $test... "
-	if ledger --init-file /dev/null -f $test bal > /dev/null; then
+	tmp=$(tempfile)
+	ledger --init-file /dev/null -f $test bal > $tmp 2>&1
+	# Ignore errors due to missing Python support
+	errors=$(grep "^Error:" $tmp | grep -v "^Error: 'python' directive seen" | grep -v "Error: Unknown identifier 'print_type'$")
+	if [ -z "$errors" ]; then
 		echo "ok"
 	else
 		echo "FAIL"
+		cat $tmp
 		status=1
 	fi
+	rm -f $tmp
 }
 
 test_validity_beancount () {
