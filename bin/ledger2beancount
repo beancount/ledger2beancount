@@ -287,6 +287,28 @@ sub pp_lot($) {
 }
 
 
+# Print a cost
+sub pp_cost($) {
+    my ($lot) = @_;
+
+    my $info = "{" x length $lot->[TYPE];
+    $info .= pp_lot $lot;
+    $info .= "}" x length $lot->[TYPE];
+    return $info;
+}
+
+
+# Print a price
+sub pp_price(@) {
+    my ($lot) = @_;
+
+    my $info = "@" x length $lot->[TYPE];
+    $info .= " ";
+    $info .= pp_amount $lot->[AMOUNT];
+    return $info;
+}
+
+
 # check if a tag should be a link based on link_match
 sub is_link($) {
     my ($key) = @_;
@@ -1050,28 +1072,16 @@ sub process_txn(@) {
 		    !($commodity1 ~~ @{$config->{currency_is_commodity}})) ||
 		    $commodity1 ~~ @{$config->{commodity_is_currency}} ||
 		    $commodity2 ~~ @{$config->{commodity_is_currency}})) {
-		    $l .= " ";
-		    $l .= "@" x length $i->[PRICE]->[TYPE];
-		    $l .= " ";
-		    $l .= pp_amount $i->[PRICE]->[AMOUNT];
+		    $l .= " " . pp_price $i->[PRICE];
 		} else {
-		    $l .= " ";
-		    $l .= "{" x length $i->[PRICE]->[TYPE];
-		    $l .= pp_lot $i->[PRICE];
-		    $l .= "}" x length $i->[PRICE]->[TYPE];
+		    $l .= " " . pp_cost $i->[PRICE];
 		}
 	    } elsif (defined $i->[COST]) {
-		$l .= " ";
-		$l .= "{" x length $i->[COST]->[TYPE];
-		$l .= pp_lot $i->[COST];
-		$l .= "}" x length $i->[COST]->[TYPE];
+		$l .= " " . pp_cost $i->[COST];
 		# ledger requires you to specify both lot cost and lot price
 		# due to a bug.  If both are the same, don't put in the price.
 		if (defined $i->[PRICE] && (pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT])) {
-		    $l .= " ";
-		    $l .= "@" x length $i->[PRICE]->[TYPE];
-		    $l .= " ";
-		    $l .= pp_amount $i->[PRICE]->[AMOUNT];
+		    $l .= " " . pp_price $i->[PRICE];
 		}
 	    }
 
