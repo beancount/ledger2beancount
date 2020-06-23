@@ -169,7 +169,11 @@ sub escape_beancount_string($) {
 # return a beancount string literal, with a given content
 sub mk_beancount_string($) {
     my ($s) = @_;
-    return '"' . escape_beancount_string($s) . '"';
+    if ($s !~ /\\|"/) {
+	return '"' . $s . '"';
+    } else {
+	return '"' . escape_beancount_string($s) . '"';
+    }
 }
 
 
