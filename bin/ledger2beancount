@@ -184,6 +184,9 @@ sub pp_date($$) {
     if ($date_str =~ /^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2}$)/) {
 	# Formats %Y/%m/%d and %Y-%m-%d
 	$date_str_iso = sprintf "%4d-%02d-%02d", $1, $2, $3;
+	# We don't need to parse and format the string again if it's
+	# already in ISO format.
+	return $date_str_iso if $date_str eq $date_str_iso;
     } elsif ($date_str =~ /^(\d{1,2})\/(\d{1,2})$/) {
 	# Format %m/%d
 	$date_str_iso = sprintf "%4d-%02d-%02d", $year, $1, $2;
