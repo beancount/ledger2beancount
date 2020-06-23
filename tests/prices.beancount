@@ -3,7 +3,9 @@
 ; SPDX-License-Identifier: GPL-3.0-or-later
 
 1970-01-01 open Assets:Bank
+1970-01-01 open Assets:Cash
 1970-01-01 open Assets:Test
+1970-01-01 open Assets:Voucher
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity ETH
@@ -59,4 +61,64 @@
 2020-06-22 * "Lot note followed by virtual price"
   Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @@ 1.30 USD
   Assets:Bank
+
+2020-06-23 * "Price with cost"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost and date"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost, date and note"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost, date, note and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost, date and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost and note"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost, note and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with cost and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with date"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with date and note"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with date, note and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with date and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with note"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with note and value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
+
+2020-06-23 * "Price with value expression"
+  Assets:Voucher    10.00 EUR @@ 10.00 EUR
+  Assets:Cash
 

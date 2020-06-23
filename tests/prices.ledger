@@ -3,7 +3,9 @@
 ; SPDX-License-Identifier: GPL-3.0-or-later
 
 account Assets:Bank
+account Assets:Cash
 account Assets:Test
+account Assets:Voucher
 account Equity:Opening-Balance
 
 commodity ETH
@@ -54,4 +56,64 @@ P 2019-04-28 17:12:15 EUR ¥124.56
 2020-06-22 * Lot note followed by virtual price
     Assets:Test               10.00 EUR {1.23 USD} (this is a note) (@@) 1.30 USD
     Assets:Bank
+
+2020-06-23 * Price with cost
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP}
+    Assets:Cash
+
+2020-06-23 * Price with cost and date
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} [2020-06-23]
+    Assets:Cash
+
+2020-06-23 * Price with cost, date and note
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} [2020-06-23] (foo)
+    Assets:Cash
+
+2020-06-23 * Price with cost, date, note and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} [2020-06-23] (foo) ((market))
+    Assets:Cash
+
+2020-06-23 * Price with cost, date and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} [2020-06-23] ((market))
+    Assets:Cash
+
+2020-06-23 * Price with cost and note
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} (foo)
+    Assets:Cash
+
+2020-06-23 * Price with cost, note and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} (foo) ((market))
+    Assets:Cash
+
+2020-06-23 * Price with cost and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR {2.00 GBP} ((market))
+    Assets:Cash
+
+2020-06-23 * Price with date
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR [2020-06-23]
+    Assets:Cash
+
+2020-06-23 * Price with date and note
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR [2020-06-23] (foo)
+    Assets:Cash
+
+2020-06-23 * Price with date, note and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR [2020-06-23] (foo) ((market))
+    Assets:Cash
+
+2020-06-23 * Price with date and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR [2020-06-23] ((market))
+    Assets:Cash
+
+2020-06-23 * Price with note
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR (foo)
+    Assets:Cash
+
+2020-06-23 * Price with note and value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR (foo) ((market))
+    Assets:Cash
+
+2020-06-23 * Price with value expression
+    Assets:Voucher    10.00 EUR @@ 10.00 EUR ((market))
+    Assets:Cash
 

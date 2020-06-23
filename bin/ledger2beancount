@@ -939,7 +939,7 @@ sub parse_posting($) {
     # A price: either @, @@, (@), or (@@)
     if ($l =~ /^\(?(@@?)\)?\s*(.*)/) {
 	$posting->[PRICE]->[TYPE] = $1;
-	($posting->[PRICE]->[AMOUNT], $l) = get_amount $2;
+	($posting->[PRICE]->[AMOUNT], $_, $l) = get_lot $2;
     }
 
     # An assertion (if there's no amount) or balance assignment
