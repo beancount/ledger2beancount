@@ -592,7 +592,7 @@ map these account names.
 Ledger supports inline math in transactions:
 
 ```ledger
-2018-03-26 * Simple inline math
+2018-03-26 * Inline math
     Assets:Test1            1 GBP @ (1/1.14 EUR)
     Assets:Test2                       -0.88 EUR
 ```
@@ -605,7 +605,7 @@ format expected by beancount.  Since beancount doesn't require round
 brackets to denote inline math, they are dropped as well, resulting in:
 
 ```beancount
-2018-03-26 * "Simple inline math"
+2018-03-26 * "Inline math"
   Assets:Test1              1 GBP @ 1/1.14 EUR
   Assets:Test2                       -0.88 EUR
 ```
