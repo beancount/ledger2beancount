@@ -718,9 +718,6 @@ sub print_tags($@) {
     }
 }
 
-# See below
-sub get_amount($);
-
 
 # Parse inline math
 sub get_value_expr($) {
