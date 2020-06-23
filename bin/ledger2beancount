@@ -866,6 +866,19 @@ sub get_lot($) {
     # Find the amount
     ($amount, $l) = get_amount $l;
 
+    # Most amounts are not followed by lot information.  If the amount
+    # is followed by something we know can't be a lot information,
+    # stop spending time to look for lot information.  Specifically,
+    # check for:
+    # * Line end: $
+    # * Comment: ;
+    # * Price: @
+    # * Virtual price: (@)
+    # * Balance assertion: =
+    if ($l =~ /^($|;|@|\(@|=)/) {
+	return $amount, $cost, $l;
+    }
+
     # Look for a cost: {...} or {{...}}
     if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?\s*(?<rest>.*)/) {
 	$l = $+{rest};
