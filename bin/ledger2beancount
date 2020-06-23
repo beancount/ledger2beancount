@@ -28,6 +28,11 @@ use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
 
+memoize('map_account');
+memoize('map_commodity');
+memoize('map_metadata');
+memoize('pp_date');
+
 use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED);
 
@@ -216,7 +221,6 @@ sub pp_date($$) {
 	die "Can't parse date $date_str (set date_format_no_year)";
     }
 }
-memoize('pp_date');
 
 
 # parse a ledger value. Usually to extract "semantic" values from typed
@@ -621,12 +625,6 @@ sub map_account_apply($) {
 sub map_account($) {
     my ($account) = my ($ledger_account) = @_;
 
-    if (exists $ledger_alias{$account}) {
-	$account = $ledger_alias{$account};
-    } else {
-	$account = map_account_apply $account;
-    }
-
     $ledger_accounts{$account} = 1;
 
     # Map accounts according to the config
@@ -656,6 +654,20 @@ sub map_account($) {
     }
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
+}
+
+
+# Applies any pending account renames (e.g. ledger alias and "apply
+# account") and then maps the account name.
+sub apply_account($) {
+    my ($account) = @_;
+
+    if (exists $ledger_alias{$account}) {
+	$account = $ledger_alias{$account};
+    } else {
+	$account = map_account_apply $account;
+    }
+    return map_account($account);
 }
 
 
@@ -1080,7 +1092,7 @@ sub process_txn(@) {
 
 	    # Replace ledger account names with corresponding beancount account names
 	    # while trying to keep the whitespace intact.
-	    $i->[ACCOUNT] = map_account $i->[ACCOUNT];
+	    $i->[ACCOUNT] = apply_account $i->[ACCOUNT];
 	    $l .= $i->[ACCOUNT];
 	    my $account_length_new = length $i->[ACCOUNT];
 	    my $space_diff = " "x abs($account_length_new - $account_length_old);
@@ -1171,7 +1183,7 @@ sub process_txn(@) {
 		    # we have to pad against.
 		    my @accounts;
 		    for my $line (@txn_parsed) {
-			push @accounts, map_account $line->[ACCOUNT] if $line->[TYPE] == POSTING;
+			push @accounts, apply_account $line->[ACCOUNT] if $line->[TYPE] == POSTING;
 		    }
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
 		    print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, $i->[ACCOUNT], $accounts[0];
@@ -1201,7 +1213,7 @@ sub process_txn(@) {
     if ($total_postings == 1) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
-	    push_line 1, map_account $ledger_bucket;
+	    push_line 1, $ledger_bucket;
 	} else {
 	    # Transactions can have a single posting as long as the
 	    # amount is 0 (otherwise it would fail to balance).  This
@@ -1360,7 +1372,7 @@ while (@input) {
 	    $year = $year_no_apply if !$found;
 	}
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
-	$ledger_bucket = $2;
+	$ledger_bucket = map_account $2;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
 	$l = shift @input;
 	# block comments may or may not be indented.  If the first line has
