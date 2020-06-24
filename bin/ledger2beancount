@@ -1210,6 +1210,8 @@ sub process_txn(@) {
 	}
     }
     print_tags 2, @cur_txn_tags;
+
+    my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
     if ($total_postings == 1) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
@@ -1223,12 +1225,8 @@ sub process_txn(@) {
 	    # same account name) because it might contain an
 	    # interesting narration.  If there's no amount,
 	    # just use the balance assertion.
-	    my $posting;
-	    foreach my $i (@txn_parsed) {
-		$posting = $i if $i->[TYPE] == POSTING;
-	    }
-	    if (defined $posting->[AMOUNT] && $posting->[AMOUNT]->[NUMBER] == 0.00) {
-		push_line 1, $posting->[ACCOUNT];
+	    if (defined $postings[0]->[AMOUNT] && $postings[0]->[AMOUNT]->[NUMBER] == 0.00) {
+		push_line 1, $postings[0]->[ACCOUNT];
 	    } else {
 		print_line 0, pp_cur_assertions if @cur_txn_assertions;
 		pop_txn();
@@ -1238,7 +1236,7 @@ sub process_txn(@) {
     } elsif ($total_postings == 2 && $postings_with_amount == 2) {
 	# Handle implicit conversions.  We only support simple implicit
 	# conversions with 2 postings.
-	my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
+
 	# If there's a cost or price on any of the postings, it's not
 	# an implicit conversion.  Same if the currencies on both
 	# postings are the same.
