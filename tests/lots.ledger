@@ -305,7 +305,7 @@ commodity XXXx
 2020-06-24 * Implicit conversion
     ; This is a comment with an amount that should not be substituted -11.42 USD
     Assets:A                  10.00 EUR ; do not substitute: -11.42 USD
-    Assets:B                 -11.42 USD
+    Assets:B                 -11.42 USD ; do not substitute: -11.42 USD
 
 2020-06-24 * Implicit conversion
     ; :foo:

@@ -309,23 +309,23 @@
   Equity:Opening-Balance   -48.67 EUR
 
 2019-01-29 * "Implicit conversion"
-  Assets:A                  10.00 EUR
-  Assets:B                 -11.42 USD @@ 10.00 EUR
+  Assets:A                  10.00 EUR @@ 11.42 USD
+  Assets:B                 -11.42 USD
 
 2019-01-29 * "Implicit conversion"
   #foo
-  Assets:A                   10.00 EUR
-  Assets:B                  -11.42 USD @@ 10.00 EUR
+  Assets:A                   10.00 EUR @@ 11.42 USD
+  Assets:B                  -11.42 USD
 
 2019-01-29 * "Implicit conversion"
-  Assets:A                  10.00 EUR
+  Assets:A                  10.00 EUR @@ 11.42 USD
     tags: "foo"
-  Assets:B                 -11.42 USD @@ 10.00 EUR
+  Assets:B                 -11.42 USD
 
 2019-01-29 * "Implicit conversion"
   #foo
-  Assets:A                     10 EUR
-  Assets:B                 -11.42 USD @@ 10 EUR
+  Assets:A                     10 EUR @@ 11.42 USD
+  Assets:B                 -11.42 USD
     foo: "bar"
 
 2019-04-28 * "Don't parse the value: 30 DM as implicit conversion"
@@ -335,13 +335,13 @@
 
 2020-06-24 * "Implicit conversion"
   ; This is a comment with an amount that should not be substituted -11.42 USD
-  Assets:A                  10.00 EUR ; do not substitute: -11.42 USD
-  Assets:B                 -11.42 USD @@ 10.00 EUR
+  Assets:A                  10.00 EUR @@ 11.42 USD ; do not substitute: -11.42 USD
+  Assets:B                 -11.42 USD ; do not substitute: -11.42 USD
 
 2020-06-24 * "Implicit conversion"
   #foo
-  Assets:A                 -10.00 EUR
-  Assets:B                  11.42 USD @@ 10.00 EUR
+  Assets:A                 -10.00 EUR @@ 11.42 USD
+  Assets:B                  11.42 USD
 
 2012-03-02 txn "KFC"
   Expenses:Food      1 USD {{0.90 EUR}}
