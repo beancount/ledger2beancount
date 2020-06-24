@@ -1042,6 +1042,7 @@ sub process_txn(@) {
 	$line->[DEPTH] = $depth;
 	push @txn_parsed, $line;
     }
+    my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
 
     my $has_amount;
     my $skipped_posting = 0;
@@ -1176,10 +1177,7 @@ sub process_txn(@) {
 		    # We have two postings, i.e. two accounts; remove the current
 		    # account from the list of accounts to find out which account
 		    # we have to pad against.
-		    my @accounts;
-		    for my $line (@txn_parsed) {
-			push @accounts, apply_account $line->[ACCOUNT] if $line->[TYPE] == POSTING;
-		    }
+		    my @accounts = map {apply_account $_->[ACCOUNT]} @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
 		    print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, $i->[ACCOUNT], $accounts[0];
 		    print_line 0, pp_cur_assertions;
@@ -1206,7 +1204,6 @@ sub process_txn(@) {
     }
     print_tags 2, @cur_txn_tags;
 
-    my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
     if ($total_postings == 1) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
