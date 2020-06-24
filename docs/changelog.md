@@ -12,6 +12,7 @@
 * Make parsing of numbers more strict
 * Fix behaviour of dates without year
 * Accept default ledger date formats without configuration
+* Fix implicit conversions with negative prices
 
 ## 2.2 (2020-05-30)
 

@@ -1243,8 +1243,9 @@ sub process_txn(@) {
 	if (!$postings[0]->[COST]->[AMOUNT] && !$postings[1]->[COST]->[AMOUNT] &&
 	    !$postings[0]->[PRICE]->[AMOUNT] && !$postings[0]->[PRICE]->[AMOUNT] &&
 	    $postings[0]->[AMOUNT]->[CURRENCY] ne $postings[1]->[AMOUNT]->[CURRENCY]) {
-	    my $price = pp_amount $postings[0]->[AMOUNT];
 	    my $amount = pp_amount $postings[1]->[AMOUNT];
+	    my $price = pp_amount $postings[0]->[AMOUNT];
+	    $price =~ s/^-//;  # Prices must never be negative
 	    # We look for a posting that contains the amount and add the
 	    # price.
 	    foreach my $l (@cur_txn_lines) {

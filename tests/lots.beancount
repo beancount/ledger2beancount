@@ -338,6 +338,11 @@
   Assets:A                  10.00 EUR ; do not substitute: -11.42 USD
   Assets:B                 -11.42 USD @@ 10.00 EUR
 
+2020-06-24 * "Implicit conversion"
+  #foo
+  Assets:A                 -10.00 EUR
+  Assets:B                  11.42 USD @@ 10.00 EUR
+
 2012-03-02 txn "KFC"
   Expenses:Food      1 USD {{0.90 EUR}}
   Assets:Cash

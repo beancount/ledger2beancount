@@ -307,6 +307,11 @@ commodity XXXx
     Assets:A                  10.00 EUR ; do not substitute: -11.42 USD
     Assets:B                 -11.42 USD
 
+2020-06-24 * Implicit conversion
+    ; :foo:
+    Assets:A                 -10.00 EUR
+    Assets:B                  11.42 USD
+
 2012-03-02 KFC
     Expenses:Food      $1 {{0.90 EUR}} ((2 EUR))
     Assets:Cash
