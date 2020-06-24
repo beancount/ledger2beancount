@@ -534,7 +534,11 @@ sub handle_comment($$$) {
 
     if ($config->{hledger} && $l =~ /;\s*(?<comment>.*?)$hledger_tags_RE/) {
 	handle_hledger_tags $depth, $+{tags}, $defer;
-	return $+{comment};
+	my $comment = $+{comment};
+	if ($+{tags}) {
+	    $comment =~ s/,?\s*$//;
+	}
+	return $comment;
     } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
 	handle_metadata $in_postings ? 2 : 1, \%+, $defer;
 	return;

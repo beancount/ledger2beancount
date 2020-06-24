@@ -44,35 +44,35 @@
 
 2015-05-30 txn "date as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, 
+  Assets:Checking          ; bank cleared it on monday
     date: 2005-06-01
 
 2015-05-30 txn "date as comment without year"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, 
+  Assets:Checking          ; bank cleared it on monday
     date: 2015-06-01
 
 2015-05-30 txn "date2 as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, 
+  Assets:Checking          ; bank cleared it on monday
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, 
+  Assets:Checking          ; bank cleared it on monday
     date: 2005-06-01
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment, in reverse order"
   Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday, 
+  Assets:Checking          ; bank cleared it on monday
     aux-date: 2005-06-02
     date: 2005-06-01
 
 2015-05-30 txn "date and date2 on next line"
   aux-date: 2005-06-02
   date: 2005-06-01
-  ; bank cleared it on monday. 
+  ; bank cleared it on monday.
   Expenses:Food     10 USD
   Assets:Checking
 
@@ -80,7 +80,7 @@
   Expenses:Food     10 USD
     aux-date: 2005-06-02
     date: 2005-06-01
-    ; bank cleared it on monday. 
+    ; bank cleared it on monday.
   Assets:Checking
 
 2015-05-30 txn "date and date2 on next line"
@@ -88,7 +88,7 @@
   Assets:Checking
     aux-date: 2005-06-02
     date: 2005-06-01
-    ; bank cleared it on monday. 
+    ; bank cleared it on monday.
 
 ; Tags
 
@@ -125,7 +125,7 @@
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test" ; a comment containing 
+2019-01-28 txn "Tag test" ; a comment containing
   #tag1
   tag2: "some value ..."
   Assets:A                 10.00 EUR
@@ -152,5 +152,9 @@
   Assets:A                 10.00 EUR
     sometag: "foo"
     tags: "foo, bar"
+  Assets:B
+
+2020-06-24 txn "Comment"
+  Assets:A                 10.00 EUR ; This is a comment which ends with a comma,
   Assets:B
 

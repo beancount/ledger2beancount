@@ -31,9 +31,6 @@ indent_style = space
 [tests/accounts.ledger]
 trim_trailing_whitespace = false
 
-[tests/hledger.beancount]
-trim_trailing_whitespace = false
-
 [tests/metadata.ledger]
 trim_trailing_whitespace = false
 

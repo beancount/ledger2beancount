@@ -14,6 +14,7 @@
 * Accept default ledger date formats without configuration
 * Fix implicit conversions with negative prices
 * Convert implicit conversions in a more idiomatic way
+* Avoid introducing trailing whitespace with hledger input
 
 ## 2.2 (2020-05-30)
 
