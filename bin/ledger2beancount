@@ -323,7 +323,7 @@ sub pp_lot($) {
 sub pp_cost($) {
     my ($lot) = @_;
 
-    my $num = defined $lot->[TYPE] ? length $lot->[TYPE] : 1;
+    my $num = defined $lot->[TYPE] ? $lot->[TYPE] : 1;
     my $info = "{" x $num;
     $info .= pp_lot $lot;
     $info .= "}" x $num;
@@ -335,7 +335,7 @@ sub pp_cost($) {
 sub pp_price(@) {
     my ($lot) = @_;
 
-    my $info = "@" x length $lot->[TYPE];
+    my $info = "@" x $lot->[TYPE];
     $info .= " ";
     $info .= pp_amount $lot->[AMOUNT];
     return $info;
@@ -905,7 +905,7 @@ sub get_lot($) {
     # Look for a cost: {...} or {{...}}
     if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?\s*(?<rest>.*)/) {
 	$l = $+{rest};
-	$cost->[TYPE] = $+{type};
+	$cost->[TYPE] = length $+{type};
 	my $rest;
 	($cost->[AMOUNT], $rest) = get_amount $+{amount};
 	if ($rest) {
@@ -948,7 +948,7 @@ sub get_lot($) {
     # is 1.00 of the currency.
     if ($date) {
 	if (!defined $cost->[AMOUNT]) {
-	    $cost->[TYPE] = "{{";
+	    $cost->[TYPE] = 2;
 	    $cost->[AMOUNT] = $amount;
 	}
 	$cost->[DATE] = $date;
@@ -994,7 +994,7 @@ sub parse_posting($) {
 
     # A price: either @, @@, (@), or (@@)
     if ($l =~ /^\(?(@@?)\)?\s*(.*)/) {
-	$posting->[PRICE]->[TYPE] = $1;
+	$posting->[PRICE]->[TYPE] = length $1;
 	($posting->[PRICE]->[AMOUNT], $_, $l) = get_lot $2;
     }
 
@@ -1328,7 +1328,7 @@ while (@input) {
 	my $fixated->[CURRENCY] = $+{commodity};
 	my $rest;
 	($fixated->[AMOUNT], $rest) = get_amount $+{fixed};
-	$fixated->[TYPE] = "{";
+	$fixated->[TYPE] = 1;
 	if ($rest) {
 	    die "Unknown rest $rest in apply $+{type} directive: $l";
 	}
