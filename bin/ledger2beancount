@@ -1238,20 +1238,19 @@ sub process_txn(@) {
     } elsif ($total_postings == 2 && $postings_with_amount == 2) {
 	# Handle implicit conversions.  We only support simple implicit
 	# conversions with 2 postings.
-	my $amount1;
-	my $commodity1;
-	foreach my $l (@cur_txn_lines) {
-	    # Parse beancount posting to get the amount and commodity
-	    if ($l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+-?([\d.]+ ([A-Z][A-Z0-9_'.-]*[A-Z0-9](\s*[@\{])?))/) {
-		last if $4; # skip if we have a cost or price
-		my $match = $2;
-		if (!$amount1) {
-		    $commodity1 = $3;
-		    $amount1 = $match;
-		} else {
-		    next if $commodity1 eq $3;
-		    $l =~ s/$match/$match @@ $amount1/;
-		}
+	my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
+	# If there's a cost or price on any of the postings, it's not
+	# an implicit conversion.  Same if the currencies on both
+	# postings are the same.
+	if (!$postings[0]->[COST]->[AMOUNT] && !$postings[1]->[COST]->[AMOUNT] &&
+	    !$postings[0]->[PRICE]->[AMOUNT] && !$postings[0]->[PRICE]->[AMOUNT] &&
+	    $postings[0]->[AMOUNT]->[CURRENCY] ne $postings[1]->[AMOUNT]->[CURRENCY]) {
+	    my $price = pp_amount $postings[0]->[AMOUNT];
+	    my $amount = pp_amount $postings[1]->[AMOUNT];
+	    # We look for a posting that contains the amount and add the
+	    # price.
+	    foreach my $l (@cur_txn_lines) {
+		$l =~ s/$amount/$amount @@ $price/ if $l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+$amount/;
 	    }
 	}
     }
