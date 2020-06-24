@@ -1147,14 +1147,9 @@ sub process_txn(@) {
 		# Apply any fixated costs if needed
 		foreach my $a (reverse @ledger_apply) {
 		    if (${$a}[0] eq "fixed") {
-			my ($commodity, $fixated) = split /\s+/, ${$a}[1], 2;
-			my $rest;
-			($fixated, $rest) = get_amount $fixated;
-			if ($i->[AMOUNT]->[CURRENCY] eq map_commodity $commodity) {
-			$l .= " ";
-			$l .= "{";
-			$l .= pp_amount $fixated;
-			$l .= "}";
+			my $fixated = ${$a}[1];
+			if ($i->[AMOUNT]->[CURRENCY] eq map_commodity $fixated->[CURRENCY]) {
+			    $l .= " " . pp_cost $fixated;
 			}
 		    }
 		}
@@ -1327,9 +1322,16 @@ while (@input) {
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	$after_auto = 1;
 	push @ledger_apply, [$+{type}, $+{val}];
-    } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<val>.*)/) {  # apply fixed
+    } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<commodity>[^\s]+)\s*(?<fixed>.+)/) {  # apply fixed
 	$after_auto = 1;
-	push @ledger_apply, ["fixed", $+{val}];
+	my $fixated->[CURRENCY] = $+{commodity};
+	my $rest;
+	($fixated->[AMOUNT], $rest) = get_amount $+{fixed};
+	$fixated->[TYPE] = "{";
+	if ($rest) {
+	    die "Unknown rest $rest in apply $+{type} directive: $l";
+	}
+	push @ledger_apply, ["fixed", $fixated];
     } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
 	$after_auto = 1;
 	# `apply tag` can be converted to beancount in three ways:
