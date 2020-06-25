@@ -23,7 +23,7 @@ We have also had contributions and input from:
 * Thierry (bug reports; documentation)
 * Zhuoyun Wei (package for Arch Linux)
 
-Some work done by Martin Michlmayr was sponsored by [Software Freedom Conservancy](https://sfconservancy.org/) and [Software in the Public Interest, Inc.](https://spi-inc.org/)
+Some work done by Martin Michlmayr was sponsored by [Software Freedom Conservancy](https://sfconservancy.org/) and [Software in the Public Interest, Inc.](https://spi-inc.org/)  You can also [sponsor Martin's work](https://github.com/sponsors/tbm) on ledger2beancount, ledger, and beancount.
 
 Thank you to all contributors and users!
 
