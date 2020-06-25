@@ -1,7 +1,6 @@
 # Installation
 
-ledger2beancount is a Perl script and relies on the following Perl
-modules:
+ledger2beancount is a Perl script and relies on the following modules:
 
 * `Config::Onion`
 * `Date::Calc`
