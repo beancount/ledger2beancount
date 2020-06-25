@@ -24,6 +24,11 @@ the converted data to `stdout`.  You can run ledger2beancount like this:
 Please see [the installation information](docs/installation.md) for
 dependencies and installation instructions.
 
+## Documentation
+
+ledger2beancount comes with extensive documentation.  You can also [read
+the documentation online](https://ledger2beancount.readthedocs.io/)
+thanks to Read the Docs.
 
 ## Features
 
