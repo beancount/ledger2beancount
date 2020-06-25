@@ -8,6 +8,7 @@ use_directory_urls: true
 
 theme:
     name: readthedocs
+    custom_dir: themes
     highlightjs: true
     hljs_languages:
         - shell
