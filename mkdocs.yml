@@ -1,7 +1,7 @@
 ---
 site_name: ledger2beancount
 site_description: Ledger to Beancount converter
-site_url: https://beancount.github.io/ledger2beancount/
+site_url: https://ledger2beancount.readthedocs.io/
 repo_url: https://github.com/beancount/ledger2beancount
 site_author: Stefano Zacchiroli, Martin Michlmayr
 use_directory_urls: true
