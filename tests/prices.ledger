@@ -16,6 +16,8 @@ P 2018-03-21 EUR 0.87 GBP
 P 2018-03-21 Chase 0.015 USD
 P 2018-03-21 "M&M4" 0.01 USD
 P 2019-04-28 17:12:15 EUR ¥124.56
+P 2020-06-26 GBP 1.11 EUR;comment
+P 2020-06-26 GBP 1.11 EUR ;comment
 
 2018-03-21 * Virtual cost (@)
     Assets:Test                10.00 EUR (@) 0.90 GBP

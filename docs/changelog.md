@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.4 (unreleased)
+
+* Handle price directives with comments
+
 ## 2.3 (2020-06-26)
 
 * Improve speed of ledger2beancount significantly

@@ -15,7 +15,7 @@ We have also had contributions and input from:
 * Jelmer Vernooĳ (package for Debian)
 * Johannes Raufeisen (bug reports)
 * John Wiegley (help with compatibility with ledger)
-* Kirill Goncharov (package for Arch Linux)
+* Kirill Goncharov (bug reports; package for Arch Linux)
 * Marin Bernard (bug reports)
 * Martin Blais (help with compatibility with beancount)
 * Simon Michael (bug reports; fixes; help with compatibility with hledger)

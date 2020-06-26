@@ -1410,7 +1410,9 @@ while (@input) {
 	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};
 	my ($commodity2, $rest) = get_amount $+{commodity2};
 	$l .= pp_amount $commodity2;
-	if ($rest) {
+	if ($rest =~ /^\s*;/) {
+	    $l .= " " . $rest;
+	} elsif ($rest) {
 	    die "Unknown rest $rest in price directive: $l";
 	}
 	print_line $depth, $l;
