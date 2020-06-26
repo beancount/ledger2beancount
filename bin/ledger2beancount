@@ -1494,6 +1494,10 @@ while (@input) {
 	    ($depth, $l) = strip_indentation $l;
 	    print_comment_top_level $depth, $l;
 	}
+    } elsif ($l =~ /^[!@]?(import\s+)/) {  # import (Python)
+	# There's no equivalent
+	($depth, $l) = strip_indentation $l;
+	print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[!@]?(python)/) {  # Python
 	$after_auto = 1;
 	# The python directive is special in the sense that empty

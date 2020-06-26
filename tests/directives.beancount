@@ -220,6 +220,8 @@ poptag #foo
 ; Ignore pricing information
 ; N EUR
 
+; import os
+
 ; python
 ;   def print_type(val):
 ;     print type(val), val

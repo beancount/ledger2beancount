@@ -213,6 +213,8 @@ D 1000.00 EUR
 ; Ignore pricing information
 N EUR
 
+import os
+
 python
   def print_type(val):
     print type(val), val

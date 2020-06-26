@@ -89,6 +89,7 @@ use ledger2beancount and to configure it to your needs.
 * Deferred postings (no equivalence in beancount)
 * Directives
   * `eval`: skipped (not supported in beancount)
+  * `import`: skipped (not supported in beancount)
   * `payee`: skipped (not needed in beancount)
   * `python`: skipped (not supported in beancount)
   * `tag`: skipped (not needed in beancount)

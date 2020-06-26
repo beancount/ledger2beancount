@@ -16,6 +16,7 @@
 * Convert implicit conversions in a more idiomatic way
 * Avoid introducing trailing whitespace with hledger input
 * Fix loading of config file
+* Skip ledger directive `import`
 
 ## 2.2 (2020-05-30)
 
