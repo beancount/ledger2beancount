@@ -38,22 +38,33 @@ use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
 
 my ($opt, $usage) = describe_options(
     "ledger2beancount %o <ledger-file>",
-    [ "config|c=s", "configuration file", { default  => "ledger2beancount.yml"  } ],
+    [ "config|c=s", "configuration file", ],
     [ "help|h",     "print usage message and exit", { shortcircuit => 1 } ],
 );
 
 print($usage->text), exit if $opt->help;
 
-my $config_file = $opt->config;
-# Config::Onion expects filename without extension
-die "Config file must end in .yml" unless $config_file =~ s/\.(yml|yaml)$//;
-my @config_files = ($config_file, config_home('ledger2beancount', 'config'));
-my $config;
+my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+if (defined $opt->config) {
+    if (! -e $opt->config) {
+	print "Config file ", $opt->config, " doesn't exist\n";
+	exit 1;
+    }
+    if ($opt->config !~ /\.(yml|yaml)$/) {
+	print "Config file must end in .yml or .yaml\n";
+	exit 1;
+    }
+    unshift @config_files, $opt->config;
+}
+my $config = Config::Onion->new;
 foreach my $config_file (@config_files) {
+    next if ! -e $config_file;
+    # Config::Onion expects filename without extension
+    $config_file =~ s/.(yml|yaml)$//;
     $config = Config::Onion->load($config_file);
     # We don't actually use the Config::Onion feature to load several
     # config files.  We merely use it to set some defaults.
-    last if defined $config;
+    last;
 }
 
 $config->set_default(date_format => "%Y-%m-%d");
