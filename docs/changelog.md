@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.3 (unreleased)
+## 2.3 (2020-06-26)
 
 * Improve speed of ledger2beancount significantly
 * Improve parsing of postings for accuracy and speed
@@ -8,7 +8,6 @@
 * Handle lots without cost
 * Fix parsing of lot notes followed by a virtual price
 * Add support for lot value expressions
-* Convert documentation to `mkdocs`
 * Make parsing of numbers more strict
 * Fix behaviour of dates without year
 * Accept default ledger date formats without configuration
@@ -17,6 +16,7 @@
 * Avoid introducing trailing whitespace with hledger input
 * Fix loading of config file
 * Skip ledger directive `import`
+* Convert documentation to `mkdocs`
 
 ## 2.2 (2020-05-30)
 
