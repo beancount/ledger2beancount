@@ -812,16 +812,16 @@ sub get_value_expr($) {
     $math =~ s/^\(//;
     $math =~ s/\)$//;
 
-    if ($config->{decimal_comma}) {
-	$math =~ s/\.//g;
-	$math =~ tr/,/./; # issue #204
-    }
-
     # Apply ledger define statements
     foreach my $key (keys %ledger_define) {
 	if ($math =~ s/\b$key\b/$ledger_define{$key}/) {
 	    print_warning_once "Directive `define` not supported by beancount: replacing $key with $ledger_define{$key}";
 	}
+    }
+
+    if ($config->{decimal_comma}) {
+	$math =~ s/\.//g;
+	$math =~ tr/,/./; # issue #204
     }
 
     # We have to move the commodity from within the inline math construct

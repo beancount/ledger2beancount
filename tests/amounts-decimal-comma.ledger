@@ -182,3 +182,8 @@ P 2002-01-01 € 6,55957 FRF
     Assets:Test1              (2,00 USD * -4,00)
     Assets:Test2
 
+define thousand=1.000,00 EUR
+2020-06-27 Define
+    Assets:Test1           (2,00 EUR + thousand)
+    Assets:Test2
+

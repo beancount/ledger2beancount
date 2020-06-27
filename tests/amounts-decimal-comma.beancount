@@ -1,6 +1,7 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
 ;
+;   - Directive `define` not supported by beancount: replacing thousand with 1.000,00 EUR
 ;   - Commodity Avios renamed to AVIOS
 ;   - Collision for commodity EUR: EUR, €
 ;   - Collision for commodity GBP: GBP, £
@@ -203,5 +204,9 @@
 
 2020-06-22 txn "Inline math"
   Assets:Test1              2.00* -4.00 USD
+  Assets:Test2
+
+2020-06-27 txn "Define"
+  Assets:Test1           2.00+ 1000.00 EUR
   Assets:Test2
 
