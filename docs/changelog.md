@@ -3,6 +3,7 @@
 ## 2.4 (unreleased)
 
 * Handle price directives with comments
+* Add support for `define` directive
 
 ## 2.3 (2020-06-26)
 

@@ -240,4 +240,28 @@ define myfunc_seven(s, d, t) = 7 EUR
 value myfunc_seven
 
 def foo=200 USD
+define hundred=$100
+!define twenty = $20
+@define my_var = $5
+def thousand=$1000
+
+2020-06-27 Using define
+    Assets:Test                            (foo)
+    Equity:Opening-Balance
+
+2020-06-27 Using define
+    Assets:Test                       (my_var*4)
+    Equity:Opening-Balance
+
+2020-06-27 Using define
+    Assets:Test                      (hundred*4)
+    Equity:Opening-Balance
+
+2020-06-27 Using multiple define
+    Assets:Test             (hundred*4 + twenty)
+    Equity:Opening-Balance
+
+2020-06-27 Using multiple define
+    Assets:Test  (thousand + hundred*4 + twenty)
+    Equity:Opening-Balance
 

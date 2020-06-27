@@ -88,6 +88,7 @@ use ledger2beancount and to configure it to your needs.
   * Effective dates (no equivalence in beancount)
 * Deferred postings (no equivalence in beancount)
 * Directives
+  * `define` and `def` (no functions)
   * `eval`: skipped (not supported in beancount)
   * `import`: skipped (not supported in beancount)
   * `payee`: skipped (not needed in beancount)
@@ -110,7 +111,6 @@ use ledger2beancount and to configure it to your needs.
   * `C` (commodity equivalences)
   * `check`
   * `D`
-  * `define` and `def`
   * `expr`
   * `N`
   * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)

@@ -53,6 +53,7 @@ The majority of features from ledger are supported by ledger2beancount.
   * Effective dates (no equivalence in beancount)
 * Deferred postings (no equivalence in beancount)
 * Directives
+  * `define` and `def` (no functions)
   * `eval`: skipped (not supported in beancount)
   * `import`: skipped (not supported in beancount)
   * `payee`: skipped (not needed in beancount)
@@ -79,13 +80,4 @@ commented out during the conversion from ledger to beancount:
 * Commodity pricing: ignore pricing (`N SYMBOL`)
 * Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
 * Periodic transactions
-
-## Unsupported in ledger2beancount
-
-The following ledger features are currently not supported by
-ledger2beancount:
-
-* The `define` directive
-
-Contributions [are welcome!](contributing.md)
 

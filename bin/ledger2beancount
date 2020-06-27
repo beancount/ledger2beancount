@@ -138,6 +138,7 @@ my %commodity_declared;
 my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
+my %ledger_define; # Capture "define" statements
 # Conversion notes for users from ledger2beancount
 my @conversion_notes;
 # Keep track of all ledger accounts and commodities to check for
@@ -816,6 +817,13 @@ sub get_value_expr($) {
 	$math =~ tr/,/./; # issue #204
     }
 
+    # Apply ledger define statements
+    foreach my $key (keys %ledger_define) {
+	if ($math =~ s/\b$key\b/$ledger_define{$key}/) {
+	    print_warning_once "Directive `define` not supported by beancount: replacing $key with $ledger_define{$key}";
+	}
+    }
+
     # We have to move the commodity from within the inline math construct
     # to after (outside) the inline math since beancount expects the
     # format "number currency" (where number can be basic math).
@@ -1396,9 +1404,13 @@ while (@input) {
 	    print_comment_top_level $depth, $l;
 	    $l = shift @input;
 	}
-    } elsif ($l =~ /^[!@]?(define|def)\s/) {  # define
-	print_warning_once "The `$1` directive is not supported";
-	print_comment_top_level 0, $l;
+    } elsif ($l =~ /^[!@]?(define|def)\s+([^=]+?)\s*=\s*(.*)/) {  # define
+	if (index($2, "(") == -1) {
+	    $ledger_define{$2} = $3;
+	} else {
+	    print_warning_once "Directive `$1` with function is not supported: $2";
+	    print_comment_top_level 0, $l;
+	}
     } elsif ($l =~ /^[!@]?(fixed|endfixed)/) {  # Fixated price
 	print_warning_once "Fixated prices are not supported";
 	print_comment_top_level 0, $l;

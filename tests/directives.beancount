@@ -12,9 +12,14 @@
 ;   - Unsupported directive `D` skipped
 ;   - Unsupported directive `N` skipped
 ;   - Unsupported directive `eval` skipped
-;   - The `define` directive is not supported
+;   - Directive `define` with function is not supported: myfunc_seven(s, d, t)
 ;   - Unsupported directive `value` skipped
-;   - The `def` directive is not supported
+;   - Directive `define` not supported by beancount: replacing foo with 200 USD
+;   - Directive `define` not supported by beancount: replacing my_var with $5
+;   - Directive `define` not supported by beancount: replacing hundred with $100
+;   - Directive `define` not supported by beancount: replacing twenty with $20
+;   - Directive `define` not supported by beancount: replacing thousand with $1000
+;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
 ; Beancount: 2.1.0
@@ -38,6 +43,7 @@
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
+1970-01-01 commodity USD
 
 1970-01-01 txn "open Assets:Test"
 
@@ -246,5 +252,24 @@ poptag #foo
 
 ; value myfunc_seven
 
-; def foo=200 USD
+
+2020-06-27 txn "Using define"
+  Assets:Test                            200 USD
+  Equity:Opening-Balance
+
+2020-06-27 txn "Using define"
+  Assets:Test                       5*4 USD
+  Equity:Opening-Balance
+
+2020-06-27 txn "Using define"
+  Assets:Test                      100*4 USD
+  Equity:Opening-Balance
+
+2020-06-27 txn "Using multiple define"
+  Assets:Test             100*4 +20 USD
+  Equity:Opening-Balance
+
+2020-06-27 txn "Using multiple define"
+  Assets:Test  1000 +100*4 +20 USD
+  Equity:Opening-Balance
 
