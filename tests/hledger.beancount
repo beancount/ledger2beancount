@@ -5,7 +5,7 @@
 ;   - Account expenses:food renamed to Expenses:Food
 ;   - Metadata key 2012 renamed to x2012
 ;   - Metadata key 2012foo renamed to x2012foo
-;   - Metadata key TEST1234TEST renamed to tEST1234TEST
+;   - Metadata key TEST1234TEST renamed to test1234test
 ;   - Metadata key test♚ renamed to test-
 ;----------------------------------------------------------------------
 
@@ -137,7 +137,7 @@
   foo: "another value"
   test-: "foo"
   Assets:A                 10.00 EUR
-    tEST1234TEST: "foo"
+    test1234test: "foo"
     test-: "foo"
     x2012: "foo"
     x2012foo: "foo"

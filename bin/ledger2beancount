@@ -599,7 +599,13 @@ sub map_metadata($) {
     $key = $config->{metadata_map}{lc $key} if exists $config->{metadata_map}{lc $key};
 
     $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
-    $key = lcfirst $key; # Make first letter lowercase
+    # Ensure the first letter is lowercase.  If the ledger tag is all
+    # uppercase, convert the whole string to lowercase.
+    if ($key eq uc $key) {
+	$key = lc $key;
+    } else {
+	$key = lcfirst $key;
+    }
     $key =~ s/^([^\p{letter}])/x$1/; # Make sure first character is a letter
     $key .= "x" if length $key == 1;
     # Work around lack of Unicode support (beancount #161)
