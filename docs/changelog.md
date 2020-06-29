@@ -28,7 +28,7 @@
 
 * Show warning for unknown `apply` directive
 * Recognize `apply rate` directive (an alias of `apply fixed`)
-* Don't convert meta-data on ignored virtual postings but keep as comments
+* Don't convert metadata on ignored virtual postings but keep as comments
 * Update location of beancount repository
 
 ## 2.1 (2020-04-06)

@@ -1078,13 +1078,13 @@ sub process_txn(@) {
     foreach my $i (@txn_parsed) {
 	if ($i->[TYPE] == COMMENT) {
 	    # If there's a virtual posting that is ignored, we have to
-	    # discard the meta-data associated with the posting on
+	    # discard the metadata associated with the posting on
 	    # following lines (if there's any).  But there might be
 	    # comments worth preserving.  So just preserve all ledger
-	    # comments (i.e. comments and meta-data) as is.
+	    # comments (i.e. comments and metadata) as is.
 	    if ($skipped_posting) {
 		push_line $i->[DEPTH], $i->[COMMENT];
-		print_warning_once "Comment or meta-data on virtual posting preserved as comment";
+		print_warning_once "Comment or metadata on virtual posting preserved as comment";
 	    } else {
 		my $comment = handle_comment $i->[DEPTH], $i->[COMMENT], 0;
 		push_comment $i->[DEPTH], $comment if $comment;
