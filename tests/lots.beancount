@@ -377,8 +377,12 @@
   Assets:Cash
 
 2020-06-23 txn "Lot with only lot note"
-  Assets:Voucher             137.87 GBP {"48H5"}
+  Assets:Voucher             137.87 GBP {{137.87 GBP, "48H5"}}
   Assets:Cash               -137.87 GBP
+
+2020-06-23 txn "Lot with only lot note"
+  Assets:Voucher             137.87 GBP {{137.87 GBP, "48H5"}}
+  Assets:Cash
 
 2020-06-23 txn "Lot with only lot date and note"
   Assets:Voucher  137.87 EUR {{137.87 EUR, 2020-06-01, "48H5"}}
@@ -387,8 +391,4 @@
 2020-06-23 txn "Lot with only lot value expression"
   Expenses:Food                1 USD
   Assets:Cash
-
-2020-06-23 * "Lot with only lot note and a price"
-  Assets:Voucher   10.00 EUR {"48H5"} @ 1.28 USD
-  Assets:Cash                       -12.80 USD
 

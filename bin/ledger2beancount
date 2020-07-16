@@ -903,7 +903,7 @@ sub get_lot($) {
     my ($l) = @_;
     my $l_orig = $l;
 
-    my ($amount, $cost, $date);
+    my ($amount, $cost);
 
     # A lot can contain various information but pretty much everything
     # apart from the amount is optional.  The order is fixed, though:
@@ -941,7 +941,7 @@ sub get_lot($) {
     # A lot date: dates are always in square brackets [date]
     if ($l =~ /^\[(?<date>\d+[^ =\]]+)\]\s*(?<rest>.*)/) {
 	$l = $+{rest};
-	$date = pp_date $+{date}, 0;
+	$cost->[DATE] = pp_date $+{date}, 0;
     }
 
     # A lot note: (note).  Don't confuse with a ((lot value expression))
@@ -968,16 +968,13 @@ sub get_lot($) {
 	}
     }
 
-    # A date without a cost is not valid in beancount, so add the
-    # amount as the cost, which essentially means that the cost
+    # A date or note without a cost is not valid in beancount, so add
+    # the amount as the cost, which essentially means that the cost
     # is 1.00 of the currency.
-    if ($date) {
-	if (!defined $cost->[AMOUNT]) {
-	    $cost->[TYPE] = 2;
-	    $cost->[AMOUNT] = $amount;
-	}
-	$cost->[DATE] = $date;
-    }
+    if (defined $cost && !defined $cost->[AMOUNT]) {
+	$cost->[TYPE] = 2;
+	$cost->[AMOUNT] = $amount;
+     }
 
     return $amount, $cost, $l;
 }

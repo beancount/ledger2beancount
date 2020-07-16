@@ -5,6 +5,7 @@
 * Handle price directives with comments
 * Add support for `define` directive
 * Convert all uppercase metadata tags to all lowercase
+* Improve handling of ledger lots without cost
 
 ## 2.3 (2020-06-26)
 
