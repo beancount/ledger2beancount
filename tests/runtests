@@ -6,12 +6,14 @@
 
 status=0
 
-# We need sort from coreutils for -V
-case `uname -s` in
-	Linux*) SORT=sort ;;
-	Darwin*) SORT=gsort ;;
-	*) SORT=sort ;;
-esac
+if [ -z "${SORT-}" ]; then
+	# We need sort from coreutils for -V
+	case `uname -s` in
+		Linux*) SORT=sort ;;
+		Darwin*) SORT=gsort ;;
+		*) SORT=sort ;;
+	esac
+fi
 
 test_conversion () {
 	test=$1
