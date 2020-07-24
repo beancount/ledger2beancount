@@ -361,3 +361,7 @@ commodity XXXx
     Expenses:Food                $1 ((0.90 EUR))
     Assets:Cash
 
+2020-07-24 * Conversion with price on second posting
+  Assets:Test                           6.38 USD
+  Assets:Test             -24.00 BRL @@ 6.38 USD
+

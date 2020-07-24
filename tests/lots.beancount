@@ -38,6 +38,7 @@
 1970-01-01 open Expenses:Test
 
 1970-01-01 commodity AAPL
+1970-01-01 commodity BRL
 
 2018-03-17 * "Opening balance"
   Assets:Test              100.00 EUR {{90.00 GBP}}
@@ -391,4 +392,8 @@
 2020-06-23 txn "Lot with only lot value expression"
   Expenses:Food                1 USD
   Assets:Cash
+
+2020-07-24 * "Conversion with price on second posting"
+  Assets:Test                           6.38 USD
+  Assets:Test             -24.00 BRL @@ 6.38 USD
 

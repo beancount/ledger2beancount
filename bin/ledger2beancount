@@ -1259,7 +1259,7 @@ sub process_txn(@) {
 	# an implicit conversion.  Same if the currencies on both
 	# postings are the same.
 	if (!$postings[0]->[COST]->[AMOUNT] && !$postings[1]->[COST]->[AMOUNT] &&
-	    !$postings[0]->[PRICE]->[AMOUNT] && !$postings[0]->[PRICE]->[AMOUNT] &&
+	    !$postings[0]->[PRICE]->[AMOUNT] && !$postings[1]->[PRICE]->[AMOUNT] &&
 	    $postings[0]->[AMOUNT]->[CURRENCY] ne $postings[1]->[AMOUNT]->[CURRENCY]) {
 	    my $amount = pp_amount $postings[0]->[AMOUNT];
 	    my $price = pp_amount $postings[1]->[AMOUNT];

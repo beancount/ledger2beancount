@@ -6,6 +6,7 @@
 * Add support for `define` directive
 * Convert all uppercase metadata tags to all lowercase
 * Improve handling of ledger lots without cost
+* Don't assume implicit conversion when price is on second posting
 
 ## 2.3 (2020-06-26)
 
