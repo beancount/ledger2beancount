@@ -2,7 +2,7 @@
 
 ledger2beancount is distributed under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html) version 3.0 or later.
 
-The [SPDX license identifier](https://spdx.org/licenses/) is [GPL-3.0-or-later](https://spdx.org/licenses/AGPL-3.0-or-later.html):
+The [SPDX license identifier](https://spdx.org/licenses/) is [GPL-3.0-or-later](https://spdx.org/licenses/GPL-3.0-or-later.html):
 
 ```text
 SPDX-License-Identifier: GPL-3.0-or-later
