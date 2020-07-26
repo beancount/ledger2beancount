@@ -666,6 +666,9 @@ ledger2beancount will look for some hledger specific features:
 4) Commas are supported as decimal markers when a number contains
    only a comma and no period.
 
+5) The `end aliases` directive to clear all defined account aliases is
+   supported.
+
 
 ## Ignoring certain lines
 

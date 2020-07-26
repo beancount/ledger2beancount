@@ -10,6 +10,7 @@
 * Allow transactions without postings
 * Fix parsing of hledger tags
 * Support commas as decimal markers for hledger
+* Support hledger's `end aliases` directive
 
 ## 2.3 (2020-06-26)
 

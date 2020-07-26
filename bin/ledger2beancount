@@ -1391,6 +1391,8 @@ while (@input) {
 	# ledger seems to silently ignore all other apply statements
 	print_warning_once "Unknown '$1' directive found";
 	next;
+    } elsif ($l =~ /^!?end aliases/ && $config->{hledger}) {  # end aliases
+	%ledger_alias = ();
     } elsif ($l =~ /^[!@]?end/) {  # end
 	next if !@ledger_apply; # end without any apply
 	my $a = pop @ledger_apply;

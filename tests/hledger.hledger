@@ -147,3 +147,27 @@ account Assets:A ; foo
     Assets:Test           1,000.00 EUR
     Assets:Test
 
+alias Assets:Test=Assets:Bank
+
+2020/07/27 Alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+
+end aliases
+
+2020/07/27 No alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+
+alias Assets:Test=Assets:Bank
+
+2020/07/27 Alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+
+!end aliases
+
+2020/07/27 No alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+
