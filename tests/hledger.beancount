@@ -12,7 +12,6 @@
 ;   - Metadata key foo,bar renamed to foo-bar
 ;   - Metadata key test♚ renamed to test-
 ;   - Collision for account Assets:Checking: Assets:Checking, assets:checking
-
 ;----------------------------------------------------------------------
 
 ; SPDX-FileCopyrightText: © 2019 Martin Michlmayr <tbm@cyrius.com>
