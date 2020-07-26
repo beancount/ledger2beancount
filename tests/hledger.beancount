@@ -24,6 +24,7 @@
 1970-01-01 open Assets:Test
 1970-01-01 open Expenses:Food
 
+1970-01-01 commodity BTC
 1970-01-01 commodity EUR
 1970-01-01 commodity USD
 
@@ -193,5 +194,17 @@
 2020-07-26 txn "Tag test"
   bar: "foo:"
   Assets:Test                    10 USD
+  Assets:Test
+
+2020-07-26 txn "Decimal mark with period"
+  Assets:Test   1.23456780000009 BTC
+  Assets:Test
+
+2020-07-26 txn "Decimal mark with comma"
+  Assets:Test   1.23456780000009 BTC
+  Assets:Test
+
+2020-07-26 txn "Thousand"
+  Assets:Test           1,000.00 EUR
   Assets:Test
 

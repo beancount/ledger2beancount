@@ -135,3 +135,15 @@ account Assets:A ; foo
     Assets:Test                    $10
     Assets:Test
 
+2020/07/26 Decimal mark with period
+    Assets:Test   1.23456780000009 BTC
+    Assets:Test
+
+2020/07/26 Decimal mark with comma
+    Assets:Test   1,23456780000009 BTC
+    Assets:Test
+
+2020/07/26 Thousand
+    Assets:Test           1,000.00 EUR
+    Assets:Test
+

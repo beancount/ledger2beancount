@@ -466,6 +466,9 @@ sub convert_number($) {
     if ($config->{decimal_comma}) {
 	$number =~ s/\.//g;
 	$number =~ tr/,/./; # issue #204
+    } elsif ($config->{hledger} && $number !~ /\./) {
+	# If there's a comma but no period, the comma is a decimal marker
+	$number =~ s/,/./;
     }
     return $number;
 }

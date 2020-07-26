@@ -9,6 +9,7 @@
 * Don't assume implicit conversion when price is on second posting
 * Allow transactions without postings
 * Fix parsing of hledger tags
+* Support commas as decimal markers for hledger
 
 ## 2.3 (2020-06-26)
 
