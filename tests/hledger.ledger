@@ -98,10 +98,40 @@ account Assets:A ; foo
     Assets:B
 
 2019/01/28 Tag test
-    Assets:A                 10.00 EUR ;sometag: foo , foo:, bar:
+    Assets:A                 10.00 EUR ;sometag: foo   , foo:, bar:
     Assets:B
 
 2020/06/24 Comment
     Assets:A                 10.00 EUR ;This is a comment which ends with a comma,
     Assets:B
+
+2020/07/26 Tag test
+    ; foo:,bar: test
+    Assets:Test                    $10
+    Assets:Test
+
+2020/07/26 Tag test
+    ; foo: ,bar: test
+    Assets:Test                    $10
+    Assets:Test
+
+2020/07/26 Tag test
+    ; bar: test, foo:
+    Assets:Test                    $10
+    Assets:Test
+
+2020/07/26 Tag test
+    ; foo,bar: test
+    Assets:Test                    $10
+    Assets:Test
+
+2020/07/26 Tag test
+    ; foo:bar: test, abc,def: ghi
+    Assets:Test                    $10
+    Assets:Test
+
+2020/07/26 Tag test
+    ; bar:foo:
+    Assets:Test                    $10
+    Assets:Test
 

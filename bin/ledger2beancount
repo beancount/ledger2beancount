@@ -95,7 +95,7 @@ my $flags_RE = qr/[*!]/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?(\s+|$)(?<flag>$flags_RE)?(\s*\((?<code>[^)]*)\))?\s*(?<narration>.*)/;
 my $hledger_payee_narration_RE = qr/(?<payee>[^|]+?)\s*\|\s*(?<narration>.*)/;
 my $tags_RE = qr/(?<tags>[\w:-]+)/;
-my $hledger_tags_RE = qr/(?<tags>[^ ]+:.*)/;
+my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # An account can be pretty much anything but in a posting it has to be
 # followed by two spaces, a tab or new line.
 # To keep the regex simpler, we parse the () and [] for virtual accounts
@@ -115,7 +115,6 @@ my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
-my $hledger_metadata_RE = qr/(?<key>[^:]+):\s*(?<value>.+)/;
 # Postings: this does not match everything, just ensures a line consists of
 # a posting
 my $posting_RE = qr/((?<flag>$flags_RE)\s+)?(?<account>$account_RE)/;
@@ -500,19 +499,19 @@ sub handle_metadata($$$) {
 
 # Process hledger tags
 # hledger tags can have values (metadata) or not (tags)
+sub handle_hledger_tags($$$);
 sub handle_hledger_tags($$$) {
     my ($depth, $l, $defer) = @_;
 
-    # hledger doesn't know the ledger :foo:bar: syntax.  However, this
-    # is parsed as tag "foo" (without the colon!) with value "bar:".
-    $l =~ s/^://;
-
-    foreach $_ (split /\s*,\s*/, $l) {
-	if (/$hledger_metadata_RE/) {
-	    if ($+{key} eq "date" || $+{key} eq "date2") {
-		my $key = $+{key};
-		my $date = $+{value};
+    if ($l =~ /^$hledger_tags_RE(,\s*(?<rest>.*))?$/) {
+	my $key = $+{key};
+	my $value = $+{value};
+	my $rest = $+{rest};
+	if ($value) {
+	    $value =~ s/\s+$//;
+	    if ($key eq "date" || $key eq "date2") {
 		my $year = $1 if $cur_txn_header{date} =~ /^(\d{4})-/;
+		my $date = $value;
 		if ($date !~ /^$hledger_date_RE/) {
 		    die "Can't parse date after hledger tag $key: $date";
 		}
@@ -524,17 +523,22 @@ sub handle_hledger_tags($$$) {
 		}
 		push_deferred_meta $depth if !$defer;
 	    } else {
-		handle_metadata $in_postings ? 2 : 1, \%+, $defer;
+		my %meta = ('key' => $key, 'value' => $value);
+		handle_metadata $in_postings ? 2 : 1, \%meta, $defer;
 	    }
 	} else {
-	    s/:$//;
 	    # The $in_postings check is a workaround since there are no posting-level tags
 	    if ($defer || $in_postings) {
-		push @cur_txn_tags, $_;
+		push @cur_txn_tags, $key;
 	    } else {
-		print_tags $depth, $_;
+		print_tags $depth, $key;
 	    }
 	}
+	if ($rest) {
+	  handle_hledger_tags($depth, $rest, $defer);
+	}
+    } else {
+	die "Can't parse hledger tag $l";
     }
 }
 
@@ -544,7 +548,7 @@ sub handle_hledger_tags($$$) {
 sub handle_comment($$$) {
     my ($depth, $l, $defer) = @_;
 
-    if ($config->{hledger} && $l =~ /;\s*(?<comment>.*?)$hledger_tags_RE/) {
+    if ($config->{hledger} && $l =~ /;\s*(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
 	handle_hledger_tags $depth, $+{tags}, $defer;
 	my $comment = $+{comment};
 	if ($+{tags}) {

@@ -8,6 +8,7 @@
 * Improve handling of ledger lots without cost
 * Don't assume implicit conversion when price is on second posting
 * Allow transactions without postings
+* Fix parsing of hledger tags
 
 ## 2.3 (2020-06-26)
 
