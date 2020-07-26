@@ -56,9 +56,9 @@ test_validity_hledger () {
 	test=$1
 	printf "Validating $test... "
 	tmp=$(tempfile)
-	if $(hledger -f $test bal > $tmp 2&>1); then
+	if $(hledger -f $test bal > $tmp 2>&1); then
 		echo "ok"
-	felse
+	else
 		echo "FAIL"
 		cat $tmp
 		status=1
@@ -92,7 +92,7 @@ test_validity_beancount () {
 	# Ensure beancount is new enough
 	needed=$(grep "^; Beancount:" $test | head -n 1 | sed 's/^; Beancount:\s*//')
 	if [ -n "$needed" ]; then
-		if ! $(meets_version $beancount_version, $needed); then
+		if ! $(meets_version $beancount_version $needed); then
 			echo "skipping since beancount is too old"
 			return
 		fi
@@ -124,10 +124,10 @@ fi
 hledger_version=$(hledger --version n 2>/dev/null | cut -d" " -f2)
 if [ -z $hledger_version ]; then
 	echo "Skipping hledger validation checks since hledger is not installed"
-elif ! $(meets_version $hledger_version, 1.10); then
+elif ! $(meets_version $hledger_version 1.10); then
 	echo "Skipping hledger validation checks since hledger $hledger_version is too old"
 else
-	test_validity_ledger hledger.ledger
+	test_validity_hledger hledger.ledger
 fi
 
 # Convert files
