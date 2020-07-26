@@ -171,3 +171,21 @@ alias Assets:Test=Assets:Bank
     Assets:Test              10.00 EUR
     Assets:Test
 
+alias /Assets:T.../ = Assets:Bank
+
+2020-07-26 Alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+
+alias /^(.+):bank:([^:]+):(.*)/ = \1:\2-\3
+
+2020-07-26 Alias
+    Assets:Bank:Wells-Fargo:Checking  $10.00
+    Assets:Bank
+
+end aliases
+
+2020-07-26 No alias
+    Assets:Test              10.00 EUR
+    Assets:Test
+

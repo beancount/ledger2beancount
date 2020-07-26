@@ -22,7 +22,7 @@ use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
 use List::MoreUtils qw(uniq);
-use Memoize;
+use Memoize qw/memoize flush_cache/;
 use POSIX qw/ceil/;
 use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
@@ -134,11 +134,14 @@ my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
 my %ledger_define; # Capture "define" statements
+# Store some hleger info
+my @hledger_alias_regex; # regex aliases
 # Conversion notes for users from ledger2beancount
 my @conversion_notes;
 # Keep track of all ledger accounts and commodities to check for
 # collisions after remapping is done.
 my %ledger_accounts;
+my %account_regex_map;
 my %ledger_commodities;
 my %ledger_metadata;
 
@@ -668,7 +671,7 @@ sub map_account($) {
     $account = $config->{account_map}{$account} if exists $config->{account_map}{$account};
     foreach $_ (sort keys %{$config->{account_regex}}) {
 	if ($account =~ s/$_/safe_interpolate($config->{account_regex}{$_})/eg) {
-	    $config->{account_map}{$ledger_account} = $account;
+	    $account_regex_map{$ledger_account} = $account;
 	    last;
 	}
     }
@@ -1355,7 +1358,17 @@ while (@input) {
 	    print_line $depth, $l;
 	}
     } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
-	$ledger_alias{$+{account}} = map_account_apply $+{val};
+	my $account = $+{account};
+	my $value = $+{val};
+        if ($config->{hledger} && $account =~ m#^/(.*)/$#) {
+	    flush_cache('map_account');
+	    $account = "(?i)$1";
+	    $value =~ s/\\(\d+)/\$$1/g;
+	    $config->{account_regex}{$account} = $value;
+	    push @hledger_alias_regex, $account;
+	} else {
+	    $ledger_alias{$account} = map_account_apply $value;
+	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	$after_auto = 1;
 	push @ledger_apply, [$+{type}, $+{val}];
@@ -1393,6 +1406,11 @@ while (@input) {
 	next;
     } elsif ($l =~ /^!?end aliases/ && $config->{hledger}) {  # end aliases
 	%ledger_alias = ();
+	foreach (@hledger_alias_regex) {
+	    delete $config->{account_regex}{$_};
+	}
+	@hledger_alias_regex = [];
+	flush_cache('map_account');
     } elsif ($l =~ /^[!@]?end/) {  # end
 	next if !@ledger_apply; # end without any apply
 	my $a = pop @ledger_apply;
@@ -1613,7 +1631,8 @@ while (@input) {
 # Check for renames
 foreach (sort keys %ledger_accounts) {
     my $map = map_account $_;
-    if ($_ ne $map && !($map ~~ [values %{$config->{account_map}}])) {
+    if ($_ ne $map && !($map ~~ [values %{$config->{account_map}}]) &&
+        !($map ~~ [values %account_regex_map])) {
         print_warning "Account $_ renamed to $map";
     }
 }

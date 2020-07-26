@@ -669,6 +669,8 @@ ledger2beancount will look for some hledger specific features:
 5) The `end aliases` directive to clear all defined account aliases is
    supported.
 
+6) Account aliases can be regular expressions.
+
 
 ## Ignoring certain lines
 
