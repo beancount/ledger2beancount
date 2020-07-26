@@ -127,7 +127,9 @@ if [ -z $hledger_version ]; then
 elif ! $(meets_version $hledger_version 1.10); then
 	echo "Skipping hledger validation checks since hledger $hledger_version is too old"
 else
-	test_validity_hledger hledger.ledger
+	for test in *.hledger; do
+		test_validity_ledger "$test"
+	done
 fi
 
 # Convert files
