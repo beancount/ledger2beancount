@@ -28,13 +28,13 @@ meets_version() {
 
 test_conversion () {
 	test=$1
-	expected=$(echo $test | sed -e 's/.ledger$/.beancount/')
+	expected=$(echo $test | sed -e 's/\.h*ledger$/.beancount/')
 	actual=$(mktemp)
 
 	printf "Converting $test... "
 
 	config=ledger2beancount.yml
-	t=$(echo $test | sed 's/.ledger$//')
+	t=$(echo $test | sed 's/.\h*ledger$//')
 	if [ -e $t.yml ]; then
 		config=$t.yml
 	fi
@@ -133,7 +133,7 @@ else
 fi
 
 # Convert files
-for test in *.ledger; do
+for test in *.ledger *.hledger; do
 	test_conversion "$test"
 done
 
