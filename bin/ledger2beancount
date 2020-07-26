@@ -101,11 +101,7 @@ my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # To keep the regex simpler, we parse the () and [] for virtual accounts
 # as part of the account name and strip these brackets later.
 my $account_RE = qr/[^\s;][^\t]*?/;
-my $number_RE = qr/([\d,]*\d(\.\d+)?|\.\d+)/;
-my $number_decimal_comma_RE = qr/([\d.]*\d(,\d+)?|,\d+)/;
-if ($config->{decimal_comma}) {
-    $number_RE = $number_decimal_comma_RE;
-}
+my $number_RE = qr/([\d,.]*\d([.,]\d+)?|\.\d+|,\d+)/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
 my $commodity_quoted_RE = qr/(["'])(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
@@ -460,6 +456,18 @@ sub push_deferred_meta($) {
 	push_line $depth, $_;
     }
     @cur_txn_meta = ();
+}
+
+
+# Convert numbers in various formats into a standard format
+sub convert_number($) {
+    my ($number) = @_;
+
+    if ($config->{decimal_comma}) {
+	$number =~ s/\.//g;
+	$number =~ tr/,/./; # issue #204
+    }
+    return $number;
 }
 
 
@@ -829,10 +837,7 @@ sub get_value_expr($) {
 	}
     }
 
-    if ($config->{decimal_comma}) {
-	$math =~ s/\.//g;
-	$math =~ tr/,/./; # issue #204
-    }
+    $math = convert_number $math;
 
     # We have to move the commodity from within the inline math construct
     # to after (outside) the inline math since beancount expects the
@@ -881,13 +886,8 @@ sub get_amount($) {
 	my $amount;
 	my $rest = $+{rest};
 	my $minus = $+{minus} ? "-" : "";
-	$amount->[NUMBER] = $+{number};
+	$amount->[NUMBER] = convert_number $+{number};
 	$amount->[CURRENCY] = map_commodity $+{currency};
-
-	if ($config->{decimal_comma}) {
-	    $amount->[NUMBER] =~ s/\.//g;
-	    $amount->[NUMBER] =~ tr/,/./; # issue #204
-	}
 
 	# ledger allows amounts without a leading zero (e.g. .10) but
 	# beancount doesn't.
