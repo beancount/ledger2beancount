@@ -128,7 +128,7 @@ elif ! $(meets_version $hledger_version 1.10); then
 	echo "Skipping hledger validation checks since hledger $hledger_version is too old"
 else
 	for test in *.hledger; do
-		test_validity_ledger "$test"
+		test_validity_hledger "$test"
 	done
 fi
 
