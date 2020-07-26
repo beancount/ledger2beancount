@@ -6,10 +6,6 @@
 --input-date-format %Y-%m-%d
 --input-date-format %m-%d
 
-1970-01-01 open Assets:Test
-1970-01-01 open Equity:Opening-Balance
-1970-01-01 commodity EUR
-
 = expr true
     Assets:Foo                          50.00 USD
     Assets:Bar                         -50.00 USD
