@@ -12,6 +12,8 @@
 * Support commas as decimal markers for hledger
 * Support hledger's `end aliases` directive
 * Support hledger's regex aliases
+* Recognize hledger's total balance assertions
+* Recognize hledger's sub-account balance assertions
 
 ## 2.3 (2020-06-26)
 

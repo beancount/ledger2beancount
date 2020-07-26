@@ -1,6 +1,8 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
 ;
+;   - hledger's balance assertions for sub-accounts not supported
+;   - hledger's total balance assertions not supported; using regular assertion
 ;   - Account assets:checking renamed to Assets:Checking
 ;   - Account expenses:food renamed to Expenses:Food
 ;   - Metadata key 2012 renamed to x2012
@@ -9,6 +11,8 @@
 ;   - Metadata key abc,def renamed to abc-def
 ;   - Metadata key foo,bar renamed to foo-bar
 ;   - Metadata key test♚ renamed to test-
+;   - Collision for account Assets:Checking: Assets:Checking, assets:checking
+
 ;----------------------------------------------------------------------
 
 ; SPDX-FileCopyrightText: © 2019 Martin Michlmayr <tbm@cyrius.com>
@@ -23,8 +27,12 @@
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Bank:Wells-Fargo:Checking
 1970-01-01 open Assets:Checking
+1970-01-01 open Assets:Checking:A
+1970-01-01 open Assets:Checking:B
 1970-01-01 open Assets:Test
+1970-01-01 open Assets:USD
 1970-01-01 open Assets:Wells-Fargo-Checking
+1970-01-01 open Equity:Opening-Balances
 1970-01-01 open Expenses:Food
 
 1970-01-01 commodity BTC
@@ -245,4 +253,38 @@
 2020-07-26 txn "No alias"
   Assets:Test              10.00 EUR
   Assets:Test
+
+2020-07-26 * "Sub-account assertion 1"
+  Assets:Checking:A            5 EUR
+  Assets:Checking:B            5 EUR
+  Assets:Checking              1 EUR
+  Equity:Opening-Balances
+
+2020-07-26 * "Sub-account assertion 2"
+  Assets:Checking:A            5 EUR
+  Assets:Checking:B            5 EUR
+  Assets:Checking              1 EUR ; comment
+  Equity:Opening-Balances
+
+2020-07-26 * "Sub-account assertion 3"
+  Assets:Checking:A            5 EUR
+  Assets:Checking:B            5 EUR
+  Assets:Checking              1 EUR
+  Equity:Opening-Balances
+
+2020-07-26 * "Sub-account assertion 4"
+  Assets:Checking:A            5 EUR
+  Assets:Checking:B            5 EUR
+  Assets:Checking              1 EUR ; comment
+  Equity:Opening-Balances
+
+2020-07-26 txn "USD opening balance"
+  Assets:USD                      1 USD
+  Assets:Test
+
+2020-07-26 txn "Check USD balance"
+  Assets:USD                      0 USD
+  Assets:USD
+
+2020-07-27 balance Assets:USD  1 USD
 

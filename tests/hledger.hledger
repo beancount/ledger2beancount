@@ -189,3 +189,35 @@ end aliases
     Assets:Test              10.00 EUR
     Assets:Test
 
+2020/07/26 * Sub-account assertion 1
+    Assets:Checking:A            5 EUR
+    Assets:Checking:B            5 EUR
+    Assets:Checking              1 EUR =* 11 EUR
+    Equity:Opening-Balances
+
+2020/07/26 * Sub-account assertion 2
+    Assets:Checking:A            5 EUR
+    Assets:Checking:B            5 EUR
+    Assets:Checking              1 EUR =* 22 EUR ; comment
+    Equity:Opening-Balances
+
+2020/07/26 * Sub-account assertion 3
+    Assets:Checking:A            5 EUR
+    Assets:Checking:B            5 EUR
+    Assets:Checking              1 EUR ==* 33 EUR
+    Equity:Opening-Balances
+
+2020/07/26 * Sub-account assertion 4
+    Assets:Checking:A            5 EUR
+    Assets:Checking:B            5 EUR
+    Assets:Checking              1 EUR ==* 44 EUR ; comment
+    Equity:Opening-Balances
+
+2020/07/26 USD opening balance
+    Assets:USD                      $1
+    Assets:Test
+
+2020/07/26 Check USD balance
+    Assets:USD                      $0 == $1
+    Assets:USD
+

@@ -1032,6 +1032,18 @@ sub parse_posting($) {
 
     # An assertion (if there's no amount) or balance assignment
     # (if there's no amount).  Starts with =
+    # Note that hledger also has =*, ==* and == assertions.
+    if ($config->{hledger}) {
+	if ($l =~ /^=?=\*\s*(.*)/) {
+	    print_warning_once "hledger's balance assertions for sub-accounts not supported";
+	    # Get amount to get the rest of the line in $l but ignore the
+	    # amount
+	    ($_, $l) = get_amount $1;
+	} elsif ($l =~ /^==\s*(.*)/) {
+	    print_warning_once "hledger's total balance assertions not supported; using regular assertion";
+	    ($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
+	}
+    }
     if ($l =~ /^=\s*(.*)/) {
 	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
     }
