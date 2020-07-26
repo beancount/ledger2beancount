@@ -653,29 +653,29 @@ The syntax of [hledger](http://hledger.org/) is largely compatible with
 that of ledger.  If the `hledger` config option is set to `true`,
 ledger2beancount will look for some hledger specific features:
 
-1) hledger allows the [separation of a transaction's description into
+1. hledger allows the [separation of a transaction's description into
    payee and note](http://hledger.org/journal.html#payee-and-note)
    (narration) using the pipe character (`payee | narration`).
 
-2) hledger allows `date:` and `date2:` to specify [posting dates](http://hledger.org/journal.html#posting-dates)
+2. hledger allows `date:` and `date2:` to specify [posting dates](http://hledger.org/journal.html#posting-dates)
    in posting comments in addition to ledger's `[date=date2]` syntax.
 
-3) The syntax of tags is different in hledger: `tag1:, tag2:, tag3:` in
+3. The syntax of tags is different in hledger: `tag1:, tag2:, tag3:` in
    hledger vs `:tag1:tag2:tag3:` in ledger.
 
-4) Commas are supported as decimal markers when a number contains
+4. Commas are supported as decimal markers when a number contains
    only a comma and no period.
 
-5) The `end aliases` directive to clear all defined account aliases is
+5. The `end aliases` directive to clear all defined account aliases is
    supported.
 
-6) Account aliases can be regular expressions.
+6. Account aliases can be regular expressions.
 
-7) Total balance assertions (`==`) are recognized, but since there's
+7. Total balance assertions (`==`) are recognized, but since there's
    no equivalent in beancount they are treated as regular balance
    assertions.
 
-8) Sub-account balance assertions (`=*` and `==*`) are recognized
+8. Sub-account balance assertions (`=*` and `==*`) are recognized
    but ignored since there's no equivalent in beancount.
 
 
