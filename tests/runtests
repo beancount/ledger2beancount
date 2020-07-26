@@ -15,6 +15,17 @@ if [ -z "${SORT-}" ]; then
 	esac
 fi
 
+meets_version() {
+	has=$1
+	needed=$2
+	latest=$(printf "$needed\n$has" | $SORT -V | tail -n 1)
+	if [ "$has" != "$latest" ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
 test_conversion () {
 	test=$1
 	expected=$(echo $test | sed -e 's/.ledger$/.beancount/')
@@ -39,6 +50,20 @@ test_conversion () {
 	fi
 
 	rm -f $actual
+}
+
+test_validity_hledger () {
+	test=$1
+	printf "Validating $test... "
+	tmp=$(tempfile)
+	if $(hledger -f $test bal > $tmp 2&>1); then
+		echo "ok"
+	felse
+		echo "FAIL"
+		cat $tmp
+		status=1
+	fi
+	rm -f $tmp
 }
 
 test_validity_ledger () {
@@ -67,8 +92,7 @@ test_validity_beancount () {
 	# Ensure beancount is new enough
 	needed=$(grep "^; Beancount:" $test | head -n 1 | sed 's/^; Beancount:\s*//')
 	if [ -n "$needed" ]; then
-		latest=$(printf "$needed\n$beancount_version" | $SORT -V | tail -n 1)
-		if [ "$beancount_version" != "$latest" ]; then
+		if ! $(meets_version $beancount_version, $needed); then
 			echo "skipping since beancount is too old"
 			return
 		fi
@@ -84,6 +108,7 @@ test_validity_beancount () {
 
 export LC_ALL=C.UTF-8
 
+# Validate ledger files
 ledger_date=$(ledger --version 2>/dev/null | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d - -f 2 | sed 's/,//')
 if [ -z $ledger_date ]; then
 	echo "Skipping ledger validation checks since ledger is not installed"
@@ -95,10 +120,22 @@ else
 	done
 fi
 
+# Validate hledger file
+hledger_version=$(hledger --version n 2>/dev/null | cut -d" " -f2)
+if [ -z $hledger_version ]; then
+	echo "Skipping hledger validation checks since hledger is not installed"
+elif ! $(meets_version $hledger_version, 1.10); then
+	echo "Skipping hledger validation checks since hledger $hledger_version is too old"
+else
+	test_validity_ledger hledger.ledger
+fi
+
+# Convert files
 for test in *.ledger; do
 	test_conversion "$test"
 done
 
+# Validate beancount files
 beancount_version=$(bean-check --version 2>/dev/null | cut -d' ' -f2)
 for test in *.beancount; do
 	test_validity_beancount "$test"

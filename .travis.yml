@@ -17,6 +17,7 @@ addons:
   apt:
     packages:
       - cpanminus
+      - hledger
       - ledger
       - yamllint
 install:
