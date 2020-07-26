@@ -1230,7 +1230,14 @@ sub process_txn(@) {
     }
     print_tags 2, @cur_txn_tags;
 
-    if ($total_postings == 1) {
+    if ($total_postings == 0) {
+	# hledger allows transactions without any postings.
+	# As it turns out, ledger doesn't complain about them either.
+	foreach (split "\n", pop_txn()) {
+	    print_comment_top_level 0, $_;
+	}
+	return;
+    } elsif ($total_postings == 1) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
 	    push_line 1, $ledger_bucket;

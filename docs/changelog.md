@@ -7,6 +7,7 @@
 * Convert all uppercase metadata tags to all lowercase
 * Improve handling of ledger lots without cost
 * Don't assume implicit conversion when price is on second posting
+* Allow transactions without postings
 
 ## 2.3 (2020-06-26)
 
