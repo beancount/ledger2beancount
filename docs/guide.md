@@ -660,7 +660,7 @@ ledger2beancount will look for some hledger specific features:
 2) hledger allows `date:` and `date2:` to specify [posting dates](http://hledger.org/journal.html#posting-dates)
    in posting comments in addition to ledger's `[date=date2]` syntax.
 
-3) The syntax of tags is different in hledger: `tag1: tag2:, tag3:` in
+3) The syntax of tags is different in hledger: `tag1:, tag2:, tag3:` in
    hledger vs `:tag1:tag2:tag3:` in ledger.
 
 4) Commas are supported as decimal markers when a number contains
