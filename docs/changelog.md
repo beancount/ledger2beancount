@@ -15,6 +15,7 @@
 * Recognise hledger's total balance assertions
 * Recognise hledger's sub-account balance assertions
 * Fix parsing issue in commodity declarations
+* Support commodities that contain quotation marks
 * Add `--version` option to show version
 * Document problem of mixing `apply` and `include`
 

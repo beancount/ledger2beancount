@@ -108,9 +108,9 @@ my $account_RE = qr/[^\s;][^\t]*?/;
 my $number_RE = qr/([\d,.]*\d([.,]\d+)?|\.\d+|,\d+)/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
-my $commodity_quoted_RE = qr/(["'])(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
+my $commodity_quoted_RE = qr/(")(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 # An unquoted commodity may not contain certain characters
-my $commodity_unquoted_RE = qr/(?!-)[^;\s0-9=)("'{}@*\/+,.-]+/;
+my $commodity_unquoted_RE = qr/(?!-)(?!")[^;\s0-9=)({}@*\/+,.-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;\s*(?<comment>.*)/;
@@ -735,7 +735,7 @@ sub map_commodity($) {
     $commodity =~ s/\p{NonspacingMark}//g;
     # Dash (-) is not valid in ledger (even with quoted commodity) but valid
     # in beancount
-    $commodity =~ s/[^a-zA-Z0-9_'.-]/-/g; # Replace disallowed characters
+    $commodity =~ s/[^a-zA-Z0-9_.-]/-/g; # Replace disallowed characters
     $commodity =~ s/^[^\p{letter}]/X/g; # Make sure first character is a letter
     $commodity =~ s/[^\p{letter}\p{number}]$/X/g; # Make sure last character is a letter or number
     $commodity .= "X" if length $commodity == 1;

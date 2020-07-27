@@ -142,3 +142,15 @@ commodity "TEST123" ; comment with "quote"
     Assets:Test                              1 ♛
     Equity:Opening-Balance
 
+2020-07-27 * Unquoted commodities may contain single quote
+  Assets:Test                 1 'TEST'
+  Assets:Test
+
+2020-07-27 * Unquoted commodities may contain single quote
+  Assets:Test                  1 T'EST
+  Assets:Test
+
+2020-07-27 * Unquoted commodities may contain double quote
+  Assets:Test                  1 TE"ST
+  Assets:Test
+

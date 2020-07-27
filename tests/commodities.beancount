@@ -4,6 +4,7 @@
 ;   - Skipped second commodity declaration for USD (old USD)
 ;   - Commodity "A commodity" renamed to A-COMMODITY
 ;   - Commodity "M&M3" renamed to M-M3
+;   - Commodity 'TEST' renamed to XTESTX
 ;   - Commodity AnotherAnotherAnotherAnother renamed to ANOTHERANOTHERANOTHERANO
 ;   - Commodity Aud renamed to AUD
 ;   - Commodity Bär renamed to BAR
@@ -12,6 +13,8 @@
 ;   - Commodity Föö renamed to FOO
 ;   - Commodity Gandi renamed to GANDI
 ;   - Commodity KrisFlyer renamed to KRISFLYER
+;   - Commodity T'EST renamed to T-EST
+;   - Commodity TE"ST renamed to TE-ST
 ;   - Commodity krw renamed to KRW
 ;   - Collision for commodity COLLISION: COLLA, COLLB
 ;   - Collision for commodity USD: $, USD
@@ -65,6 +68,9 @@
 1970-01-01 commodity AA
 1970-01-01 commodity COLLISION
 1970-01-01 commodity CX
+1970-01-01 commodity T-EST
+1970-01-01 commodity TE-ST
+1970-01-01 commodity XTESTX
 
 2018-03-17 * "Test quoted commodity"
   Assets:Test                      1 DE0002635307
@@ -161,4 +167,16 @@
 2018-04-28 * "Commodity with only 1 letter"
   Assets:Test                              1 AA
   Equity:Opening-Balance
+
+2020-07-27 * "Unquoted commodities may contain single quote"
+  Assets:Test                 1 XTESTX
+  Assets:Test
+
+2020-07-27 * "Unquoted commodities may contain single quote"
+  Assets:Test                  1 T-EST
+  Assets:Test
+
+2020-07-27 * "Unquoted commodities may contain double quote"
+  Assets:Test                  1 TE-ST
+  Assets:Test
 
