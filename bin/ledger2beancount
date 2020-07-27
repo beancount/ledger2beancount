@@ -1529,16 +1529,26 @@ while (@input) {
 		print_comment_top_level $depth, $l;
 	    }
 	}
-    } elsif ($l =~ /^[!@]?commodity\s+(?<commodity>$commodity_RE)\s*(?<rest>.*)/) {  # commodity declaration
-	my $rest = $+{rest};
-	my $commodity = map_commodity $+{commodity};
+    } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
+	$l = $1;
+	my $commodity;
 	my $comment = "";
-	if ($rest) {
-	   if ($rest =~ /^$comment_RE/) {
+	if ($l =~ /^(?<commodity>$commodity_RE)\s*($comment_RE)?$/) {
+	    $commodity = map_commodity $+{commodity};
+	    $comment = " ; $+{comment}" if $+{comment};
+	} elsif ($config->{hledger}) {
+	    # In hledger, a commodity directive can contain an amount
+	    # where the amount defines the format for this commodity
+	    # instead of a separate format directive.
+	    my ($amount, $l) = get_amount $l;
+	    $commodity = $amount->[CURRENCY];
+	    if ($l =~ /^\s*$comment_RE/) {
 		$comment = " ; $+{comment}";
-	    } else {
-		die "Unknown rest in commodity declaration for $commodity: $rest";
-	    }
+            } elsif ($l) {
+		die "Unknown rest in commodity declaration for $commodity: $l";
+            }
+	} else {
+		die "Cannot parse commodity directive: $l";
 	}
 	@stanza = read_stanza \@input;
 	# Avoid duplicate commodity declarations if two commodities are

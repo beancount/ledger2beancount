@@ -221,3 +221,11 @@ end aliases
     Assets:USD                      $0 == $1
     Assets:USD
 
+commodity R$ 1.234,56
+
+commodity ¥ 1,234.56;comment
+
+commodity 1.234,56 Kč
+
+commodity 1.234,56 Ft;comment
+
