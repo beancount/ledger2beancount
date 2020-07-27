@@ -1,6 +1,6 @@
 # Features
 
-The majority of features from ledger are supported by ledger2beancount.
+The majority of features from [ledger](https://ledger-cli.org/) and [hledger](https://hledger.org/) are supported by ledger2beancount.
 
 ## Fully supported
 
@@ -79,4 +79,21 @@ commented out during the conversion from ledger to beancount:
 * Commodity pricing: ignore pricing (`N SYMBOL`)
 * Timeclock support (`I`, `i`, `O`, `o`, `b`, `h`)
 * Periodic transactions
+
+## Supported features from hledger
+
+The following syntax from [hledger](https://hledger.org/) is supported if the `hledger` configuration variable is set:
+
+* Account aliases can be regular expressions
+* Amounts
+    * All digit group marks (space, comma, and period) are supported
+    * Number format can be specified via `commodity` and `D` directives
+* Narration: support for `payee | note` format
+* Posting dates: `date` and `date2`
+* Tags: `tag1:, tag2:, tag2: info`
+* Balance assertions
+    * Sub-account balance assertions: recognised but not supported in beancount
+    * Total balance assertions: recognised but no equivalent in beancount
+* Directives
+    * `end aliases`
 

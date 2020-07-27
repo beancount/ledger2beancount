@@ -2,19 +2,20 @@
 
 ## 2.4 (unreleased)
 
+* Improve support for hledger
+    * Fix parsing of hledger tags
+    * Support commas as decimal markers
+    * Support digit group marks through `commodity` and `D` directives
+    * Support `end aliases` directive
+    * Support regex aliases
+    * Recognise total balance assertions
+    * Recognise sub-account balance assertions
 * Handle price directives with comments
 * Add support for `define` directive
 * Convert all uppercase metadata tags to all lowercase
 * Improve handling of ledger lots without cost
 * Don't assume implicit conversion when price is on second posting
 * Allow transactions without postings
-* Fix parsing of hledger tags
-* Support commas as decimal markers for hledger
-* Support hledger's `end aliases` directive
-* Support hledger's regex aliases
-* Recognise hledger's total balance assertions
-* Recognise hledger's sub-account balance assertions
-* Support digit group marks through `commodity` and `D` directives
 * Fix parsing issue in commodity declarations
 * Support commodities that contain quotation marks
 * Add `--version` option to show version

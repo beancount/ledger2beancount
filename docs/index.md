@@ -24,6 +24,11 @@ Conversion is based on (concrete) syntax, so that information that is not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
+As input, ledger2beancount supports the file formats from:
+
+* [ledger](https://ledger-cli.org/)
+* [hledger](https://hledger.org/)
+
 ledger2beancount aims to be compatible with the latest official release of
 beancount.
 

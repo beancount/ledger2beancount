@@ -10,6 +10,10 @@ Conversion is based on (concrete) syntax, so that information that is not
 meaningful for accounting reasons but still valuable (e.g., comments,
 formatting, etc.) can be preserved.
 
+ledger2beancount supports the file formats from:
+
+* [ledger](https://ledger-cli.org/)
+* [hledger](https://hledger.org/)
 
 ## Usage
 
@@ -116,6 +120,20 @@ use ledger2beancount and to configure it to your needs.
     * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)
 * Periodic transactions
 
+### Supported features from hledger
+
+* Account aliases can be regular expressions
+* Amounts
+    * All digit group marks (space, comma, and period) are supported
+    * Number format can be specified via `commodity` and `D` directives
+* Narration: support for `payee | note` format
+* Posting dates: `date` and `date2`
+* Tags: `tag1:, tag2:, tag2: info`
+* Balance assertions
+    * Sub-account balance assertions: recognised but not supported in beancount
+    * Total balance assertions: recognised but no equivalent in beancount
+* Directives
+    * `end aliases`
 
 ## Authors
 
