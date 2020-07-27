@@ -28,7 +28,7 @@ use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
 
-my $VERSION = "2.3+git";
+my $VERSION = "2.4";
 
 memoize('map_account');
 memoize('map_commodity');

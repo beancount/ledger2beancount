@@ -1,7 +1,10 @@
 # ledger2beancount releases
 
-## 2.4 (unreleased)
+## 2.4 (2020-07-27)
 
+* Fix regressions introduced in version 2.3
+    * Handle price directives with comments
+    * Don't assume implicit conversion when price is on second posting
 * Improve support for hledger
     * Fix parsing of hledger tags
     * Support commas as decimal markers
@@ -10,11 +13,9 @@
     * Support regex aliases
     * Recognise total balance assertions
     * Recognise sub-account balance assertions
-* Handle price directives with comments
 * Add support for `define` directive
 * Convert all uppercase metadata tags to all lowercase
 * Improve handling of ledger lots without cost
-* Don't assume implicit conversion when price is on second posting
 * Allow transactions without postings
 * Fix parsing issue in commodity declarations
 * Support commodities that contain quotation marks
