@@ -15,6 +15,7 @@
 ;   - Commodity KrisFlyer renamed to KRISFLYER
 ;   - Commodity T'EST renamed to T-EST
 ;   - Commodity TE"ST renamed to TE-ST
+;   - Commodity TEST" renamed to TESTX
 ;   - Commodity krw renamed to KRW
 ;   - Collision for commodity COLLISION: COLLA, COLLB
 ;   - Collision for commodity USD: $, USD
@@ -70,6 +71,7 @@
 1970-01-01 commodity CX
 1970-01-01 commodity T-EST
 1970-01-01 commodity TE-ST
+1970-01-01 commodity TESTX
 1970-01-01 commodity XTESTX
 
 2018-03-17 * "Test quoted commodity"
@@ -178,5 +180,9 @@
 
 2020-07-27 * "Unquoted commodities may contain double quote"
   Assets:Test                  1 TE-ST
+  Assets:Test
+
+2020-07-27 * "Unquoted commodities may contain double quote"
+  Assets:Test                  1 TESTX
   Assets:Test
 

@@ -725,7 +725,7 @@ sub map_commodity($) {
     $ledger_commodities{$commodity} = 1;
 
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
-    $commodity =~ s/(^")|("$)//g;
+    $commodity =~ s/^(")(.*)\g{-2}$/$2/;
     # Check again after removing the quote
     $commodity = $config->{commodity_map}{$commodity} if exists $config->{commodity_map}{$commodity};
 
