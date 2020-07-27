@@ -1523,16 +1523,17 @@ while (@input) {
 		print_comment_top_level $depth, $l;
 	    }
 	}
-    } elsif ($l =~ /^[!@]?commodity\s+(.*)/) {  # commodity declaration
-	my ($commodity, $comment);
-	$commodity = $1;
-	if ($commodity =~ /^(".*")(.*)/) {
-	    $commodity = $1;
-	    $comment = $1 if $2 =~ /\s*;\s*(.*)/;
-	} else {
-	    ($commodity, $comment) = split /\s*;\s*/, $commodity, 2;
+    } elsif ($l =~ /^[!@]?commodity\s+(?<commodity>$commodity_RE)\s*(?<rest>.*)/) {  # commodity declaration
+	my $rest = $+{rest};
+	my $commodity = map_commodity $+{commodity};
+	my $comment = "";
+	if ($rest) {
+	   if ($rest =~ /^$comment_RE/) {
+		$comment = " ; $+{comment}";
+	    } else {
+		die "Unknown rest in commodity declaration for $commodity: $rest";
+	    }
 	}
-	$commodity = map_commodity $commodity;
 	@stanza = read_stanza \@input;
 	# Avoid duplicate commodity declarations if two commodities are
 	# mapped to the same commodity and both have commodity declarations.
@@ -1541,7 +1542,7 @@ while (@input) {
 	    next;
 	}
 	$commodity_declared{$commodity} = 1;
-	print_line $depth, sprintf "$config->{commodities_date} commodity %s%s", $commodity, $comment ? " ; $comment" : "";
+	print_line $depth, sprintf "$config->{commodities_date} commodity %s%s", $commodity, $comment;
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note

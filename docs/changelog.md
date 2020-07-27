@@ -14,6 +14,7 @@
 * Support hledger's regex aliases
 * Recognise hledger's total balance assertions
 * Recognise hledger's sub-account balance assertions
+* Fix parsing issue in commodity declarations
 * Add `--version` option to show version
 * Document problem of mixing `apply` and `include`
 
