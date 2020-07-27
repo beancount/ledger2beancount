@@ -14,6 +14,7 @@
 * Support hledger's regex aliases
 * Recognise hledger's total balance assertions
 * Recognise hledger's sub-account balance assertions
+* Support digit group marks through `commodity` and `D` directives
 * Fix parsing issue in commodity declarations
 * Support commodities that contain quotation marks
 * Add `--version` option to show version

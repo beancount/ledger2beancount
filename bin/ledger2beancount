@@ -105,7 +105,7 @@ my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # To keep the regex simpler, we parse the () and [] for virtual accounts
 # as part of the account name and strip these brackets later.
 my $account_RE = qr/[^\s;][^\t]*?/;
-my $number_RE = qr/([\d,.]*\d([.,]\d+)?|\.\d+|,\d+)/;
+my $number_RE = qr/([\d\s,.]*\d([.,]\d+)?|\.\d+|,\d+)/;
 # A quoted commodity ("LU0274208692") can contain anything
 # between quotes.
 my $commodity_quoted_RE = qr/(")(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
@@ -138,6 +138,7 @@ my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
 my %ledger_define; # Capture "define" statements
+my %ledger_commodity_format; # Ledger commodity format
 # Store some hleger info
 my @hledger_alias_regex; # regex aliases
 # Conversion notes for users from ledger2beancount
@@ -467,15 +468,33 @@ sub push_deferred_meta($) {
 
 
 # Convert numbers in various formats into a standard format
-sub convert_number($) {
-    my ($number) = @_;
+sub convert_number($$) {
+    my ($number, $currency) = @_;
 
     if ($config->{decimal_comma}) {
 	$number =~ s/\.//g;
 	$number =~ tr/,/./; # issue #204
-    } elsif ($config->{hledger} && $number !~ /\./) {
-	# If there's a comma but no period, the comma is a decimal marker
-	$number =~ s/,/./;
+    } elsif ($config->{hledger}) {
+	if (defined $ledger_commodity_format{$currency}) {
+	   my $format = $ledger_commodity_format{$currency};
+	   # We use some shortcuts for the format; basically,
+	   # we just use format to figure out the decimal mark
+	   # character.  We don't care if anything else is in
+	   # the right format.
+	   $number =~ s/\s+//g;
+	   if ($format =~ /,\d+$/) {
+		# Decimal marker: comma
+		$number =~ s/\.//g;
+		$number =~ s/,/./g;
+	   } else {
+		# Decimal marker: period
+		# Something like 9,99,99,999.00 INR isn't accepted
+		$number =~ s/,//g if $number !~ /^(\d,|\d\d\d\d,)+$/;
+	   }
+	} elsif ($number !~ /\./) {
+	    # If there's a comma but no period, the comma is a decimal marker
+	    $number =~ s/,/./;
+	}
     }
     return $number;
 }
@@ -847,8 +866,6 @@ sub get_value_expr($) {
 	}
     }
 
-    $math = convert_number $math;
-
     # We have to move the commodity from within the inline math construct
     # to after (outside) the inline math since beancount expects the
     # format "number currency" (where number can be basic math).
@@ -857,7 +874,7 @@ sub get_value_expr($) {
     # that's the commodity we need.  If there are multiple, beancount
     # can't handle it.
     my $terms = $math;
-    $terms =~ s/[.\d\(\)\*\/+-]/ /g;
+    $terms =~ s/[.,\s\d\(\)\*\/+-]/ /g;
     $terms =~ s/^\s+//;
     my @terms = uniq split /\s+/, $terms;
     if (scalar @terms == 0) {
@@ -868,8 +885,8 @@ sub get_value_expr($) {
 	print_warning_once("Complex inline math not supported in beancount: $math");
     }
     my $amount;
-    $amount->[NUMBER] = $math;
     $amount->[CURRENCY] = map_commodity $terms[0];
+    $amount->[NUMBER] = convert_number $math, $amount->[CURRENCY];
     return $amount, $rest;
 }
 
@@ -896,8 +913,8 @@ sub get_amount($) {
 	my $amount;
 	my $rest = $+{rest};
 	my $minus = $+{minus} ? "-" : "";
-	$amount->[NUMBER] = convert_number $+{number};
 	$amount->[CURRENCY] = map_commodity $+{currency};
+	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
 
 	# ledger allows amounts without a leading zero (e.g. .10) but
 	# beancount doesn't.
@@ -1542,6 +1559,7 @@ while (@input) {
 	    # instead of a separate format directive.
 	    my ($amount, $l) = get_amount $l;
 	    $commodity = $amount->[CURRENCY];
+	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
 	    if ($l =~ /^\s*$comment_RE/) {
 		$comment = " ; $+{comment}";
             } elsif ($l) {
@@ -1564,12 +1582,40 @@ while (@input) {
 	    if ($l =~ /^note\s+(.*)/) {  # note
 		print_line $depth, pp_metadata "name", mk_beancount_string $1;
 	    } elsif ($l =~ /^format\s+(.*)/) {  # format
-		next;  # skip directive, not needed in beancount
+	        my ($amount, $l) = get_amount $1;
+		$ledger_commodity_format{$amount->[CURRENCY]} = $amount->[NUMBER];
+		if ($l =~ /^\s*$comment_RE/) {
+		    # do nothing: we don't show format info in beancount,
+		    # so we can discard the comment
+		} elsif ($l) {
+		    die "Cannot parse commodity format information: $l";
+		}
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
 		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
 	    } else {
 		print_comment_top_level $depth, $l;
 	    }
+	}
+    } elsif ($l =~ /^[!@]?(D)\s*(.*)/) {
+	$after_auto = 1;
+
+	# Print a warning since beancount doesn't have such a directive,
+	# but process it anyway (although we only use the information
+	# for hledger at the moment).
+	print_warning_once "Unsupported directive `$1` skipped";
+	# Not supported in beancount
+	print_comment_top_level $depth, $l;
+
+	my ($amount, $l) = get_amount $2;
+	my $commodity = $amount->[CURRENCY];
+	if ($l =~ /^\s*$comment_RE/) {
+	    # do nothing: we don't show D directive in beancount,
+	    # so we can discard the comment
+	} elsif ($l) {
+	    die "Unknown rest in D directive for $commodity: $l";
+        }
+	if (!defined $ledger_commodity_format{$commodity}) {
+	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
 	}
     } elsif ($l =~ /^[!@]?(payee\s+.*)/) {  # payee declaration
 	print_comment_top_level $depth, $1;
@@ -1595,7 +1641,7 @@ while (@input) {
     } elsif ($l =~ /^[!@]?(tag\s+.*)/) {  # tag declaration
 	# Not needed in beancount and there's no equivalent
 	read_stanza \@input if $input[0] =~ /^\h+/;
-    } elsif ($l =~ /^[!@]?(N|D|C|I|i|O|o|b|h|assert|check|expr|eval|value)(\s|$)/) {
+    } elsif ($l =~ /^[!@]?(N|C|I|i|O|o|b|h|assert|check|expr|eval|value)(\s|$)/) {
 	$after_auto = 1;
 	    print_warning_once "Unsupported directive `$1` skipped";
 	    # Not supported in beancount

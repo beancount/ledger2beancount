@@ -229,3 +229,45 @@ commodity 1.234,56 Kč
 
 commodity 1.234,56 Ft;comment
 
+commodity ₪
+    format ₪ 2.000.000,00 ; comment
+
+2020-07-27 Two million
+    Assets:Test         ₪ 2.000.000,00
+    Assets:Test
+
+2020-07-27 Thousand
+    Assets:Test                ₪ 1.000
+    Assets:Test
+
+commodity INR 9,99,99,999.00
+
+2020-07-27 Format currently not allowed
+    Assets:Test     INR 9,99,99,999.00
+    Assets:Test
+
+commodity kr 1 234 567.000
+
+2020-07-27 Space
+    Assets:Test           kr 1 234 567
+    Assets:Test
+
+2020-07-27 One
+    Assets:Test               kr 1.000
+    Assets:Test
+
+commodity 1 000 000.9455 FOO
+
+2020-07-27 Space
+    Assets:Test         1 000.9455 FOO
+    Assets:Test
+
+2020-07-27 Space
+    Assets:Test     1 000 000.9455 FOO
+    Assets:Test
+
+D 1.000,00 zł
+2020-07-27 Thousand
+    Assets:Test               1.000 zł
+    Assets:Test
+

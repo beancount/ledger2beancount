@@ -684,6 +684,11 @@ ledger2beancount will look for some hledger specific features:
 8. Sub-account balance assertions (`=*` and `==*`) are recognised
    but ignored since there's no equivalent in beancount.
 
+9. Digit group marks (space, comma, and period) are supported and
+   the format information from `commodity` and `D` directives is used
+   to convert the numbers correctly into the format required in
+   beancount.
+
 
 ## Ignoring certain lines
 
