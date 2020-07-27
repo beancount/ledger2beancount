@@ -33,6 +33,9 @@ comments, formatting, etc.) can be preserved.
 *-h, --help*
 	Show help message and quit.
 
+*-V, --version*
+	Show version and quit.
+
 # USAGE
 
 *ledger2beancount* accepts input from _stdin_ or from a file and will

@@ -28,6 +28,8 @@ use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
 
+my $VERSION = "2.3+git";
+
 memoize('map_account');
 memoize('map_commodity');
 memoize('map_metadata');
@@ -40,8 +42,10 @@ my ($opt, $usage) = describe_options(
     "ledger2beancount %o <ledger-file>",
     [ "config|c=s", "configuration file", ],
     [ "help|h",     "print usage message and exit", { shortcircuit => 1 } ],
+    [ "version|V",  "show version and exit", ],
 );
 
+print("ledger2beancount $VERSION\n"), exit if $opt->version;
 print($usage->text), exit if $opt->help;
 
 my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
