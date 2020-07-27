@@ -25,6 +25,7 @@ nav:
           - Configuration: configuration.md
     - Guides:
           - User guide: guide.md
+          - Limitations: limitations.md
     - About:
           - Release notes: changelog.md
           - Bugs and contributions: contributing.md

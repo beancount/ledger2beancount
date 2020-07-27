@@ -15,6 +15,7 @@
 * Recognize hledger's total balance assertions
 * Recognize hledger's sub-account balance assertions
 * Add `--version` option to show version
+* Document problem of mixing `apply` and `include`
 
 ## 2.3 (2020-06-26)
 
