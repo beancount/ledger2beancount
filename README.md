@@ -63,7 +63,7 @@ use ledger2beancount and to configure it to your needs.
 * Flags
     * State flags (posting flags)
     * Transaction state (transaction flags)
-* Inline math
+* Inline maths
 * Lots
     * Lot dates
     * Lot notes

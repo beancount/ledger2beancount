@@ -147,7 +147,7 @@ flags](https://www.ledger-cli.org/3.0/doc/ledger3.html#State-flags)).
 
 ledger supports a wide range of date formats whereas beancount requires
 all dates in the format `YYYY-MM-DD` (ISO 8601).  ledger2beancount
-automatically recognizes the default date formats from ledger:
+automatically recognises the default date formats from ledger:
 
 * `YYYY-YY-DD`
 * `YYYY/MM/DD`
@@ -162,7 +162,7 @@ Ledger allows dates without a year if the year is declared using the
 `Y`, `year` and `apply year` directives.  If `date_format_no_year` is
 set, ledger2beancount can convert such dates to `YYYY-MM-DD`.
 
-Posting-level dates are recognized by ledger2beancount and stored as
+Posting-level dates are recognised by ledger2beancount and stored as
 metadata according to the `postdate_tag` (`date` by default) but this
 has no effect in beancount.  There is
 [a proposal](https://docs.google.com/document/d/1x0qqWGRHi02ef-FtUW172SHkdJ8quOZD-Xli7r4Nl_k/)
@@ -584,9 +584,9 @@ often not the case for virtual postings, so you will have to rename or
 map these account names.
 
 
-## Inline math
+## Inline maths
 
-Ledger supports inline math in transactions:
+Ledger supports inline maths in transactions:
 
 ```ledger
 2018-03-26 * Inline math
@@ -594,12 +594,12 @@ Ledger supports inline math in transactions:
     Assets:Test2                       -0.88 EUR
 ```
 
-Beancount also supports inline math, but support is limited to the basic
-arithmetic operations.  Basic math is converted by ledger2beancount to
+Beancount also supports inline maths, but support is limited to the basic
+arithmetic operations.  Basic maths is converted by ledger2beancount to
 the format expected by beancount.  Specifically, the commodity is moved
-from the inline math construct in order to create the "number commodity"
+from the inline maths construct in order to create the "number commodity"
 format expected by beancount.  Since beancount doesn't require round
-brackets to denote inline math, they are dropped as well, resulting in:
+brackets to denote inline maths, they are dropped as well, resulting in:
 
 ```beancount
 2018-03-26 * "Inline math"
@@ -607,8 +607,8 @@ brackets to denote inline math, they are dropped as well, resulting in:
   Assets:Test2                       -0.88 EUR
 ```
 
-Ledger additionally supports functions in inline math, such as `abs`,
-`rounded`, and `roundto`.  Such complex inline math is not supported
+Ledger additionally supports functions in inline maths, such as `abs`,
+`rounded`, and `roundto`.  Such complex inline maths is not supported
 by beancount.  It will result in a conversion note and an invalid
 beancount file.
 
@@ -671,11 +671,11 @@ ledger2beancount will look for some hledger specific features:
 
 6. Account aliases can be regular expressions.
 
-7. Total balance assertions (`==`) are recognized, but since there's
+7. Total balance assertions (`==`) are recognised, but since there's
    no equivalent in beancount they are treated as regular balance
    assertions.
 
-8. Sub-account balance assertions (`=*` and `==*`) are recognized
+8. Sub-account balance assertions (`=*` and `==*`) are recognised
    but ignored since there's no equivalent in beancount.
 
 

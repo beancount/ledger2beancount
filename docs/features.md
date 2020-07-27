@@ -27,7 +27,7 @@ The majority of features from ledger are supported by ledger2beancount.
     * `Year` / `Y`, `apply year`
 * Flags
     * Transaction state (transaction flags)
-* Inline math
+* Inline maths
     * Lots
     * Lot dates
     * Lot notes

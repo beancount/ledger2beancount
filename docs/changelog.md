@@ -12,8 +12,8 @@
 * Support commas as decimal markers for hledger
 * Support hledger's `end aliases` directive
 * Support hledger's regex aliases
-* Recognize hledger's total balance assertions
-* Recognize hledger's sub-account balance assertions
+* Recognise hledger's total balance assertions
+* Recognise hledger's sub-account balance assertions
 * Add `--version` option to show version
 * Document problem of mixing `apply` and `include`
 
@@ -21,7 +21,7 @@
 
 * Improve speed of ledger2beancount significantly
 * Improve parsing of postings for accuracy and speed
-* Improve support for inline math
+* Improve support for inline maths
 * Handle lots without cost
 * Fix parsing of lot notes followed by a virtual price
 * Add support for lot value expressions
@@ -38,7 +38,7 @@
 ## 2.2 (2020-05-30)
 
 * Show warning for unknown `apply` directive
-* Recognize `apply rate` directive (an alias of `apply fixed`)
+* Recognise `apply rate` directive (an alias of `apply fixed`)
 * Don't convert metadata on ignored virtual postings but keep as comments
 * Update location of beancount repository
 
