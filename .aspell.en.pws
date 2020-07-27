@@ -1,4 +1,4 @@
-personal_ws-1.1 en 61 utf-8
+personal_ws-1.1 en 62 utf-8
 AUR
 Alen
 Blais
@@ -48,6 +48,7 @@ modeline
 perl
 pkgsrc
 poptag
+pricedb
 pushtag
 scrartcl
 stdin

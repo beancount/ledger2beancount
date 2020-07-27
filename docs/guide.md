@@ -433,6 +433,12 @@ costs](https://www.ledger-cli.org/3.0/doc/ledger3.html#Virtual-posting-costs)
 ledger2beancount therefore treats them as regular costs (or, rather,
 as regular prices).
 
+Please note that by default all prices are treated as virtual prices
+in beancount.  That is, unlike in ledger, price information (`@` and
+`@@`) is not automatically entered in the price database (pricedb
+in ledger).  This only happens when the `implicit_prices` plugin is
+enabled.
+
 
 ## Lots
 
