@@ -1,0 +1,3 @@
+; Ensure there are no "uninitialized value" warnings from reading
+; the stanza when a commodity directive is at the end of a file.
+commodity EUR

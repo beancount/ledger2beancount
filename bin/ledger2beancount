@@ -1313,6 +1313,12 @@ sub read_stanza($) {
     my ($input_ref) = @_;
 
     my @stanza = ();
+
+    # Check if input is empty
+    if (!@{$input_ref}) {
+	return @stanza;
+    }
+
     my $l;
     do {
 	$l = @{$input_ref}[0];
