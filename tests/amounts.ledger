@@ -168,3 +168,27 @@ commodity $
     Assets:Test1              (2.00 USD * -4.00)
     Assets:Test2
 
+2020-07-27 * Commodity before amount, comma, and comment
+    Assets:Test1                    EUR 1,000.00 ; comment
+    Assets:Test2
+
+2020-07-27 * Commodity before amount, comma, no space, and comment
+    Assets:Test1                     EUR1,000.00 ; comment
+    Assets:Test2
+
+2020-07-27 * Commodity before amount, comma, one million, and comment
+    Assets:Test1                EUR 1,000,000.00 ; comment
+    Assets:Test2
+
+2020-07-27 * Commodity before amount, comma, and price
+    Assets:Test1                    EUR 1,000.00 @ 0.91 GBP
+    Assets:Test2
+
+2020-07-27 * Commodity before amount, comma, no space, and price
+    Assets:Test1                     EUR1,000.00 @ 0.91 GBP
+    Assets:Test2
+
+2020-07-27 * Commodity before amount, comma, one million, and price
+    Assets:Test1                EUR 1,000,000.00 @ 0.91 GBP
+    Assets:Test2
+
