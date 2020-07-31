@@ -36,6 +36,7 @@
 1970-01-01 open Assets:Voucher:Groupon
 1970-01-01 open Expenses:Currency
 1970-01-01 open Expenses:Dining
+1970-01-01 open Expenses:Fees
 1970-01-01 open Expenses:Food
 1970-01-01 open Expenses:Test
 1970-01-01 open Liabilities:Credit-Card
@@ -313,22 +314,22 @@
   Equity:Opening-Balance   -48.67 EUR
 
 2019-01-29 * "Implicit conversion"
-  Assets:A                  10.00 EUR @@ 11.42 USD
+  Assets:A                  10.00 EUR @ 1.142 USD
   Assets:B                 -11.42 USD
 
 2019-01-29 * "Implicit conversion"
   #foo
-  Assets:A                   10.00 EUR @@ 11.42 USD
+  Assets:A                   10.00 EUR @ 1.142 USD
   Assets:B                  -11.42 USD
 
 2019-01-29 * "Implicit conversion"
-  Assets:A                  10.00 EUR @@ 11.42 USD
+  Assets:A                  10.00 EUR @ 1.142 USD
     tags: "foo"
   Assets:B                 -11.42 USD
 
 2019-01-29 * "Implicit conversion"
   #foo
-  Assets:A                     10 EUR @@ 11.42 USD
+  Assets:A                     10 EUR @ 1.142 USD
   Assets:B                 -11.42 USD
     foo: "bar"
 
@@ -338,13 +339,13 @@
   Assets:Cash              -20.00 USD
 
 2020-06-24 * "Implicit conversion"
-  ; This is a comment with an amount that should not be substituted -11.42 USD
-  Assets:A                  10.00 EUR @@ 11.42 USD ; do not substitute: -11.42 USD
-  Assets:B                 -11.42 USD ; do not substitute: -11.42 USD
+  ; This is a comment with an amount that should not be substituted 10.00 EUR
+  Assets:A                  10.00 EUR @ 1.142 USD ; do not substitute: 10.00 EUR
+  Assets:B                 -11.42 USD ; do not substitute: 10.00 EUR
 
 2020-06-24 * "Implicit conversion"
   #foo
-  Assets:A                 -10.00 EUR @@ 11.42 USD
+  Assets:A                 -10.00 EUR @ 1.142 USD
   Assets:B                  11.42 USD
 
 2012-03-02 txn "KFC"
@@ -404,4 +405,32 @@
 2020-07-24 * "Conversion with price on second posting"
   Assets:Test                           6.38 USD
   Assets:Test             -24.00 BRL @@ 6.38 USD
+
+2020-07-31 * "Not an implicit conversion"
+  Expenses:Fees                       2.09 EUR
+  Assets:Cash                        30.00 GBP @ 1.205 EUR
+  Assets:Bank                       -38.24 EUR
+
+2020-07-31 * "Implicit conversion"
+  Assets:Cash                        30.00 GBP @ 1.205 EUR
+  Expenses:Fees                       2.09 EUR
+  Assets:Bank                       -38.24 EUR
+
+2020-07-31 * "Implicit conversion"
+  Assets:Cash                        30.00 GBP @ 1.205 EUR
+  Expenses:Fees                       1.09 EUR
+  Expenses:Fees                       1.00 EUR
+  Assets:Bank                       -38.24 EUR
+
+2020-07-31 * "Implicit conversion"
+  Assets:Cash                3 * 3,000.00 GBP @ 1.205 EUR
+  Expenses:Fees                       1.00 EUR
+  Expenses:Fees                       6.00 EUR
+  Assets:Bank                   -10,852.00 EUR
+
+2020-07-31 * "Implicit conversion"
+  Assets:Cash                    3,000.00 GBP @ 1.00205 EUR
+  Expenses:Fees                       1.09 EUR
+  Expenses:Fees                       1.00 EUR
+  Assets:Bank                    -3,008.24 EUR
 

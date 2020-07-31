@@ -3,6 +3,7 @@
 ## 2.5 (unreleased)
 
 * Don't create negative cost for lot without cost
+* Support complex implicit conversions
 
 ## 2.4 (2020-07-27)
 

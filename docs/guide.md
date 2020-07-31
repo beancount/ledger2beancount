@@ -634,10 +634,6 @@ They are generally a bad idea since they make it very easy to hide
 problems that are hard to track down.  Beancount doesn't support
 implicit conversions.
 
-ledger2beancount supports implicit conversions if there are only two
-postings in a transaction (the most common case).  More complex
-implicit conversations are not supported.
-
 
 ## Fixated prices and costs
 

@@ -500,6 +500,16 @@ sub convert_number($$) {
 }
 
 
+# Convert number from an amount to an integer
+# A number can contain commas (,) and inline math
+sub number2int($) {
+    my ($number, $currency) = @_;
+
+    $number =~ s/,//g;
+    $number = eval $number; # This is safe get_amount() parsed the number
+}
+
+
 # Handle metadata
 sub handle_metadata($$$) {
     my ($depth, $metadata, $defer) = @_;
@@ -1093,6 +1103,7 @@ sub process_txn(@) {
     # to distinguish different kinds of balance assignments.
     my $total_postings = 0;
     my $postings_with_amount = 0;
+    my %txn_commodities;
     my @txn_parsed;
     foreach my $l (@txn) {
 	my $line;
@@ -1103,7 +1114,10 @@ sub process_txn(@) {
 	} elsif ($l =~ /^$posting_RE/) {
 	    $line = parse_posting $l;
 	    $total_postings++;
-	    $postings_with_amount++ if defined $line->[AMOUNT];
+	    if (defined $line->[AMOUNT]) {
+		$postings_with_amount++ ;
+		$txn_commodities{$line->[AMOUNT]->[CURRENCY]} = 1;
+	    }
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
 	    $line->[TYPE] = BLANK;
 	} else {
@@ -1302,23 +1316,35 @@ sub process_txn(@) {
 		return;
 	    }
 	}
-    } elsif ($total_postings == 2 && $postings_with_amount == 2) {
-	# Handle implicit conversions.  We only support simple implicit
-	# conversions with 2 postings.
+    } elsif ($total_postings == $postings_with_amount && keys %txn_commodities == 2) {
+	# Handle implicit conversions.   We can only do this if there are
+	# exactly two commodities in all postings.
 
 	# If there's a cost or price on any of the postings, it's not
-	# an implicit conversion.  Same if the currencies on both
-	# postings are the same.
-	if (!$postings[0]->[COST]->[AMOUNT] && !$postings[1]->[COST]->[AMOUNT] &&
-	    !$postings[0]->[PRICE]->[AMOUNT] && !$postings[1]->[PRICE]->[AMOUNT] &&
-	    $postings[0]->[AMOUNT]->[CURRENCY] ne $postings[1]->[AMOUNT]->[CURRENCY]) {
-	    my $amount = pp_amount $postings[0]->[AMOUNT];
-	    my $price = pp_amount $postings[1]->[AMOUNT];
-	    $price =~ s/^-//;  # Prices must never be negative
-	    # We look for a posting that contains the amount and add the
-	    # price.
+	# an implicit conversion.
+	my $price = 0;
+	my %total_by_commodity;
+	foreach my $i (@txn_parsed) {
+	    next if $i->[TYPE] != POSTING;
+	    if ($i->[COST]->[AMOUNT] || $i->[PRICE]->[AMOUNT]) {
+		$price = 1;
+	    } else {
+		$total_by_commodity{$i->[AMOUNT]->[CURRENCY]} += number2int $i->[AMOUNT]->[NUMBER];
+	    }
+	}
+
+	my $commodity = $postings[0]->[AMOUNT]->[CURRENCY];
+	my ($other_commodity) = grep { $_ ne $commodity } keys %txn_commodities;
+	# The total of all transactions might be 0 because we could have 4
+	# transactions: +XX AA, -XX AA, +YY BB, -YY BB.  This is not an
+	# implicit conversion since it balances.
+	if ($price == 0 && $total_by_commodity{$other_commodity} != 0 && $total_by_commodity{$commodity} != 0) {
+	    my $rate = abs($total_by_commodity{$other_commodity} / $total_by_commodity{$commodity});
+	    # We look for a posting that contains the commodity and add the rate
 	    foreach my $l (@cur_txn_lines) {
-		$l =~ s/$amount/$amount @@ $price/ if $l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+$amount/;
+		if ($l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+[\s\d,.*\/+-]+ $commodity/) {
+		    $l =~ s/(\d $commodity)/$1 @ $rate $other_commodity/;
+		}
 	    }
 	}
     }
