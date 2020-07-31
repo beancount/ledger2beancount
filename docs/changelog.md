@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.5 (unreleased)
+
+* Don't create negative cost for lot without cost
+
 ## 2.4 (2020-07-27)
 
 * Fix regressions introduced in version 2.3

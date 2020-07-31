@@ -33,9 +33,12 @@
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Cash
 1970-01-01 open Assets:Voucher
+1970-01-01 open Assets:Voucher:Groupon
 1970-01-01 open Expenses:Currency
+1970-01-01 open Expenses:Dining
 1970-01-01 open Expenses:Food
 1970-01-01 open Expenses:Test
+1970-01-01 open Liabilities:Credit-Card
 
 1970-01-01 commodity AAPL
 1970-01-01 commodity BRL
@@ -392,6 +395,11 @@
 2020-06-23 txn "Lot with only lot value expression"
   Expenses:Food                1 USD
   Assets:Cash
+
+2020-07-31 * "Lot without cost, with negative number"
+  Expenses:Dining                    17.00 GBP
+  Assets:Voucher:Groupon             -6.00 GBP {{6 GBP, "expiration: 2012-11-26"}}
+  Liabilities:Credit-Card           -11.00 GBP
 
 2020-07-24 * "Conversion with price on second posting"
   Assets:Test                           6.38 USD

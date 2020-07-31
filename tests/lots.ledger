@@ -361,6 +361,11 @@ commodity XXXx
     Expenses:Food                $1 ((0.90 EUR))
     Assets:Cash
 
+2020-07-31 * Lot without cost, with negative number
+    Expenses:Dining                    17.00 GBP
+    Assets:Voucher:Groupon             -6.00 GBP (expiration: 2012-11-26)
+    Liabilities:Credit-Card           -11.00 GBP
+
 2020-07-24 * Conversion with price on second posting
   Assets:Test                           6.38 USD
   Assets:Test             -24.00 BRL @@ 6.38 USD

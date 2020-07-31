@@ -1004,7 +1004,8 @@ sub get_lot($) {
     # is 1.00 of the currency.
     if (defined $cost && !defined $cost->[AMOUNT]) {
 	$cost->[TYPE] = 2;
-	$cost->[AMOUNT] = $amount;
+	$cost->[AMOUNT]->[NUMBER] = abs $amount->[NUMBER]; # cost has to be positive
+	$cost->[AMOUNT]->[CURRENCY] = $amount->[CURRENCY];
      }
 
     return $amount, $cost, $l;
