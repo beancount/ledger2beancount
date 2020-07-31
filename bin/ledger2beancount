@@ -1009,12 +1009,11 @@ sub get_lot($) {
 	}
     }
 
-    # A date or note without a cost is not valid in beancount, so add
-    # the amount as the cost, which essentially means that the cost
-    # is 1.00 of the currency.
+    # A date or note without a cost is not valid in beancount, so set
+    # the cost to 1.00 with a matching commodity.
     if (defined $cost && !defined $cost->[AMOUNT]) {
-	$cost->[TYPE] = 2;
-	$cost->[AMOUNT]->[NUMBER] = abs $amount->[NUMBER]; # cost has to be positive
+	$cost->[TYPE] = 1;
+	$cost->[AMOUNT]->[NUMBER] = "1.00";
 	$cost->[AMOUNT]->[CURRENCY] = $amount->[CURRENCY];
      }
 

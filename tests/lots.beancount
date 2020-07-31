@@ -378,19 +378,19 @@
   Income:Capital-Gain                 -125.00 USD
 
 2020-06-23 txn "Lot with only lot date"
-  Assets:Voucher       137.87 EUR {{137.87 EUR, 2020-06-01}}
+  Assets:Voucher       137.87 EUR {1.00 EUR, 2020-06-01}
   Assets:Cash
 
 2020-06-23 txn "Lot with only lot note"
-  Assets:Voucher             137.87 GBP {{137.87 GBP, "48H5"}}
+  Assets:Voucher             137.87 GBP {1.00 GBP, "48H5"}
   Assets:Cash               -137.87 GBP
 
 2020-06-23 txn "Lot with only lot note"
-  Assets:Voucher             137.87 GBP {{137.87 GBP, "48H5"}}
+  Assets:Voucher             137.87 GBP {1.00 GBP, "48H5"}
   Assets:Cash
 
 2020-06-23 txn "Lot with only lot date and note"
-  Assets:Voucher  137.87 EUR {{137.87 EUR, 2020-06-01, "48H5"}}
+  Assets:Voucher  137.87 EUR {1.00 EUR, 2020-06-01, "48H5"}
   Assets:Cash
 
 2020-06-23 txn "Lot with only lot value expression"
@@ -399,7 +399,7 @@
 
 2020-07-31 * "Lot without cost, with negative number"
   Expenses:Dining                    17.00 GBP
-  Assets:Voucher:Groupon             -6.00 GBP {{6 GBP, "expiration: 2012-11-26"}}
+  Assets:Voucher:Groupon             -6.00 GBP {1.00 GBP, "expiration: 2012-11-26"}
   Liabilities:Credit-Card           -11.00 GBP
 
 2020-07-24 * "Conversion with price on second posting"

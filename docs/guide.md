@@ -494,11 +494,11 @@ can use a lot note to track a specific voucher:
 ```
 
 This is not supported in beancount (see [issue #482](https://github.com/beancount/beancount/issues/482))
-and therefore the amount is used as the cost:
+and therefore the cost is set to `1.00` of the same commodity:
 
 ```beancount
 2020-06-23 * "Voucher"
-  Assets:Voucher        100.00 EUR {{100.00 EUR, "48H5"}}
+  Assets:Voucher        100.00 EUR {1.00 EUR, "48H5"}
   Assets:Cash          -100.00 EUR
 ```
 
