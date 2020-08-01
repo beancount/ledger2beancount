@@ -216,3 +216,31 @@ commodity $
     Assets:Test                               .5
     Assets:Test                          -    .5
 
+2020-08-01 * Spaces between minus and number
+    Assets:Test                          0.5 EUR
+    Assets:Test                       -  0.5 EUR
+
+2020-08-01 * Commodity before amount, negative, space between minus and number
+    Assets:Test                          - EUR 2
+    Assets:Test
+
+2020-08-01 * Commodity before amount, negative, space between minus and number
+    Assets:Test                           EUR -3
+    Assets:Test
+
+2020-08-01 * Commodity symbol before amount, negative, space between minus and number
+    Assets:Test                             - $1
+    Assets:Test
+
+2020-08-01 * Commodity symbol before amount, negative, spaces
+    Assets:Test                            - $ 1
+    Assets:Test
+
+2020-08-01 * Commodity symbol before amount, negative, space between minus and number
+    Assets:Test                             -$ 1
+    Assets:Test
+
+2020-08-01 * Commodity symbol before amount, negative, spaces
+    Assets:Test                            - $ 1
+    Assets:Test
+

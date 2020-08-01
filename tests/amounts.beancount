@@ -241,3 +241,31 @@
   Assets:Test                               0.5 FOO
   Assets:Test                          -0.5 FOO
 
+2020-08-01 * "Spaces between minus and number"
+  Assets:Test                          0.5 EUR
+  Assets:Test                       -0.5 EUR
+
+2020-08-01 * "Commodity before amount, negative, space between minus and number"
+  Assets:Test                          -2 EUR
+  Assets:Test
+
+2020-08-01 * "Commodity before amount, negative, space between minus and number"
+  Assets:Test                           -3 EUR
+  Assets:Test
+
+2020-08-01 * "Commodity symbol before amount, negative, space between minus and number"
+  Assets:Test                             -1 USD
+  Assets:Test
+
+2020-08-01 * "Commodity symbol before amount, negative, spaces"
+  Assets:Test                            -1 USD
+  Assets:Test
+
+2020-08-01 * "Commodity symbol before amount, negative, space between minus and number"
+  Assets:Test                             -1 USD
+  Assets:Test
+
+2020-08-01 * "Commodity symbol before amount, negative, spaces"
+  Assets:Test                            -1 USD
+  Assets:Test
+
