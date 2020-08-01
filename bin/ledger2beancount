@@ -638,6 +638,16 @@ sub pop_txn() {
 }
 
 
+# Create note based on transaction header
+sub pp_note_for_txn($) {
+    my ($account) = @_;
+
+    my $buf = "$cur_txn_header{date} note $account ";
+    $buf .= mk_beancount_string $cur_txn_header{narration};
+    $buf .= "\n";
+    return $buf;
+}
+
 # map a (ledger) metadata key to the desired (beancount) metadata key. Relies
 # on the config variable metadata_map
 # Beancount syntax: "Keys must begin with a lowercase character from a-z and
@@ -1321,22 +1331,10 @@ sub process_txn(@) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
 	    push_line 1, $ledger_bucket;
-	} else {
-	    # Transactions can have a single posting as long as the
-	    # amount is 0 (otherwise it would fail to balance).  This
-	    # can be used to add standalone balance assertions.
-	    # If there's an amount (it has to be zero), print
-	    # the transaction (using a second posting with the
-	    # same account name) because it might contain an
-	    # interesting narration.  If there's no amount,
-	    # just use the balance assertion.
-	    if (defined $postings[0]->[AMOUNT] && $postings[0]->[AMOUNT]->[NUMBER] == 0.00) {
-		push_line 1, $postings[0]->[ACCOUNT];
-	    } else {
-		print_line 0, pp_cur_assertions if @cur_txn_assertions;
-		pop_txn();
-		return;
-	    }
+	} elsif (!@cur_txn_assertions && defined $postings[0]->[AMOUNT] && number2int $postings[0]->[AMOUNT]->[NUMBER] == 0) {
+	    print_line 0, pp_note_for_txn $postings[0]->[ACCOUNT];
+	    pop_txn();
+	    return;
 	}
     } elsif ($total_postings == $postings_with_amount && keys %txn_commodities == 2) {
 	# Handle implicit conversions.   We can only do this if there are
@@ -1368,6 +1366,29 @@ sub process_txn(@) {
 		    $l =~ s/(\d $commodity)/$1 @ $rate $other_commodity/;
 		}
 	    }
+	}
+    }
+
+    # If there's no amount or all amounts are 0, the transaction only
+    # exists for balance assertions.  In that case, convert the
+    # transaction into a note.
+    if (@cur_txn_assertions) {
+	my $num_amount_not_null = 0;
+	my @accounts;
+	foreach my $i (@txn_parsed) {
+	    next if $i->[TYPE] != POSTING;
+	    $num_amount_not_null++ if $i->[AMOUNT] && number2int $i->[AMOUNT]->[NUMBER] != 0;
+	    push @accounts, $i->[ACCOUNT] if defined $i->[ASSERTION];
+	}
+	if ($num_amount_not_null == 0) {
+	    my %seen;
+	    @accounts = grep { !$seen{$_}++ } @accounts;
+	    foreach (@accounts) {
+		print_line 0, pp_note_for_txn $_;
+	    }
+	    print_line 0, pp_cur_assertions;
+	    pop_txn();
+	    return;
 	}
     }
     push @output, pop_txn();

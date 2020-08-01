@@ -283,11 +283,10 @@
   Assets:USD                      1 USD
   Assets:Test
 
-2020-07-26 txn "Check USD balance"
-  Assets:USD                      0 USD
-  Assets:USD
+2020-07-26 note Assets:USD "Check USD balance"
 
 2020-07-27 balance Assets:USD  1 USD
+
 
 1970-01-01 commodity BRL
 
