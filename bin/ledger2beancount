@@ -36,7 +36,7 @@ memoize('map_metadata');
 memoize('pp_date');
 
 use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
-            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED);
+            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY);
 
 my ($opt, $usage) = describe_options(
     "ledger2beancount %o <ledger-file>",
@@ -926,11 +926,13 @@ sub get_amount($) {
 	my $minus = $+{minus} ? "-" : "";
 	if ($+{currency}) {
 	    $amount->[CURRENCY] = map_commodity $+{currency};
-	} elsif ($config->{default_commodity}) {
-	    $amount->[CURRENCY] = map_commodity $config->{default_commodity};
 	} else {
-	    print_warning_once "Amount without commodity found";
-	    $amount->[CURRENCY] = map_commodity "XXX"
+	    $amount->[NO_CURRENCY] = 1;
+	    if (defined $config->{default_commodity}) {
+		$amount->[CURRENCY] = map_commodity $config->{default_commodity};
+	    } else {
+		$amount->[CURRENCY] = map_commodity "XXX"
+	    }
 	}
 	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
 
@@ -1085,6 +1087,19 @@ sub parse_posting($) {
     }
     if ($l =~ /^=\s*(.*)/) {
 	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
+    }
+    # If amount was commodity-less, use commodity from assertion.  This is
+    # useful since some people do something like: 0 == 10 EUR
+    if (defined $posting->[AMOUNT] && $posting->[AMOUNT]->[NO_CURRENCY]) {
+	if (defined $posting->[ASSERTION]) {
+	    $posting->[AMOUNT]->[CURRENCY] = $posting->[ASSERTION]->[AMOUNT]->[CURRENCY];
+	    # Don't create commodity directive for default commodity
+	    my $commodity = "XXX";
+	    $commodity = $config->{default_commodity} if defined $config->{default_commodity};
+	    delete $commodity_declared{$commodity};
+	} elsif (!defined $config->{default_commodity}) {
+	    print_warning_once "Amount without commodity found; set default_commodity in config";
+	}
     }
 
     # A comment: starts with ;

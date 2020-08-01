@@ -133,6 +133,27 @@
 2020-02-16 balance Assets:Test8  30.00 EUR
 
 
+2020-02-16 balance Assets:Test8  30.00 EUR
+
+
+2020-02-15 * "Balance assignment with a single posting"
+  Assets:Test8                               0 EUR
+  Assets:Test8
+
+2020-02-16 balance Assets:Test8  30.00 EUR
+
+2020-02-15 * "Balance assignment with a single posting"
+  Assets:Test8                            0.00 EUR
+  Assets:Test8
+
+2020-02-16 balance Assets:Test8  30.00 EUR
+
+2020-02-15 * "Balance assignment with a single posting"
+  Assets:Test8                        0.00 EUR
+  Assets:Test8
+
+2020-02-16 balance Assets:Test8  30.00 EUR
+
 2020-02-15 txn "Specify amount"
   Assets:Test9                       40.00 EUR
   Equity:Opening-Balance            -40.00 EUR

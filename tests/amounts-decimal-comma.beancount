@@ -2,7 +2,7 @@
 ; ledger2beancount conversion notes:
 ;
 ;   - Directive `define` not supported by beancount: replacing thousand with 1.000,00 EUR
-;   - Amount without commodity found
+;   - Amount without commodity found; set default_commodity in config
 ;   - Commodity Avios renamed to AVIOS
 ;   - Collision for commodity EUR: EUR, €
 ;   - Collision for commodity GBP: GBP, £

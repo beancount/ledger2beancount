@@ -87,6 +87,18 @@ commodity $
 2020-02-15 * Balance assignment with a single posting
     Assets:Test8                                 = 30.00 EUR
 
+2020-02-15 * Balance assignment with a single posting
+    Assets:Test8                                 = 30.00 EUR
+
+2020-02-15 * Balance assignment with a single posting
+    Assets:Test8                               0 = 30.00 EUR
+
+2020-02-15 * Balance assignment with a single posting
+    Assets:Test8                            0.00 = 30.00 EUR
+
+2020-02-15 * Balance assignment with a single posting
+    Assets:Test8                        0.00 EUR = 30.00 EUR
+
 2020-02-15 Specify amount
     Assets:Test9                       40.00 EUR
     Equity:Opening-Balance            -40.00 EUR
