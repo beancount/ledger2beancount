@@ -85,6 +85,7 @@ use ledger2beancount and to configure it to your needs.
 ### Partly supported
 
 * Amounts
+    * Amounts without commodities (not supported in beancount)
     * Decimal comma (not supported in beancount)
 * Dates
     * Dates on posting-level (no equivalence in beancount)
@@ -108,7 +109,6 @@ use ledger2beancount and to configure it to your needs.
 
 ### Not supported
 
-* Amounts without commodities
 * Automated transactions
 * Directives
     * `assert`

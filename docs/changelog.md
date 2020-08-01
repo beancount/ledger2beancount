@@ -5,6 +5,7 @@
 * Don't create negative cost for lot without cost
 * Support complex implicit conversions
 * Set per-unit instead of total cost when cost is missing from lot
+* Support commodity-less amounts
 
 ## 2.4 (2020-07-27)
 

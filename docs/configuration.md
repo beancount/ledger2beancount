@@ -191,3 +191,8 @@ commodity_is_currency
     (in the sense that cost is not retained).  Expects beancount
     commodities (i.e. after transformation and mapping).
 
+default_commodity
+
+:   Specifies the commodity to be used if an amount without commodity is
+    found.
+

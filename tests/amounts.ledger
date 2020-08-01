@@ -192,3 +192,27 @@ commodity $
     Assets:Test1                EUR 1,000,000.00 @ 0.91 GBP
     Assets:Test2
 
+2020-08-01 * Amount without commodity
+    Assets:Test                               10
+    Assets:Test                              -10
+
+2020-08-01 * Amount without commodity
+    Assets:Test                            10.00
+    Assets:Test                           -10.00
+
+2020-08-01 * Amount without commodity
+    Assets:Test                             0.50
+    Assets:Test                            -0.50
+
+2020-08-01 * Amount without commodity
+    Assets:Test                              .50
+    Assets:Test                             -.50
+
+2020-08-01 * Amount without commodity
+    Assets:Test                               .5
+    Assets:Test                              -.5
+
+2020-08-01 * Amount without commodity: space between minus and number
+    Assets:Test                               .5
+    Assets:Test                          -    .5
+

@@ -45,6 +45,7 @@ The majority of features from [ledger](https://ledger-cli.org/) and [hledger](ht
 ## Partly supported
 
 * Amounts
+    * Amounts without commodities (not supported in beancount)
     * Decimal comma (not supported in beancount)
 * Dates
     * Dates on posting-level (no equivalence in beancount)
@@ -71,7 +72,6 @@ The majority of features from [ledger](https://ledger-cli.org/) and [hledger](ht
 The following features are not supported in beancount and therefore
 commented out during the conversion from ledger to beancount:
 
-* Amounts without commodities
 * Automated transactions
 * Checks and assertions (`check` and `assert`)
 * Commodity conversion (`C AMOUNT1 = AMOUNT2`)

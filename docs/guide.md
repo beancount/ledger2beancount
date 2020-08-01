@@ -101,9 +101,11 @@ Ledger allows amounts without commodities, e.g.:
     Assets:Test                         10.00
 ```
 
-While this is allowed in ledger (but not in beancount), it's not
-recommended and ledger2beancount does not support amounts without
-commodities.  Please add a commodity before using ledger2beancount.
+While this is allowed in ledger, it's not recommended and we suggest
+you add commodities to your ledger file.  However, ledger2beancount
+supports commodity-less amounts and will use the config variable
+`default_commodity` to set the commodity for beancount (which requires
+every amount to have a commodity).
 
 
 ## Commodities

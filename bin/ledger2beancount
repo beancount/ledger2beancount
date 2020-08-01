@@ -919,11 +919,19 @@ sub get_amount($) {
     # currency [minus] number
     if ($l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<currency>$commodity_RE)\s*(?<rest>.*)/ ||
         $l =~ /^(?<minus>-\s*)?(?<currency>$commodity_RE)\s*(?<number>$number_RE)\s*(?<rest>.*)/ ||
-        $l =~ /^(?<currency>$commodity_RE)\s*(?<minus>-\s*)(?<number>$number_RE)\s*(?<rest>.*)/) {
+        $l =~ /^(?<currency>$commodity_RE)\s*(?<minus>-\s*)(?<number>$number_RE)\s*(?<rest>.*)/ ||
+        $l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<rest>($|[;={(@]).*)$/) {
 	my $amount;
 	my $rest = $+{rest};
 	my $minus = $+{minus} ? "-" : "";
-	$amount->[CURRENCY] = map_commodity $+{currency};
+	if ($+{currency}) {
+	    $amount->[CURRENCY] = map_commodity $+{currency};
+	} elsif ($config->{default_commodity}) {
+	    $amount->[CURRENCY] = map_commodity $config->{default_commodity};
+	} else {
+	    print_warning_once "Amount without commodity found";
+	    $amount->[CURRENCY] = map_commodity "XXX"
+	}
 	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
 
 	# ledger allows amounts without a leading zero (e.g. .10) but

@@ -2,6 +2,7 @@
 ; ledger2beancount conversion notes:
 ;
 ;   - Directive `define` not supported by beancount: replacing thousand with 1.000,00 EUR
+;   - Amount without commodity found
 ;   - Commodity Avios renamed to AVIOS
 ;   - Collision for commodity EUR: EUR, €
 ;   - Collision for commodity GBP: GBP, £
@@ -36,6 +37,7 @@
 
 1970-01-01 commodity AVIOS
 1970-01-01 commodity FRF
+1970-01-01 commodity XXX
 
 2002-01-01 price EUR 6.55957 FRF
 
@@ -209,4 +211,28 @@
 2020-06-27 txn "Define"
   Assets:Test1           2.00+ 1000.00 EUR
   Assets:Test2
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                               10 XXX
+  Assets:Test                              -10 XXX
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                            10.00 XXX
+  Assets:Test                           -10.00 XXX
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                             0.50 XXX
+  Assets:Test                            -0.50 XXX
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                              0.50 XXX
+  Assets:Test                             -0.50 XXX
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                               0.5 XXX
+  Assets:Test                              -0.5 XXX
+
+2020-08-01 * "Amount without commodity: space between minus and number"
+  Assets:Test                               0.5 XXX
+  Assets:Test                          -0.5 XXX
 

@@ -34,6 +34,7 @@
 
 1970-01-01 commodity AVIOS
 1970-01-01 commodity CZK
+1970-01-01 commodity FOO
 
 2018-03-26 * "Commodity after amount"
   Assets:99Test:Test99                   1 EUR
@@ -215,4 +216,28 @@
 2020-07-27 * "Commodity before amount, comma, one million, and price"
   Assets:Test1                1,000,000.00 EUR @ 0.91 GBP
   Assets:Test2
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                               10 FOO
+  Assets:Test                              -10 FOO
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                            10.00 FOO
+  Assets:Test                           -10.00 FOO
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                             0.50 FOO
+  Assets:Test                            -0.50 FOO
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                              0.50 FOO
+  Assets:Test                             -0.50 FOO
+
+2020-08-01 * "Amount without commodity"
+  Assets:Test                               0.5 FOO
+  Assets:Test                              -0.5 FOO
+
+2020-08-01 * "Amount without commodity: space between minus and number"
+  Assets:Test                               0.5 FOO
+  Assets:Test                          -0.5 FOO
 
