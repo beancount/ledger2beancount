@@ -7,6 +7,7 @@
 * Set per-unit instead of total cost when cost is missing from lot
 * Support commodity-less amounts
 * Convert transactions with no amounts or only `0` amounts to notes
+* Fix parsing of transaction notes
 
 ## 2.4 (2020-07-27)
 

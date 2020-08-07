@@ -1721,7 +1721,7 @@ while (@input) {
 	if ($l =~ /$txn_header_RE/) {  # txn header
 	    $in_postings = 0;
 	    # You can have a comment on the same line as the payee
-	    my ($narration, $comment) = split /  +;\s*|\t+;\s*/, $+{narration}, 2;
+	    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
 	    $narration = "" if not $narration;
 	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 	    $comment = handle_comment $depth + 1, "; $comment", 0 if $comment;
