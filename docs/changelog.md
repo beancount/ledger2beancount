@@ -8,6 +8,7 @@
 * Support commodity-less amounts
 * Convert transactions with no amounts or only `0` amounts to notes
 * Fix parsing of transaction notes
+* Keep tags in transaction notes on same line as transaction header
 
 ## 2.4 (2020-07-27)
 

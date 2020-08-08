@@ -108,17 +108,11 @@
 
 ; Tags
 
-2019-01-28 txn "Tag test"
-  #sometag
-  #foo
-  #bar
+2019-01-28 txn "Tag test" #sometag #foo #bar
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test"
-  #sometag
-  #foo
-  #bar
+2019-01-28 txn "Tag test" #sometag #foo #bar
   Assets:A                 10.00 EUR
   Assets:B
 
@@ -127,28 +121,23 @@
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test"
-  #foo
-  #bar
+2019-01-28 txn "Tag test" #foo #bar
   sometag: "foo"
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test"
-  #bar
+2019-01-28 txn "Tag test" #bar
   sometag: "this is a value"
   foo: "another value"
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test" ; a comment containing
-  #tag1
+2019-01-28 txn "Tag test" #tag1 ; a comment containing
   tag2: "some value ..."
   Assets:A                 10.00 EUR
   Assets:B
 
-2019-01-28 txn "Tag test"
-  #bar
+2019-01-28 txn "Tag test" #bar
   sometag: "this is a value"
   foo: "another value"
   test-: "foo"
@@ -187,8 +176,8 @@
   Assets:Test
 
 2020-07-26 txn "Tag test"
-  #foo
   bar: "test"
+  #foo
   Assets:Test                    10 USD
   Assets:Test
 

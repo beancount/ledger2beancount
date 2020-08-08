@@ -157,14 +157,14 @@ pushtag #foo
 pushtag #bar
 
 2018-03-29 * "Test apply"
-  ^2018-02-02-brussels-fosdem
   test: "martin"
+  ^2018-02-02-brussels-fosdem
   Assets:Test1:Test2:AA            10.00 EUR
   Assets:Test1:Test2:BB
 
 2018-03-29 * "Test apply"
-  ^2018-02-02-brussels-fosdem
   test: "martin"
+  ^2018-02-02-brussels-fosdem
   Assets:Test1:Test2:CC:DD         10.00 EUR
   Assets:Test1:Test2:EE:FF
 

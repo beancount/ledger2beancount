@@ -286,11 +286,11 @@ sub pp_cur_header() {
 	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
     }
     $buf .= mk_beancount_string $cur_txn_header{narration};
+    if (exists $cur_txn_header{tags}) {
+	$buf .= " " . join " ", @{$cur_txn_header{tags}};
+    }
     if (exists $cur_txn_header{comment}) {
 	$buf .= " ; " . $cur_txn_header{comment};
-    }
-    if (exists $cur_txn_header{tags}) {
-	$buf .= $cur_txn_header{tags};
     }
 
     return $buf;
@@ -853,8 +853,10 @@ sub print_tags($@) {
 
     my @tags = grep {!is_link $_} @ledger_tags;
     my @links = grep {is_link $_} @ledger_tags;
-    if (!$in_postings) {
-	$cur_txn_header{tags} .= "\n" . indent $depth, pp_tags @ledger_tags;
+    if (!$in_txn) {
+	push @{$cur_txn_header{tags}}, pp_tags @ledger_tags;
+    } elsif (!$in_postings) {
+	push_line $depth, pp_tags @ledger_tags;
     } else {
 	# XXX workaround for the fact that per-posting tags are currently not
 	# allowed.  See:
@@ -1723,8 +1725,8 @@ while (@input) {
 	    # You can have a comment on the same line as the payee
 	    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
 	    $narration = "" if not $narration;
-	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 	    $comment = handle_comment $depth + 1, "; $comment", 0 if $comment;
+	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 	    $cur_txn_header{comment} = $comment if $comment;
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};
 	    push_metadata $depth + 1, $config->{code_tag}, mk_beancount_string $+{code} if defined $+{code} && defined $config->{code_tag};

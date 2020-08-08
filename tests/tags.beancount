@@ -68,36 +68,30 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
-2019-01-25 * "Tag on same line as payee"
-  #foo
+2019-01-25 * "Tag on same line as payee" #foo
   #bar #baz
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
-2019-01-25 * "Tag on same line as payee"
-  #foo
+2019-01-25 * "Tag on same line as payee" #foo
   #bar #baz
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
-2019-01-25 * "Comment and tag on same line as payee" ; comment
-  #foo
+2019-01-25 * "Comment and tag on same line as payee" #foo ; comment
   #bar #baz
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
-2020-08-06 * "Tag on same line as payee"
-  #foo
+2020-08-06 * "Tag on same line as payee" #foo
   Assets:Test                        10.00 EUR
   Assets:Test                       -10.00 EUR
 
-2020-08-06 * "Tag on same line as payee"
-  #foo
+2020-08-06 * "Tag on same line as payee" #foo
   Assets:Test                        10.00 EUR
   Assets:Test                       -10.00 EUR
 
-2020-08-06 * "Tag on same line as payee"
-  #foo
+2020-08-06 * "Tag on same line as payee" #foo
   Assets:Test                        10.00 EUR
   Assets:Test                       -10.00 EUR
 
