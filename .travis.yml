@@ -27,4 +27,4 @@ install:
 script:
   - make test
   - mkdocs build
-  - find -name "*.yml" -exec yamllint {} \;
+  - find -name "*.yml" -exec yamllint -s {} \;
