@@ -528,7 +528,7 @@ sub handle_metadata($$$) {
 	    print_tags $depth, "^$metadata->{value}";
 	} else {
 	    # Metadata values can be empty
-	    my $value = $metadata->{value} ? $metadata->{value} : "";
+	    my $value = defined $metadata->{value} ? $metadata->{value} : "";
 	    if (defined($metadata->{typed})) {
 		$value = parse_ledger_value $value;
 	    } else {

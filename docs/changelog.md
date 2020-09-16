@@ -4,6 +4,7 @@
 
 * Don't create negative cost for lot without cost
 * Support complex implicit conversions
+* Handle typed metadata with value `0` correctly
 * Set per-unit instead of total cost when cost is missing from lot
 * Support commodity-less amounts
 * Convert transactions with no amounts or only `0` amounts to notes

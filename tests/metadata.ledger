@@ -237,3 +237,8 @@ commodity EUR
     Assets:Cash                       -10.00 EUR
       ; xyz: abc
 
+2020-09-16 * Typed data int 0
+    ; TP:: 0
+    Assets:Rewards                    3000 Avios
+    Income:Rewards                   -3000 Avios
+
