@@ -22,11 +22,10 @@ cpanm --installdeps .
 If you use Debian, you can install the dependencies with this command:
 
 ```shell
-sudo apt install libdate-calc-perl \
-    libfile-basedir-perl libyaml-libyaml-perl \
-    libgetopt-long-descriptive-perl libdatetime-format-strptime-perl \
-    libstring-interpolate-perl libenum-perl liblist-moreutils-perl \
-    libregexp-common-perl
+sudo apt install libdate-calc-perl libdatetime-format-strptime-perl \
+    libenum-perl libfile-basedir-perl libgetopt-long-descriptive-perl \
+    liblist-moreutils-perl libregexp-common-perl \
+    libstring-interpolate-perl libyaml-libyaml-perl
 ```
 
 Note that `String::Interpolate` (`libstring-interpolate-perl`) was not
