@@ -1,0 +1,19 @@
+; Test the automatic creation of config options for non-standard
+; account roots
+
+2020-01-01 * Opening balance
+    Aktiva:Bank                      1000.00 EUR
+    Eigenkapital:Anfangsbestand
+
+2020-09-28 * Expenses
+    Ausgaben:Essen                     20.00 EUR
+    Aktiva:Bank
+
+2020-09-28 * Income
+    Aktiva:Bank                      1000.00 EUR
+    Ertrag:Lohn
+
+2020-09-28 * Liabilities
+    Aktiva:Bank                     50000.00 EUR
+    Passiva:Darlehen
+

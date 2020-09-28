@@ -62,7 +62,12 @@ of five account types, also known as root names.  The default root names
 are `Assets`, `Liabilities`, `Equity`, `Expenses`, and `Income`.  If you
 want to use other root names, you can configure them using the beancount
 options `name_assets`, `name_liabilities`, `name_equity`,
-`name_expenses`, and `name_income`.
+`name_expenses`, and `name_income`.  ledger2beancount knows about
+common root names in some languages and will try to set the required
+beancount options automatically where possible; if ledger2beancount
+isn't able to set the options, it will alert you in a conversion
+note so you can add the options yourself (for example in a file
+specified via `beancount_header`).
 
 If you use more than five root names, you will have to rename them.
 ledger2beancount offers the `account_regex` option to mass rename

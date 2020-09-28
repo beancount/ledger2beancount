@@ -30,6 +30,7 @@ use YAML::XS qw/LoadFile/;
 
 my $VERSION = "2.4";
 
+memoize('get_root_type');
 memoize('map_account');
 memoize('map_commodity');
 memoize('map_metadata');
@@ -96,6 +97,8 @@ my %ledger_accounts;
 my %account_regex_map;
 my %ledger_commodities;
 my %ledger_metadata;
+# Mapping of non-standard root names to their types
+my %root_names;
 
 # Date parsing functions
 my $date_iso = DateTime::Format::Strptime->new(
@@ -106,6 +109,283 @@ my $date_iso = DateTime::Format::Strptime->new(
 # These two will be initialized once we know the date format
 my $date_complete;
 my $date_no_year;
+
+my %root_mappings = (
+    # ar - Arabic
+    qr/الأصول/ => "assets",
+    qr/الإلتزامات/ => "liabilities",
+    qr/رأس المال/ => "equity",
+    qr/حقوق الملكية/ => "equity",
+    qr/الدخل/ => "income",
+    qr/المصروفات/ => "expenses",
+    # as - Assamese
+    qr/সম্পত্তিবোৰ/ => "assets",
+    qr/বিশ্বাসযোগ্যতাবোৰ/ => "liabilities",
+    qr/মূলধন/ => "equity",
+    qr/সাধাৰণ অংশ/ => "equity",
+    qr/উপাৰ্জন/ => "income",
+    qr/ব্যয়বোৰ/ => "expenses",
+    # bg - Bulgarian
+    qr/Активи:/ => "assets",
+    qr/Пасиви/ => "liabilities",
+    qr/Капитал/ => "equity",
+    qr/Собствен капитал/ => "equity",
+    qr/Доход/ => "income",
+    qr/Разходи/ => "expenses",
+    # ca - Catalan
+    qr/Actiu/ => "assets",
+    qr/Passiu/ => "liabilities",
+    qr/Capital/ => "equity",
+    qr/Patrimoni/ => "equity",
+    qr/Ingressos/ => "income",
+    qr/Despeses/ => "expenses",
+    # cs - Czech
+    qr/Aktiva/ => "assets",
+    qr/Pasiva/ => "liabilities",
+    qr/Kapitál/ => "equity",
+    qr/Vlastní jmění/ => "equity",
+    qr/Příjmy/ => "income",
+    qr/Náklady/ => "expenses",
+    # da - Danish
+    qr/Aktiver/ => "assets",
+    qr/Passiver/ => "liabilities",
+    qr/Kapital/ => "equity",
+    qr/Udligning/ => "equity",
+    qr/Indtægt/ => "income",
+    qr/Udgifter/ => "expenses",
+    # de - German
+    qr/Aktiva/ => "assets",
+    qr/Passiva/ => "liabilities",
+    qr/Verbindlichkeit/ => "liabilities",
+    qr/Kapital/ => "equity",
+    qr/Eigenkapital/ => "equity",
+    qr/Ertrag/ => "income",
+    qr/Einnahmen?/ => "income",
+    qr/Aufwand/ => "expenses",
+    qr/Ausgaben?/ => "expenses",
+    # el - Greek
+    qr/Ενεργητικό/ => "assets",
+    qr/Παθητικό/ => "liabilities",
+    qr/Κεφάλαιο/ => "equity",
+    qr/Καθαρή θέση/ => "equity",
+    qr/Έσοδα/ => "income",
+    qr/Έξοδα/ => "expenses",
+    # es - Spanish
+    qr/Activos?/ => "assets",
+    qr/Pasivos?/ => "liabilities",
+    qr/Capital/ => "equity",
+    qr/Equidad/ => "equity",
+    qr/Patrimonio/ => "equity",
+    qr/Ingreso/ => "income",
+    qr/Gastos?/ => "expenses",
+    qr/Egresos?/ => "expenses",
+    # fa - Farsi
+    qr/دارایی‌ها/ => "assets",
+    qr/دیون/ => "liabilities",
+    qr/سرمایه/ => "equity",
+    qr/درآمد/ => "income",
+    qr/هزینه‌ها/ => "expenses",
+    # fi - Finnish
+    qr/Vastaavaa/ => "assets",
+    qr/Vieras pääoma/ => "liabilities",
+    qr/Pääoma/ => "equity",
+    qr/Oma pääoma/ => "equity",
+    qr/Tulo/ => "income",
+    qr/Menot/ => "expenses",
+    # fr - French
+    qr/Actifs?/ => "assets",
+    qr/Passifs?/ => "liabilities",
+    qr/Capital/ => "equity",
+    qr/Capitaux propres/ => "equity",
+    qr/Revenus?/ => "income",
+    qr/Recettes?/ => "income",
+    qr/Dépenses?/ => "expenses",
+    # gu - Gujarati
+    qr/સંપત્તિઓ/ => "assets",
+    qr/જવાબદારી/ => "liabilities",
+    qr/મૂડી/ => "equity",
+    qr/હિસ્સો/ => "equity",
+    qr/આવક/ => "income",
+    qr/ખર્ચ/ => "expenses",
+    # he - Hebrew
+    qr/נכסים/ => "assets",
+    qr/התחייבויות/ => "liabilities",
+    qr/הון/ => "equity",
+    qr/הכנסות/ => "income",
+    qr/הוצאות/ => "expenses",
+    # hi - Hindi
+    qr/संपत्तियां / => "assets",
+    qr/देयताएं / => "liabilities",
+    qr/पूंजी / => "equity",
+    qr/इक्विटी/ => "equity",
+    qr/आय/ => "income",
+    qr/खर्चे/ => "expenses",
+    # hr - Croatian
+    qr/Imovina/ => "assets",
+    qr/Obveze/ => "liabilities",
+    qr/Kapital/ => "equity",
+    qr/Prihod/ => "income",
+    qr/Rashod/ => "expenses",
+    # hu - Hungarian
+    qr/Eszközök/ => "assets",
+    qr/Kötelezettségek/ => "liabilities",
+    qr/Tőke/ => "equity",
+    qr/Saját tőke/ => "equity",
+    qr/Bevétel/ => "income",
+    qr/Kiadások/ => "expenses",
+    # it - Italian
+    qr/Attività/ => "assets",
+    qr/Passività/ => "liabilities",
+    qr/Capitale/ => "equity",
+    qr/Entrata/ => "income",
+    qr/Uscite/ => "expenses",
+    # ja - Japanese
+    qr/資産/ => "assets",
+    qr/負債/ => "liabilities",
+    qr/純資産金/ => "equity",
+    qr/純資産/ => "equity",
+    qr/収益/ => "income",
+    qr/費用/ => "expenses",
+    # ko - Korean
+    qr/자산/ => "assets",
+    qr/부채/ => "liabilities",
+    qr/자본/ => "equity",
+    qr/자기자본/ => "equity",
+    qr/수입/ => "income",
+    qr/지출/ => "expenses",
+    # lt - Lithuanian
+    qr/Turtas/ => "assets",
+    qr/Įsipareigojimai/ => "liabilities",
+    qr/Kapitalas/ => "equity",
+    qr/Nuosavybė/ => "equity",
+    qr/Pajamos/ => "income",
+    qr/Sąnaudos/ => "expenses",
+    # lv - Latvian
+    qr/Aktīvi/ => "assets",
+    qr/Pasīvi/ => "liabilities",
+    qr/Kapitāls/ => "equity",
+    qr/Pašu kapitāls/ => "equity",
+    qr/Ieņēmumi/ => "income",
+    qr/izdevumi/ => "expenses",
+    # mr - Marathi
+    qr/मालमत्ता/ => "assets",
+    qr/दायित्व/ => "liabilities",
+    qr/भांडवल/ => "equity",
+    qr/इक्विटी/ => "equity",
+    qr/मिळकत/ => "income",
+    qr/खर्च/ => "expenses",
+    # nb - Norwegian
+    qr/Eiendeler/ => "assets",
+    qr/Gjeld/ => "liabilities",
+    qr/Kapital/ => "equity",
+    qr/Egenkapital/ => "equity",
+    qr/Inntekt/ => "income",
+    qr/Kostnader/ => "expenses",
+    # nl - Dutch
+    qr/Activa/ => "assets",
+    qr/Vreemd vermogen/ => "liabilities",
+    qr/Passiva/ => "liabilities",
+    qr/Kapitaal/ => "equity",
+    qr/Eigen vermogen/ => "equity",
+    qr/Baten/ => "income",
+    qr/Opbrengsten/ => "income",
+    qr/Kosten/ => "expenses",
+    qr/Lasten/ => "expenses",
+    # pl -
+    qr/Aktywa/ => "assets",
+    qr/Pasywa/ => "liabilities",
+    qr/Kapitał/ => "equity",
+    qr/Kapitał własny/ => "equity",
+    qr/Przychody/ => "income",
+    qr/Wydatki/ => "expenses",
+    # pt - Portuguese
+    qr/Activos?/ => "assets",
+    qr/Passivos?/ => "liabilities",
+    qr/Capital/ => "equity",
+    qr/Capital próprio/ => "equity",
+    qr/Patrimônio Líquido/ => "equity",
+    qr/Receita/ => "income",
+    qr/Despesas?/ => "expenses",
+    # ro - Romanian
+    qr/Active/ => "assets",
+    qr/Pasive/ => "liabilities",
+    qr/Capital/ => "equity",
+    qr/Capital propriu/ => "equity",
+    qr/Venituri/ => "income",
+    qr/Cheltuieli/ => "expenses",
+    # ru - Russian
+    qr/Активы/ => "assets",
+    qr/Обязательства/ => "liabilities",
+    qr/Состояние/ => "equity",
+    qr/Капитал/ => "equity",
+    qr/Собственные средства/ => "equity",
+    qr/Приход/ => "income",
+    qr/Доходы/ => "income",
+    qr/Расходы/ => "expenses",
+    # sk - Slovak
+    qr/Aktíva/ => "assets",
+    qr/Pasíva/ => "liabilities",
+    qr/Kapitál/ => "equity",
+    qr/Vlastné imanie/ => "equity",
+    qr/Príjem/ => "income",
+    qr/Výdavky/ => "expenses",
+    # sv - Swedish
+    qr/Tillgångar/ => "assets",
+    qr/Skulder/ => "liabilities",
+    qr/Kapital/ => "equity",
+    qr/Eget kapital/ => "equity",
+    qr/Intäkt/ => "income",
+    qr/Kostnader/ => "expenses",
+    # ta - Tamil
+    qr/சொத்துக்கள்/ => "assets",
+    qr/பொறுப்பீடுகள்/ => "liabilities",
+    qr/முதல்/ => "equity",
+    qr/உறுப்பு/ => "equity",
+    qr/ஊதியம்/ => "income",
+    qr/செலவுகள்/ => "expenses",
+    # tr - Turkish
+    qr/Varlıklar/ => "assets",
+    qr/Kaynaklar/ => "liabilities",
+    qr/Sermaye/ => "equity",
+    qr/Özkaynak/ => "equity",
+    qr/Gelir/ => "income",
+    qr/Gider/ => "expenses",
+    # uk - Ukrainian
+    qr/Активи/ => "assets",
+    qr/Зобов'язання/ => "liabilities",
+    qr/Капітал/ => "equity",
+    qr/Маржа/ => "equity",
+    qr/Надходження/ => "income",
+    qr/Видатки/ => "expenses",
+    # ur - Urdu
+    qr/مالیات/ => "assets",
+    qr/ادائیگی/ => "liabilities",
+    qr/كیپیٹل/ => "equity",
+    qr/اكویٹی/ => "equity",
+    qr/آمدنی/ => "income",
+    qr/خرچ/ => "expenses",
+    # vi - Vietnamese
+    qr/Tài sản/ => "assets",
+    qr/Tài sản nợ/ => "liabilities",
+    qr/Vốn/ => "equity",
+    qr/Cổ phần/ => "equity",
+    qr/Thu nhập/ => "income",
+    qr/Phí tổn/ => "expenses",
+    # zh - Chinese (simplified)
+    qr/资产/ => "assets",
+    qr/负债/ => "liabilities",
+    qr/资本/ => "equity",
+    qr/所有者权益/ => "equity",
+    qr/收入/ => "income",
+    qr/费用/ => "expenses",
+    # zh - Chinese (traditional)
+    qr/資產/ => "assets",
+    qr/債務/ => "liabilities",
+    qr/資本/ => "equity",
+    qr/財產淨值/ => "equity",
+    qr/收入/ => "income",
+    qr/支出/ => "expenses",
+);
 
 # Declarations
 sub map_commodity($);
@@ -661,6 +941,16 @@ sub map_account_apply($) {
 }
 
 
+# Get the account type for a non-standard account root
+sub get_root_type($) {
+    my ($root) = @_;
+
+    foreach (keys %root_mappings) {
+	return lc $root_mappings{$_} if $root =~ /^$_$/i;
+    }
+}
+
+
 # map a ledger account to a beancount account
 # ledger account: can be pretty much anything, as long as it's followed
 # by two spaces, a tab or the end of the line.
@@ -695,7 +985,13 @@ sub map_account($) {
 	$account .= ":Subaccount";
     }
     if (!($root ~~ @beancount_root_names)) {
-	print_warning_once("Non-standard root name $root used; please set beancount options name_*");
+	my $root_type = get_root_type $root;
+	if ($root_type) {
+	    print_warning_once("Non-standard root name $root used; setting beancount option name_$root_type");
+	    $root_names{$root} = $root_type;
+	} else {
+	    print_warning_once("Non-standard root name $root used; please set beancount options name_*");
+	}
     }
     $account_declared{$account} = undef if not defined $account_declared{$account};
     return $account;
@@ -1881,6 +2177,26 @@ if (@conversion_notes) {
 }
 
 print "option \"operating_currency\" \"$_\"\n" foreach @{$config->{operating_currencies}};
+
+if (scalar keys %root_names) {
+    # This shouldn't really be here.  It ensures that all entries in
+    # %root_mappings map to a valid account type.  Users should never
+    # encounter problems here but this will produce an error during
+    # development if we add a wrong entry to %root_mappings.
+    foreach my $root (keys %root_mappings) {
+	my $type = $root_mappings{$root};
+	if (!(ucfirst $type ~~ @beancount_root_names)) {
+	    die "Invalid %root_mappings entry for $root: invalid type $type";
+	}
+    }
+
+    # Add config options for non-standard account names
+    print "\n";
+    foreach my $root (sort keys %root_names) {
+	print "option \"name_$root_names{$root}\" \"$root\"\n";
+    }
+    print "\n";
+}
 
 if ($config->{beancount_header}) {
     open my $beancount_header, $config->{beancount_header} or

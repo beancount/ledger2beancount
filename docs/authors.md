@@ -18,9 +18,11 @@ We have also had contributions and input from:
 * Kirill Goncharov (bug reports; package for Arch Linux)
 * Marin Bernard (bug reports)
 * Martin Blais (help with compatibility with beancount)
+* Remco Rĳnders (feedback)
 * Simon Michael (bug reports; fixes; help with compatibility with hledger)
 * Taylor R. Campbell (package for pkgsrc)
 * Thierry (bug reports; documentation)
+* Yuri Khan (feedback)
 * Zhuoyun Wei (package for Arch Linux)
 
 Some work done by Martin Michlmayr was sponsored by [Software Freedom Conservancy](https://sfconservancy.org/) and [Software in the Public Interest, Inc.](https://spi-inc.org/)  You can also [sponsor Martin's work](https://github.com/sponsors/tbm) on ledger2beancount, ledger, and beancount.
