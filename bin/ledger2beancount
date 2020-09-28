@@ -121,6 +121,7 @@ sub set_default($$$) {
     return $config;
 }
 
+
 # indent some content at a given depth in beancount style
 sub indent($$) {
     my ($depth, $content) = @_;
@@ -135,6 +136,7 @@ sub escape_beancount_string($) {
     $s =~ s/"/\\"/g;
     return $s;
 }
+
 
 # return a beancount string literal, with a given content
 sub mk_beancount_string($) {
@@ -246,16 +248,19 @@ sub pp_cur_header() {
     return $buf;
 }
 
+
 # pretty print subsequent lines (all but the first) of a transaction, in
 # beancount format
 sub pp_cur_lines() {
     return (join "\n", @cur_txn_lines) . "\n";
 }
 
+
 # pretty print pending balance assertions, in beancount format
 sub pp_cur_assertions() {
     return (join "\n", @cur_txn_assertions) . "\n";
 }
+
 
 # pretty print a single metadata key/value pair, in beancount format
 sub pp_metadata($$) {
@@ -263,6 +268,7 @@ sub pp_metadata($$) {
 
     return "$key: $value";
 }
+
 
 # Print an amount
 sub pp_amount($) {
@@ -340,6 +346,7 @@ sub pp_tags(@) {
     return join(' ', map pp_tag_link($_), @tags);
 }
 
+
 # dump the current parsing state to stdout. Used for debugging purposes only
 sub dump_cur_txn() {
     if ($in_txn) {
@@ -365,11 +372,13 @@ sub push_header($$$) {
     $cur_txn_header{narration} = $narration;
 }
 
+
 # set the current transaction payee, complementing the transaction header
 sub push_payee($) {
     my ($payee) = @_;
     $cur_txn_header{payee} = $payee;
 }
+
 
 # add a transaction line. Call this multiple times to accumulate lines that will
 # be emitted as soon as the transaction is over
@@ -378,6 +387,7 @@ sub push_line($$) {
 
     push @cur_txn_lines, indent($depth, $line);
 }
+
 
 # add a balance assertion to be published at the end of current transaction
 sub push_assertion($$) {
@@ -391,6 +401,7 @@ sub push_assertion($$) {
 				 Add_Delta_Days(split(/-/, $cur_txn_header{date}), 1));
     push @cur_txn_assertions, "$assertion_date balance $account  $amount";
 }
+
 
 # add a metadata line. Wrapper around push_line() for metadata
 sub push_metadata($$$) {
@@ -598,6 +609,7 @@ sub pp_note_for_txn($) {
     return $buf;
 }
 
+
 # map a (ledger) metadata key to the desired (beancount) metadata key. Relies
 # on the config variable metadata_map
 # Beancount syntax: "Keys must begin with a lowercase character from a-z and
@@ -744,6 +756,7 @@ sub get_output() {
     }
 }
 
+
 # emit a single line
 sub print_line($$) {
     my ($depth, $line) = @_;
@@ -773,6 +786,7 @@ sub print_warning($) {
 
     push @conversion_notes, $warning;
 }
+
 
 # Add warning to output file, but only once
 sub print_warning_once($) {
