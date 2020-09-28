@@ -20,11 +20,11 @@ use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw/uniq/;
 use Memoize qw/memoize flush_cache/;
 use POSIX qw/ceil/;
 use Regexp::Common;
-use String::Interpolate qw(safe_interpolate);
+use String::Interpolate qw/safe_interpolate/;
 use Unicode::Normalize;
 use YAML::XS qw/LoadFile/;
 
@@ -35,8 +35,8 @@ memoize('map_commodity');
 memoize('map_metadata');
 memoize('pp_date');
 
-use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
-            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY);
+use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
+            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
