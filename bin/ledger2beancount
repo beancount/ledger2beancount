@@ -16,7 +16,6 @@ use utf8;
 use feature 'unicode_strings';
 use open qw/:std :locale/;
 
-use Config::Onion;
 use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
@@ -27,6 +26,7 @@ use POSIX qw/ceil/;
 use Regexp::Common;
 use String::Interpolate qw(safe_interpolate);
 use Unicode::Normalize;
+use YAML::XS qw/LoadFile/;
 
 my $VERSION = "2.4";
 
@@ -111,6 +111,15 @@ my $date_no_year;
 sub map_commodity($);
 sub print_tags($@);
 
+
+# Set values if the key doesn't exist already
+sub set_default($$$) {
+    my ($config, $key, $value) = @_;
+
+    $config->{$key} = $value if !exists $config->{$key};
+
+    return $config;
+}
 
 # indent some content at a given depth in beancount style
 sub indent($$) {
@@ -1382,33 +1391,38 @@ if (defined $opt->config) {
     }
     unshift @config_files, $opt->config;
 }
-$config = Config::Onion->new;
 foreach my $config_file (@config_files) {
     next if ! -e $config_file;
-    # Config::Onion expects filename without extension
-    $config_file =~ s/.(yml|yaml)$//;
-    $config = Config::Onion->load($config_file);
-    # We don't actually use the Config::Onion feature to load several
-    # config files.  We merely use it to set some defaults.
+    $config = LoadFile($config_file);
     last;
 }
 
-$config->set_default(date_format => "%Y-%m-%d");
-$config->set_default(date_format_no_year => "%m-%d");
-$config->set_default(account_open_date => "1970-01-01");
-$config->set_default(commodities_date => "1970-01-01");
-$config->set_default(payee_tag => "");
-$config->set_default(payer_tag => "");
-$config->set_default(payee_match => []);
-$config->set_default(ledger_indent => 4);
-$config->set_default(beancount_indent => 2);
-$config->set_default(automatic_declarations => 1);
-$config->set_default(decimal_comma => 0);
-$config->set_default(convert_virtual => 0);
-$config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "EUR", "¥" => "JPY"});
+$config = set_default($config, "date_format", "%Y-%m-%d");
+$config = set_default($config, "date_format_no_year", "%m-%d");
+$config = set_default($config, "account_open_date", "1970-01-01");
+$config = set_default($config, "commodities_date", "1970-01-01");
+$config = set_default($config, "payee_tag", "");
+$config = set_default($config, "payer_tag", "");
+$config = set_default($config, "payee_match", []);
+$config = set_default($config, "ledger_indent", 4);
+$config = set_default($config, "beancount_indent", 2);
+$config = set_default($config, "automatic_declarations", 1);
+$config = set_default($config, "decimal_comma", 0);
+$config = set_default($config, "convert_virtual", 0);
+$config = set_default($config, "commodity_map", {});
 
-# Make config variables easier to access
-$config = $config->get;
+# commodity_map is handled slightly differently to the rest:
+# some defaults are set even if there's a "commodity_map" declaration
+# in the config.
+my %default_commodities = (
+    "\$" => "USD",
+    "£" => "GBP",
+    "€" => "EUR",
+    "¥" => "JPY",
+);
+foreach (keys %default_commodities) {
+    $config->{commodity_map}{$_} = $default_commodities{$_} if !exists $config->{commodity_map}{$_};
+}
 
 $date_complete = DateTime::Format::Strptime->new(
     pattern  => $config->{date_format},
