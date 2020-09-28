@@ -38,60 +38,6 @@ memoize('pp_date');
 use enum qw(DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY);
 
-my ($opt, $usage) = describe_options(
-    "ledger2beancount %o <ledger-file>",
-    [ "config|c=s", "configuration file", ],
-    [ "help|h",     "print usage message and exit", { shortcircuit => 1 } ],
-    [ "version|V",  "show version and exit", ],
-);
-
-print("ledger2beancount $VERSION\n"), exit if $opt->version;
-print($usage->text), exit if $opt->help;
-
-my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
-if (defined $opt->config) {
-    if (! -e $opt->config) {
-	print "Config file ", $opt->config, " doesn't exist\n";
-	exit 1;
-    }
-    if ($opt->config !~ /\.(yml|yaml)$/) {
-	print "Config file must end in .yml or .yaml\n";
-	exit 1;
-    }
-    unshift @config_files, $opt->config;
-}
-my $config = Config::Onion->new;
-foreach my $config_file (@config_files) {
-    next if ! -e $config_file;
-    # Config::Onion expects filename without extension
-    $config_file =~ s/.(yml|yaml)$//;
-    $config = Config::Onion->load($config_file);
-    # We don't actually use the Config::Onion feature to load several
-    # config files.  We merely use it to set some defaults.
-    last;
-}
-
-$config->set_default(date_format => "%Y-%m-%d");
-$config->set_default(date_format_no_year => "%m-%d");
-$config->set_default(account_open_date => "1970-01-01");
-$config->set_default(commodities_date => "1970-01-01");
-$config->set_default(payee_tag => "");
-$config->set_default(payer_tag => "");
-$config->set_default(payee_match => []);
-$config->set_default(ledger_indent => 4);
-$config->set_default(beancount_indent => 2);
-$config->set_default(automatic_declarations => 1);
-$config->set_default(decimal_comma => 0);
-$config->set_default(convert_virtual => 0);
-$config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "EUR", "¥" => "JPY"});
-
-# Make config variables easier to access
-$config = $config->get;
-
-if (ref $config->{payee_match} ne ref []) {
-    die "Config variable payee_match has to be a Yaml list";
-}
-
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
 my $hledger_date_RE = qr#(\d{4}[./-])?\d{1,2}[./-]\d{1,2}#;
@@ -125,6 +71,7 @@ my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
 
 my @beancount_root_names = qw/Assets Liabilities Equity Income Expenses/;
 
+my $config; # config parameters
 my @pre_output; # Used to store output of the script before automatic declarations
 my @output; # Used to store the output of the script after automatic declarations
 my $after_auto = 0;
@@ -151,20 +98,14 @@ my %ledger_commodities;
 my %ledger_metadata;
 
 # Date parsing functions
-my $date_complete = DateTime::Format::Strptime->new(
-    pattern  => $config->{date_format},
-    on_error => "undef",
-);
-
-my $date_no_year = DateTime::Format::Strptime->new(
-    pattern  => $config->{date_format_no_year},
-    on_error => "undef",
-);
-
 my $date_iso = DateTime::Format::Strptime->new(
     pattern  => "%Y-%m-%d",
     on_error => "undef",
 );
+
+# These two will be initialized once we know the date format
+my $date_complete;
+my $date_no_year;
 
 # Declarations
 sub map_commodity($);
@@ -1416,6 +1357,72 @@ sub read_stanza($) {
     return @stanza;
 }
 
+
+# GET CONFIG
+
+my ($opt, $usage) = describe_options(
+    "ledger2beancount %o <ledger-file>",
+    [ "config|c=s", "configuration file", ],
+    [ "help|h",     "print usage message and exit", { shortcircuit => 1 } ],
+    [ "version|V",  "show version and exit", ],
+);
+
+print("ledger2beancount $VERSION\n"), exit if $opt->version;
+print($usage->text), exit if $opt->help;
+
+my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+if (defined $opt->config) {
+    if (! -e $opt->config) {
+	print "Config file ", $opt->config, " doesn't exist\n";
+	exit 1;
+    }
+    if ($opt->config !~ /\.(yml|yaml)$/) {
+	print "Config file must end in .yml or .yaml\n";
+	exit 1;
+    }
+    unshift @config_files, $opt->config;
+}
+$config = Config::Onion->new;
+foreach my $config_file (@config_files) {
+    next if ! -e $config_file;
+    # Config::Onion expects filename without extension
+    $config_file =~ s/.(yml|yaml)$//;
+    $config = Config::Onion->load($config_file);
+    # We don't actually use the Config::Onion feature to load several
+    # config files.  We merely use it to set some defaults.
+    last;
+}
+
+$config->set_default(date_format => "%Y-%m-%d");
+$config->set_default(date_format_no_year => "%m-%d");
+$config->set_default(account_open_date => "1970-01-01");
+$config->set_default(commodities_date => "1970-01-01");
+$config->set_default(payee_tag => "");
+$config->set_default(payer_tag => "");
+$config->set_default(payee_match => []);
+$config->set_default(ledger_indent => 4);
+$config->set_default(beancount_indent => 2);
+$config->set_default(automatic_declarations => 1);
+$config->set_default(decimal_comma => 0);
+$config->set_default(convert_virtual => 0);
+$config->set_default(commodity_map => {"\$" => "USD", "£" => "GBP", "€" => "EUR", "¥" => "JPY"});
+
+# Make config variables easier to access
+$config = $config->get;
+
+$date_complete = DateTime::Format::Strptime->new(
+    pattern  => $config->{date_format},
+    on_error => "undef",
+);
+
+$date_no_year = DateTime::Format::Strptime->new(
+    pattern  => $config->{date_format_no_year},
+    on_error => "undef",
+);
+
+if (ref $config->{payee_match} ne ref []) {
+    die "Config variable payee_match has to be a Yaml list";
+}
 
 # MAIN CONVERSION LOOP
 
