@@ -1593,7 +1593,7 @@ sub process_txn(@) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
 	    push_line 1, $ledger_bucket;
-	} elsif (!@cur_txn_assertions && defined $postings[0]->[AMOUNT] && number2int $postings[0]->[AMOUNT]->[NUMBER] == 0) {
+	} elsif (!@cur_txn_assertions && (!defined $postings[0]->[AMOUNT] || number2int $postings[0]->[AMOUNT]->[NUMBER] == 0)) {
 	    print_line 0, pp_note_for_txn $postings[0]->[ACCOUNT];
 	    pop_txn();
 	    return;
