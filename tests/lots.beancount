@@ -234,7 +234,7 @@
   Equity:Opening-Balance    -9.00 GBP
 
 2018-04-22 * "Lot with comment"
-  Assets:Test               10.00 EUR {1.23 USD, 2018-03-16} ; comment
+  Assets:Test               10.00 EUR {1.23 USD, 2018-03-16} ;comment
   Equity:Opening-Balance   -12.30 USD
 
 2018-04-22 * "Lot with comment"

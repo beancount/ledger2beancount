@@ -99,3 +99,15 @@ end comment
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+;No space
+2020-10-01 * Comment spacing
+    ;No space
+    Assets:Test                        10.00 EUR;No space
+    Equity:Opening-Balance            -10.00 EUR
+
+;  Two space
+2020-10-01 * Comment spacing
+    ;  Two space
+    Assets:Test                        10.00 EUR;  Two space
+    Equity:Opening-Balance            -10.00 EUR
+

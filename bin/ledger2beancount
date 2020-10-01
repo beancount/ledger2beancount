@@ -60,7 +60,7 @@ my $commodity_quoted_RE = qr/(")(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 my $commodity_unquoted_RE = qr/(?!-)(?!")[^;\s0-9=)({}@*\/+,.-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
-my $comment_RE = qr/;\s*(?<comment>.*)/;
+my $comment_RE = qr/;(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
 # Postings: this does not match everything, just ensures a line consists of
 # a posting
@@ -694,7 +694,7 @@ sub push_metadata($$$) {
 sub push_comment($$) {
     my ($depth, $comment) = @_;
 
-    push_line $depth, "; $comment";
+    push_line $depth, ";$comment";
 }
 
 
@@ -836,7 +836,7 @@ sub handle_hledger_tags($$$) {
 sub handle_comment($$$) {
     my ($depth, $l, $defer) = @_;
 
-    if ($config->{hledger} && $l =~ /;\s*(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
+    if ($config->{hledger} && $l =~ /;(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
 	handle_hledger_tags $depth, $+{tags}, $defer;
 	my $comment = $+{comment};
 	if ($+{tags}) {
@@ -846,7 +846,7 @@ sub handle_comment($$$) {
     } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
 	handle_metadata $in_postings ? 2 : 1, \%+, $defer;
 	return;
-    } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](\s*;?\s*(?<comment>.*))/) {  # postdate/auxdate
+    } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
 	if ($+{postdate} && defined $config->{postdate_tag}) {
 	    push @cur_txn_meta, "$config->{postdate_tag}: " . pp_date $+{postdate}, 0;
 	}
@@ -854,8 +854,8 @@ sub handle_comment($$$) {
 	    push @cur_txn_meta, "$config->{auxdate_tag}: " . pp_date $+{auxdate}, 0;
 	}
 	return $+{comment};
-    } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
+    } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
+	or $l =~ /^;\s*:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
 	# The $in_postings check is a workaround since there are no posting-level tags
 	if ($defer || $in_postings) {
 	    push @cur_txn_tags, split /:/, $+{tags};
@@ -1541,10 +1541,10 @@ sub process_txn(@) {
 	    }
 
 	    if ($i->[COMMENT]) {
-		my $comment = handle_comment $i->[DEPTH], "; $i->[COMMENT]", 1;
+		my $comment = handle_comment $i->[DEPTH], ";$i->[COMMENT]", 1;
 		if ($comment) {
 		    $l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
-		    $l .= " ; $comment" if $comment;
+		    $l .= " ;$comment" if $comment;
 		}
 	    }
 
@@ -1922,9 +1922,9 @@ while (@input) {
 	# account name, but such an account name is invalid so treat it
 	# as a comment.
 	if ($config->{hledger}) {
-	    ($account, $comment) = split /\s*;\s*/, $1, 2;
+	    ($account, $comment) = split /\s*;/, $1, 2;
 	} else {
-	    ($account, $comment) = split /\s\s+;\s*/, $1, 2;
+	    ($account, $comment) = split /\s\s+;/, $1, 2;
 	}
 	$account = map_account $account;
 	@stanza = read_stanza \@input;
@@ -1935,7 +1935,7 @@ while (@input) {
 	    next;
 	}
 	$account_declared{$account} = 1;
-	print_line $depth, sprintf "$config->{account_open_date} open %s%s", $account, $comment ? " ; $comment" : "";
+	print_line $depth, sprintf "$config->{account_open_date} open %s%s", $account, $comment ? " ;$comment" : "";
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note
@@ -1952,7 +1952,7 @@ while (@input) {
 	my $comment = "";
 	if ($l =~ /^(?<commodity>$commodity_RE)\s*($comment_RE)?$/) {
 	    $commodity = map_commodity $+{commodity};
-	    $comment = " ; $+{comment}" if $+{comment};
+	    $comment = " ;$+{comment}" if $+{comment};
 	} elsif ($config->{hledger}) {
 	    # In hledger, a commodity directive can contain an amount
 	    # where the amount defines the format for this commodity
@@ -1961,7 +1961,7 @@ while (@input) {
 	    $commodity = $amount->[CURRENCY];
 	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
 	    if ($l =~ /^\s*$comment_RE/) {
-		$comment = " ; $+{comment}";
+		$comment = " ;$+{comment}";
             } elsif ($l) {
 		die "Unknown rest in commodity declaration for $commodity: $l";
             }
@@ -2053,7 +2053,7 @@ while (@input) {
 	    # You can have a comment on the same line as the payee
 	    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
 	    $narration = "" if not $narration;
-	    $comment = handle_comment $depth + 1, "; $comment", 0 if $comment;
+	    $comment = handle_comment $depth + 1, ";$comment", 0 if $comment;
 	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 	    $cur_txn_header{comment} = $comment if $comment;
 	    push_metadata $depth + 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year) if defined $+{auxdate} && defined $config->{auxdate_tag};

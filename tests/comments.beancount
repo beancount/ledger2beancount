@@ -54,7 +54,7 @@
 
 2018-03-17 * "Tag and comment on same line"
   #tag
-  ; comment
+  ;comment
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
@@ -82,5 +82,17 @@
 
 2019-01-25 * "You can put a comment on the same line as the payee" ; this is a comment
   Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+;No space
+2020-10-01 * "Comment spacing"
+  ;No space
+  Assets:Test                        10.00 EUR ;No space
+  Equity:Opening-Balance            -10.00 EUR
+
+;  Two space
+2020-10-01 * "Comment spacing"
+  ;  Two space
+  Assets:Test                        10.00 EUR ;  Two space
   Equity:Opening-Balance            -10.00 EUR
 
