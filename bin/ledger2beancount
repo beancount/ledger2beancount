@@ -846,6 +846,14 @@ sub handle_comment($$$) {
     } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
 	handle_metadata $in_postings ? 2 : 1, \%+, $defer;
 	return;
+    } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](\s*;?\s*(?<comment>.*))/) {  # postdate/auxdate
+	if ($+{postdate} && defined $config->{postdate_tag}) {
+	    push @cur_txn_meta, "$config->{postdate_tag}: " . pp_date $+{postdate}, 0;
+	}
+	if ($+{auxdate} && defined $config->{auxdate_tag}) {
+	    push @cur_txn_meta, "$config->{auxdate_tag}: " . pp_date $+{auxdate}, 0;
+	}
+	return $+{comment};
     } elsif ($l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	or $l =~ /^;\s+:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
 	# The $in_postings check is a workaround since there are no posting-level tags
@@ -1465,8 +1473,6 @@ sub process_txn(@) {
 	    }
 	    $skipped_posting = 0; # reset variable with each posting
 	    $in_postings = 1;
-	    my $postdate;
-	    my $auxdate;
 	    $has_amount = $+{amount} ? 1 : 0;
 
 	    # Replace ledger account names with corresponding beancount account names
@@ -1535,18 +1541,7 @@ sub process_txn(@) {
 	    }
 
 	    if ($i->[COMMENT]) {
-		# Ideally, handling of postdates and auxdates would be
-		# done in handle_comment but this is difficult because
-		# push_deferred_meta has to be called before push_metadata
-		# of postdate and auxdate.
-		$i->[COMMENT] =~ /(^\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?(\s*;?\s*(?<comment>.*))/;
-		if ($+{postdate} && defined $config->{postdate_tag}) {
-		    push @cur_txn_meta, "$config->{postdate_tag}: " . pp_date $+{postdate}, 0;
-		}
-		if ($+{auxdate} && defined $config->{auxdate_tag}) {
-		    push @cur_txn_meta, "$config->{auxdate_tag}: " . pp_date $+{auxdate}, 0;
-		}
-		my $comment = handle_comment $i->[DEPTH], "; $+{comment}", 1;
+		my $comment = handle_comment $i->[DEPTH], "; $i->[COMMENT]", 1;
 		if ($comment) {
 		    $l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
 		    $l .= " ; $comment" if $comment;
