@@ -1540,8 +1540,12 @@ sub process_txn(@) {
 		# push_deferred_meta has to be called before push_metadata
 		# of postdate and auxdate.
 		$i->[COMMENT] =~ /(^\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\])?(\s*;?\s*(?<comment>.*))/;
-		$auxdate = $+{auxdate};
-		$postdate = $+{postdate};
+		if ($+{postdate} && defined $config->{postdate_tag}) {
+		    push @cur_txn_meta, "$config->{postdate_tag}: " . pp_date $+{postdate}, 0;
+		}
+		if ($+{auxdate} && defined $config->{auxdate_tag}) {
+		    push @cur_txn_meta, "$config->{auxdate_tag}: " . pp_date $+{auxdate}, 0;
+		}
 		my $comment = handle_comment $i->[DEPTH], "; $+{comment}", 1;
 		if ($comment) {
 		    $l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
@@ -1572,8 +1576,6 @@ sub process_txn(@) {
 
 	    # Show all metadata that was on the same line as the posting
 	    push_deferred_meta $i->[DEPTH] + 1;
-	    push_metadata $i->[DEPTH] + 1, $config->{postdate_tag}, pp_date $postdate, 0 if defined $postdate && defined $config->{postdate_tag};
-	    push_metadata $i->[DEPTH] + 1, $config->{auxdate_tag}, pp_date $auxdate, 0 if defined $auxdate && defined $config->{auxdate_tag};
 	} elsif ($i->[TYPE] == BLANK) {
 	    push_line 0, "";
 	} else {  # there shouldn't be anything
