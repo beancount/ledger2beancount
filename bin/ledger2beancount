@@ -853,7 +853,6 @@ sub handle_comment($$$) {
 	if ($+{auxdate} && defined $config->{auxdate_tag}) {
 	    push @cur_txn_meta, "$config->{auxdate_tag}: " . pp_date $+{auxdate}, 0;
 	}
-	return $+{comment};
     } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	or $l =~ /^;\s*:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
 	# The $in_postings check is a workaround since there are no posting-level tags
@@ -862,12 +861,12 @@ sub handle_comment($$$) {
 	} else {
 	    print_tags $depth, split /:/, $+{tags};
 	}
-	return $+{comment};
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
-	return $+{comment};
+	# do nothing
     } else {
 	die "Can't process comment: $l";
     }
+    return $+{comment} if $+{comment} !~ /^\s*;?\s*$/;
 }
 
 

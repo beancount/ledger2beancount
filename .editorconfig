@@ -35,6 +35,12 @@ indent_style = space
 [tests/accounts.ledger]
 trim_trailing_whitespace = false
 
+[tests/aux-date.ledger]
+trim_trailing_whitespace = false
+
+[tests/comments.ledger]
+trim_trailing_whitespace = false
+
 [tests/metadata.ledger]
 trim_trailing_whitespace = false
 

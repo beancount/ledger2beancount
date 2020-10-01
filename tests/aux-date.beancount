@@ -73,3 +73,8 @@
     aux-date: 2018-03-13
   Equity:Opening-Balance            -10.00 EUR
 
+2020-10-01 * "Trailing whitespace"
+  Assets:Test                        10.00 EUR
+    date: 2020-09-30
+  Assets:Test                       -10.00 EUR
+

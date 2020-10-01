@@ -92,6 +92,10 @@ commodity EUR
     Assets:Test                        10.00 EUR;:foo:
     Assets:Test                       -10.00 EUR
 
+2020-10-01 * Many spaces before tag
+    Assets:Test                        10.00 EUR   ;   :foo:
+    Assets:Test                       -10.00 EUR
+
 2020-10-01 * Tab separated
     ;	Comment
     Assets:Test                        10.00 EUR;	:foo:

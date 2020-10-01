@@ -96,3 +96,7 @@
   Assets:Test                        10.00 EUR ;  Two space
   Equity:Opening-Balance            -10.00 EUR
 
+2020-10-01 * "Empty comment, with trailing whitespace"
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+

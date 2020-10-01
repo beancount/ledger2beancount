@@ -257,6 +257,11 @@ commodity EUR
     Assets:Test                        10.00 EUR ;test: foo
     Equity:Opening-Balance            -10.00 EUR
 
+2020-10-01 * Many spaces
+    ;    test: foo bar baz
+    Assets:Test                        10.00 EUR   ;   test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
 2020-10-01 * Tabs
     ;	test: foo bar baz
     Assets:Test                        10.00 EUR;	test: foo
