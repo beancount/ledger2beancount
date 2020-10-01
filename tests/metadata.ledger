@@ -242,3 +242,38 @@ commodity EUR
     Assets:Rewards                    3000 Avios
     Income:Rewards                   -3000 Avios
 
+2020-10-01 * No space
+    ;test: foo bar baz
+    Assets:Test                        10.00 EUR;test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-01 * No space
+    ;test: foo bar baz
+    Assets:Test                        10.00 EUR; test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-01 * No space
+    ;test: foo bar baz
+    Assets:Test                        10.00 EUR ;test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-01 * Tabs
+    ;	test: foo bar baz
+    Assets:Test                        10.00 EUR;	test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-01 * Tabs
+    ;	test: foo bar baz
+    Assets:Test                        10.00 EUR	;	test: foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-01 * Tabs and typed data with int
+    ; TP::	100
+    Assets:Rewards                    3000 Avios
+    Income:Rewards                   -3000 Avios
+
+2020-10-01 * Tabs and typed data with date
+    ; when::	[2020-09-30]
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
