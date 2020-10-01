@@ -866,7 +866,7 @@ sub handle_comment($$$) {
     } else {
 	die "Can't process comment: $l";
     }
-    return $+{comment} if $+{comment} !~ /^\s*;?\s*$/;
+    return $+{comment} if defined $+{comment} && $+{comment} !~ /^\s*;?\s*$/;
 }
 
 
