@@ -11,6 +11,7 @@
 * Fix parsing of transaction notes
 * Keep tags in transaction notes on same line as transaction header
 * Add beancount config options for non-standard root names automatically
+* Fix conversion of fixated prices to costs
 * Preserve leading whitespace in posting comments
 * Preserve indentation for tags and metadata
 * Remove dependency on `Config::Onion` module

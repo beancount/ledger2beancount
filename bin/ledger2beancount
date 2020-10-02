@@ -1200,7 +1200,6 @@ sub get_amount($) {
         $l =~ /^(?<minus>-\s*)?(?<currency>$commodity_RE)\s*(?<number>$number_RE)\s*(?<rest>.*)/ ||
         $l =~ /^(?<currency>$commodity_RE)\s*(?<minus>-\s*)(?<number>$number_RE)\s*(?<rest>.*)/ ||
         $l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<rest>($|[;={(@]).*)$/) {
-	my $amount;
 	my $rest = $+{rest};
 	my $minus = $+{minus} ? "-" : "";
 	if ($+{currency}) {
@@ -1508,6 +1507,11 @@ sub process_txn(@) {
 		# work in all cases, we also check for a list of
 		# commodities.  Similarly, we allow users to configure
 		# commodities that should be treated as currencies.
+		#
+		# If there's a fixated price, we convert it to a cost
+		# in order to preserve the price information (this is
+		# the best way since beancount doesn't have fixated
+		# prices).
 		my $commodity1 = $i->[AMOUNT]->[CURRENCY];
 		my $commodity2 = $i->[PRICE]->[AMOUNT]->[CURRENCY];
 		if (!defined $i->[PRICE]->[AMOUNT]->[FIXATED] && ((length $commodity1 == 3 && length $commodity2 == 3 &&

@@ -80,3 +80,11 @@ apply rate CAD $0.85
 
 end apply fixed
 
+2020-10-02 * Fixated price should become a cost in beancount
+    Expenses:Food          100.00 PHP @ =1.76 EUR
+    Assets:Wallet
+
+2020-10-02 * Fixated price should become a cost in beancount (despite commodity_is_currency)
+    Assets:Test               1000 AA @ =5.00 EUR
+    Assets:Test
+

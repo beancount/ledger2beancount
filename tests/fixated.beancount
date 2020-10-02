@@ -4,12 +4,15 @@
 
 1970-01-01 open Assets:Brokerage
 1970-01-01 open Assets:Brokerage:Cash
+1970-01-01 open Assets:Test
 1970-01-01 open Assets:Wallet
 1970-01-01 open Expenses:Food
 
+1970-01-01 commodity AA
 1970-01-01 commodity AAPL
 1970-01-01 commodity CAD
 1970-01-01 commodity EUR
+1970-01-01 commodity PHP
 1970-01-01 commodity USD
 
 2012-04-10 txn "My Broker"
@@ -81,4 +84,12 @@
   Assets:Wallet           -15.50 CAD {0.85 USD}
   Expenses:Food            15.50 CAD {0.85 USD}
 
+
+2020-10-02 * "Fixated price should become a cost in beancount"
+  Expenses:Food          100.00 PHP {1.76 EUR}
+  Assets:Wallet
+
+2020-10-02 * "Fixated price should become a cost in beancount (despite commodity_is_currency)"
+  Assets:Test               1000 AA {5.00 EUR}
+  Assets:Test
 
