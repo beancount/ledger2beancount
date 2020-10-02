@@ -176,8 +176,8 @@
   Assets:Test
 
 2020-07-26 txn "Tag test"
-  bar: "test"
   #foo
+  bar: "test"
   Assets:Test                    10 USD
   Assets:Test
 
