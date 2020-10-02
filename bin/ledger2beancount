@@ -844,7 +844,7 @@ sub handle_comment($$$) {
 	}
 	return $comment;
     } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
-	handle_metadata $in_postings ? 2 : 1, \%+, $defer;
+	handle_metadata $depth, \%+, $defer;
 	return;
     } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
 	if ($+{postdate} && defined $config->{postdate_tag}) {

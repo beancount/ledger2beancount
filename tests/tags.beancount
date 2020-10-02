@@ -116,3 +116,9 @@
     tags: "foo"
   Assets:Test                       -10.00 EUR
 
+2020-10-02 * "Inconsistent spacing: 4 for postings, 2 for tags"
+    #foo
+  Assets:Test                        10.00 EUR
+    tags: "bar"
+  Assets:Test                       -10.00 EUR
+

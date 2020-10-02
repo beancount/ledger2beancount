@@ -51,7 +51,7 @@
 2018-03-19 * "Metadata on next line of posting, no space"
   test: "foo bar baz"
   Assets:Test                        10.00 EUR
-    test: "bar"
+  test: "bar"
   Equity:Opening-Balance            -10.00 EUR
 
 2018-03-19 * "Metadata on next line of posting, with space"
@@ -152,7 +152,7 @@
 
 2019-04-29 * "Metadata key with one letter"
   Assets:Test                         10.00 EUR
-    ax: "books"
+  ax: "books"
   Assets:Test                        -10.00 EUR
 
 2020-02-18 * "Empty (but defined tag)"
@@ -306,4 +306,11 @@
   when: 2020-09-30
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
+
+2020-10-02 * "Inconsistent spacing: 4 for postings, 2 for metadata"
+    #a #b #c
+    foo: "bar"
+  Assets:Test                        10.00 EUR
+    test: "foo"
+  Assets:Test                       -10.00 EUR
 

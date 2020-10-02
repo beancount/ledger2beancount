@@ -282,3 +282,10 @@ commodity EUR
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2020-10-02 * Inconsistent spacing: 4 for postings, 2 for metadata
+      ; :a:b:c:
+      ; foo: bar
+    Assets:Test                        10.00 EUR
+      ; test: foo
+    Assets:Test                       -10.00 EUR
+

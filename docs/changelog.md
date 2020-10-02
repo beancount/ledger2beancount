@@ -12,6 +12,7 @@
 * Keep tags in transaction notes on same line as transaction header
 * Add beancount config options for non-standard root names automatically
 * Preserve leading whitespace in posting comments
+* Preserve indentation for tags and metadata
 * Remove dependency on `Config::Onion` module
 
 ## 2.4 (2020-07-27)
