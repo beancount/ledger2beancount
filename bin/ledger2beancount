@@ -1522,7 +1522,7 @@ sub process_txn(@) {
 		$l .= " " . pp_cost $i->[COST];
 		# ledger requires you to specify both lot cost and lot price
 		# due to a bug.  If both are the same, don't put in the price.
-		if (defined $i->[PRICE]->[AMOUNT] && (!defined $i->[COST]->[AMOUNT] || pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT])) {
+		if (defined $i->[PRICE] && pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT]) {
 		    $l .= " " . pp_price $i->[PRICE];
 		}
 	    }
@@ -1604,7 +1604,7 @@ sub process_txn(@) {
 	my %total_by_commodity;
 	foreach my $i (@txn_parsed) {
 	    next if $i->[TYPE] != POSTING;
-	    if ($i->[COST]->[AMOUNT] || $i->[PRICE]->[AMOUNT]) {
+	    if (defined $i->[COST] || defined $i->[PRICE]) {
 		$price = 1;
 	    } else {
 		$total_by_commodity{$i->[AMOUNT]->[CURRENCY]} += number2int $i->[AMOUNT]->[NUMBER];
