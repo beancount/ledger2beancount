@@ -22,7 +22,6 @@ use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
 use List::MoreUtils qw/uniq/;
 use Memoize qw/memoize flush_cache/;
-use POSIX qw/ceil/;
 use Regexp::Common;
 use String::Interpolate qw/safe_interpolate/;
 use Unicode::Normalize;
@@ -1104,12 +1103,13 @@ sub strip_indentation($) {
     my ($line) = @_;
 
     chomp $line;
-    # handle line indentation once and for all
-    $line =~ /^(?<indent>\s*)(?<line>.*)/;
-    my $depth = ceil(length($+{indent}) / $config->{ledger_indent});
-	# round up with ceil() because we mix 4 (postings) and 2 (posting tags) indent in ledger
+    my $len1 = length $line;
+    $line =~ s/^\s+//;
+    my $len2 = length $line;
+    my $depth = int(($len1 - $len2) / $config->{ledger_indent} + 0.75);
+	# round up because some people mix 4 (postings) and 2 (posting tags) indent in ledger
 
-    return ($depth, $+{line});
+    return ($depth, $line);
 }
 
 
