@@ -1543,7 +1543,7 @@ sub process_txn(@) {
 		my $comment = handle_comment $i->[DEPTH], ";$i->[COMMENT]", 1;
 		if ($comment) {
 		    $l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
-		    $l .= " ;$comment" if $comment;
+		    $l .= " ;$comment";
 		}
 	    }
 
