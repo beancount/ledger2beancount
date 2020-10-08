@@ -289,3 +289,31 @@ commodity EUR
       ; test: foo
     Assets:Test                       -10.00 EUR
 
+2020-10-08 * Metadata on transaction header  ; foo: bar
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-08 * Metadata on transaction header  ; foo: bar
+    ; test: foo
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-08 * Metadata on transaction header  ; foo: bar
+    ; :baz:
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-08=2020-10-05 * Metadata on transaction header  ; foo: bar
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-08=2020-10-05 * Metadata on transaction header  ; foo: bar
+    ; test: foo
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-08=2020-10-05 * Metadata on transaction header  ; foo: bar
+    ; :baz:
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+

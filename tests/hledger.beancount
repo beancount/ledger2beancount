@@ -326,3 +326,40 @@
   Assets:Test               1000 PLN
   Assets:Test
 
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  Assets:Test                    10 USD
+  Assets:Test
+
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  test: "bar"
+  Assets:Test                    10 USD
+  Assets:Test
+
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  #bar
+  Assets:Test                    10 USD
+  Assets:Test
+
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  aux-date: 2020-10-05
+  Assets:Test                    10 USD
+  Assets:Test
+
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  aux-date: 2020-10-05
+  test: "bar"
+  Assets:Test                    10 USD
+  Assets:Test
+
+2020-10-08 txn "Tag test"
+  foo: "bar"
+  aux-date: 2020-10-05
+  #bar
+  Assets:Test                    10 USD
+  Assets:Test
+

@@ -314,3 +314,40 @@
     test: "foo"
   Assets:Test                       -10.00 EUR
 
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  test: "foo"
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  #baz
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  aux-date: 2020-10-05
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  aux-date: 2020-10-05
+  test: "foo"
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
+2020-10-08 * "Metadata on transaction header"
+  foo: "bar"
+  aux-date: 2020-10-05
+  #baz
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+

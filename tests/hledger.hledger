@@ -271,3 +271,31 @@ D 1.000,00 zł
     Assets:Test               1.000 zł
     Assets:Test
 
+2020/10/08 Tag test  ; foo: bar
+    Assets:Test                    $10
+    Assets:Test
+
+2020/10/08 Tag test  ; foo: bar
+    ; test: bar
+    Assets:Test                    $10
+    Assets:Test
+
+2020/10/08 Tag test  ; foo: bar
+    ; bar:
+    Assets:Test                    $10
+    Assets:Test
+
+2020/10/08=2020/10/05 Tag test  ; foo: bar
+    Assets:Test                    $10
+    Assets:Test
+
+2020/10/08=2020/10/05 Tag test  ; foo: bar
+    ; test: bar
+    Assets:Test                    $10
+    Assets:Test
+
+2020/10/08=2020/10/05 Tag test  ; foo: bar
+    ; bar:
+    Assets:Test                    $10
+    Assets:Test
+
