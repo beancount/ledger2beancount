@@ -1630,6 +1630,10 @@ sub process_txn(@) {
 		$txn_commodities{$line->[AMOUNT]->[CURRENCY]} = 1;
 	    }
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
+	    # This isn't really part of the transaction, but read_stanza
+	    # reads empty lines with trailing whitespace as part of the
+	    # transactions.  It's easy to change this, but this leads to
+	    # a performance slowdown, so it's not worth it.
 	    $line->[TYPE] = BLANK;
 	} else {
 	    die "Cannot handle line: $l";
@@ -1863,8 +1867,8 @@ sub read_stanza($) {
     my $l;
     do {
 	$l = @{$input_ref}[0];
-	push @stanza, shift @{$input_ref} if $l =~ /^\h+/;
-    } while ($l =~ /^\h+/ && @{$input_ref});
+	push @stanza, shift @{$input_ref} if $l =~ /^\h/;
+    } while ($l =~ /^\h/ && @{$input_ref});
     return @stanza;
 }
 
