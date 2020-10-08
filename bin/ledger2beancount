@@ -36,7 +36,8 @@ memoize('map_metadata');
 memoize('pp_date');
 
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
-            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY/;
+            COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
+            TAG META KEY VALUE TYPED ORIGINAL_ACCOUNT/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -388,7 +389,8 @@ my %root_mappings = (
 
 # Declarations
 sub map_commodity($);
-sub print_tags($@);
+sub print_tags($);
+sub handle_metadata($);
 
 
 # Set values if the key doesn't exist already
@@ -401,11 +403,52 @@ sub set_default($$$) {
 }
 
 
+# Create a comment object
+# Arguments:
+#  - depth
+#  - comment string
+sub create_comment($$) {
+    my $comment;
+    $comment->[TYPE] = COMMENT;
+    ($comment->[DEPTH], $comment->[VALUE]) = @_;
+    return $comment;
+}
+
+
 # Create a metadata object
-sub create_metadata($$$) {
+# Arguments:
+#  - depth
+#  - key
+#  - value
+#  - typed metadata
+sub create_metadata($$$$) {
     my $metadata;
-    ($metadata->{key}, $metadata->{value}, $metadata->{typed}) = @_;
+    $metadata->[TYPE] = META;
+    ($metadata->[DEPTH], $metadata->[KEY], $metadata->[VALUE], $metadata->[TYPED]) = @_;
     return $metadata;
+}
+
+
+# Create a metadata object from a regex match (matched with $metadata_RE).
+# Arguments:
+#  - depth
+#  - regex match
+sub create_metadata_from_regex($$) {
+    my ($depth, $match) = @_;
+
+    return create_metadata $depth, $match->{key}, $match->{value}, $match->{typed};
+}
+
+
+# Create a tag object
+# Arguments:
+#  - depth
+#  - an array reference with all tags
+sub create_tag($$) {
+    my $tag;
+    $tag->[TYPE] = TAG;
+    ($tag->[DEPTH], $tag->[VALUE]) = @_;
+    return $tag;
 }
 
 
@@ -634,6 +677,46 @@ sub pp_tags(@) {
 }
 
 
+# pretty print a posting
+# Arguments:
+#  - a posting object
+# Returns:
+#  - a string (the formatted posting)
+sub pp_posting($) {
+    my ($i) = @_;
+
+    my $l = "";
+    $l .= "$i->[FLAG] " if defined $i->[FLAG];
+
+    my $account_length_old = defined $i->[ORIGINAL_ACCOUNT] ? length $i->[ORIGINAL_ACCOUNT] : length $i->[ACCOUNT];
+    # Replace ledger account names with corresponding beancount account names
+    # while trying to keep the whitespace intact.
+    $l .= $i->[ACCOUNT];
+    my $account_length_new = length $i->[ACCOUNT];
+    my $space_diff = " "x abs($account_length_new - $account_length_old);
+    if ($account_length_new <= $account_length_old) {
+	$i->[WHITESPACE] .= $space_diff;
+    } else {
+	$i->[WHITESPACE] =~ s/$space_diff//;
+	# # Ensure there are two spaces
+	$i->[WHITESPACE] = "  " if $i->[WHITESPACE] eq " " || $i->[WHITESPACE] eq "";
+    }
+
+    if (defined $i->[AMOUNT]) {
+	$l .= $i->[WHITESPACE] . pp_amount $i->[AMOUNT];
+	$l .= " " . pp_cost $i->[COST] if defined $i->[COST];
+	$l .= " " . pp_price $i->[PRICE] if defined $i->[PRICE];
+    }
+
+    if ($i->[COMMENT]) {
+	$l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
+	$l .= " ;$i->[COMMENT]";
+    }
+
+    return $l;
+}
+
+
 # dump the current parsing state to stdout. Used for debugging purposes only
 sub dump_cur_txn() {
     if ($in_txn) {
@@ -644,6 +727,85 @@ sub dump_cur_txn() {
     } else {
 	print "D: no txn\n";
     }
+}
+
+
+# dump a blank object
+sub dump_blank($) {
+    my ($i) = @_;
+
+    print "D: TYPE: BLANK\n";
+}
+
+
+# dump a comment object
+sub dump_comment($) {
+    my ($i) = @_;
+
+    print "D: TYPE: COMMENT\n";
+    print "D:   VALUE: $i->[VALUE]\n";
+    print "D:   DEPTH: $i->[DEPTH]\n";
+}
+
+
+# dump a metadata object
+sub dump_metadata($) {
+    my ($i) = @_;
+
+    print "D: TYPE: METADATA\n";
+    print "D:   DEPTH: $i->[DEPTH]\n";
+    print "D:   KEY: $i->[KEY]\n";
+    print "D:   VALUE: " . (defined $i->[VALUE] ? $i->[VALUE] : "empty value") . "\n";
+    print "D:   TYPED: " . (defined $i->[TYPED] ? $i->[TYPED] : "no") . "\n";
+}
+
+
+# dump a posting object
+sub dump_posting($) {
+    my ($i) = @_;
+
+    print "D: TYPE: POSTING\n";
+    print "D:   DEPTH: $i->[DEPTH]\n";
+    print "D:   FLAG: " . ($i->[FLAG] ? $i->[FLAG] : "none") . "\n";
+    print "D:   ACCOUNT: $i->[ACCOUNT]\n";
+    print "D:   AMOUNT: " . (defined $i->[AMOUNT] ? pp_amount $i->[AMOUNT] : "none") . "\n";
+    print "D:   COST: " . (defined $i->[COST] ? pp_amount $i->[COST]->[AMOUNT] : "none") . "\n";
+    print "D:   PRICE: " . (defined $i->[PRICE] ? pp_amount $i->[PRICE]->[AMOUNT] : "none") . "\n";
+    print "D:   COMMENT: " . (defined $i->[COMMENT] ? $i->[COMMENT] : "none") . "\n";
+}
+
+
+# dump a tag object
+sub dump_tag($) {
+    my ($i) = @_;
+
+    print "D: TYPE: TAG\n";
+    print "D:   DEPTH: $i->[DEPTH]\n";
+    print "D:   VALUE: " . (join ", ", @{$i->[VALUE]}) . "\n";
+}
+
+
+# dump the elements of a parsed transaction
+sub  dump_parsed_txn(@) {
+    my @txn = @_;
+
+    print "D: begin of parsed transaction\n";
+    foreach my $i (@txn) {
+	if ($i->[TYPE] == BLANK) {
+	    dump_blank $i;
+	} elsif ($i->[TYPE] == COMMENT) {
+	    dump_comment $i;
+	} elsif ($i->[TYPE] == META) {
+	    dump_metadata $i;
+	} elsif ($i->[TYPE] == POSTING) {
+	    dump_posting $i;
+	} elsif ($i->[TYPE] == TAG) {
+	    dump_tag $i;
+	} else {
+	    print "D: UNKNOWN ELEMENT\n";
+	}
+    }
+    print "D: end of parsed transaction\n";
 }
 
 
@@ -715,6 +877,40 @@ sub push_deferred_meta($) {
 }
 
 
+# Format and push a transaction
+# Arguments:
+#  - an array of objects describing the transaction
+sub push_txn(@) {
+    my @txn = @_;
+
+    $in_postings = 0;
+    foreach my $i (@txn) {
+	if ($i->[TYPE] == COMMENT) {
+	    push_line $i->[DEPTH], ";$i->[VALUE]";
+	} elsif ($i->[TYPE] == POSTING) {
+	    $in_postings = 1;
+	    print_tags create_tag 2, \@cur_txn_tags;
+	    @cur_txn_tags = ();
+	    push_line $i->[DEPTH], pp_posting $i;
+	} elsif ($i->[TYPE] == META) {
+	    handle_metadata $i;
+	} elsif ($i->[TYPE] == TAG) {
+	    # The $in_postings check is a workaround since there are no posting-level tags
+	    if ($in_postings) {
+		push @cur_txn_tags, $_ foreach @{$i->[VALUE]};
+	    } else {
+		print_tags $i;
+	    }
+	} elsif ($i->[TYPE] == BLANK) {
+	    push_line 0, "";
+	} else {
+	    die "Don't know how to process transaction line with type $i->[TYPE]\n";
+	}
+    }
+    print_tags create_tag 2, \@cur_txn_tags;
+}
+
+
 # Convert numbers in various formats into a standard format
 sub convert_number($$) {
     my ($number, $currency) = @_;
@@ -759,49 +955,52 @@ sub number2int($) {
 
 
 # Handle metadata
-sub handle_metadata($$$) {
-    my ($depth, $metadata, $defer) = @_;
+# Arguments:
+#  - a metadata object
+sub handle_metadata($) {
+    my ($metadata) = @_;
 
-    my $key = map_metadata($metadata->{key});
+    my $key = map_metadata($metadata->[KEY]);
     if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
 	# ASSUMPTION: payer_tag always occurs later than payee_tag, which
 	# is currently enforced in our ledger. This is to guarantee that we
 	# promote payers to payees, because that's the sensible thing to do
 	# with Beancount
-	push_payee $metadata->{value};
+	push_payee $metadata->[VALUE];
     } else {
 	# Check if we should store as metadata or as links
 	# We check for $in_postings since posting-level links are not allowed
 	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
-	    print_tags $depth, "^$metadata->{value}";
+	    print_tags create_tag $metadata->[DEPTH], [ "^$metadata->[VALUE]" ];
 	} else {
 	    # Metadata values can be empty
-	    my $value = defined $metadata->{value} ? $metadata->{value} : "";
-	    if (defined $metadata->{typed} && $metadata->{typed}) {
+	    my $value = defined $metadata->[VALUE] ? $metadata->[VALUE] : "";
+	    if (defined $metadata->[TYPED] && $metadata->[TYPED]) {
 		$value = parse_ledger_value $value;
 	    } else {
 		$value = mk_beancount_string $value;
 	    }
-	    if ($defer) {
-		push @cur_txn_meta, pp_metadata($key, $value);
-	    } else {
-		push_metadata $depth, $key, $value;
-	    }
+	    push_metadata $metadata->[DEPTH], $key, $value;
 	}
     }
 }
 
 
-# Parse hledger comments and return:
-#  - the comment
-#  - tags
-#  - metadata
+# Parse an hledger comment.
+# Arguments:
+#  - a comment object
+# Return values:
+#  - the comment (string)
+#  - an array reference with tags and metadata
+#
 # hledger tags can have values (which makes them metadata) or
 # not (which makes them tags)
 sub parse_hledger_comment($) {
-    my ($l) = @_;
+    my ($c) = @_;
 
-    my ($comment, @tags, @metadata);
+    my $l = $c->[VALUE];
+    my $depth = $c->[DEPTH];
+    my ($comment, @metadata);
 
     if ($l =~ /^;(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
 	$comment = $+{comment};
@@ -826,55 +1025,58 @@ sub parse_hledger_comment($) {
 		    die "Can't parse date after hledger tag $key: $date";
 		}
 		if (defined $config->{postdate_tag} && $key eq "date") {
-		    push @metadata, create_metadata $config->{postdate_tag}, pp_date ($date, $year), 1;
+		    push @metadata, create_metadata $depth, $config->{postdate_tag}, pp_date ($date, $year), 1;
 		}
 		if (defined $config->{auxdate_tag} && $key eq "date2") {
-		    push @metadata, create_metadata $config->{auxdate_tag}, (pp_date $date, $year), 1;
+		    push @metadata, create_metadata $depth, $config->{auxdate_tag}, (pp_date $date, $year), 1;
 		}
 	    } else {
-		push @metadata, create_metadata $key, $value, 0;
+		push @metadata, create_metadata $depth, $key, $value, 0;
 	    }
 	} else {
-	    push @tags, $key;
+	    push @metadata, create_tag $depth, [ $key ];
 	}
     }
     $comment =~ s/,?\s*$//;
-    return $comment, \@tags, \@metadata;
+    return $comment, \@metadata;
 }
 
 
-# Parses a comment and returns:
-#  - the comment
-#  - tags
-#  - metadata
+# Parse a comment.
+# Arguments:
+#  - a comment object
+# Return values:
+#  - the comment (string)
+#  - an array reference with tags and metadata
 sub parse_comment($) {
-    my ($l) = @_;
+    my ($c) = @_;
 
+    my $l = $c->[VALUE];
+    my $depth = $c->[DEPTH];
     my $comment;
-    my @tags;
     my @metadata;
 
     if ($config->{hledger}) {
-	return parse_hledger_comment $l;
+	return parse_hledger_comment $c;
     } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
-	push @metadata, { %+ };
+	push @metadata, create_metadata_from_regex $depth, \%+;
     } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
 	if ($+{postdate} && defined $config->{postdate_tag}) {
-	    push @metadata, create_metadata $config->{postdate_tag}, pp_date($+{postdate}, 0), 1;
+	    push @metadata, create_metadata $depth, $config->{postdate_tag}, pp_date($+{postdate}, 0), 1;
 	}
 	if ($+{auxdate} && defined $config->{auxdate_tag}) {
-	    push @metadata, create_metadata $config->{auxdate_tag}, pp_date($+{auxdate}, 0), 1;
+	    push @metadata, create_metadata $depth, $config->{auxdate_tag}, pp_date($+{auxdate}, 0), 1;
 	}
     } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	or $l =~ /^;\s*:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
-	push @tags, split /:/, $+{tags};
+	     or $l =~ /^;\s*:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
+	push @metadata, create_tag $depth, [ split /:/, $+{tags} ];
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	# do nothing
     } else {
 	die "Can't process comment: $l";
     }
     $comment = $+{comment} if defined $+{comment} && $+{comment} !~ /^\s*;?\s*$/;
-    return $comment, \@tags, \@metadata;
+    return $comment, \@metadata;
 }
 
 
@@ -1122,23 +1324,24 @@ sub strip_indentation($) {
 }
 
 
-sub print_tags($@) {
-    my ($depth, @ledger_tags) = @_;
+# Print tags
+# Arguments:
+#  - a tag object
+sub print_tags($) {
+    my ($tag) = @_;
 
-    return if not scalar @ledger_tags;
+    return if not scalar @{$tag->[VALUE]};
 
-    my @tags = grep {!is_link $_} @ledger_tags;
-    my @links = grep {is_link $_} @ledger_tags;
-    if (!$in_txn) {
-	push @{$cur_txn_header{tags}}, pp_tags @ledger_tags;
-    } elsif (!$in_postings) {
-	push_line $depth, pp_tags @ledger_tags;
+    my @tags = grep {!is_link $_} @{$tag->[VALUE]};
+    my @links = grep {is_link $_} @{$tag->[VALUE]};
+    if (!$in_postings) {
+	push_line $tag->[DEPTH], pp_tags @{$tag->[VALUE]};
     } else {
 	# XXX workaround for the fact that per-posting tags are currently not
 	# allowed.  See:
 	# https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-	push_line $depth, "tags: \"" . join(', ', @tags) . "\"" if @tags;
-	push_line $depth, "links: \"" . join(', ', @links) . "\"" if @links;
+	push_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
+	push_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
     }
 }
 
@@ -1418,8 +1621,7 @@ sub process_txn(@) {
 	my $line;
 	my ($depth, $l) = strip_indentation($l);
 	if ($l =~ /^$comment_RE/) {
-	    $line->[TYPE] = COMMENT;
-	    $line->[COMMENT] = $l;
+	    $line = create_comment $depth, $l;
 	} elsif ($l =~ /^$posting_RE/) {
 	    $line = parse_posting $l;
 	    $total_postings++;
@@ -1437,37 +1639,29 @@ sub process_txn(@) {
     }
     my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
 
-    my $has_amount;
     my $skipped_posting = 0;
+    my @txn_out;
     foreach my $i (@txn_parsed) {
 	if ($i->[TYPE] == COMMENT) {
+	    my ($metadata);
+	    ($i->[VALUE], $metadata) = parse_comment $i;
 	    # If there's a virtual posting that is ignored, we have to
 	    # discard the metadata associated with the posting on
 	    # following lines (if there's any).  But there might be
 	    # comments worth preserving.  So just preserve all ledger
 	    # comments (i.e. comments and metadata) as is.
 	    if ($skipped_posting) {
-		push_line $i->[DEPTH], $i->[COMMENT];
 		print_warning_once "Comment or metadata on virtual posting preserved as comment";
+		push @txn_out, create_comment $i->[DEPTH], " " . pp_metadata $_->[KEY], $_->[VALUE] foreach @{$metadata};
 	    } else {
-		my ($comment, $tags, $metadata) = parse_comment $i->[COMMENT];
-		# The $in_postings check is a workaround since there are no posting-level tags
-		if ($in_postings) {
-		    push @cur_txn_tags, $_ foreach @{$tags};
-		} else {
-		    print_tags $i->[DEPTH], @{$tags};
-		}
-		handle_metadata $i->[DEPTH], $_, 0 foreach @{$metadata};
-		push_comment $i->[DEPTH], $comment if $comment;
+		push @txn_out, $_ foreach @{$metadata};
 	    }
+	    push @txn_out, $i if $i->[VALUE];
 	} elsif ($i->[TYPE] == POSTING) {
-	    print_tags $i->[DEPTH]+1, @cur_txn_tags;
-	    @cur_txn_tags = ();
+	    $skipped_posting = 0; # reset variable with each posting
+	    $in_postings = 1;
 
-	    my $l = "";
-	    $l .= "$i->[FLAG] " if defined $i->[FLAG];
-
-	    my $account_length_old = length $i->[ACCOUNT];
+	    $i->[ORIGINAL_ACCOUNT] = $i->[ACCOUNT];
 	    # Check for virtual and deferred accounts
 	    if ($i->[ACCOUNT] =~ /^\(/) {
 		# Ignore virtual postings with parentheses
@@ -1485,67 +1679,7 @@ sub process_txn(@) {
 	    } elsif ($i->[ACCOUNT] =~ /^<(.*)>/) {
 		    $i->[ACCOUNT] = $1;
 	    }
-	    $skipped_posting = 0; # reset variable with each posting
-	    $in_postings = 1;
-	    $has_amount = $+{amount} ? 1 : 0;
-
-	    # Replace ledger account names with corresponding beancount account names
-	    # while trying to keep the whitespace intact.
 	    $i->[ACCOUNT] = apply_account $i->[ACCOUNT];
-	    $l .= $i->[ACCOUNT];
-	    my $account_length_new = length $i->[ACCOUNT];
-	    my $space_diff = " "x abs($account_length_new - $account_length_old);
-	    if ($account_length_new <= $account_length_old) {
-		$i->[WHITESPACE] .= $space_diff;
-	    } else {
-		$i->[WHITESPACE] =~ s/$space_diff//;
-		# # Ensure there are two spaces
-		$i->[WHITESPACE] = "  " if $i->[WHITESPACE] eq " " || $i->[WHITESPACE] eq "";
-	    }
-
-	    if (defined $i->[AMOUNT]) {
-		$l .= $i->[WHITESPACE] . pp_amount $i->[AMOUNT];
-	    }
-
-	    if (defined $i->[PRICE] && !defined $i->[COST]) {
-		# No ledger lot cost, only price.  This one is tricky
-		# because this convention can be used for two different
-		# purposes:
-		# 1) For conversion between currencies where you do not
-		# generally wish to retain the cost.
-		# 2) To acquire/dispose of commodities (e.g. shares)
-		# where you want to retain the cost.
-		#
-		# Most currencies have 3 characters (e.g. EUR, USD, GBP)
-		# whereas commodities often have more (e.g. the ISIN).
-		# Therefore, we assume the cost should not be kept if
-		# both currencies have 3 characters.  Since this won't
-		# work in all cases, we also check for a list of
-		# commodities.  Similarly, we allow users to configure
-		# commodities that should be treated as currencies.
-		#
-		# If there's a fixated price, we convert it to a cost
-		# in order to preserve the price information (this is
-		# the best way since beancount doesn't have fixated
-		# prices).
-		my $commodity1 = $i->[AMOUNT]->[CURRENCY];
-		my $commodity2 = $i->[PRICE]->[AMOUNT]->[CURRENCY];
-		if (!defined $i->[PRICE]->[AMOUNT]->[FIXATED] && ((length $commodity1 == 3 && length $commodity2 == 3 &&
-		    !($commodity1 ~~ @{$config->{currency_is_commodity}})) ||
-		    $commodity1 ~~ @{$config->{commodity_is_currency}} ||
-		    $commodity2 ~~ @{$config->{commodity_is_currency}})) {
-		    $l .= " " . pp_price $i->[PRICE];
-		} else {
-		    $l .= " " . pp_cost $i->[PRICE];
-		}
-	    } elsif (defined $i->[COST]) {
-		$l .= " " . pp_cost $i->[COST];
-		# ledger requires you to specify both lot cost and lot price
-		# due to a bug.  If both are the same, don't put in the price.
-		if (defined $i->[PRICE] && pp_amount $i->[COST]->[AMOUNT] ne pp_amount $i->[PRICE]->[AMOUNT]) {
-		    $l .= " " . pp_price $i->[PRICE];
-		}
-	    }
 
 	    if (defined $i->[AMOUNT] && !defined $i->[COST]) {
 		# Apply any fixated costs if needed
@@ -1553,20 +1687,54 @@ sub process_txn(@) {
 		    if (${$a}[0] eq "fixed") {
 			my $fixated = ${$a}[1];
 			if ($i->[AMOUNT]->[CURRENCY] eq map_commodity $fixated->[CURRENCY]) {
-			    $l .= " " . pp_cost $fixated;
+			    $i->[COST] = $fixated;
 			}
 		    }
 		}
 	    }
 
-	    if ($i->[COMMENT]) {
-		my ($comment, $tags, $metadata) = parse_comment ";$i->[COMMENT]";
-		if ($comment) {
-		    $l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
-		    $l .= " ;$comment";
+	    if (defined $i->[PRICE]) {
+		if (defined $i->[COST]) {
+		    # ledger requires you to specify both lot cost and lot price
+		    # due to a bug.  If both are the same, remove the price.
+		    if (pp_amount $i->[COST]->[AMOUNT] eq pp_amount $i->[PRICE]->[AMOUNT]) {
+			$i->[PRICE] = undef;
+		    }
+		} else {
+		    # No ledger lot cost, only price.  This one is tricky
+		    # because this convention can be used for two different
+		    # purposes:
+		    # 1) For conversion between currencies where you do not
+		    # generally wish to retain the cost.
+		    # 2) To acquire/dispose of commodities (e.g. shares)
+		    # where you want to retain the cost.
+		    #
+		    # Most currencies have 3 characters (e.g. EUR, USD, GBP)
+		    # whereas commodities often have more (e.g. the ISIN).
+		    # Therefore, we assume a cost should be created if one
+		    # of the currencies doesn't have 3 characters.
+		    # Since this won't  work in all cases, we also check for
+		    # a list of commodities.  Similarly, we allow users to
+		    # configure commodities that should be treated as currencies.
+		    #
+		    # If there's a fixated price, we convert it to a cost
+		    # in order to preserve the price information (this is
+		    # the best way since beancount doesn't have fixated
+		    # prices).
+		    my $commodity1 = $i->[AMOUNT]->[CURRENCY];
+		    my $commodity2 = $i->[PRICE]->[AMOUNT]->[CURRENCY];
+		    if (defined $i->[PRICE]->[AMOUNT]->[FIXATED] || $commodity1 ~~ @{$config->{currency_is_commodity}} ||
+		       ((length $commodity1 != 3 || length $commodity2 != 3) && !($commodity1 ~~ @{$config->{commodity_is_currency}} || $commodity2 ~~ @{$config->{commodity_is_currency}}))) {
+			$i->[COST] = $i->[PRICE];
+			$i->[PRICE] = undef;
+		    }
 		}
-		push @cur_txn_tags, $_ foreach @{$tags};
-		handle_metadata $i->[DEPTH] + 1, $_, 1 foreach @{$metadata};
+	    }
+
+	    my ($metadata);
+	    if ($i->[COMMENT]) {
+	        my $comment = create_comment $i->[DEPTH]+1, ";$i->[COMMENT]";
+		($i->[COMMENT], $metadata) = parse_comment $comment;
 	    }
 
 	    if ($i->[ASSERTION]) {
@@ -1588,21 +1756,18 @@ sub process_txn(@) {
 		}
 	    }
 
-	    push_line $i->[DEPTH], $l;
-
-	    # Show all metadata that was on the same line as the posting
-	    push_deferred_meta $i->[DEPTH] + 1;
+	    push @txn_out, $i;
+	    push @txn_out, $_ foreach @{$metadata};
 	} elsif ($i->[TYPE] == BLANK) {
-	    push_line 0, "";
+	    push @txn_out, $i;
 	} else {  # there shouldn't be anything
 	    die "Don't know how to process transaction line with type $i->[TYPE]\n";
 	}
     }
-    print_tags 2, @cur_txn_tags;
 
     if ($total_postings == 0) {
-	# hledger allows transactions without any postings.
-	# As it turns out, ledger doesn't complain about them either.
+	# Transactions without any postings are allowed in ledger.
+	push_txn @txn_out;
 	foreach (split "\n", pop_txn()) {
 	    print_comment_top_level 0, $_;
 	}
@@ -1610,7 +1775,11 @@ sub process_txn(@) {
     } elsif ($total_postings == 1) {
 	if (defined $ledger_bucket) {
 	    # We only saw one posting and a ledger bucket is defined
-	    push_line 1, $ledger_bucket;
+	    my $posting;
+	    $posting->[TYPE] = POSTING;
+	    $posting->[DEPTH] = 1;
+	    $posting->[ACCOUNT] = $ledger_bucket;
+	    push @txn_out, $posting;
 	} elsif (!@cur_txn_assertions && (!defined $postings[0]->[AMOUNT] || number2int $postings[0]->[AMOUNT]->[NUMBER] == 0)) {
 	    print_line 0, pp_note_for_txn $postings[0]->[ACCOUNT];
 	    pop_txn();
@@ -1624,7 +1793,7 @@ sub process_txn(@) {
 	# an implicit conversion.
 	my $price = 0;
 	my %total_by_commodity;
-	foreach my $i (@txn_parsed) {
+	foreach my $i (@txn_out) {
 	    next if $i->[TYPE] != POSTING;
 	    if (defined $i->[COST] || defined $i->[PRICE]) {
 		$price = 1;
@@ -1641,9 +1810,12 @@ sub process_txn(@) {
 	if ($price == 0 && $total_by_commodity{$other_commodity} != 0 && $total_by_commodity{$commodity} != 0) {
 	    my $rate = abs($total_by_commodity{$other_commodity} / $total_by_commodity{$commodity});
 	    # We look for a posting that contains the commodity and add the rate
-	    foreach my $l (@cur_txn_lines) {
-		if ($l =~ /^\s+([*!]\s+)?[\p{Uppercase_Letter}][^\s]+\s+[\s\d,.*\/+-]+ $commodity/) {
-		    $l =~ s/(\d $commodity)/$1 @ $rate $other_commodity/;
+	    foreach my $i (@txn_out) {
+		next if $i->[TYPE] != POSTING;
+		if ($i->[AMOUNT]->[CURRENCY] eq $commodity) {
+		    $i->[PRICE]->[TYPE] = 1;
+		    $i->[PRICE]->[AMOUNT]->[NUMBER] = $rate;
+		    $i->[PRICE]->[AMOUNT]->[CURRENCY] = $other_commodity;
 		}
 	    }
 	}
@@ -1671,6 +1843,8 @@ sub process_txn(@) {
 	    return;
 	}
     }
+
+    push_txn @txn_out;
     push @output, pop_txn();
 }
 
@@ -1849,9 +2023,9 @@ while (@input) {
 	# * applying links to each transactions
 	# * applying metadata to each transactions
 	if ("; $+{val}" =~ /$metadata_RE/) {
-	    push @ledger_apply, ["metadata", {%+}];
+	    push @ledger_apply, ["metadata", create_metadata_from_regex 1, \%+];
 	} elsif (is_link $+{val}) {
-	    push @ledger_apply, ["link", $+{val}];
+	    push @ledger_apply, ["link", create_tag 1, [ $+{val} ]];
 	} else {
 	    print_line $depth, "pushtag " . pp_tag_link $+{val};
 	    push @ledger_apply, [$+{type}, $+{val}];
@@ -2074,18 +2248,28 @@ while (@input) {
 	    # You can have a comment on the same line as the payee
 	    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
 	    $narration = "" if not $narration;
-	    my ($tags, $metadata);
-	    ($comment, $tags, $metadata) = parse_comment ";$comment" if $comment;
+	    my ($metadata);
+	    if ($comment) {
+		$comment = create_comment $depth+1, ";$comment";
+		($comment, $metadata) = parse_comment $comment;
+	    }
 	    $cur_txn_header{comment} = $comment if $comment;
-	    print_tags $depth, $_ foreach @{$tags};
-	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 	    if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
-		push @{$metadata}, create_metadata $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
+		push @{$metadata}, create_metadata $depth+1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
 	    }
 	    if (defined $+{code} && defined $config->{code_tag}) {
-		push @{$metadata}, create_metadata $config->{code_tag}, $+{code}, 0;
+		push @{$metadata}, create_metadata $depth+1, $config->{code_tag}, $+{code}, 0;
 	    }
-	    handle_metadata $depth + 1, $_, 0 foreach @{$metadata};
+	    foreach (@{$metadata}) {
+		if ($_->[TYPE] == TAG) {
+		    push @{$cur_txn_header{tags}}, pp_tags $_ foreach @{$_->[VALUE]};
+		} elsif ($_->[TYPE] == META) {
+		    handle_metadata $_;
+		} else {
+		    die "Can't handle metadata type $_->[TYPE]\n";
+		}
+	    }
+	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
 
 	    # Determine payee based on the narration field
 	    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
@@ -2114,9 +2298,9 @@ while (@input) {
 	    # ledger "apply tag"
 	    foreach my $a (reverse @ledger_apply) {
 		if (${$a}[0] eq "metadata") {
-		    handle_metadata 1, ${$a}[1], 0;
+		    handle_metadata ${$a}[1];
 		} elsif (${$a}[0] eq "link") {
-		    print_tags 1, ${$a}[1];
+		    print_tags ${$a}[1];
 		}
 	    }
 	} elsif ($l !~ /^$date_RE/) {

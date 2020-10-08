@@ -14,6 +14,7 @@
 * Fix conversion of fixated prices to costs
 * Preserve leading whitespace in posting comments
 * Preserve indentation for tags and metadata
+* Refactor code to use more data structures
 * Remove dependency on `Config::Onion` module
 
 ## 2.4 (2020-07-27)
