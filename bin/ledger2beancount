@@ -37,7 +37,8 @@ memoize('pp_date');
 
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
-            TAG META KEY VALUE TYPED ORIGINAL_ACCOUNT/;
+            TAG META KEY VALUE TYPED ORIGINAL_ACCOUNT TXN_HEADER PAYEE
+            NARRATION/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -407,10 +408,14 @@ sub set_default($$$) {
 # Arguments:
 #  - depth
 #  - comment string
-sub create_comment($$) {
-    my $comment;
+#  - header object
+sub create_comment($$$) {
+    my ($comment, $header);
     $comment->[TYPE] = COMMENT;
-    ($comment->[DEPTH], $comment->[VALUE]) = @_;
+    ($comment->[DEPTH], $comment->[VALUE], $header) = @_;
+    # hledger comments may need the year of the transaction
+    # for metadata `date`/`date2` without the year.
+    $comment->[DATE] = $header->[DATE];
     return $comment;
 }
 
@@ -541,42 +546,19 @@ sub parse_ledger_value($) {
 # they appear as a regular metadata ("x-payee"). The following functions
 # support the parsing state machine for this:
 my ($in_txn, $in_postings,
-    %cur_txn_header, @cur_txn_lines, @cur_txn_assertions, @cur_txn_tags, @cur_txn_meta);
+    @cur_txn_lines, @cur_txn_assertions, @cur_txn_tags, @cur_txn_meta);
 
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
     $in_txn = 0;  # whether we are currently in a txn block
     $in_postings = 0;  # whether we are currently within postings (i.e., past txn metadata)
-    %cur_txn_header = ();  # txn header, i.e., its first line
     @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
     @cur_txn_assertions = ();  # balance assertions related to txn
     @cur_txn_tags = ();  # posting tags
     @cur_txn_meta = ();  # posting metadata
 }
 reset_cur_txn();
-
-
-# pretty print the transaction header (i.e., its first line) in beancount
-# format
-sub pp_cur_header() {
-    my $buf = "";
-
-    $buf .= $cur_txn_header{date} . " ";
-    $buf .= $cur_txn_header{flag} . " ";
-    if (exists $cur_txn_header{payee}) {
-	$buf .= (mk_beancount_string $cur_txn_header{payee}) . " ";
-    }
-    $buf .= mk_beancount_string $cur_txn_header{narration};
-    if (exists $cur_txn_header{tags}) {
-	$buf .= " " . join " ", @{$cur_txn_header{tags}};
-    }
-    if (exists $cur_txn_header{comment}) {
-	$buf .= " ; " . $cur_txn_header{comment};
-    }
-
-    return $buf;
-}
 
 
 # pretty print subsequent lines (all but the first) of a transaction, in
@@ -717,16 +699,28 @@ sub pp_posting($) {
 }
 
 
-# dump the current parsing state to stdout. Used for debugging purposes only
-sub dump_cur_txn() {
-    if ($in_txn) {
-	print "D: cur_header: " . pp_cur_header() . "\n";
-	print "D: cur_lines_begin\n";
-	print pp_cur_lines();
-	print "D: cur_lines_end\n";
-    } else {
-	print "D: no txn\n";
+# pretty print a transaction header
+# Arguments:
+#  - a transaction header object
+# Returns:
+#  - a string (the formatted header)
+sub pp_txn_header($) {
+    my ($i) = @_;
+    my $l;
+
+    $l = $i->[DATE];
+    $l .= " ";
+    $l .= $i->[FLAG] ? $i->[FLAG] : "txn";
+    $l .= " " . mk_beancount_string $i->[PAYEE] if defined $i->[PAYEE];
+    $l .= " ";
+    $l .= $i->[NARRATION] ? mk_beancount_string $i->[NARRATION] : mk_beancount_string "";
+    if ($i->[TAG]) {
+	$l .= " ";
+	my @tags = map { pp_tags $_ } @{$i->[TAG]};
+	$l .= join " ", @tags;
     }
+    $l .= " ; " . $i->[COMMENT] if $i->[COMMENT];
+    return $l;
 }
 
 
@@ -785,6 +779,20 @@ sub dump_tag($) {
 }
 
 
+# dump a txn header object
+sub dump_txn_header($) {
+    my ($i) = @_;
+
+    print "D: TYPE: TXN HEADER\n";
+    print "D:   DATE: $i->[DATE]\n";
+    print "D:   FLAG: " . ($i->[FLAG] ? $i->[FLAG] : "none") . "\n";
+    print "D:   PAYEE: " . ($i->[PAYEE] ? $i->[PAYEE] : "none") . "\n";
+    print "D:   NARRATION: " . ($i->[NARRATION] ? $i->[NARRATION] : "none") . "\n";
+    print "D:   TAG: " . ($i->[TAG] ? join ", ", @{$i->[TAG]} : "none") . "\n";
+    print "D:   COMMENT: " . ($i->[COMMENT] ? $i->[COMMENT] : "none") . "\n";
+}
+
+
 # dump the elements of a parsed transaction
 sub  dump_parsed_txn(@) {
     my @txn = @_;
@@ -801,31 +809,13 @@ sub  dump_parsed_txn(@) {
 	    dump_posting $i;
 	} elsif ($i->[TYPE] == TAG) {
 	    dump_tag $i;
+	} elsif ($i->[TYPE] == TXN_HEADER) {
+	    dump_txn_header $i;
 	} else {
 	    print "D: UNKNOWN ELEMENT\n";
 	}
     }
     print "D: end of parsed transaction\n";
-}
-
-
-# set the current transaction header (= first line), overriding the previous
-# value (which should *usually* be empty, but it is the caller responsibility
-# to ensure this is the case)
-sub push_header($$$) {
-    my ($date, $flag, $narration) = @_;
-
-    $in_txn = 1;
-    $cur_txn_header{date} = $date;
-    $cur_txn_header{flag} = $flag;
-    $cur_txn_header{narration} = $narration;
-}
-
-
-# set the current transaction payee, complementing the transaction header
-sub push_payee($) {
-    my ($payee) = @_;
-    $cur_txn_header{payee} = $payee;
 }
 
 
@@ -839,15 +829,15 @@ sub push_line($$) {
 
 
 # add a balance assertion to be published at the end of current transaction
-sub push_assertion($$) {
-    my ($account, $amount) = @_;
+sub push_assertion($$$) {
+    my ($account, $amount, $date) = @_;
 
     # beancount evaluates balance assertions at the beginning of the day,
     # whereas ledger evaluates them at the end of the txn. So we schedule the
     # balance assertion for *after* the original txn. This assumes that there
     # are no *other* txn in the same day that change the balance again.
     my $assertion_date = sprintf("%04d-%02d-%02d",
-				 Add_Delta_Days(split(/-/, $cur_txn_header{date}), 1));
+				 Add_Delta_Days(split(/-/, $date), 1));
     push @cur_txn_assertions, "$assertion_date balance $account  $amount";
 }
 
@@ -901,6 +891,8 @@ sub push_txn(@) {
 	    } else {
 		print_tags $i;
 	    }
+	} elsif ($i->[TYPE] == TXN_HEADER) {
+	    push_line 0, pp_txn_header $i;
 	} elsif ($i->[TYPE] == BLANK) {
 	    push_line 0, "";
 	} else {
@@ -954,6 +946,23 @@ sub number2int($) {
 }
 
 
+# Does a metadata object specify information that should be used
+# for the payee of the transaction? (cf the payee_tag and
+# payer_tag config variables)
+# Arguments:
+#  - a metadata object
+# Returns:
+#  - 1 if the metadata info should be used to specify the payee
+sub is_meta_payee($) {
+    my ($metadata) = @_;
+
+    my $key = map_metadata($metadata->[KEY]);
+    if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
+	return 1;
+    }
+}
+
+
 # Handle metadata
 # Arguments:
 #  - a metadata object
@@ -961,27 +970,19 @@ sub handle_metadata($) {
     my ($metadata) = @_;
 
     my $key = map_metadata($metadata->[KEY]);
-    if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
-	# ASSUMPTION: payer_tag always occurs later than payee_tag, which
-	# is currently enforced in our ledger. This is to guarantee that we
-	# promote payers to payees, because that's the sensible thing to do
-	# with Beancount
-	push_payee $metadata->[VALUE];
+    # Check if we should store as metadata or as links
+    # We check for $in_postings since posting-level links are not allowed
+    if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
+	print_tags create_tag $metadata->[DEPTH], [ "^$metadata->[VALUE]" ];
     } else {
-	# Check if we should store as metadata or as links
-	# We check for $in_postings since posting-level links are not allowed
-	if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
-	    print_tags create_tag $metadata->[DEPTH], [ "^$metadata->[VALUE]" ];
+	# Metadata values can be empty
+	my $value = defined $metadata->[VALUE] ? $metadata->[VALUE] : "";
+	if (defined $metadata->[TYPED] && $metadata->[TYPED]) {
+	    $value = parse_ledger_value $value;
 	} else {
-	    # Metadata values can be empty
-	    my $value = defined $metadata->[VALUE] ? $metadata->[VALUE] : "";
-	    if (defined $metadata->[TYPED] && $metadata->[TYPED]) {
-		$value = parse_ledger_value $value;
-	    } else {
-		$value = mk_beancount_string $value;
-	    }
-	    push_metadata $metadata->[DEPTH], $key, $value;
+	    $value = mk_beancount_string $value;
 	}
+	push_metadata $metadata->[DEPTH], $key, $value;
     }
 }
 
@@ -1019,7 +1020,7 @@ sub parse_hledger_comment($) {
 	if ($value) {
 	    $value =~ s/\s+$//;
 	    if ($key eq "date" || $key eq "date2") {
-		my $year = $1 if $cur_txn_header{date} =~ /^(\d{4})-/;
+		my $year = $1 if $c->[DATE] =~ /^(\d{4})-/;
 		my $date = $value;
 		if ($date !~ /^$hledger_date_RE/) {
 		    die "Can't parse date after hledger tag $key: $date";
@@ -1086,7 +1087,6 @@ sub parse_comment($) {
 sub pop_txn() {
     my $buf = "";
 
-    $buf .= pp_cur_header() . "\n";
     $buf .= pp_cur_lines();
     $buf .= "\n" . pp_cur_assertions() if @cur_txn_assertions;
 
@@ -1097,11 +1097,11 @@ sub pop_txn() {
 
 
 # Create note based on transaction header
-sub pp_note_for_txn($) {
-    my ($account) = @_;
+sub pp_note_for_txn($$) {
+    my ($header, $account) = @_;
 
-    my $buf = "$cur_txn_header{date} note $account ";
-    $buf .= mk_beancount_string $cur_txn_header{narration};
+    my $buf = "$header->[DATE] note $account ";
+    $buf .= mk_beancount_string $header->[NARRATION];
     $buf .= "\n";
     return $buf;
 }
@@ -1613,51 +1613,64 @@ sub parse_posting($) {
 #  - the transaction header
 #  - an array with the remaining lines of the transaction
 sub process_txn($$@) {
-    my ($year, $header, @txn) = @_;
+    my ($year, $header_line, @txn) = @_;
 
-    if ($header !~ /^$date_RE/) {
-	die "Cannot process date in transaction header: $header\n";
-    } elsif ($header !~ /^$txn_header_RE/) {
-	die "Cannot process transaction header: $header\n";
+    $in_postings = 0;
+
+    if ($header_line !~ /^$date_RE/) {
+	die "Cannot process date in transaction header: $header_line\n";
+    } elsif ($header_line !~ /^$txn_header_RE/) {
+	die "Cannot process transaction header: $header_line\n";
     }
 
     # We just matched against $txn_header_RE, so the results are in %+.
-    $in_postings = 0;
+    my @txn_parsed;
+    my $header;
+    $header->[TYPE] = TXN_HEADER;
+    $header->[DATE] = pp_date $+{date}, $year;
+    $header->[FLAG] = $+{flag} if $+{flag};
+
     # You can have a comment on the same line as the payee
     my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
-    $narration = "" if not $narration;
+    $header->[NARRATION] = $narration if $narration;
     my ($metadata);
     if ($comment) {
-	$comment = create_comment 1, ";$comment";
+	$comment = create_comment 1, ";$comment", $header;
 	($comment, $metadata) = parse_comment $comment;
+	$header->[COMMENT] = $comment if $comment;
     }
-    $cur_txn_header{comment} = $comment if $comment;
-    if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
-	push @{$metadata}, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
-    }
-    if (defined $+{code} && defined $config->{code_tag}) {
-	push @{$metadata}, create_metadata 1, $config->{code_tag}, $+{code}, 0;
-    }
+
+    my @tags;
     foreach (@{$metadata}) {
 	if ($_->[TYPE] == TAG) {
-	    push @{$cur_txn_header{tags}}, pp_tags $_ foreach @{$_->[VALUE]};
+	    push @tags, $_ foreach @{$_->[VALUE]};
 	} elsif ($_->[TYPE] == META) {
-	    handle_metadata $_;
+	    if (is_meta_payee $_) {
+		$header->[PAYEE] = $_->[VALUE];
+	    } else {
+		push @txn_parsed, $_;
+	    }
 	} else {
 	    die "Can't handle metadata type $_->[TYPE]\n";
 	}
     }
-    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
+    $header->[TAG] = \@tags if @tags;
+    if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
+	push @txn_parsed, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
+    }
+    if (defined $+{code} && defined $config->{code_tag}) {
+	push @txn_parsed, create_metadata 1, $config->{code_tag}, $+{code}, 0;
+    }
 
     # Determine payee based on the narration field
     if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
-	push_payee $+{payee};
-	$cur_txn_header{narration} = $+{narration};
+	$header->[PAYEE] = $+{payee};
+	$header->[NARRATION] = $+{narration};
     }
     foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-	if ($narration =~ /$custom_narration_RE/) {
-	    push_payee $+{payee};
-	    $cur_txn_header{narration} = $+{narration};
+	if ($narration && $narration =~ /$custom_narration_RE/) {
+	    $header->[PAYEE] = $+{payee};
+	    $header->[NARRATION] = $+{narration};
 	    last;
 	}
     }
@@ -1667,8 +1680,8 @@ sub process_txn($$@) {
     while (!$match && @payee_match) {
 	my $payee_match = shift @payee_match;
 	foreach my $custom_narration_RE (keys %{$payee_match}) {
-	    if ($narration =~ /$custom_narration_RE/) {
-		push_payee ${$payee_match}{$custom_narration_RE};
+	    if ($narration && $narration =~ /$custom_narration_RE/) {
+		$header->[PAYEE] = ${$payee_match}{$custom_narration_RE};
 		$match = 1;
 	    }
 	}
@@ -1676,23 +1689,29 @@ sub process_txn($$@) {
     # ledger "apply tag"
     foreach my $a (reverse @ledger_apply) {
 	if (${$a}[0] eq "metadata") {
-	    handle_metadata ${$a}[1];
+	    if (is_meta_payee ${$a}[1]) {
+		$header->[PAYEE] = ${$a}[1]->[VALUE];
+	    } else {
+		push @txn_parsed, ${$a}[1];
+	    }
 	} elsif (${$a}[0] eq "link") {
-	    print_tags ${$a}[1];
+	    push @txn_parsed, ${$a}[1];
 	}
     }
+
+    # Add the header at the beginning of the array
+    unshift @txn_parsed, $header;
 
     # Count total postings and postings that have amounts.  This is needed
     # to distinguish different kinds of balance assignments.
     my $total_postings = 0;
     my $postings_with_amount = 0;
     my %txn_commodities;
-    my @txn_parsed;
     foreach my $l (@txn) {
 	my $line;
 	my ($depth, $l) = strip_indentation($l);
 	if ($l =~ /^$comment_RE/) {
-	    $line = create_comment $depth, $l;
+	    $line = create_comment $depth, $l, $header;
 	} elsif ($l =~ /^$posting_RE/) {
 	    $line = parse_posting $l;
 	    $total_postings++;
@@ -1727,9 +1746,15 @@ sub process_txn($$@) {
 	    # comments (i.e. comments and metadata) as is.
 	    if ($skipped_posting) {
 		print_warning_once "Comment or metadata on virtual posting preserved as comment";
-		push @txn_out, create_comment $i->[DEPTH], " " . pp_metadata $_->[KEY], $_->[VALUE] foreach @{$metadata};
+		push @txn_out, create_comment $i->[DEPTH], ( " " . pp_metadata $_->[KEY], $_->[VALUE]), $header foreach @{$metadata};
 	    } else {
-		push @txn_out, $_ foreach @{$metadata};
+		foreach (@{$metadata}) {
+		    if ($_->[TYPE] == META && is_meta_payee $_) {
+			$header->[PAYEE] = $_->[VALUE];
+		    } else {
+			push @txn_out, $_;
+		    }
+		}
 	    }
 	    push @txn_out, $i if $i->[VALUE];
 	} elsif ($i->[TYPE] == POSTING) {
@@ -1808,19 +1833,19 @@ sub process_txn($$@) {
 
 	    my ($metadata);
 	    if ($i->[COMMENT]) {
-	        my $comment = create_comment $i->[DEPTH]+1, ";$i->[COMMENT]";
+	        my $comment = create_comment $i->[DEPTH]+1, ";$i->[COMMENT]", $header;
 		($i->[COMMENT], $metadata) = parse_comment $comment;
 	    }
 
 	    if ($i->[ASSERTION]) {
-		push_assertion $i->[ACCOUNT], pp_amount $i->[ASSERTION]->[AMOUNT];
+		push_assertion $i->[ACCOUNT], pp_amount $i->[ASSERTION]->[AMOUNT], $header->[DATE];
 		if ($total_postings == 2 && $postings_with_amount == 0) {
 		    # We have two postings, i.e. two accounts; remove the current
 		    # account from the list of accounts to find out which account
 		    # we have to pad against.
 		    my @accounts = map {apply_account $_->[ACCOUNT]} @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
-		    print_line 0, sprintf "%s pad %s %s", $cur_txn_header{date}, $i->[ACCOUNT], $accounts[0];
+		    print_line 0, sprintf "%s pad %s %s", $header->[DATE], $i->[ACCOUNT], $accounts[0];
 		    print_line 0, pp_cur_assertions;
 		    # Skip transaction (the transaction itself is just two
 		    # null postings, which are not valid in beancount)
@@ -1833,10 +1858,8 @@ sub process_txn($$@) {
 
 	    push @txn_out, $i;
 	    push @txn_out, $_ foreach @{$metadata};
-	} elsif ($i->[TYPE] == BLANK) {
+	} else {
 	    push @txn_out, $i;
-	} else {  # there shouldn't be anything
-	    die "Don't know how to process transaction line with type $i->[TYPE]\n";
 	}
     }
 
@@ -1856,7 +1879,7 @@ sub process_txn($$@) {
 	    $posting->[ACCOUNT] = $ledger_bucket;
 	    push @txn_out, $posting;
 	} elsif (!@cur_txn_assertions && (!defined $postings[0]->[AMOUNT] || number2int $postings[0]->[AMOUNT]->[NUMBER] == 0)) {
-	    print_line 0, pp_note_for_txn $postings[0]->[ACCOUNT];
+	    print_line 0, pp_note_for_txn $header, $postings[0]->[ACCOUNT];
 	    pop_txn();
 	    return;
 	}
@@ -1911,7 +1934,7 @@ sub process_txn($$@) {
 	    my %seen;
 	    @accounts = grep { !$seen{$_}++ } @accounts;
 	    foreach (@accounts) {
-		print_line 0, pp_note_for_txn $_;
+		print_line 0, pp_note_for_txn $header, $_;
 	    }
 	    print_line 0, pp_cur_assertions;
 	    pop_txn();
