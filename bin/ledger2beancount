@@ -391,7 +391,8 @@ my %root_mappings = (
 # Declarations
 sub map_commodity($);
 sub print_tags($);
-sub handle_metadata($);
+sub print_posting_tags($);
+sub handle_metadata($$);
 
 
 # Set values if the key doesn't exist already
@@ -545,14 +546,13 @@ sub parse_ledger_value($) {
 # beancount they appear on the first line of a transaction, whereas in ledger
 # they appear as a regular metadata ("x-payee"). The following functions
 # support the parsing state machine for this:
-my ($in_txn, $in_postings,
+my ($in_txn,
     @cur_txn_lines, @cur_txn_assertions, @cur_txn_tags, @cur_txn_meta);
 
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
     $in_txn = 0;  # whether we are currently in a txn block
-    $in_postings = 0;  # whether we are currently within postings (i.e., past txn metadata)
     @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
     @cur_txn_assertions = ();  # balance assertions related to txn
     @cur_txn_tags = ();  # posting tags
@@ -873,17 +873,17 @@ sub push_deferred_meta($) {
 sub push_txn(@) {
     my @txn = @_;
 
-    $in_postings = 0;
+    my $in_postings = 0;
     foreach my $i (@txn) {
 	if ($i->[TYPE] == COMMENT) {
 	    push_line $i->[DEPTH], ";$i->[VALUE]";
 	} elsif ($i->[TYPE] == POSTING) {
 	    $in_postings = 1;
-	    print_tags create_tag 2, \@cur_txn_tags;
+	    print_posting_tags create_tag 2, \@cur_txn_tags;
 	    @cur_txn_tags = ();
 	    push_line $i->[DEPTH], pp_posting $i;
 	} elsif ($i->[TYPE] == META) {
-	    handle_metadata $i;
+	    handle_metadata $i, $in_postings;
 	} elsif ($i->[TYPE] == TAG) {
 	    # The $in_postings check is a workaround since there are no posting-level tags
 	    if ($in_postings) {
@@ -899,7 +899,7 @@ sub push_txn(@) {
 	    die "Don't know how to process transaction line with type $i->[TYPE]\n";
 	}
     }
-    print_tags create_tag 2, \@cur_txn_tags;
+    print_posting_tags create_tag 2, \@cur_txn_tags;
 }
 
 
@@ -957,7 +957,7 @@ sub is_meta_payee($) {
     my ($metadata) = @_;
 
     my $key = map_metadata($metadata->[KEY]);
-    if (not $in_postings and ($key eq $config->{payee_tag} or $key eq $config->{payer_tag})) {
+    if ($key eq $config->{payee_tag} or $key eq $config->{payer_tag}) {
 	return 1;
     }
 }
@@ -966,8 +966,9 @@ sub is_meta_payee($) {
 # Handle metadata
 # Arguments:
 #  - a metadata object
-sub handle_metadata($) {
-    my ($metadata) = @_;
+#  - in_postings
+sub handle_metadata($$) {
+    my ($metadata, $in_postings) = @_;
 
     my $key = map_metadata($metadata->[KEY]);
     # Check if we should store as metadata or as links
@@ -1331,18 +1332,23 @@ sub print_tags($) {
     my ($tag) = @_;
 
     return if not scalar @{$tag->[VALUE]};
+    push_line $tag->[DEPTH], pp_tags @{$tag->[VALUE]};
+}
+
+
+# Print tags in postings
+# XXX workaround for the fact that per-posting tags are currently not
+# allowed.  See:
+# https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
+# Arguments:
+#  - a tag object
+sub print_posting_tags($) {
+    my ($tag) = @_;
 
     my @tags = grep {!is_link $_} @{$tag->[VALUE]};
     my @links = grep {is_link $_} @{$tag->[VALUE]};
-    if (!$in_postings) {
-	push_line $tag->[DEPTH], pp_tags @{$tag->[VALUE]};
-    } else {
-	# XXX workaround for the fact that per-posting tags are currently not
-	# allowed.  See:
-	# https://groups.google.com/forum/#!topic/beancount/XPtFOnqCVws
-	push_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
-	push_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
-    }
+    push_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
+    push_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
 }
 
 
@@ -1615,7 +1621,7 @@ sub parse_posting($) {
 sub process_txn($$@) {
     my ($year, $header_line, @txn) = @_;
 
-    $in_postings = 0;
+    my $in_postings = 0;
 
     if ($header_line !~ /^$date_RE/) {
 	die "Cannot process date in transaction header: $header_line\n";
