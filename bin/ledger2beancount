@@ -1608,8 +1608,79 @@ sub parse_posting($) {
 
 
 # Process a ledger transaction
-sub process_txn(@) {
-    my @txn = @_;
+# Arguments:
+#  - the year
+#  - the transaction header
+#  - an array with the remaining lines of the transaction
+sub process_txn($$@) {
+    my ($year, $header, @txn) = @_;
+
+    if ($header !~ /^$date_RE/) {
+	die "Cannot process date in transaction header: $header\n";
+    } elsif ($header !~ /^$txn_header_RE/) {
+	die "Cannot process transaction header: $header\n";
+    }
+
+    # We just matched against $txn_header_RE, so the results are in %+.
+    $in_postings = 0;
+    # You can have a comment on the same line as the payee
+    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
+    $narration = "" if not $narration;
+    my ($metadata);
+    if ($comment) {
+	$comment = create_comment 1, ";$comment";
+	($comment, $metadata) = parse_comment $comment;
+    }
+    $cur_txn_header{comment} = $comment if $comment;
+    if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
+	push @{$metadata}, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
+    }
+    if (defined $+{code} && defined $config->{code_tag}) {
+	push @{$metadata}, create_metadata 1, $config->{code_tag}, $+{code}, 0;
+    }
+    foreach (@{$metadata}) {
+	if ($_->[TYPE] == TAG) {
+	    push @{$cur_txn_header{tags}}, pp_tags $_ foreach @{$_->[VALUE]};
+	} elsif ($_->[TYPE] == META) {
+	    handle_metadata $_;
+	} else {
+	    die "Can't handle metadata type $_->[TYPE]\n";
+	}
+    }
+    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
+
+    # Determine payee based on the narration field
+    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
+	push_payee $+{payee};
+	$cur_txn_header{narration} = $+{narration};
+    }
+    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
+	if ($narration =~ /$custom_narration_RE/) {
+	    push_payee $+{payee};
+	    $cur_txn_header{narration} = $+{narration};
+	    last;
+	}
+    }
+    # Config `payee_match` is an array of hashes
+    my @payee_match = @{$config->{payee_match}};
+    my $match = 0;
+    while (!$match && @payee_match) {
+	my $payee_match = shift @payee_match;
+	foreach my $custom_narration_RE (keys %{$payee_match}) {
+	    if ($narration =~ /$custom_narration_RE/) {
+		push_payee ${$payee_match}{$custom_narration_RE};
+		$match = 1;
+	    }
+	}
+    }
+    # ledger "apply tag"
+    foreach my $a (reverse @ledger_apply) {
+	if (${$a}[0] eq "metadata") {
+	    handle_metadata ${$a}[1];
+	} elsif (${$a}[0] eq "link") {
+	    print_tags ${$a}[1];
+	}
+    }
 
     # Count total postings and postings that have amounts.  This is needed
     # to distinguish different kinds of balance assignments.
@@ -2247,73 +2318,8 @@ while (@input) {
 	print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
 	$after_auto = 1;
-	if ($l =~ /$txn_header_RE/) {  # txn header
-	    $in_postings = 0;
-	    # You can have a comment on the same line as the payee
-	    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
-	    $narration = "" if not $narration;
-	    my ($metadata);
-	    if ($comment) {
-		$comment = create_comment $depth+1, ";$comment";
-		($comment, $metadata) = parse_comment $comment;
-	    }
-	    $cur_txn_header{comment} = $comment if $comment;
-	    if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
-		push @{$metadata}, create_metadata $depth+1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
-	    }
-	    if (defined $+{code} && defined $config->{code_tag}) {
-		push @{$metadata}, create_metadata $depth+1, $config->{code_tag}, $+{code}, 0;
-	    }
-	    foreach (@{$metadata}) {
-		if ($_->[TYPE] == TAG) {
-		    push @{$cur_txn_header{tags}}, pp_tags $_ foreach @{$_->[VALUE]};
-		} elsif ($_->[TYPE] == META) {
-		    handle_metadata $_;
-		} else {
-		    die "Can't handle metadata type $_->[TYPE]\n";
-		}
-	    }
-	    push_header pp_date($+{date}, $year), $+{flag} ? $+{flag} : "txn", $narration;
-
-	    # Determine payee based on the narration field
-	    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
-		push_payee $+{payee};
-		$cur_txn_header{narration} = $+{narration};
-	    }
-	    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-		if ($narration =~ /$custom_narration_RE/) {
-		    push_payee $+{payee};
-		    $cur_txn_header{narration} = $+{narration};
-		    last;
-		}
-	    }
-	    # Config `payee_match` is an array of hashes
-	    my @payee_match = @{$config->{payee_match}};
-	    my $match = 0;
-	    while (!$match && @payee_match) {
-		my $payee_match = shift @payee_match;
-		foreach my $custom_narration_RE (keys %{$payee_match}) {
-		    if ($narration =~ /$custom_narration_RE/) {
-			push_payee ${$payee_match}{$custom_narration_RE};
-			$match = 1;
-		    }
-		}
-	    }
-	    # ledger "apply tag"
-	    foreach my $a (reverse @ledger_apply) {
-		if (${$a}[0] eq "metadata") {
-		    handle_metadata ${$a}[1];
-		} elsif (${$a}[0] eq "link") {
-		    print_tags ${$a}[1];
-		}
-	    }
-	} elsif ($l !~ /^$date_RE/) {
-	    die "Cannot process date in transaction header: $l\n";
-	} else {
-	    die "Cannot process transaction header: $l\n";
-	}
 	@stanza = read_stanza \@input;
-	process_txn @stanza;
+	process_txn $year, $l, @stanza;
     } elsif ($l =~ /^\h*$/) {
 	print_line 0, "";
     } elsif ($l =~ /^--/) {  # ledger option
