@@ -542,21 +542,14 @@ sub parse_ledger_value($) {
 }
 
 
-# Simple parsing state machine: we need to look ahead for payee metadata, as in
-# beancount they appear on the first line of a transaction, whereas in ledger
-# they appear as a regular metadata ("x-payee"). The following functions
-# support the parsing state machine for this:
-my ($in_txn,
-    @cur_txn_lines, @cur_txn_assertions, @cur_txn_tags, @cur_txn_meta);
+# Simple parsing state machine
+my (@cur_txn_lines, @cur_txn_assertions);
 
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
-    $in_txn = 0;  # whether we are currently in a txn block
     @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
     @cur_txn_assertions = ();  # balance assertions related to txn
-    @cur_txn_tags = ();  # posting tags
-    @cur_txn_meta = ();  # posting metadata
 }
 reset_cur_txn();
 
@@ -857,16 +850,6 @@ sub push_comment($$) {
 }
 
 
-sub push_deferred_meta($) {
-    my ($depth) = @_;
-
-    foreach (@cur_txn_meta) {
-	push_line $depth, $_;
-    }
-    @cur_txn_meta = ();
-}
-
-
 # Format and push a transaction
 # Arguments:
 #  - an array of objects describing the transaction
@@ -874,6 +857,7 @@ sub push_txn(@) {
     my @txn = @_;
 
     my $in_postings = 0;
+    my @cur_txn_tags;
     foreach my $i (@txn) {
 	if ($i->[TYPE] == COMMENT) {
 	    push_line $i->[DEPTH], ";$i->[VALUE]";
