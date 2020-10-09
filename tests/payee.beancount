@@ -55,3 +55,13 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+2020-10-09 * "Foo" "Payee Foo"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+
+2020-10-09 * "Bar" "Payee Bar"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+

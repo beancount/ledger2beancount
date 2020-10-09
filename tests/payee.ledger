@@ -61,3 +61,15 @@ commodity GBP
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2020-10-09 * Payee Foo  ; payee: Foo
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+apply tag payee: Bar
+
+2020-10-09 * Payee Bar
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply tag
+
