@@ -542,14 +542,13 @@ sub parse_ledger_value($) {
 }
 
 
-# Simple parsing state machine
-my (@cur_txn_lines, @cur_txn_assertions);
+# Txn lines
+my (@cur_txn_lines);
 
 
 # reset current parsing state, reinitializing it to the empty state
 sub reset_cur_txn() {
-    @cur_txn_lines = ();  # txn lines, i.e., all lines except the header
-    @cur_txn_assertions = ();  # balance assertions related to txn
+    @cur_txn_lines = ();  # txn lines
 }
 reset_cur_txn();
 
@@ -558,12 +557,6 @@ reset_cur_txn();
 # beancount format
 sub pp_cur_lines() {
     return (join "\n", @cur_txn_lines) . "\n";
-}
-
-
-# pretty print pending balance assertions, in beancount format
-sub pp_cur_assertions() {
-    return (join "\n", @cur_txn_assertions) . "\n";
 }
 
 
@@ -615,6 +608,20 @@ sub pp_price(@) {
     $info .= " ";
     $info .= pp_amount $lot->[AMOUNT];
     return $info;
+}
+
+
+# pretty print a balance assertion in beancount format
+sub pp_assertion($) {
+    my ($assertion) = @_;
+
+    # beancount evaluates balance assertions at the beginning of the day,
+    # whereas ledger evaluates them at the end of the txn. So we schedule the
+    # balance assertion for *after* the original txn. This assumes that there
+    # are no *other* txn in the same day that change the balance again.
+    my $assertion_date = sprintf("%04d-%02d-%02d",
+				 Add_Delta_Days(split(/-/, $assertion->[DATE]), 1));
+    return "$assertion_date balance $assertion->[ACCOUNT]  " . pp_amount $assertion->[AMOUNT];
 }
 
 
@@ -818,20 +825,6 @@ sub push_line($$) {
     my ($depth, $line) = @_;
 
     push @cur_txn_lines, indent($depth, $line);
-}
-
-
-# add a balance assertion to be published at the end of current transaction
-sub push_assertion($$$) {
-    my ($account, $amount, $date) = @_;
-
-    # beancount evaluates balance assertions at the beginning of the day,
-    # whereas ledger evaluates them at the end of the txn. So we schedule the
-    # balance assertion for *after* the original txn. This assumes that there
-    # are no *other* txn in the same day that change the balance again.
-    my $assertion_date = sprintf("%04d-%02d-%02d",
-				 Add_Delta_Days(split(/-/, $date), 1));
-    push @cur_txn_assertions, "$assertion_date balance $account  $amount";
 }
 
 
@@ -1073,7 +1066,6 @@ sub pop_txn() {
     my $buf = "";
 
     $buf .= pp_cur_lines();
-    $buf .= "\n" . pp_cur_assertions() if @cur_txn_assertions;
 
     reset_cur_txn();
 
@@ -1261,6 +1253,13 @@ sub print_line($$) {
 
     my $out = get_output;
     push @$out, indent($depth, $line), "\n";
+}
+
+
+sub print_assertions(@) {
+    my (@assertions) = @_;
+
+    print_line 0, pp_assertion $_ foreach @assertions;
 }
 
 
@@ -1725,6 +1724,7 @@ sub process_txn($$@) {
 
     my $skipped_posting = 0;
     my @txn_out;
+    my @assertions;
     foreach my $i (@txn_parsed) {
 	if ($i->[TYPE] == COMMENT) {
 	    my ($metadata);
@@ -1828,7 +1828,9 @@ sub process_txn($$@) {
 	    }
 
 	    if ($i->[ASSERTION]) {
-		push_assertion $i->[ACCOUNT], pp_amount $i->[ASSERTION]->[AMOUNT], $header->[DATE];
+		$i->[ASSERTION]->[DATE] = $header->[DATE];
+		$i->[ASSERTION]->[ACCOUNT] = $i->[ACCOUNT];
+		push @assertions, $i->[ASSERTION];
 		if ($total_postings == 2 && $postings_with_amount == 0) {
 		    # We have two postings, i.e. two accounts; remove the current
 		    # account from the list of accounts to find out which account
@@ -1836,10 +1838,9 @@ sub process_txn($$@) {
 		    my @accounts = map {apply_account $_->[ACCOUNT]} @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
 		    print_line 0, sprintf "%s pad %s %s", $header->[DATE], $i->[ACCOUNT], $accounts[0];
-		    print_line 0, pp_cur_assertions;
+		    print_assertions @assertions;
 		    # Skip transaction (the transaction itself is just two
 		    # null postings, which are not valid in beancount)
-		    pop_txn();
 		    return;
 		} elsif ($total_postings > 2 && ($total_postings-$postings_with_amount) == 2) {
 		    print_warning_once "Balance assignments with 2 null postings not supported";
@@ -1868,9 +1869,8 @@ sub process_txn($$@) {
 	    $posting->[DEPTH] = 1;
 	    $posting->[ACCOUNT] = $ledger_bucket;
 	    push @txn_out, $posting;
-	} elsif (!@cur_txn_assertions && (!defined $postings[0]->[AMOUNT] || number2int $postings[0]->[AMOUNT]->[NUMBER] == 0)) {
+	} elsif (!@assertions && (!defined $postings[0]->[AMOUNT] || number2int $postings[0]->[AMOUNT]->[NUMBER] == 0)) {
 	    print_line 0, pp_note_for_txn $header, $postings[0]->[ACCOUNT];
-	    pop_txn();
 	    return;
 	}
     } elsif ($total_postings == $postings_with_amount && keys %txn_commodities == 2) {
@@ -1912,7 +1912,7 @@ sub process_txn($$@) {
     # If there's no amount or all amounts are 0, the transaction only
     # exists for balance assertions.  In that case, convert the
     # transaction into a note.
-    if (@cur_txn_assertions) {
+    if (@assertions) {
 	my $num_amount_not_null = 0;
 	my @accounts;
 	foreach my $i (@txn_parsed) {
@@ -1926,14 +1926,16 @@ sub process_txn($$@) {
 	    foreach (@accounts) {
 		print_line 0, pp_note_for_txn $header, $_;
 	    }
-	    print_line 0, pp_cur_assertions;
-	    pop_txn();
+	    print_assertions @assertions;
 	    return;
 	}
     }
-
     push_txn @txn_out;
     push @output, pop_txn();
+    if (@assertions) {
+	print_line 0, "";
+	print_assertions @assertions;
+    }
 }
 
 
