@@ -390,6 +390,7 @@ my %root_mappings = (
 
 # Declarations
 sub map_commodity($);
+sub map_metadata($);
 sub print_line($$);
 sub print_tags($);
 sub print_posting_tags($);
@@ -432,6 +433,7 @@ sub create_metadata($$$$) {
     my $metadata;
     $metadata->[TYPE] = META;
     ($metadata->[DEPTH], $metadata->[KEY], $metadata->[VALUE], $metadata->[TYPED]) = @_;
+    $metadata->[KEY] = map_metadata $metadata->[KEY];
     return $metadata;
 }
 
@@ -889,8 +891,7 @@ sub number2int($) {
 sub is_meta_payee($) {
     my ($metadata) = @_;
 
-    my $key = map_metadata($metadata->[KEY]);
-    if ($key eq $config->{payee_tag} or $key eq $config->{payer_tag}) {
+    if ($metadata->[KEY] eq $config->{payee_tag} or $metadata->[KEY] eq $config->{payer_tag}) {
 	return 1;
     }
 }
@@ -903,10 +904,9 @@ sub is_meta_payee($) {
 sub print_metadata($$) {
     my ($metadata, $in_postings) = @_;
 
-    my $key = map_metadata($metadata->[KEY]);
     # Check if we should store as metadata or as links
     # We check for $in_postings since posting-level links are not allowed
-    if (lc $key ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
+    if (lc $metadata->[KEY] ~~ [ map lc $_, @{$config->{link_tags}} ] && !$in_postings) {
 	print_tags create_tag $metadata->[DEPTH], [ "^$metadata->[VALUE]" ];
     } else {
 	# Metadata values can be empty
@@ -916,7 +916,7 @@ sub print_metadata($$) {
 	} else {
 	    $value = mk_beancount_string $value;
 	}
-	print_line $metadata->[DEPTH], pp_metadata $key, $value;
+	print_line $metadata->[DEPTH], pp_metadata $metadata->[KEY], $value;
     }
 }
 
