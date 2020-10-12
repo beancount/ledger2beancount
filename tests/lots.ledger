@@ -399,6 +399,6 @@ commodity XXXx
     Assets:Bank                    -3,008.24 EUR
 
 2020-10-12 * Cost==price, but use different number format
-    Assets:Test      1000.00 EUR {{9000 GBP}} @ 9,000 GBP
+    Assets:Test      1000.00 EUR {{9000 GBP}} @@ 9,000 GBP
     Assets:Test
 
