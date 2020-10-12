@@ -691,16 +691,13 @@ sub pp_txn_header($) {
     my ($i) = @_;
     my $l;
 
-    $l = $i->[DATE];
-    $l .= " ";
-    $l .= $i->[FLAG] ? $i->[FLAG] : "txn";
-    $l .= " " . mk_beancount_string $i->[PAYEE] if defined $i->[PAYEE];
-    $l .= " ";
+    $l = $i->[DATE] . " ";
+    $l .= $i->[FLAG] ? "$i->[FLAG] " : "txn ";
+    $l .= mk_beancount_string($i->[PAYEE]) . " " if defined $i->[PAYEE];
     $l .= $i->[NARRATION] ? mk_beancount_string $i->[NARRATION] : mk_beancount_string "";
     if ($i->[TAG]) {
-	$l .= " ";
 	my @tags = map { pp_tags $_ } @{$i->[TAG]};
-	$l .= join " ", @tags;
+	$l .= " " . join " ", @tags;
     }
     $l .= " ; " . $i->[COMMENT] if $i->[COMMENT];
     return $l;
