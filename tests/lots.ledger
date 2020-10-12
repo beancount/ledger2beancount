@@ -399,6 +399,26 @@ commodity XXXx
     Assets:Bank                    -3,008.24 EUR
 
 2020-10-12 * Cost==price, but use different number format
-    Assets:Test      1000.00 EUR {{9000 GBP}} @@ 9,000 GBP
+    Assets:Test     10,000.00 EUR {{9000 GBP}} @@ 9,000 GBP
+    Assets:Test
+
+2020-10-12 * Cost==price, but per-unit vs total
+    Assets:Test      10.00 EUR {0.90 GBP} @@ 9.00 GBP
+    Assets:Test
+
+2020-10-12 * Cost==price, but total vs per-unit
+    Assets:Test      10.00 EUR {{9.000 GBP}} @ 0.90 GBP
+    Assets:Test
+
+2020-10-12 * Cost==price, both total
+    Assets:Test      10.00 EUR {{9.00 GBP}} @@ 9.00 GBP
+    Assets:Test
+
+2020-10-12 * Cost==price, number contains non-digits
+    Assets:Test      10,000.00 EUR {{9,000.00 GBP}} @ 0.90 GBP
+    Assets:Test
+
+2020-10-12 * Cost==price
+    Assets:Test      1,000.00 EUR {0.90 GBP} @ 0.90 GBP
     Assets:Test
 

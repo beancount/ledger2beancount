@@ -1529,6 +1529,23 @@ sub parse_posting($) {
 }
 
 
+# Calculate the total price of a lot (convert from per-unit if needed)
+# Arguments:
+#  - amount
+#  - lot (cost or price)
+# Returns:
+#  - total (an integer, not an amount object!)
+sub get_lot_total($$) {
+    my ($amount, $lot) = @_;
+
+    if (defined $lot->[TYPE] && $lot->[TYPE] == 2) {
+	return number2int $lot->[AMOUNT]->[NUMBER];
+    }
+
+    return number2int($lot->[AMOUNT]->[NUMBER]) * number2int($amount->[AMOUNT]->[NUMBER]);
+}
+
+
 # Process a ledger transaction
 # Arguments:
 #  - the year
@@ -1721,7 +1738,7 @@ sub process_txn($$@) {
 		    # ledger requires you to specify both lot cost and lot price
 		    # due to a bug.  If both are the same, remove the price.
 		    if ($i->[COST]->[AMOUNT]->[CURRENCY] eq $i->[PRICE]->[AMOUNT]->[CURRENCY] &&
-			number2int $i->[COST]->[AMOUNT]->[NUMBER] == number2int $i->[PRICE]->[AMOUNT]->[NUMBER]) {
+		        get_lot_total($i, $i->[COST]) == get_lot_total($i, $i->[PRICE])) {
 			$i->[PRICE] = undef;
 		    }
 		} else {
