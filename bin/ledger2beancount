@@ -1788,7 +1788,15 @@ sub process_txn($$@) {
 		    # we have to pad against.
 		    my @accounts = map {apply_account $_->[ACCOUNT]} @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
-		    print_line 0, sprintf "%s pad %s %s", $header->[DATE], $i->[ACCOUNT], $accounts[0];
+		    # @accounts shouldn't be empty; if it's empty, it means
+		    # both postings had the same account.  While such a
+		    # transaction is valid in ledger, it doesn't actually
+		    # make sense...
+		    if (@accounts) {
+			print_line 0, sprintf "%s pad %s %s", $header->[DATE], $i->[ACCOUNT], $accounts[0];
+		    } else {
+			print_warning_once "Balance assignment with same account `$i->[ACCOUNT]` found";
+		    }
 		    print_assertions @assertions;
 		    # Skip transaction (the transaction itself is just two
 		    # null postings, which are not valid in beancount)
