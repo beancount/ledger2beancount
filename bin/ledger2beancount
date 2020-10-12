@@ -74,9 +74,9 @@ my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
 my @beancount_root_names = qw/Assets Liabilities Equity Income Expenses/;
 
 my $config; # config parameters
+my $out; # Reference to either @pre_output or @output
 my @pre_output; # Used to store output of the script before automatic declarations
 my @output; # Used to store the output of the script after automatic declarations
-my $after_auto = 0;
 # Store accounts and commodities encountered and declared
 # value == undef: seen
 # value == 1: declared
@@ -1180,20 +1180,10 @@ sub map_commodity($) {
 }
 
 
-sub get_output() {
-    if (!$after_auto) {
-	return \@pre_output;
-    } else {
-	return \@output;
-    }
-}
-
-
 # emit a single line
 sub print_line($$) {
     my ($depth, $line) = @_;
 
-    my $out = get_output;
     push @$out, indent($depth, $line), "\n";
 }
 
@@ -1210,7 +1200,6 @@ sub print_assertions(@) {
 sub print_comment_top_level($$) {
     my ($depth, $comment) = @_;
 
-    my $out = get_output;
     if (!$comment) {
 	push @$out, ";\n";
     } else {
@@ -1982,6 +1971,7 @@ my $year = POSIX::strftime "%Y", localtime;
 # specified using the Y/year directive.
 my $year_no_apply = $year;
 
+$out = \@pre_output;
 while (@input) {
     my $l = shift @input;
     chomp $l;
@@ -1996,7 +1986,7 @@ while (@input) {
     } elsif ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}/) {
 	next;
     } elsif ($config->{keep_marker} && $l =~ /;\s*:?$config->{keep_marker}\s+begin/) {
-	$after_auto = 1;
+	$out = \@output;
 	$l = shift @input;
 	do {
 	    if ($l =~ /^$comment_top_level_RE$/) {
@@ -2032,10 +2022,10 @@ while (@input) {
 	    $ledger_alias{$account} = map_account_apply $value;
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
-	$after_auto = 1;
+	$out = \@output;
 	push @ledger_apply, [$+{type}, $+{val}];
     } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<commodity>[^\s]+)\s*(?<fixed>.+)/) {  # apply fixed
-	$after_auto = 1;
+	$out = \@output;
 	my $fixated->[CURRENCY] = $+{commodity};
 	my $rest;
 	($fixated->[AMOUNT], $rest) = get_amount $+{fixed};
@@ -2045,7 +2035,7 @@ while (@input) {
 	}
 	push @ledger_apply, ["fixed", $fixated];
     } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
-	$after_auto = 1;
+	$out = \@output;
 	# `apply tag` can be converted to beancount in three ways:
 	# * using pushtag/poptag for tags
 	# * applying links to each transactions
@@ -2059,7 +2049,7 @@ while (@input) {
 	    push @ledger_apply, [$+{type}, $+{val}];
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>year)\s+(?<val>\d+)/) {  # apply year
-	$after_auto = 1;
+	$out = \@output;
 	$year = $+{val};
 	push @ledger_apply, [$+{type}, $+{val}];
     } elsif ($l =~ /^[!@]?(apply\s+.*)/) {  # apply .*
@@ -2117,7 +2107,7 @@ while (@input) {
 	$year = $2;
 	$year_no_apply = $2;
     } elsif ($l =~ /^$price_RE/) {
-	$after_auto = 1;
+	$out = \@output;
 	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};
 	my ($commodity2, $rest) = get_amount $+{commodity2};
 	$l .= pp_amount $commodity2;
@@ -2128,7 +2118,7 @@ while (@input) {
 	}
 	print_line $depth, $l;
     } elsif ($l =~ /^([=~].*)/) {  # automated transaction (=) or periodic transaction (~)
-	$after_auto = 1;
+	$out = \@output;
 	print_warning_once "Automated or periodic transaction skipped";
 	print_comment_top_level $depth, $1;
 	@stanza = read_stanza \@input;
@@ -2220,7 +2210,7 @@ while (@input) {
 	    }
 	}
     } elsif ($l =~ /^[!@]?(D)\s*(.*)/) {
-	$after_auto = 1;
+	$out = \@output;
 
 	# Print a warning since beancount doesn't have such a directive,
 	# but process it anyway (although we only use the information
@@ -2252,7 +2242,7 @@ while (@input) {
 	($depth, $l) = strip_indentation $l;
 	print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[!@]?(python)/) {  # Python
-	$after_auto = 1;
+	$out = \@output;
 	# The python directive is special in the sense that empty
 	# lines don't end the directive.
 	do {
@@ -2265,12 +2255,12 @@ while (@input) {
 	# Not needed in beancount and there's no equivalent
 	read_stanza \@input if $input[0] =~ /^\h+/;
     } elsif ($l =~ /^[!@]?(N|C|I|i|O|o|b|h|assert|check|expr|eval|value)(\s|$)/) {
-	$after_auto = 1;
+	$out = \@output;
 	print_warning_once "Unsupported directive `$1` skipped";
 	# Not supported in beancount
 	print_comment_top_level $depth, $l;
     } elsif ($l =~ /^[0-9]/) {
-	$after_auto = 1;
+	$out = \@output;
 	@stanza = read_stanza \@input;
 	process_txn $year, $l, @stanza;
     } elsif ($l =~ /^\h*$/) {
