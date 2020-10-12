@@ -12,6 +12,7 @@
 * Keep tags in transaction notes on same line as transaction header
 * Add beancount config options for non-standard root names automatically
 * Fix conversion of fixated prices to costs
+* Fix removal of price when `price==cost` but when they use different number formats
 * Preserve leading whitespace in posting comments
 * Preserve indentation for tags and metadata
 * Refactor code to use more data structures

@@ -1720,7 +1720,8 @@ sub process_txn($$@) {
 		if (defined $i->[COST]) {
 		    # ledger requires you to specify both lot cost and lot price
 		    # due to a bug.  If both are the same, remove the price.
-		    if (pp_amount $i->[COST]->[AMOUNT] eq pp_amount $i->[PRICE]->[AMOUNT]) {
+		    if ($i->[COST]->[AMOUNT]->[CURRENCY] eq $i->[PRICE]->[AMOUNT]->[CURRENCY] &&
+			number2int $i->[COST]->[AMOUNT]->[NUMBER] == number2int $i->[PRICE]->[AMOUNT]->[NUMBER]) {
 			$i->[PRICE] = undef;
 		    }
 		} else {
