@@ -390,9 +390,10 @@ my %root_mappings = (
 
 # Declarations
 sub map_commodity($);
+sub print_line($$);
 sub print_tags($);
 sub print_posting_tags($);
-sub handle_metadata($$);
+sub print_metadata($$);
 
 
 # Set values if the key doesn't exist already
@@ -539,24 +540,6 @@ sub parse_ledger_value($) {
     }
 
     return $value;
-}
-
-
-# Txn lines
-my (@cur_txn_lines);
-
-
-# reset current parsing state, reinitializing it to the empty state
-sub reset_cur_txn() {
-    @cur_txn_lines = ();  # txn lines
-}
-reset_cur_txn();
-
-
-# pretty print subsequent lines (all but the first) of a transaction, in
-# beancount format
-sub pp_cur_lines() {
-    return (join "\n", @cur_txn_lines) . "\n";
 }
 
 
@@ -819,48 +802,24 @@ sub  dump_parsed_txn(@) {
 }
 
 
-# add a transaction line. Call this multiple times to accumulate lines that will
-# be emitted as soon as the transaction is over
-sub push_line($$) {
-    my ($depth, $line) = @_;
-
-    push @cur_txn_lines, indent($depth, $line);
-}
-
-
-# add a metadata line. Wrapper around push_line() for metadata
-sub push_metadata($$$) {
-    my ($depth, $key, $value) = @_;
-    push_line $depth, pp_metadata($key, $value);
-}
-
-
-# add a comment line. Wrapper around push_line() for comments
-sub push_comment($$) {
-    my ($depth, $comment) = @_;
-
-    push_line $depth, ";$comment";
-}
-
-
-# Format and push a transaction
+# Format and print a transaction
 # Arguments:
 #  - an array of objects describing the transaction
-sub push_txn(@) {
+sub print_txn(@) {
     my @txn = @_;
 
     my $in_postings = 0;
     my @cur_txn_tags;
     foreach my $i (@txn) {
 	if ($i->[TYPE] == COMMENT) {
-	    push_line $i->[DEPTH], ";$i->[VALUE]";
+	    print_line $i->[DEPTH], ";$i->[VALUE]";
 	} elsif ($i->[TYPE] == POSTING) {
 	    $in_postings = 1;
 	    print_posting_tags create_tag 2, \@cur_txn_tags;
 	    @cur_txn_tags = ();
-	    push_line $i->[DEPTH], pp_posting $i;
+	    print_line $i->[DEPTH], pp_posting $i;
 	} elsif ($i->[TYPE] == META) {
-	    handle_metadata $i, $in_postings;
+	    print_metadata $i, $in_postings;
 	} elsif ($i->[TYPE] == TAG) {
 	    # The $in_postings check is a workaround since there are no posting-level tags
 	    if ($in_postings) {
@@ -869,9 +828,9 @@ sub push_txn(@) {
 		print_tags $i;
 	    }
 	} elsif ($i->[TYPE] == TXN_HEADER) {
-	    push_line 0, pp_txn_header $i;
+	    print_line 0, pp_txn_header $i;
 	} elsif ($i->[TYPE] == BLANK) {
-	    push_line 0, "";
+	    print_line 0, "";
 	} else {
 	    die "Don't know how to process transaction line with type $i->[TYPE]\n";
 	}
@@ -940,11 +899,11 @@ sub is_meta_payee($) {
 }
 
 
-# Handle metadata
+# Print metadata
 # Arguments:
 #  - a metadata object
 #  - in_postings
-sub handle_metadata($$) {
+sub print_metadata($$) {
     my ($metadata, $in_postings) = @_;
 
     my $key = map_metadata($metadata->[KEY]);
@@ -960,7 +919,7 @@ sub handle_metadata($$) {
 	} else {
 	    $value = mk_beancount_string $value;
 	}
-	push_metadata $metadata->[DEPTH], $key, $value;
+	print_line $metadata->[DEPTH], pp_metadata $key, $value;
     }
 }
 
@@ -1056,20 +1015,6 @@ sub parse_comment($) {
     }
     $comment = $+{comment} if defined $+{comment} && $+{comment} !~ /^\s*;?\s*$/;
     return $comment, \@metadata;
-}
-
-
-# return a pretty printed transaction, resetting the current parsing state. This
-# is usually called as soon as the end of a transaction (usually an empty line)
-# is encountered
-sub pop_txn() {
-    my $buf = "";
-
-    $buf .= pp_cur_lines();
-
-    reset_cur_txn();
-
-    return $buf;
 }
 
 
@@ -1315,7 +1260,7 @@ sub print_tags($) {
     my ($tag) = @_;
 
     return if not scalar @{$tag->[VALUE]};
-    push_line $tag->[DEPTH], pp_tags @{$tag->[VALUE]};
+    print_line $tag->[DEPTH], pp_tags @{$tag->[VALUE]};
 }
 
 
@@ -1330,8 +1275,8 @@ sub print_posting_tags($) {
 
     my @tags = grep {!is_link $_} @{$tag->[VALUE]};
     my @links = grep {is_link $_} @{$tag->[VALUE]};
-    push_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
-    push_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
+    print_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
+    print_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
 }
 
 
@@ -1856,10 +1801,7 @@ sub process_txn($$@) {
 
     if ($total_postings == 0) {
 	# Transactions without any postings are allowed in ledger.
-	push_txn @txn_out;
-	foreach (split "\n", pop_txn()) {
-	    print_comment_top_level 0, $_;
-	}
+	print_comment_top_level 0, "Skipping transaction without header.";
 	return;
     } elsif ($total_postings == 1) {
 	if (defined $ledger_bucket) {
@@ -1930,8 +1872,7 @@ sub process_txn($$@) {
 	    return;
 	}
     }
-    push_txn @txn_out;
-    push @output, pop_txn();
+    print_txn @txn_out;
     if (@assertions) {
 	print_line 0, "";
 	print_assertions @assertions;

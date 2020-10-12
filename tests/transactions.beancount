@@ -12,11 +12,9 @@
 2019-02-15 note Assets:Test "A transaction with a single posting - only allowed when amount == 0"
 
 
-; 2020-07-26 * "No posting"
+; Skipping transaction without header.
 
-; 2020-07-26 * "No posting"
-;   ; comment
-;   foo: ""
+; Skipping transaction without header.
 
 2020-09-29 note Assets:Test "A transaction with a single posting - no amount"
 
