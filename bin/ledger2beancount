@@ -586,7 +586,7 @@ sub pp_cost($) {
 
 
 # Print a price
-sub pp_price(@) {
+sub pp_price($) {
     my ($lot) = @_;
 
     my $info = "@" x $lot->[TYPE];
@@ -623,7 +623,7 @@ sub is_link($) {
 
 
 # format string according to whether it should be a link or a tag
-sub pp_tag_link(@) {
+sub pp_tag_link($) {
     my ($key) = @_;
 
     if ($key =~ /^\^/) {
@@ -874,7 +874,7 @@ sub convert_number($$) {
 # Convert number from an amount to an integer
 # A number can contain commas (,) and inline math
 sub number2int($) {
-    my ($number, $currency) = @_;
+    my ($number) = @_;
 
     $number =~ s/,//g;
     $number = eval $number; # This is safe get_amount() parsed the number
