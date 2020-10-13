@@ -111,3 +111,7 @@ commodity EUR
       ; :bar:
     Assets:Test                       -10.00 EUR
 
+2020-10-13=2020-10-11 * Tag on same line as payee, with auxdate  ; :foo:
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+

@@ -122,3 +122,8 @@
     tags: "bar"
   Assets:Test                       -10.00 EUR
 
+2020-10-13 * "Tag on same line as payee, with auxdate" #foo
+  aux-date: 2020-10-11
+  Assets:Test                        10.00 EUR
+  Assets:Test                       -10.00 EUR
+
