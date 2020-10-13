@@ -458,3 +458,8 @@
   Assets:Test      1,000.00 EUR {0.90 GBP}
   Assets:Test
 
+2020-10-13 * "Implicit conversion, with a 0 posting"
+  Expenses:Food                       3.50 EUR @ 1.2 USD
+  Assets:Cash                        -4.20 USD
+  Assets:Test                            0 EUR
+

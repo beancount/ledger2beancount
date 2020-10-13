@@ -1891,7 +1891,7 @@ sub process_txn($$@) {
 	    # We look for a posting that contains the commodity and add the rate
 	    foreach my $i (@txn_out) {
 		next if $i->[TYPE] != POSTING;
-		if ($i->[AMOUNT]->[CURRENCY] eq $commodity) {
+		if ($i->[AMOUNT]->[CURRENCY] eq $commodity && number2int $i->[AMOUNT]->[NUMBER] != 0) {
 		    $i->[PRICE]->[TYPE] = 1;
 		    $i->[PRICE]->[AMOUNT]->[NUMBER] = $rate;
 		    $i->[PRICE]->[AMOUNT]->[CURRENCY] = $other_commodity;
