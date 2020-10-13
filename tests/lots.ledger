@@ -367,8 +367,8 @@ commodity XXXx
     Liabilities:Credit-Card           -11.00 GBP
 
 2020-07-24 * Conversion with price on second posting
-  Assets:Test                           6.38 USD
-  Assets:Test             -24.00 BRL @@ 6.38 USD
+    Assets:Test                         6.38 USD
+    Assets:Test           -24.00 BRL @@ 6.38 USD
 
 2020-07-31 * Not an implicit conversion
     Expenses:Fees                       2.09 EUR

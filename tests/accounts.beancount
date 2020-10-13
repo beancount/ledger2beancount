@@ -185,8 +185,8 @@ option "name_income" "Revenue"
   Equity:Opening-Balance
 
 2018-04-18 * "Preserve whitespace: shorter"
-  Assets:Short                         10.00 EUR
-  Assets:Test                         -10.00 EUR
+  Assets:Short                       10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 2018-04-18 * "Preserve whitespace: shorter"
   Assets:Short    10.00 EUR
@@ -198,11 +198,11 @@ option "name_income" "Revenue"
 
 2018-04-18 * "Preserve whitespace: shorter"
   Assets:Short
-  Assets:Test                         -10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 2018-04-18 * "Preserve whitespace: longer"
-  Assets:MuchLonger                    10.00 EUR
-  Assets:Test                         -10.00 EUR
+  Assets:MuchLonger                  10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 ; Impossible to preserve
 2018-04-18 * "Preserve whitespace: longer"
@@ -215,11 +215,11 @@ option "name_income" "Revenue"
 
 2018-04-18 * "Preserve whitespace: longer"
   Assets:MuchLonger
-  Assets:Test                         -10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 2018-04-18 * "Preserve whitespace: same"
-  Assets:Bash                          10.00 EUR
-  Assets:Test                         -10.00 EUR
+  Assets:Bash                        10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 2018-04-18 * "Preserve whitespace: same"
   Assets:Bash  10.00 EUR
@@ -231,7 +231,7 @@ option "name_income" "Revenue"
 
 2018-04-18 * "Preserve whitespace: same"
   Assets:Bash
-  Assets:Test                         -10.00 EUR
+  Assets:Test                       -10.00 EUR
 
 2018-10-22 txn "Whitespace is not part of account name"
   Assets:Test                      10.00 EUR

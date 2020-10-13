@@ -109,6 +109,6 @@ bucket Income:Test
     Assets:Test9                        5.00 EUR = 45.00 EUR
 
 2020-06-22 * Balance assignment with inline math
-  Assets:Test10    1 GBP = (0.25 GBP + 0.75 GBP)
-  Assets:Test11
+    Assets:Test10    1 GBP = (0.25 GBP + 0.75 GBP)
+    Assets:Test11
 
