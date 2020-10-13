@@ -106,7 +106,18 @@ test_validity_beancount () {
 	fi
 }
 
-export LC_ALL=C.UTF-8
+# Warn if the locale is not UTF-8
+case "$LANG" in
+	*UTF-8* | *utf8*)
+		# good
+		;;
+	"")
+		echo "Can't determine locale.  Please ensure UTF-8"
+		;;
+	*)
+		echo "Locale is not UTF-8.  Tests might fail"
+		;;
+esac
 
 # Validate ledger files
 ledger_date=$(ledger --version 2>/dev/null | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d - -f 2 | sed 's/,//')
