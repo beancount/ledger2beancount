@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: © 2018 Stefano Zacchiroli <zack@upsilon.cc>
+# SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+on:
+  - push
+  - pull_request
+jobs:
+  test:
+    name: Unit Tests
+    strategy:
+      fail-fast: false
+      matrix:
+        beancount:
+          - "beancount>=2.1.2"
+          - "git+https://github.com/beancount/beancount/"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shogo82148/actions-setup-perl@v1
+      - uses: actions/setup-python@v2
+      - run: sudo apt install coreutils hledger ledger
+      - run: cpanm --notest --installdeps .
+      - run: pip install ${{ matrix.beancount }}
+      - run: make test
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - run: pip install -r requirements.txt
+      - run: mkdocs build
+      - run: find -name "*.yml" -exec yamllint -s {} \;
+      - run: find -name "*.yaml" -exec yamllint -s {} \;
