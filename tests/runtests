@@ -55,7 +55,7 @@ test_conversion () {
 test_validity_hledger () {
 	test=$1
 	printf "Validating $test... "
-	tmp=$(tempfile)
+	tmp=$(mktemp)
 	if $(hledger -f $test bal > $tmp 2>&1); then
 		echo "ok"
 	else
@@ -69,7 +69,7 @@ test_validity_hledger () {
 test_validity_ledger () {
 	test=$1
 	printf "Validating $test... "
-	tmp=$(tempfile)
+	tmp=$(mktemp)
 	ledger --init-file /dev/null -f $test bal > $tmp 2>&1
 	# Ignore errors due to missing Python support
 	errors=$(grep "^Error:" $tmp | grep -v "^Error: 'python' directive seen" | \
