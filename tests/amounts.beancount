@@ -1,6 +1,7 @@
 ;----------------------------------------------------------------------
 ; ledger2beancount conversion notes:
 ;
+;   - Mixing postings with and without commodities is a bad idea
 ;   - Commodity Avios renamed to AVIOS
 ;   - Collision for commodity EUR: EUR, €
 ;   - Collision for commodity GBP: GBP, £
@@ -26,6 +27,7 @@
 1970-01-01 open Assets:Receivable
 1970-01-01 open Assets:Rewards
 1970-01-01 open Assets:Test
+1970-01-01 open Equity:Exchange
 1970-01-01 open Expenses:Housing:Rent
 1970-01-01 open Expenses:Travel:Airfare
 1970-01-01 open Income:401k:Match
@@ -268,4 +270,23 @@
 2020-08-01 * "Commodity symbol before amount, negative, spaces"
   Assets:Test                            -1 USD
   Assets:Test
+
+2020-10-13 * "Posting with 0 amount and no commodity"
+  Assets:Test              3.50 EUR @ 1.20 USD
+  Assets:Test                        -4.20 USD
+  Equity:Exchange                            0 EUR
+
+2020-10-13 * "Posting with 0 amount and no commodity - more 0 postings than commodities"
+  Assets:Test              3.50 EUR @ 1.20 USD
+  Assets:Test                        -4.20 USD
+  Equity:Exchange                            0 EUR
+  Equity:Exchange                            0 USD
+  Equity:Exchange                            0 USD
+  Equity:Exchange                            0 USD
+
+2020-10-13 * "Mixing amounts with and without commodities - crazy"
+  Assets:Test              3.50 EUR @ 1.20 USD
+  Assets:Test                        -4.20 USD
+  Assets:Test                            1 FOO
+  Assets:Test                           -1 FOO
 

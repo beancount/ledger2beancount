@@ -1271,6 +1271,20 @@ sub print_posting_tags($) {
 }
 
 
+# Get the default commodity: either take `default_commodity` from
+# the config or use "XXX";
+# Returns:
+#  - default commodity (string)
+sub get_default_commodity() {
+    if (defined $config->{default_commodity}) {
+	return map_commodity $config->{default_commodity};
+    } else {
+	print_warning_once "Amount without commodity found; set default_commodity in config";
+	return map_commodity "XXX";
+    }
+}
+
+
 # Parse inline math
 sub get_value_expr($) {
     my ($l) = @_;
@@ -1341,13 +1355,6 @@ sub get_amount($) {
 	my $minus = $+{minus} ? "-" : "";
 	if ($+{currency}) {
 	    $amount->[CURRENCY] = map_commodity $+{currency};
-	} else {
-	    $amount->[NO_CURRENCY] = 1;
-	    if (defined $config->{default_commodity}) {
-		$amount->[CURRENCY] = map_commodity $config->{default_commodity};
-	    } else {
-		$amount->[CURRENCY] = map_commodity "XXX"
-	    }
 	}
 	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
 
@@ -1502,18 +1509,12 @@ sub parse_posting($) {
     }
     if ($l =~ /^=\s*(.*)/) {
 	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
-    }
-    # If amount was commodity-less, use commodity from assertion.  This is
-    # useful since some people do something like: 0 == 10 EUR
-    if (defined $posting->[AMOUNT] && $posting->[AMOUNT]->[NO_CURRENCY]) {
-	if (defined $posting->[ASSERTION]) {
+
+	# If amount was commodity-less and we have an assertion, use the
+	# commodity from assertion.  This is useful since some people do
+	# something like: 0 == 10 EUR
+	if (defined $posting->[AMOUNT] && !defined $posting->[AMOUNT]->[CURRENCY] && defined $posting->[ASSERTION]) {
 	    $posting->[AMOUNT]->[CURRENCY] = $posting->[ASSERTION]->[AMOUNT]->[CURRENCY];
-	    # Don't create commodity directive for default commodity
-	    my $commodity = "XXX";
-	    $commodity = $config->{default_commodity} if defined $config->{default_commodity};
-	    delete $commodity_declared{$commodity};
-	} elsif (!defined $config->{default_commodity}) {
-	    print_warning_once "Amount without commodity found; set default_commodity in config";
 	}
     }
 
@@ -1648,6 +1649,7 @@ sub process_txn($$@) {
     # to distinguish different kinds of balance assignments.
     my $total_postings = 0;
     my $postings_with_amount = 0;
+    my $postings_with_amount_and_commodity = 0;
     my %txn_commodities;
     foreach my $l (@txn) {
 	my $line;
@@ -1659,7 +1661,10 @@ sub process_txn($$@) {
 	    $total_postings++;
 	    if (defined $line->[AMOUNT]) {
 		$postings_with_amount++ ;
-		$txn_commodities{$line->[AMOUNT]->[CURRENCY]} = 1;
+		if (defined $line->[AMOUNT]->[CURRENCY]) {
+		    $txn_commodities{$line->[AMOUNT]->[CURRENCY]} = 1;
+		    $postings_with_amount_and_commodity++;
+		}
 	    }
 	} elsif ($l =~ /^\h*$/) {  # whitespace or blank line
 	    # This isn't really part of the transaction, but read_stanza
@@ -1674,6 +1679,33 @@ sub process_txn($$@) {
 	push @txn_parsed, $line;
     }
     my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
+
+    # Deal with commodity-less amounts.  There are two cases:
+    # 1) If we didn't see any commodities at all, set a commodity using
+    #    default_commodity.
+    # 2) If there were some commodities, but not everywhere, there are probably
+    #    some postings with an amount of 0.  Some people use this make sure the
+    #    transaction has no rest.  In this case, assign commodities from
+    #    the commodities we've seen.
+    #    Ledger also allows mixing postings with and without commodities, but
+    #    doing that is just crazy.
+    if ($postings_with_amount && !$postings_with_amount_and_commodity) {
+	my $commodity = get_default_commodity;
+	foreach my $i (grep { defined $_->[AMOUNT] } @postings) {
+	    $i->[AMOUNT]->[CURRENCY] = $commodity;
+	}
+    } elsif ($postings_with_amount_and_commodity < $postings_with_amount) {
+	my @commodities = sort keys %txn_commodities;
+	foreach my $i (grep { defined $_->[AMOUNT] && !defined $_->[AMOUNT]->[CURRENCY] } @postings) {
+	    if (number2int $i->[AMOUNT]->[NUMBER] == 0) {
+		$i->[AMOUNT]->[CURRENCY] = $commodities[0];
+		shift @commodities if scalar @commodities > 1;
+	    } else {
+		print_warning_once "Mixing postings with and without commodities is a bad idea";
+		$i->[AMOUNT]->[CURRENCY] = get_default_commodity;
+	    }
+	}
+    }
 
     my $skipped_posting = 0;
     my @txn_out;

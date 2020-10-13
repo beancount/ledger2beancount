@@ -244,3 +244,22 @@ commodity $
     Assets:Test                            - $ 1
     Assets:Test
 
+2020-10-13 * Posting with 0 amount and no commodity
+    Assets:Test              3.50 EUR @ 1.20 USD
+    Assets:Test                        -4.20 USD
+    Equity:Exchange                            0
+
+2020-10-13 * Posting with 0 amount and no commodity - more 0 postings than commodities
+    Assets:Test              3.50 EUR @ 1.20 USD
+    Assets:Test                        -4.20 USD
+    Equity:Exchange                            0
+    Equity:Exchange                            0
+    Equity:Exchange                            0
+    Equity:Exchange                            0
+
+2020-10-13 * Mixing amounts with and without commodities - crazy
+    Assets:Test              3.50 EUR @ 1.20 USD
+    Assets:Test                        -4.20 USD
+    Assets:Test                            1
+    Assets:Test                           -1
+
