@@ -38,8 +38,7 @@ memoize('pp_date');
 
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
-            TAG META KEY VALUE TYPED ORIGINAL_ACCOUNT TXN_HEADER PAYEE
-            NARRATION/;
+            TAG META KEY VALUE TYPED TXN_HEADER PAYEE NARRATION ADJUST_WHITESPACE/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -664,15 +663,15 @@ sub pp_posting($) {
     my $l = "";
     $l .= "$i->[FLAG] " if defined $i->[FLAG];
 
-    my $account_length_old = defined $i->[ORIGINAL_ACCOUNT] ? length $i->[ORIGINAL_ACCOUNT] : length $i->[ACCOUNT];
-    # Replace ledger account names with corresponding beancount account names
-    # while trying to keep the whitespace intact.
     $l .= $i->[ACCOUNT];
-    my $account_length_new = length $i->[ACCOUNT];
-    my $space_diff = " "x abs($account_length_new - $account_length_old);
-    if ($account_length_new <= $account_length_old) {
+
+    # Try to keep the whitespace intact.
+    my $adjust = $i->[ADJUST_WHITESPACE] ? $i->[ADJUST_WHITESPACE] : 0;
+    $adjust += (defined $i->[AMOUNT] && $i->[AMOUNT]->[ADJUST_WHITESPACE]) ? $i->[AMOUNT]->[ADJUST_WHITESPACE] : 0;
+    my $space_diff = " "x abs $adjust;
+    if ($adjust > 0) {
 	$i->[WHITESPACE] .= $space_diff;
-    } else {
+    } elsif ($adjust < 0) {
 	$i->[WHITESPACE] =~ s/$space_diff//;
 	# # Ensure there are two spaces
 	$i->[WHITESPACE] = "  " if $i->[WHITESPACE] eq " " || $i->[WHITESPACE] eq "";
@@ -1295,6 +1294,8 @@ sub get_value_expr($) {
     my $math = $+{math};
     my $rest = $+{rest};
 
+    my $amount;
+    $amount->[ADJUST_WHITESPACE] = length($math) - 1; # we subtract the new length later
     # Strip the outer () since beancount doesn't require them.
     $math =~ s/^\(//;
     $math =~ s/\)$//;
@@ -1324,9 +1325,9 @@ sub get_value_expr($) {
     } else {
 	print_warning_once("Complex inline math not supported in beancount: $math");
     }
-    my $amount;
     $amount->[CURRENCY] = map_commodity $terms[0];
     $amount->[NUMBER] = convert_number $math, $amount->[CURRENCY];
+    $amount->[ADJUST_WHITESPACE] -= length pp_amount $amount;
     return $amount, $rest;
 }
 
@@ -1341,6 +1342,7 @@ sub get_amount($) {
     }
 
     my $amount;
+    $amount->[ADJUST_WHITESPACE] = 0;
     $amount->[FIXATED] = 1 if $l =~ s/^=\s*//;
 
     # Ledger supports three different amount formats:
@@ -1360,7 +1362,9 @@ sub get_amount($) {
 
 	# ledger allows amounts without a leading zero (e.g. .10) but
 	# beancount doesn't.
-	$amount->[NUMBER] =~ s/^\./0./;
+	if ($amount->[NUMBER] =~ s/^\./0./) {
+	    $amount->[ADJUST_WHITESPACE]--;
+	}
 
 	$amount->[NUMBER] = $minus . $amount->[NUMBER];
 
@@ -1475,6 +1479,7 @@ sub parse_posting($) {
     # * It ends with two spaces, a tab or the end of line
     if ($l =~ /^(.*?)((  |\t| \t|\s*$)\h*)(.*)/) {
 	$posting->[ACCOUNT] = $1;
+	# We don't store whitespace as integer because users might use tabs
 	$posting->[WHITESPACE] = $2;
 	$l = $4;
     }
@@ -1736,7 +1741,7 @@ sub process_txn($$@) {
 	    $skipped_posting = 0; # reset variable with each posting
 	    $in_postings = 1;
 
-	    $i->[ORIGINAL_ACCOUNT] = $i->[ACCOUNT];
+	    $i->[ADJUST_WHITESPACE] += length $i->[ACCOUNT];
 	    # Check for virtual and deferred accounts
 	    if ($i->[ACCOUNT] =~ /^\(/) {
 		# Ignore virtual postings with parentheses
@@ -1755,6 +1760,7 @@ sub process_txn($$@) {
 		    $i->[ACCOUNT] = $1;
 	    }
 	    $i->[ACCOUNT] = apply_account $i->[ACCOUNT];
+	    $i->[ADJUST_WHITESPACE] -= length $i->[ACCOUNT];
 
 	    if (defined $i->[AMOUNT] && !defined $i->[COST]) {
 		# Apply any fixated costs if needed

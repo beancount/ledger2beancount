@@ -247,22 +247,22 @@ poptag #foo
 
 
 2020-06-27 txn "Using define"
-  Assets:Test                            200 USD
+  Assets:Test                         200 USD
   Equity:Opening-Balance
 
 2020-06-27 txn "Using define"
-  Assets:Test                       5*4 USD
+  Assets:Test                         5*4 USD
   Equity:Opening-Balance
 
 2020-06-27 txn "Using define"
-  Assets:Test                      100*4 USD
+  Assets:Test                       100*4 USD
   Equity:Opening-Balance
 
 2020-06-27 txn "Using multiple define"
-  Assets:Test             100*4 +20 USD
+  Assets:Test                   100*4 +20 USD
   Equity:Opening-Balance
 
 2020-06-27 txn "Using multiple define"
-  Assets:Test  1000 +100*4 +20 USD
+  Assets:Test             1000 +100*4 +20 USD
   Equity:Opening-Balance
 

@@ -423,13 +423,13 @@
   Assets:Bank                       -38.24 EUR
 
 2020-07-31 * "Implicit conversion"
-  Assets:Cash                3 * 3,000.00 GBP @ 1.205 EUR
+  Assets:Cash                 3 * 3,000.00 GBP @ 1.205 EUR
   Expenses:Fees                       1.00 EUR
   Expenses:Fees                       6.00 EUR
   Assets:Bank                   -10,852.00 EUR
 
 2020-07-31 * "Implicit conversion"
-  Assets:Cash                    3,000.00 GBP @ 1.00205 EUR
+  Assets:Cash                     3,000.00 GBP @ 1.00205 EUR
   Expenses:Fees                       1.09 EUR
   Expenses:Fees                       1.00 EUR
   Assets:Bank                    -3,008.24 EUR

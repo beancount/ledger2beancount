@@ -119,7 +119,7 @@
   Equity:Opening-Balance
 
 2018-03-26 * "Simple inline math"
-  Assets:Test1                       1*3 GBP
+  Assets:Test1                        1*3 GBP
   Assets:Test2                          -3 GBP
 
 2018-03-26 * "Simple inline math"
@@ -131,7 +131,7 @@
   Assets:Test2                      -32.35 GBP
 
 2018-03-26 * "Simple inline math"
-  Assets:Test1                     1 * 3 GBP
+  Assets:Test1                      1 * 3 GBP
   Assets:Test2                          -3 GBP
 
 2018-03-26 * "Simple inline math"
@@ -143,22 +143,22 @@
   Assets:Test2                      -32.35 GBP
 
 2018-04-10 * "Inline math: negative amounts"
-  Expenses:Travel:Airfare      2 * 15.00 GBP
-  Expenses:Travel:Airfare       2*4500 AVIOS
-  Assets:Rewards               2*-4500 AVIOS
-  Liabilities:BA              2 * -15.00 GBP
+  Expenses:Travel:Airfare       2 * 15.00 GBP
+  Expenses:Travel:Airfare        2*4500 AVIOS
+  Assets:Rewards                2*-4500 AVIOS
+  Liabilities:BA               2 * -15.00 GBP
 
 2018-04-10 * "Inline math"
-  Expenses:Housing:Rent         550.00/2 GBP
-  Assets:Receivable             550.00/2 GBP
+  Expenses:Housing:Rent          550.00/2 GBP
+  Assets:Receivable              550.00/2 GBP
   Assets:Current                   -550.00 GBP
 
 2018-09-27 * "Test amounts without digits before point separator"
-  Assets:Test                        0.10 EUR
-  Assets:Test                       -0.10 EUR
-  Assets:Test                        0.10 GBP
-  Assets:Test                       -0.10 GBP
-  Assets:Test                        0.10 USD
+  Assets:Test                       0.10 EUR
+  Assets:Test                      -0.10 EUR
+  Assets:Test                       0.10 GBP
+  Assets:Test                      -0.10 GBP
+  Assets:Test                       0.10 USD
   Assets:Test                      -0.10 USD
   Assets:Test     19,200 CZK @ 0.04585052 USD
   Assets:Test                    -880.33 USD
@@ -166,33 +166,33 @@
 2020-06-22 txn "Paycheck"
   Income:Salary                   -4000.00 USD
   Assets:Bank                      4000.00 USD
-  Income:401k:Match         -4000.00 * 0.05 USD
-  Assets:Investments         4000.00 * 0.05 USD
+  Income:401k:Match       -4000.00 * 0.05 USD
+  Assets:Investments       4000.00 * 0.05 USD
 
 2020-06-22 txn "Paycheck"
   Income:Salary                   -4000.00 USD
   Assets:Bank                      4000.00 USD
-  Income:401k:Match      -4000.00* 0.05 USD
-  Assets:Investments      4000.00* 0.05 USD
+  Income:401k:Match        -4000.00* 0.05 USD
+  Assets:Investments        4000.00* 0.05 USD
 
 2020-06-22 txn "Inline math"
-  Assets:Test1              (4.00 *100.00) USD
+  Assets:Test1             (4.00 *100.00) USD
   Assets:Test2
 
 2020-06-22 txn "Inline math"
-  Assets:Test1              (4.00) *100.00 USD
+  Assets:Test1             (4.00) *100.00 USD
   Assets:Test2
 
 2020-06-22 txn "Inline math"
-  Assets:Test1         (4.00*2.00) *100.00 USD
+  Assets:Test1        (4.00*2.00) *100.00 USD
   Assets:Test2
 
 2020-06-22 txn "Inline math"
-  Assets:Test1  (4.00*2.00) * 100.00 USD
+  Assets:Test1       (4.00*2.00) * 100.00 USD
   Assets:Test2
 
 2020-06-22 txn "Inline math"
-  Assets:Test1              2.00* -4.00 USD
+  Assets:Test1                2.00* -4.00 USD
   Assets:Test2
 
 2020-07-27 * "Commodity before amount, comma, and comment"
@@ -232,16 +232,16 @@
   Assets:Test                            -0.50 FOO
 
 2020-08-01 * "Amount without commodity"
-  Assets:Test                              0.50 FOO
-  Assets:Test                             -0.50 FOO
+  Assets:Test                             0.50 FOO
+  Assets:Test                            -0.50 FOO
 
 2020-08-01 * "Amount without commodity"
-  Assets:Test                               0.5 FOO
-  Assets:Test                              -0.5 FOO
+  Assets:Test                              0.5 FOO
+  Assets:Test                             -0.5 FOO
 
 2020-08-01 * "Amount without commodity: space between minus and number"
-  Assets:Test                               0.5 FOO
-  Assets:Test                          -0.5 FOO
+  Assets:Test                              0.5 FOO
+  Assets:Test                         -0.5 FOO
 
 2020-08-01 * "Spaces between minus and number"
   Assets:Test                          0.5 EUR
