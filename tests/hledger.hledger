@@ -309,3 +309,8 @@ D £1,000.00
     Assets:Test               1,000.00
     Assets:Test
 
+; No payee information
+2020/10/13
+    Assets:Test              10.00 EUR
+    Assets:Test
+

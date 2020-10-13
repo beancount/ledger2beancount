@@ -372,3 +372,8 @@
   Assets:Test               1000.00 GBP
   Assets:Test
 
+; No payee information
+2020-10-13 txn ""
+  Assets:Test              10.00 EUR
+  Assets:Test
+

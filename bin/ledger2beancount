@@ -1614,7 +1614,7 @@ sub process_txn($$@) {
     }
 
     # Determine payee based on the narration field
-    if ($config->{hledger} && $narration =~ /$hledger_payee_narration_RE/) {
+    if ($config->{hledger} && $narration && $narration =~ /$hledger_payee_narration_RE/) {
 	$header->[PAYEE] = $+{payee};
 	$header->[NARRATION] = $+{narration};
     }
