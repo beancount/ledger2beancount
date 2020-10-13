@@ -28,6 +28,7 @@ use Unicode::Normalize;
 use YAML::XS qw/LoadFile/;
 
 my $VERSION = "2.4";
+my $DEBUG = 0; # turn on for debugging output
 
 memoize('get_root_type');
 memoize('map_account');
@@ -814,6 +815,8 @@ sub  dump_parsed_txn(@) {
 #  - an array of objects describing the transaction
 sub print_txn(@) {
     my @txn = @_;
+
+    dump_parsed_txn @txn if $DEBUG;
 
     my $in_postings = 0;
     my @cur_txn_tags;
