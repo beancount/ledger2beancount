@@ -14,6 +14,7 @@
 * Fix conversion of fixated prices to costs
 * Fix removal of price when `price==cost` but when they use different number formats
 * Fix removal of price when `price==cost` but per-unit and total notation mixed
+* Use `D` directive to set default commodity for hledger
 * Improve support for postings with commodity-less amounts
 * Preserve leading whitespace in posting comments
 * Preserve indentation for tags and metadata

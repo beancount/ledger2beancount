@@ -90,6 +90,7 @@ my %ledger_define; # Capture "define" statements
 my %ledger_commodity_format; # Ledger commodity format
 # Store some hleger info
 my @hledger_alias_regex; # regex aliases
+my $hledger_default_commodity; # default commodity set via "D" directive
 # Conversion notes for users from ledger2beancount
 my @conversion_notes;
 # Keep track of all ledger accounts and commodities to check for
@@ -1357,6 +1358,8 @@ sub get_amount($) {
 	my $minus = $+{minus} ? "-" : "";
 	if ($+{currency}) {
 	    $amount->[CURRENCY] = map_commodity $+{currency};
+	} elsif ($config->{hledger} && defined $hledger_default_commodity) {
+	    $amount->[CURRENCY] = $hledger_default_commodity;
 	}
 	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
 
@@ -2281,10 +2284,10 @@ while (@input) {
     } elsif ($l =~ /^[!@]?(D)\s*(.*)/) {
 	$out = \@output;
 
-	# Print a warning since beancount doesn't have such a directive,
-	# but process it anyway (although we only use the information
-	# for hledger at the moment).
-	print_warning_once "Unsupported directive `$1` skipped";
+	# Print a warning since beancount doesn't have such a directive.
+	if (!$config->{hledger}) {
+	    print_warning_once "Unsupported directive `$1` skipped";
+	}
 	# Not supported in beancount
 	print_comment_top_level $depth, $l;
 
@@ -2299,6 +2302,7 @@ while (@input) {
 	if (!defined $ledger_commodity_format{$commodity}) {
 	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
 	}
+	$hledger_default_commodity = $commodity;
     } elsif ($l =~ /^[!@]?(payee\s+.*)/) {  # payee declaration
 	print_comment_top_level $depth, $1;
 	@stanza = read_stanza \@input;

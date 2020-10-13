@@ -93,6 +93,7 @@ use ledger2beancount and to configure it to your needs.
     * Effective dates (no equivalence in beancount)
 * Deferred postings (no equivalence in beancount)
 * Directives
+    * `D` (not supported in beancount)
     * `define` and `def` (no functions)
     * `eval`: skipped (not supported in beancount)
     * `import`: skipped (not supported in beancount)
@@ -114,7 +115,6 @@ use ledger2beancount and to configure it to your needs.
     * `assert`
     * `C` (commodity equivalences)
     * `check`
-    * `D`
     * `expr`
     * `N`
     * Timeclock (`I`, `i`, `O`, `o`, `b`, `h`)
@@ -133,6 +133,7 @@ use ledger2beancount and to configure it to your needs.
     * Sub-account balance assertions: recognised but not supported in beancount
     * Total balance assertions: recognised but no equivalent in beancount
 * Directives
+    * `D` (set default commodity)
     * `end aliases`
 
 ## Authors

@@ -95,5 +95,6 @@ The following syntax from [hledger](https://hledger.org/) is supported if the `h
     * Sub-account balance assertions: recognised but not supported in beancount
     * Total balance assertions: recognised but no equivalent in beancount
 * Directives
+    * `D` (set default commodity)
     * `end aliases`
 

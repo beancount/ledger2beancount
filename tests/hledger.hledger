@@ -299,3 +299,13 @@ D 1.000,00 zł
     Assets:Test                    $10
     Assets:Test
 
+2020/10/13 No commodity: zł (from earlier)
+    Assets:Test                  1.000
+    Assets:Test
+
+D £1,000.00
+
+2020/10/13 No commodity: £ now
+    Assets:Test               1,000.00
+    Assets:Test
+
