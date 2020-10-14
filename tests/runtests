@@ -39,7 +39,11 @@ test_conversion () {
 		config=$t.yml
 	fi
 
-	../bin/ledger2beancount --config $config $test > $actual
+	if [ -n "$PERL5BIN" ]; then
+		$PERL5BIN ../bin/ledger2beancount --config $config $test > $actual
+	else
+		../bin/ledger2beancount --config $config $test > $actual
+	fi
 
 	if $(cmp -s $expected $actual); then
 		echo "ok"

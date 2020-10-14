@@ -14,21 +14,30 @@ jobs:
         os:
           - macos-latest
           - ubuntu-20.04
+          - windows-latest
         beancount:
           - "beancount>=2.1.2"
           - "git+https://github.com/beancount/beancount/"
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: shogo82148/actions-setup-perl@v1
       - uses: actions/setup-python@v2
       - if: matrix.os == 'ubuntu-20.04'
         run: sudo apt install hledger ledger
       - if: matrix.os == 'macos-latest'
         run: brew install coreutils hledger ledger
-      - run: cpanm --notest --installdeps .
+      - if: matrix.os == 'windows-latest'
+        run: choco install strawberryperl
+      - uses: perl-actions/install-with-cpanm@v1.1
+        with:
+          cpanfile: "cpanfile"
       - run: pip install ${{ matrix.beancount }}
-      - run: make test
+      - if: matrix.os != 'windows-latest'
+        run: make test
+      - if: matrix.os == 'windows-latest'
+        run: make test
+        env:
+          PERL5BIN: C:\\strawberry\\perl\\bin\\perl
   docs:
     name: Documentation
     runs-on: ubuntu-latest
