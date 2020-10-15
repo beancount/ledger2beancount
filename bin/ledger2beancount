@@ -1732,7 +1732,7 @@ sub process_txn($$@) {
 		push @txn_out, create_comment $i->[DEPTH], ( " " . pp_metadata $_->[KEY], $_->[VALUE]), $header foreach @{$metadata};
 	    } else {
 		foreach (@{$metadata}) {
-		    if ($_->[TYPE] == META && is_meta_payee $_) {
+		    if ($_->[TYPE] == META && !$in_postings && is_meta_payee $_) {
 			$header->[PAYEE] = $_->[VALUE];
 		    } else {
 			push @txn_out, $_;

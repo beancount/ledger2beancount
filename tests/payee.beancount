@@ -65,3 +65,8 @@
   Equity:Opening-Balance            -10.00 EUR
 
 
+2020-10-15 * "No payee"
+  Assets:Test                        10.00 EUR
+    payee: "Foo"
+  Equity:Opening-Balance            -10.00 EUR
+

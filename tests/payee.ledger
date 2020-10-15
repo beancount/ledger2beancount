@@ -73,3 +73,8 @@ apply tag payee: Bar
 
 end apply tag
 
+2020-10-15 * No payee
+    Assets:Test                        10.00 EUR
+        ; payee: Foo
+    Equity:Opening-Balance            -10.00 EUR
+
