@@ -54,7 +54,7 @@
 
 2018-03-17 * "Tag and comment on same line"
   #tag
-  ;comment
+  ; comment
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 

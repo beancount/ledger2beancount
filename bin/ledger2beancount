@@ -1008,7 +1008,7 @@ sub parse_comment($) {
 	    push @metadata, create_metadata $depth, $config->{auxdate_tag}, pp_date($+{auxdate}, 0), 1;
 	}
     } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
-	     or $l =~ /^;\s*:$tags_RE:\s+(?<comment>.*)$/) {  # tags comment
+	     or $l =~ /^;\s*:$tags_RE:(?<comment>\s+.*)?$/) {  # tags comment
 	push @metadata, create_tag $depth, [ split /:/, $+{tags} ];
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	# do nothing
