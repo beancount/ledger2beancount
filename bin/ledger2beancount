@@ -1970,7 +1970,13 @@ my ($opt, $usage) = describe_options(
 print("ledger2beancount $VERSION\n"), exit if $opt->version;
 print($usage->text), exit if $opt->help;
 
-my @config_files = ('ledger2beancount.yml', config_home('ledger2beancount', 'config.yml'));
+my @config_files = (
+    "ledger2beancount.yaml",
+    "ledger2beancount.yml",
+    config_home('ledger2beancount', 'config.yaml'),
+    config_home('ledger2beancount', 'config.yml'),
+);
+
 if (defined $opt->config) {
     if (! -e $opt->config) {
 	print "Config file ", $opt->config, " doesn't exist\n";

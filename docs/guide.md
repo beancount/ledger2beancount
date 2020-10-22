@@ -14,7 +14,7 @@ subsections as this section, so it's easy to follow in parallel.
 You can convert the illustrated ledger file to beancount like this:
 
 ```shell
-ledger2beancount --config examples/illustrated.yml examples/illustrated.ledger
+ledger2beancount --config examples/illustrated.yaml examples/illustrated.ledger
 ```
 
 But please be aware that it doesn't pass `bean-check`.  See the comments in

@@ -33,10 +33,10 @@ test_conversion () {
 
 	printf "Converting $test... "
 
-	config=ledger2beancount.yml
+	config=ledger2beancount.yaml
 	t=$(echo $test | sed 's/.\h*ledger$//')
-	if [ -e $t.yml ]; then
-		config=$t.yml
+	if [ -e $t.yaml ]; then
+		config=$t.yaml
 	fi
 
 	if [ -n "$PERL5BIN" ]; then

@@ -56,10 +56,10 @@ problems with the conversion.
 
 # FILES
 
-_$PWD/ledger2beancount.yml_
+_$PWD/ledger2beancount.yaml_
 	The configuration file for the current directory.
 
-_$HOME/.config/ledger2beancount/config.yml_
+_$HOME/.config/ledger2beancount/config.yaml_
 	The default configuration file.
 
 # BUGS
