@@ -1,4 +1,4 @@
-personal_ws-1.1 en 64 utf-8
+personal_ws-1.1 en 66 utf-8
 AUR
 Alen
 Blais
@@ -37,6 +37,7 @@ backports
 beancount
 beancount's
 config
+coreutils
 cpanminus
 documentclass
 fava
@@ -62,4 +63,5 @@ uncomment
 undef
 urlcolor
 whitespace
+yaml
 yml
