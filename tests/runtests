@@ -11,6 +11,7 @@ if [ -z "${SORT-}" ]; then
 	case `uname -s` in
 		Linux*) SORT=sort ;;
 		Darwin*) SORT=gsort ;;
+		NetBSD*) SORT=gsort ;;
 		*) SORT=sort ;;
 	esac
 fi
