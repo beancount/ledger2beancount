@@ -710,7 +710,7 @@ sub pp_txn_header($) {
 	my @tags = map { pp_tags $_ } @{$i->[TAG]};
 	$l .= " " . join " ", @tags;
     }
-    $l .= " ; " . $i->[COMMENT] if $i->[COMMENT];
+    $l .= " ;" . $i->[COMMENT] if $i->[COMMENT];
     return $l;
 }
 
@@ -1595,7 +1595,7 @@ sub process_txn($$@) {
     $header->[FLAG] = $+{flag} if $+{flag};
 
     # You can have a comment on the same line as the payee
-    my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
+    my ($narration, $comment) = split /  +\s*;|\s*\t+\s*;/, $+{narration}, 2;
     $header->[NARRATION] = $narration if $narration;
     my $metadata;
     if ($comment) {

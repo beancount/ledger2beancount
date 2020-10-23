@@ -115,3 +115,11 @@ end comment
     Assets:Test                        10.00 EUR   ;   
     Assets:Test                       -10.00 EUR
 
+2020-10-23 * Payee  ;  comment which starts with two spaces
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Payee  ;	comment which starts with tab
+    Assets:Test                        10.00 EUR
+    Assets:Test                       -10.00 EUR
+
