@@ -84,3 +84,11 @@ commodity EUR
     Assets:Test                        10.00 EUR ; [2020-10-20=2020-09-30] foo: bar
     Assets:Test                       -10.00 EUR
 
+2020-10-23 * Comment spacing for comment after date
+    Assets:Test                        10.00 EUR ; [2020-09-30] foo
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-10-23 * Comment spacing for comment after date
+    Assets:Test                        10.00 EUR ;[2020-09-30] foo
+    Equity:Opening-Balance            -10.00 EUR
+

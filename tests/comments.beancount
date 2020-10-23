@@ -112,3 +112,8 @@
   Assets:Test                        10.00 EUR
   Assets:Test                       -10.00 EUR
 
+2020-10-23 * "Comment spacing"
+  ;	Tab
+  Assets:Test                        10.00 EUR ;	Tab
+  Equity:Opening-Balance            -10.00 EUR
+

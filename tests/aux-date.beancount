@@ -116,3 +116,13 @@
     foo: "bar"
   Assets:Test                       -10.00 EUR
 
+2020-10-23 * "Comment spacing for comment after date"
+  Assets:Test                        10.00 EUR ; foo
+    date: 2020-09-30
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-10-23 * "Comment spacing for comment after date"
+  Assets:Test                        10.00 EUR ;foo
+    date: 2020-09-30
+  Equity:Opening-Balance            -10.00 EUR
+

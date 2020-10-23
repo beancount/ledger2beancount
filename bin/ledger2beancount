@@ -417,6 +417,7 @@ sub set_default($$$) {
 sub create_comment($$$) {
     my ($comment, $header);
     $comment->[TYPE] = COMMENT;
+    $comment->[WHITESPACE] = "";
     ($comment->[DEPTH], $comment->[VALUE], $header) = @_;
     # hledger comments may need the year of the transaction
     # for metadata `date`/`date2` without the year.
@@ -558,7 +559,7 @@ sub parse_ledger_value($) {
 sub pp_comment($) {
     my ($comment) = @_;
 
-    return ";" . $comment->[VALUE];
+    return ";" . $comment->[WHITESPACE] . $comment->[VALUE];
 
 }
 
@@ -830,7 +831,7 @@ sub print_txn(@) {
     my @cur_txn_tags;
     foreach my $i (@txn) {
 	if ($i->[TYPE] == COMMENT) {
-	    print_line $i->[DEPTH], ";$i->[VALUE]";
+	    print_line $i->[DEPTH], pp_comment $i;
 	} elsif ($i->[TYPE] == POSTING) {
 	    $in_postings = 1;
 	    print_posting_tags create_tag 2, \@cur_txn_tags;
@@ -1046,6 +1047,12 @@ sub parse_comment($) {
     }
 
     if (defined $str && $str =~ /\S/) {
+	# Extract leading whitespace from original string in order
+	# to preserve comment-style.  This mostly matters when we
+	# have a comment with a posting date, aux date or tag
+	# which is followed by a comment.
+	$comment->[WHITESPACE] = $1 if $comment->[VALUE] =~ /^(\s+)/;
+	$str =~ s/^\s+//;
 	$comment->[VALUE] = $str;
 	return $comment, $metadata;
     } else {
