@@ -1506,8 +1506,14 @@ sub get_lot($) {
 
 
 # Parse a posting
-sub parse_posting($) {
-    my ($l) = @_;
+# Arguments:
+#  - depth
+#  - posting string
+#  - transaction header object
+# Returns:
+#  - posting object
+sub parse_posting($$$) {
+    my ($depth, $l, $header) = @_;
 
     my $posting;
     $posting->[TYPE] = POSTING;
@@ -1574,7 +1580,7 @@ sub parse_posting($) {
     # A comment: starts with ;
     if ($l =~ /^;(.*)/) {
 	$l = "";
-	$posting->[COMMENT] = $1;
+	$posting->[COMMENT] = create_comment $depth+1, $1, $header;
     }
 
     # There should be nothing left
@@ -1710,7 +1716,7 @@ sub process_txn($$@) {
 	if ($l =~ /^$comment_RE/) {
 	    $line = create_comment $depth, $+{comment}, $header;
 	} elsif ($l =~ /^$posting_RE/) {
-	    $line = parse_posting $l;
+	    $line = parse_posting $depth, $l, $header;
 	    $total_postings++;
 	    if (defined $line->[AMOUNT]) {
 		$postings_with_amount++ ;
@@ -1862,9 +1868,7 @@ sub process_txn($$@) {
 
 	    my $metadata;
 	    if (defined $i->[COMMENT]) {
-	        my $comment = create_comment $i->[DEPTH]+1, $i->[COMMENT], $header;
-		($comment, $metadata) = parse_comment $comment;
-		$i->[COMMENT] = $comment ? $comment : undef;
+		($i->[COMMENT], $metadata) = parse_comment $i->[COMMENT];
 	    }
 
 	    if ($i->[ASSERTION]) {
