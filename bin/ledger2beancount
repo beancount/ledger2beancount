@@ -938,7 +938,7 @@ sub print_metadata($) {
 sub parse_hledger_comment($) {
     my ($c) = @_;
 
-    my $l = $c->[VALUE];
+    my $l = ";" . $c->[VALUE];
     my $depth = $c->[DEPTH];
     my ($comment, @metadata);
 
@@ -991,7 +991,7 @@ sub parse_hledger_comment($) {
 sub parse_comment($) {
     my ($c) = @_;
 
-    my $l = $c->[VALUE];
+    my $l = ";" . $c->[VALUE];
     my $depth = $c->[DEPTH];
     my $comment;
     my @metadata;
@@ -1591,7 +1591,7 @@ sub process_txn($$@) {
     $header->[NARRATION] = $narration if $narration;
     my ($metadata);
     if ($comment) {
-	$comment = create_comment 1, ";$comment", $header;
+	$comment = create_comment 1, $comment, $header;
 	($comment, $metadata) = parse_comment $comment;
 	$header->[COMMENT] = $comment if $comment;
     }
@@ -1668,7 +1668,7 @@ sub process_txn($$@) {
 	my $line;
 	my ($depth, $l) = strip_indentation($l);
 	if ($l =~ /^$comment_RE/) {
-	    $line = create_comment $depth, $l, $header;
+	    $line = create_comment $depth, $+{comment}, $header;
 	} elsif ($l =~ /^$posting_RE/) {
 	    $line = parse_posting $l;
 	    $total_postings++;
@@ -1823,7 +1823,7 @@ sub process_txn($$@) {
 
 	    my ($metadata);
 	    if ($i->[COMMENT]) {
-	        my $comment = create_comment $i->[DEPTH]+1, ";$i->[COMMENT]", $header;
+	        my $comment = create_comment $i->[DEPTH]+1, $i->[COMMENT], $header;
 		($i->[COMMENT], $metadata) = parse_comment $comment;
 	    }
 
