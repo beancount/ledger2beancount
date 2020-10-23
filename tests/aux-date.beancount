@@ -59,7 +59,7 @@
   Equity:Opening-Balance
 
 2020-03-09 * "Test with posting date and comment, but no amount"
-  Assets:Test                                   ; Foo Bar
+  Assets:Test                                  ; Foo Bar
     date: 2018-03-13
   Equity:Opening-Balance            -10.00 EUR
 
@@ -69,7 +69,7 @@
   Equity:Opening-Balance
 
 2020-03-09 * "Test with posting aux date and comment, but no amount"
-  Assets:Test                                   ; Foo Bar
+  Assets:Test                                  ; Foo Bar
     aux-date: 2018-03-13
   Equity:Opening-Balance            -10.00 EUR
 

@@ -226,7 +226,7 @@
   Assets:Test                            -5641 AA
 
 2018-04-22 * "Lot with comment"
-  Assets:Test               10.00 EUR {0.90 GBP} ; comment
+  Assets:Test               10.00 EUR {0.90 GBP}   ; comment
   Equity:Opening-Balance    -9.00 GBP
 
 2018-04-22 * "Lot with comment"
@@ -251,7 +251,7 @@
   Equity:Opening-Balance   -12.30 USD
 
 2018-04-22 * "Lot with comment, no space"
-  Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @ 1.30 USD ; comment
+  Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @ 1.30 USD; comment
   Assets:Bank
 
 2018-10-22 * "Commodity conversion of lot cost"
@@ -462,4 +462,33 @@
   Expenses:Food                       3.50 EUR @ 1.2 USD
   Assets:Cash                        -4.20 USD
   Assets:Test                            0 EUR
+
+2020-10-23 * "Implicit conversion: space between amount and comment"
+  ; This is a comment with an amount that should not be substituted 10.00 EUR
+  Assets:A                  10.00 EUR @ 1.142 USD    ; do not substitute: 10.00 EUR
+  Assets:B                 -11.42 USD    ; do not substitute: 10.00 EUR
+
+2020-10-23 * "Spacing"
+  Assets:Test           10.00 EUR @@ 9.00 GBP; foo
+  Assets:Test                        -9.00 GBP
+
+2020-10-23 * "Spacing"
+  Assets:Test           10.00 EUR @@ 9.00 GBP  ; foo
+  Assets:Test                        -9.00 GBP
+
+2020-10-23 * "Spacing"
+  Assets:Test           10.00 EUR {{9.00 GBP}}; foo
+  Assets:Test                        -9.00 GBP
+
+2020-10-23 * "Spacing"
+  Assets:Test           10.00 EUR {{9.00 GBP}}   ; foo
+  Assets:Test                        -9.00 GBP
+
+2020-10-23 * "Spacing: take from cost"
+  Assets:Test           10.00 EUR {{9.00 GBP}}; foo
+  Assets:Test                        -9.00 GBP
+
+2020-10-23 * "Spacing: take from cost"
+  Assets:Test           10.00 EUR {{9.00 GBP}}  ; foo
+  Assets:Test                        -9.00 GBP
 

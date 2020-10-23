@@ -20,6 +20,7 @@
 * Allow empty comments
 * Preserve leading whitespace in comments in postings and transaction headers
 * Preserve indentation for tags and metadata
+* Preserve whitespace between amount and comment
 * Refactor code to use more data structures
 * Remove dependency on `Config::Onion` module
 

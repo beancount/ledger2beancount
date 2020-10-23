@@ -694,8 +694,16 @@ sub pp_posting($) {
     }
 
     if ($i->[COMMENT]) {
-	$l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
-	$l .= " " . pp_comment $i->[COMMENT];
+	if (defined $i->[PRICE]) {
+	    $l .= $i->[PRICE]->[AMOUNT]->[WHITESPACE];
+	} elsif (defined $i->[COST]) {
+	    $l .= $i->[COST]->[AMOUNT]->[WHITESPACE];
+	} elsif (defined $i->[AMOUNT]) {
+	    $l .= $i->[AMOUNT]->[WHITESPACE];
+	} else {
+	    $l .= $i->[WHITESPACE];
+	}
+	$l .= pp_comment $i->[COMMENT];
     }
 
     return $l;
@@ -1395,10 +1403,11 @@ sub get_amount($) {
     # [minus] number currency
     # [minus] currency number
     # currency [minus] number
-    if ($l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<currency>$commodity_RE)\s*(?<rest>.*)/ ||
-        $l =~ /^(?<minus>-\s*)?(?<currency>$commodity_RE)\s*(?<number>$number_RE)\s*(?<rest>.*)/ ||
-        $l =~ /^(?<currency>$commodity_RE)\s*(?<minus>-\s*)(?<number>$number_RE)\s*(?<rest>.*)/ ||
-        $l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<rest>($|[;={(@]).*)$/) {
+    if ($l =~ /^(?<minus>-\s*)?(?<number>$number_RE)\s*(?<currency>$commodity_RE)(?<space>\s*)(?<rest>.*)/ ||
+        $l =~ /^(?<minus>-\s*)?(?<currency>$commodity_RE)\s*(?<number>$number_RE)(?<space>\s*)(?<rest>.*)/ ||
+        $l =~ /^(?<currency>$commodity_RE)\s*(?<minus>-\s*)(?<number>$number_RE)(?<space>\s*)(?<rest>.*)/ ||
+        $l =~ /^(?<minus>-\s*)?(?<number>$number_RE)(?<space>\s*)(?<rest>($|[;={(@]).*)$/) {
+	$amount->[WHITESPACE] = $+{space};
 	my $rest = $+{rest};
 	my $minus = $+{minus} ? "-" : "";
 	if ($+{currency}) {
@@ -1453,7 +1462,7 @@ sub get_lot($) {
     }
 
     # Look for a cost: {...} or {{...}}
-    if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?\s*(?<rest>.*)/) {
+    if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?(?<rest>.*)/) {
 	$l = $+{rest};
 	$cost->[TYPE] = length $+{type};
 	my $rest;
@@ -1464,14 +1473,14 @@ sub get_lot($) {
     }
 
     # A lot date: dates are always in square brackets [date]
-    if ($l =~ /^\[(?<date>\d+[^ =\]]+)\]\s*(?<rest>.*)/) {
+    if ($l =~ /^\s*\[(?<date>\d+[^ =\]]+)\](?<rest>.*)/) {
 	$l = $+{rest};
 	$cost->[DATE] = pp_date $+{date}, 0;
     }
 
     # A lot note: (note).  Don't confuse with a ((lot value expression))
     # (see below) or a virtual price: (@).
-    if ($l !~ /^(\(\(|\(@)/ && $l =~ /^(?<note>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
+    if ($l !~ /^\s*(\(\(|\(@)/ && $l =~ /^\s*(?<note>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
 	$l = $+{rest};
 	$cost->[NOTE] = $+{note};
 	$cost->[NOTE] =~ s/^\(//;
@@ -1479,7 +1488,7 @@ sub get_lot($) {
     }
 
     # A lot value expression: ((market))
-    if ($l =~ /^\(\(/ && $l =~ /^(?<valuation>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
+    if ($l =~ /^\s*\(\(/ && $l =~ /^\s*(?<valuation>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
 	$l = $+{rest};
 	my $valuation = $+{valuation};
 	$valuation =~ s/^\(\(//;
@@ -1500,6 +1509,11 @@ sub get_lot($) {
 	$cost->[AMOUNT]->[NUMBER] = "1.00";
 	$cost->[AMOUNT]->[CURRENCY] = $amount->[CURRENCY];
      }
+
+    if ($l =~ /^(?<space>\s*)(?<rest>.*)/) {
+	$cost->[AMOUNT]->[WHITESPACE] = $+{space} if $cost;
+	$l = $+{rest};
+    }
 
     return $amount, $cost, $l;
 }
@@ -1833,6 +1847,7 @@ sub process_txn($$@) {
 		    # due to a bug.  If both are the same, remove the price.
 		    if ($i->[COST]->[AMOUNT]->[CURRENCY] eq $i->[PRICE]->[AMOUNT]->[CURRENCY] &&
 		        get_lot_total($i, $i->[COST]) == get_lot_total($i, $i->[PRICE])) {
+			$i->[COST]->[AMOUNT]->[WHITESPACE] = $i->[PRICE]->[AMOUNT]->[WHITESPACE];
 			$i->[PRICE] = undef;
 		    }
 		} else {
@@ -1951,8 +1966,8 @@ sub process_txn($$@) {
 		next if $i->[TYPE] != POSTING;
 		if ($i->[AMOUNT]->[CURRENCY] eq $commodity && number2int $i->[AMOUNT]->[NUMBER] != 0) {
 		    $i->[PRICE]->[TYPE] = 1;
-		    $i->[PRICE]->[AMOUNT]->[NUMBER] = $rate;
-		    $i->[PRICE]->[AMOUNT]->[CURRENCY] = $other_commodity;
+		    ($i->[PRICE]->[AMOUNT], $_) = get_amount "$rate $other_commodity";
+		    $i->[PRICE]->[AMOUNT]->[WHITESPACE] = $postings[0]->[AMOUNT]->[WHITESPACE];
 		}
 	    }
 	}

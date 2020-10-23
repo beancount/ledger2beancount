@@ -59,29 +59,29 @@
 ; Posting level dates as comments
 
 2015-05-30 txn "date as comment"
-  Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday
+  Expenses:Food     10 USD   ; food purchased on saturday 05/30
+  Assets:Checking         ; bank cleared it on monday
     date: 2005-06-01
 
 2015-05-30 txn "date as comment without year"
-  Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday
+  Expenses:Food     10 USD   ; food purchased on saturday 05/30
+  Assets:Checking         ; bank cleared it on monday
     date: 2015-06-01
 
 2015-05-30 txn "date2 as comment"
-  Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday
+  Expenses:Food     10 USD   ; food purchased on saturday 05/30
+  Assets:Checking         ; bank cleared it on monday
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment"
-  Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday
+  Expenses:Food     10 USD   ; food purchased on saturday 05/30
+  Assets:Checking         ; bank cleared it on monday
     date: 2005-06-01
     aux-date: 2005-06-02
 
 2015-05-30 txn "date and date2 as comment, in reverse order"
-  Expenses:Food     10 USD ; food purchased on saturday 05/30
-  Assets:Checking          ; bank cleared it on monday
+  Expenses:Food     10 USD   ; food purchased on saturday 05/30
+  Assets:Checking         ; bank cleared it on monday
     aux-date: 2005-06-02
     date: 2005-06-01
 

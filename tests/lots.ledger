@@ -427,3 +427,32 @@ commodity XXXx
     Assets:Cash                        -4.20 USD
     Assets:Test                            0
 
+2020-10-23 * Implicit conversion: space between amount and comment
+    ; This is a comment with an amount that should not be substituted 10.00 EUR
+    Assets:A                  10.00 EUR    ; do not substitute: 10.00 EUR
+    Assets:B                 -11.42 USD    ; do not substitute: 10.00 EUR
+
+2020-10-23 * Spacing
+    Assets:Test           10.00 EUR     @@ 9.00 GBP; foo
+    Assets:Test                        -9.00 GBP
+
+2020-10-23 * Spacing
+    Assets:Test           10.00 EUR     @@ 9.00 GBP  ; foo
+    Assets:Test                        -9.00 GBP
+
+2020-10-23 * Spacing
+    Assets:Test           10.00 EUR {{9.00 GBP}}; foo
+    Assets:Test                        -9.00 GBP
+
+2020-10-23 * Spacing
+    Assets:Test           10.00 EUR {{9.00 GBP}}   ; foo
+    Assets:Test                        -9.00 GBP
+
+2020-10-23 * Spacing: take from cost
+    Assets:Test           10.00 EUR {{9.00 GBP}}    @@ 9.00 GBP; foo
+    Assets:Test                        -9.00 GBP
+
+2020-10-23 * Spacing: take from cost
+    Assets:Test           10.00 EUR {{9.00 GBP}}    @@ 9.00 GBP  ; foo
+    Assets:Test                        -9.00 GBP
+

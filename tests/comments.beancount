@@ -66,11 +66,11 @@
 
 2018-03-27 * "Account name could be mistaken for commodity"
   Assets:Test                        10.00 EUR
-  Assets:Commodity-Test123        ; comment
+  Assets:Commodity-Test123       ; comment
 
 2018-03-27 * "Account name could be mistaken for commodity"
   Assets:Test                        10.00 EUR
-  Assets:Commodity-Test123   ; comment
+  Assets:Commodity-Test123  ; comment
 
 2019-01-25 * "A payee can contain ; without problems"
   Assets:Test                        10.00 EUR
@@ -87,17 +87,17 @@
 ;No space
 2020-10-01 * "Comment spacing"
   ;No space
-  Assets:Test                        10.00 EUR ;No space
+  Assets:Test                        10.00 EUR;No space
   Equity:Opening-Balance            -10.00 EUR
 
 ;  Two space
 2020-10-01 * "Comment spacing"
   ;  Two space
-  Assets:Test                        10.00 EUR ;  Two space
+  Assets:Test                        10.00 EUR;  Two space
   Equity:Opening-Balance            -10.00 EUR
 
 2020-10-01 * "Empty comment, with trailing whitespace"
-  Assets:Test                        10.00 EUR ;   
+  Assets:Test                        10.00 EUR   ;   
   Assets:Test                       -10.00 EUR
 
 2020-10-23 * "Payee" ;  comment which starts with two spaces

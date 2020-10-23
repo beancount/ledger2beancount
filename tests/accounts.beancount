@@ -118,7 +118,7 @@ option "name_income" "Revenue"
 
 2018-03-18 * "Test"
   Assets:Test                        10.00 EUR
-  Equity:Opening-Balance                        ; comment
+  Equity:Opening-Balance                       ; comment
 
 2018-03-18 * "Account name with space"
   Liabilities:Credit-Card:Test      -10.00 EUR
