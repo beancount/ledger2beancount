@@ -948,14 +948,15 @@ sub parse_hledger_comment($) {
 
     my $l = ";" . $comment->[VALUE];
     my $depth = $comment->[DEPTH];
+    my $str;
     my @metadata;
 
     if ($l =~ /^;(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
-	$comment->[VALUE] = $+{comment};
+	$str = $+{comment};
 	# Put tags in $l and continue to parse them further down
 	$l = $+{tags};
     } elsif ($l =~ /^$comment_RE/) {
-	return $comment;
+	return $+{comment};
     } else {
 	die "Can't process comment: $l";
     }
@@ -985,27 +986,19 @@ sub parse_hledger_comment($) {
 	    push @metadata, create_tag $depth, [ $key ];
 	}
     }
-    $comment->[VALUE] =~ s/,?\s*$//;
-    if ($comment->[VALUE] =~ /\S/) {
-	return $comment, \@metadata;
-    } else {
-	return undef, \@metadata;
-    }
+    $str =~ s/,?\s*$//;
+    return $str, \@metadata;
 }
 
 
-# Parse a comment.
+# Parse a ledger comment.
 # Arguments:
 #  - a comment object
 # Return values:
 #  - the comment (string)
 #  - an array reference with tags and metadata
-sub parse_comment($) {
+sub parse_ledger_comment($) {
     my ($comment) = @_;
-
-    if ($config->{hledger}) {
-	return parse_hledger_comment $comment;
-    }
 
     my $l = ";" . $comment->[VALUE];
     my $depth = $comment->[DEPTH];
@@ -1031,12 +1024,32 @@ sub parse_comment($) {
     } else {
 	die "Can't process comment: $l";
     }
+    return $+{comment}, \@metadata;
+}
 
-    $comment->[VALUE] = $+{comment};
-    if (defined $comment->[VALUE] && $comment->[VALUE] =~ /\S/) {
-	return $comment, \@metadata;
+
+# Parse a comment.
+# Arguments:
+#  - a comment object
+# Return values:
+#  - a comment object or undef if no remaining comment
+#  - an array reference with tags and metadata
+sub parse_comment($) {
+    my ($comment) = @_;
+
+    my ($str, $metadata);
+
+    if ($config->{hledger}) {
+	($str, $metadata) = parse_hledger_comment $comment;
     } else {
-	return undef, \@metadata;
+	($str, $metadata) = parse_ledger_comment $comment;
+    }
+
+    if (defined $str && $str =~ /\S/) {
+	$comment->[VALUE] = $str;
+	return $comment, $metadata;
+    } else {
+	return undef, $metadata;
     }
 }
 
