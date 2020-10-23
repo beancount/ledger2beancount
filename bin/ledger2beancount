@@ -936,18 +936,18 @@ sub print_metadata($) {
 # hledger tags can have values (which makes them metadata) or
 # not (which makes them tags)
 sub parse_hledger_comment($) {
-    my ($c) = @_;
+    my ($comment) = @_;
 
-    my $l = ";" . $c->[VALUE];
-    my $depth = $c->[DEPTH];
-    my ($comment, @metadata);
+    my $l = ";" . $comment->[VALUE];
+    my $depth = $comment->[DEPTH];
+    my @metadata;
 
     if ($l =~ /^;(?<comment>.*?)(?<tags>$hledger_tags_RE)$/) {
-	$comment = $+{comment};
+	$comment->[VALUE] = $+{comment};
 	# Put tags in $l and continue to parse them further down
 	$l = $+{tags};
     } elsif ($l =~ /^$comment_RE/) {
-	return $+{comment};
+	return $comment;
     } else {
 	die "Can't process comment: $l";
     }
@@ -959,7 +959,7 @@ sub parse_hledger_comment($) {
 	if ($value) {
 	    $value =~ s/\s+$//;
 	    if ($key eq "date" || $key eq "date2") {
-		my $year = $1 if $c->[DATE] =~ /^(\d{4})-/;
+		my $year = $1 if $comment->[DATE] =~ /^(\d{4})-/;
 		my $date = $value;
 		if ($date !~ /^$hledger_date_RE/) {
 		    die "Can't parse date after hledger tag $key: $date";
@@ -977,8 +977,12 @@ sub parse_hledger_comment($) {
 	    push @metadata, create_tag $depth, [ $key ];
 	}
     }
-    $comment =~ s/,?\s*$//;
-    return $comment, \@metadata;
+    $comment->[VALUE] =~ s/,?\s*$//;
+    if ($comment->[VALUE] =~ /\S/) {
+	return $comment, \@metadata;
+    } else {
+	return undef, \@metadata;
+    }
 }
 
 
@@ -989,15 +993,14 @@ sub parse_hledger_comment($) {
 #  - the comment (string)
 #  - an array reference with tags and metadata
 sub parse_comment($) {
-    my ($c) = @_;
+    my ($comment) = @_;
 
-    my $l = ";" . $c->[VALUE];
-    my $depth = $c->[DEPTH];
-    my $comment;
+    my $l = ";" . $comment->[VALUE];
+    my $depth = $comment->[DEPTH];
     my @metadata;
 
     if ($config->{hledger}) {
-	return parse_hledger_comment $c;
+	return parse_hledger_comment $comment;
     }
 
     if ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
@@ -1020,8 +1023,13 @@ sub parse_comment($) {
     } else {
 	die "Can't process comment: $l";
     }
-    $comment = $+{comment} if defined $+{comment} && $+{comment} !~ /^\s*;?\s*$/;
-    return $comment, \@metadata;
+
+    $comment->[VALUE] = $+{comment};
+    if (defined $comment->[VALUE] && $comment->[VALUE] =~ /\S/) {
+	return $comment, \@metadata;
+    } else {
+	return undef, \@metadata;
+    }
 }
 
 
@@ -1593,7 +1601,7 @@ sub process_txn($$@) {
     if ($comment) {
 	$comment = create_comment 1, $comment, $header;
 	($comment, $metadata) = parse_comment $comment;
-	$header->[COMMENT] = $comment if $comment;
+	$header->[COMMENT] = $comment->[VALUE] if $comment;
     }
 
     my @tags;
@@ -1725,8 +1733,7 @@ sub process_txn($$@) {
     my @assertions;
     foreach my $i (@txn_parsed) {
 	if ($i->[TYPE] == COMMENT) {
-	    my ($metadata);
-	    ($i->[VALUE], $metadata) = parse_comment $i;
+	    my ($comment, $metadata) = parse_comment $i;
 	    # If there's a virtual posting that is ignored, we have to
 	    # discard the metadata associated with the posting on
 	    # following lines (if there's any).  But there might be
@@ -1744,7 +1751,7 @@ sub process_txn($$@) {
 		    }
 		}
 	    }
-	    push @txn_out, $i if $i->[VALUE];
+	    push @txn_out, $comment if $comment;
 	} elsif ($i->[TYPE] == POSTING) {
 	    $skipped_posting = 0; # reset variable with each posting
 	    $in_postings = 1;
@@ -1824,7 +1831,8 @@ sub process_txn($$@) {
 	    my ($metadata);
 	    if ($i->[COMMENT]) {
 	        my $comment = create_comment $i->[DEPTH]+1, $i->[COMMENT], $header;
-		($i->[COMMENT], $metadata) = parse_comment $comment;
+		($comment, $metadata) = parse_comment $comment;
+		$i->[COMMENT] = $comment ? $comment->[VALUE]: undef;
 	    }
 
 	    if ($i->[ASSERTION]) {
