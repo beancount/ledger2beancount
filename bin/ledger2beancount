@@ -554,6 +554,14 @@ sub parse_ledger_value($) {
 }
 
 
+# pretty print a comment
+sub pp_comment($) {
+    my ($comment) = @_;
+
+    return ";" . $comment->[VALUE];
+
+}
+
 # pretty print a single metadata key/value pair, in beancount format
 sub pp_metadata($$) {
     my ($key, $value) = @_;
@@ -686,7 +694,7 @@ sub pp_posting($) {
 
     if ($i->[COMMENT]) {
 	$l .= $i->[WHITESPACE] if !defined $i->[AMOUNT];
-	$l .= " ;$i->[COMMENT]";
+	$l .= " " . pp_comment $i->[COMMENT];
     }
 
     return $l;
@@ -710,7 +718,7 @@ sub pp_txn_header($) {
 	my @tags = map { pp_tags $_ } @{$i->[TAG]};
 	$l .= " " . join " ", @tags;
     }
-    $l .= " ;" . $i->[COMMENT] if $i->[COMMENT];
+    $l .= " " . pp_comment $i->[COMMENT] if $i->[COMMENT];
     return $l;
 }
 
@@ -756,7 +764,7 @@ sub dump_posting($) {
     print "D:   AMOUNT: " . (defined $i->[AMOUNT] ? pp_amount $i->[AMOUNT] : "none") . "\n";
     print "D:   COST: " . (defined $i->[COST] ? pp_amount $i->[COST]->[AMOUNT] : "none") . "\n";
     print "D:   PRICE: " . (defined $i->[PRICE] ? pp_amount $i->[PRICE]->[AMOUNT] : "none") . "\n";
-    print "D:   COMMENT: " . (defined $i->[COMMENT] ? $i->[COMMENT] : "none") . "\n";
+    print "D:   COMMENT: " . (defined $i->[COMMENT] ? pp_comment $i->[COMMENT] : "none") . "\n";
 }
 
 
@@ -780,7 +788,7 @@ sub dump_txn_header($) {
     print "D:   PAYEE: " . ($i->[PAYEE] ? $i->[PAYEE] : "none") . "\n";
     print "D:   NARRATION: " . ($i->[NARRATION] ? $i->[NARRATION] : "none") . "\n";
     print "D:   TAG: " . ($i->[TAG] ? join ", ", @{$i->[TAG]} : "none") . "\n";
-    print "D:   COMMENT: " . ($i->[COMMENT] ? $i->[COMMENT] : "none") . "\n";
+    print "D:   COMMENT: " . ($i->[COMMENT] ? pp_comment $i->[COMMENT] : "none") . "\n";
 }
 
 
@@ -1601,7 +1609,7 @@ sub process_txn($$@) {
     if ($comment) {
 	$comment = create_comment 1, $comment, $header;
 	($comment, $metadata) = parse_comment $comment;
-	$header->[COMMENT] = $comment->[VALUE] if $comment;
+	$header->[COMMENT] = $comment if $comment;
     }
 
     my @tags;
@@ -1829,10 +1837,10 @@ sub process_txn($$@) {
 	    }
 
 	    my $metadata;
-	    if ($i->[COMMENT]) {
+	    if (defined $i->[COMMENT]) {
 	        my $comment = create_comment $i->[DEPTH]+1, $i->[COMMENT], $header;
 		($comment, $metadata) = parse_comment $comment;
-		$i->[COMMENT] = $comment ? $comment->[VALUE] : undef;
+		$i->[COMMENT] = $comment ? $comment : undef;
 	    }
 
 	    if ($i->[ASSERTION]) {
