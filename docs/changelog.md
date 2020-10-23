@@ -17,6 +17,7 @@
 * Fix detection of tags and metadata after posting/aux date
 * Use `D` directive to set default commodity for hledger
 * Improve support for postings with commodity-less amounts
+* Allow empty comments
 * Preserve leading whitespace in comments in postings and transaction headers
 * Preserve indentation for tags and metadata
 * Refactor code to use more data structures

@@ -38,6 +38,9 @@ trim_trailing_whitespace = false
 [tests/aux-date.ledger]
 trim_trailing_whitespace = false
 
+[tests/comments.beancount]
+trim_trailing_whitespace = false
+
 [tests/comments.ledger]
 trim_trailing_whitespace = false
 

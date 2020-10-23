@@ -97,7 +97,7 @@
   Equity:Opening-Balance            -10.00 EUR
 
 2020-10-01 * "Empty comment, with trailing whitespace"
-  Assets:Test                        10.00 EUR
+  Assets:Test                        10.00 EUR ;   
   Assets:Test                       -10.00 EUR
 
 2020-10-23 * "Payee" ;  comment which starts with two spaces
@@ -109,11 +109,23 @@
   Assets:Test                       -10.00 EUR
 
 2020-10-23 * "Empty comment"
-  Assets:Test                        10.00 EUR
+  Assets:Test                        10.00 EUR ;
   Assets:Test                       -10.00 EUR
 
 2020-10-23 * "Comment spacing"
   ;	Tab
   Assets:Test                        10.00 EUR ;	Tab
   Equity:Opening-Balance            -10.00 EUR
+
+2020-10-23 * "Empty comments"
+  Assets:Test                        10.00 EUR ;
+  Assets:Test                        10.00 EUR ; 
+  Assets:Test                        10.00 EUR ;  
+  Assets:Test                        10.00 EUR ;	
+  ;
+  ;             
+  ;	
+  ; 	
+  ;	 
+  Equity:Opening-Balance
 

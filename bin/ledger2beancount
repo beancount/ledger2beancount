@@ -1040,6 +1040,10 @@ sub parse_comment($) {
 
     my ($str, $metadata);
 
+    if ($comment->[VALUE] =~ /^\s*$/) {
+	return $comment;
+    }
+
     if ($config->{hledger}) {
 	($str, $metadata) = parse_hledger_comment $comment;
     } else {
