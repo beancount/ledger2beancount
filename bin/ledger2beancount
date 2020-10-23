@@ -1277,8 +1277,8 @@ sub print_tags($) {
 sub print_posting_tags($) {
     my ($tag) = @_;
 
-    my @tags = grep {!is_link $_} @{$tag->[VALUE]};
-    my @links = grep {is_link $_} @{$tag->[VALUE]};
+    my @tags = grep { !is_link $_ } @{$tag->[VALUE]};
+    my @links = grep { is_link $_ } @{$tag->[VALUE]};
     print_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
     print_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
 }
@@ -1597,7 +1597,7 @@ sub process_txn($$@) {
     # You can have a comment on the same line as the payee
     my ($narration, $comment) = split /  +\s*;\s*|\s*\t+\s*;\s*/, $+{narration}, 2;
     $header->[NARRATION] = $narration if $narration;
-    my ($metadata);
+    my $metadata;
     if ($comment) {
 	$comment = create_comment 1, $comment, $header;
 	($comment, $metadata) = parse_comment $comment;
@@ -1699,7 +1699,7 @@ sub process_txn($$@) {
 	$line->[DEPTH] = $depth;
 	push @txn_parsed, $line;
     }
-    my @postings = grep {$_->[TYPE] == POSTING} @txn_parsed;
+    my @postings = grep { $_->[TYPE] == POSTING } @txn_parsed;
 
     # Deal with commodity-less amounts.  There are two cases:
     # 1) If we didn't see any commodities at all, set a commodity using
@@ -1828,11 +1828,11 @@ sub process_txn($$@) {
 		}
 	    }
 
-	    my ($metadata);
+	    my $metadata;
 	    if ($i->[COMMENT]) {
 	        my $comment = create_comment $i->[DEPTH]+1, $i->[COMMENT], $header;
 		($comment, $metadata) = parse_comment $comment;
-		$i->[COMMENT] = $comment ? $comment->[VALUE]: undef;
+		$i->[COMMENT] = $comment ? $comment->[VALUE] : undef;
 	    }
 
 	    if ($i->[ASSERTION]) {
@@ -1843,7 +1843,7 @@ sub process_txn($$@) {
 		    # We have two postings, i.e. two accounts; remove the current
 		    # account from the list of accounts to find out which account
 		    # we have to pad against.
-		    my @accounts = map {apply_account $_->[ACCOUNT]} @postings;
+		    my @accounts = map { apply_account $_->[ACCOUNT] } @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
 		    # @accounts shouldn't be empty; if it's empty, it means
 		    # both postings had the same account.  While such a
