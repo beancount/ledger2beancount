@@ -998,15 +998,20 @@ sub parse_comment($) {
 
     if ($config->{hledger}) {
 	return parse_hledger_comment $c;
-    } elsif ($l =~ /^$metadata_RE/) {  # metadata comment
-	push @metadata, create_metadata_from_regex $depth, \%+;
-    } elsif ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
+    }
+
+    if ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
+	$l = ";$+{comment}";
 	if ($+{postdate} && defined $config->{postdate_tag}) {
 	    push @metadata, create_metadata $depth, $config->{postdate_tag}, pp_date($+{postdate}, 0), 1;
 	}
 	if ($+{auxdate} && defined $config->{auxdate_tag}) {
 	    push @metadata, create_metadata $depth, $config->{auxdate_tag}, pp_date($+{auxdate}, 0), 1;
 	}
+    }
+
+    if ($l =~ /^$metadata_RE/) {  # metadata comment
+	push @metadata, create_metadata_from_regex $depth, \%+;
     } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	     or $l =~ /^;\s*:$tags_RE:(?<comment>\s+.*)?$/) {  # tags comment
 	push @metadata, create_tag $depth, [ split /:/, $+{tags} ];

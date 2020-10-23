@@ -60,3 +60,27 @@ commodity EUR
     Assets:Test                        10.00 EUR ; [2020-09-30]      
     Assets:Test                       -10.00 EUR
 
+2020-10-23 * Posting date and tag
+    Assets:Test                        10.00 EUR ; [2020-09-30] :foo:
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Posting date and metadata
+    Assets:Test                        10.00 EUR ; [2020-09-30] foo: bar
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Aux date and tag
+    Assets:Test                        10.00 EUR ; [=2020-09-30] :foo:
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Aux date and metadata
+    Assets:Test                        10.00 EUR ; [=2020-09-30] foo: bar
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Posting date, aux date and tag
+    Assets:Test                        10.00 EUR ; [2020-10-20=2020-09-30] :foo:
+    Assets:Test                       -10.00 EUR
+
+2020-10-23 * Posting date, aux date and metadata
+    Assets:Test                        10.00 EUR ; [2020-10-20=2020-09-30] foo: bar
+    Assets:Test                       -10.00 EUR
+
