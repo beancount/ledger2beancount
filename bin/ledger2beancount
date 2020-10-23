@@ -995,13 +995,13 @@ sub parse_hledger_comment($) {
 sub parse_comment($) {
     my ($comment) = @_;
 
-    my $l = ";" . $comment->[VALUE];
-    my $depth = $comment->[DEPTH];
-    my @metadata;
-
     if ($config->{hledger}) {
 	return parse_hledger_comment $comment;
     }
+
+    my $l = ";" . $comment->[VALUE];
+    my $depth = $comment->[DEPTH];
+    my @metadata;
 
     if ($l =~ /^;\s*\[(?<postdate>$date_RE)?(=(?<auxdate>$date_RE))?\](?<comment>.*)/) {  # postdate/auxdate
 	$l = ";$+{comment}";
