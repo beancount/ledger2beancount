@@ -21,19 +21,19 @@ P 2020-06-26 GBP 1.11 EUR ;comment
 
 2018-03-21 * Virtual cost (@)
     Assets:Test                10.00 EUR (@) 0.90 GBP
-    Equity:Opening-Balance     -9.00 GBP
+    Equity:Opening-Balance                  -9.00 GBP
 
 2018-03-21 * Virtual cost (@@)
     Assets:Test                10.00 EUR (@@) 9.00 GBP
-    Equity:Opening-Balance     -9.00 GBP
+    Equity:Opening-Balance                   -9.00 GBP
 
 2018-03-21 * Virtual cost (@) becoming a cost
     Assets:Test               1.00 ETH (@) 6500.00 EUR
-    Equity:Opening-Balance    -6500.00 EUR
+    Equity:Opening-Balance                -6500.00 EUR
 
 2018-03-21 * Virtual cost (@) becoming a cost
     Assets:Test               1.00 ETH (@@) 6500.00 EUR
-    Equity:Opening-Balance    -6500.00 EUR
+    Equity:Opening-Balance                 -6500.00 EUR
 
 2020-06-22 * Lot and virtual price
     Assets:Test               10.00 EUR {1.23 USD} (@) 1.30 USD

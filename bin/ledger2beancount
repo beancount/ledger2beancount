@@ -1561,9 +1561,10 @@ sub parse_posting($$$) {
     }
 
     # A price: either @, @@, (@), or (@@)
-    if ($l =~ /^\(?(@@?)\)?\s*(.*)/) {
-	$posting->[PRICE]->[TYPE] = length $1;
-	($posting->[PRICE]->[AMOUNT], $_, $l) = get_lot $2;
+    if ($l =~ /^(\()?(@@?)\)?\s*(.*)/) {
+	$posting->[PRICE]->[TYPE] = length $2;
+	($posting->[PRICE]->[AMOUNT], $_, $l) = get_lot $3;
+	$posting->[WHITESPACE] .= "  " if $1 && $posting->[WHITESPACE] =~ /^ +$/; # to account for missing brackets
     }
 
     # An assertion (if there's no amount) or balance assignment

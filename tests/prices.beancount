@@ -25,43 +25,43 @@
 2020-06-26 price GBP 1.11 EUR ;comment
 
 2018-03-21 * "Virtual cost (@)"
-  Assets:Test                10.00 EUR @ 0.90 GBP
-  Equity:Opening-Balance     -9.00 GBP
+  Assets:Test                  10.00 EUR @ 0.90 GBP
+  Equity:Opening-Balance                  -9.00 GBP
 
 2018-03-21 * "Virtual cost (@@)"
-  Assets:Test                10.00 EUR @@ 9.00 GBP
-  Equity:Opening-Balance     -9.00 GBP
+  Assets:Test                  10.00 EUR @@ 9.00 GBP
+  Equity:Opening-Balance                   -9.00 GBP
 
 2018-03-21 * "Virtual cost (@) becoming a cost"
-  Assets:Test               1.00 ETH {6500.00 EUR}
-  Equity:Opening-Balance    -6500.00 EUR
+  Assets:Test                 1.00 ETH {6500.00 EUR}
+  Equity:Opening-Balance                -6500.00 EUR
 
 2018-03-21 * "Virtual cost (@) becoming a cost"
-  Assets:Test               1.00 ETH {{6500.00 EUR}}
-  Equity:Opening-Balance    -6500.00 EUR
+  Assets:Test                 1.00 ETH {{6500.00 EUR}}
+  Equity:Opening-Balance                 -6500.00 EUR
 
 2020-06-22 * "Lot and virtual price"
-  Assets:Test               10.00 EUR {1.23 USD} @ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD} @ 1.30 USD
   Equity:Opening-Balance
 
 2020-06-22 * "Lot date and virtual price"
-  Assets:Test               10.00 EUR {1.23 USD, 2020-06-21} @ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD, 2020-06-21} @ 1.30 USD
   Equity:Opening-Balance
 
 2020-06-22 * "Lot and virtual price"
-  Assets:Test               10.00 EUR {1.23 USD} @@ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD} @@ 1.30 USD
   Equity:Opening-Balance
 
 2020-06-22 * "Lot date and virtual price"
-  Assets:Test               10.00 EUR {1.23 USD, 2020-06-21} @@ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD, 2020-06-21} @@ 1.30 USD
   Equity:Opening-Balance
 
 2020-06-22 * "Lot note followed by virtual price"
-  Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD, "this is a note"} @ 1.30 USD
   Assets:Bank
 
 2020-06-22 * "Lot note followed by virtual price"
-  Assets:Test               10.00 EUR {1.23 USD, "this is a note"} @@ 1.30 USD
+  Assets:Test                 10.00 EUR {1.23 USD, "this is a note"} @@ 1.30 USD
   Assets:Bank
 
 2020-06-23 * "Price with cost"

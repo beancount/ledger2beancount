@@ -369,12 +369,12 @@
 
 2020-06-20 txn "Lot value expression and virtual price"
   Assets:Brokerage                     375.00 USD
-  Assets:Brokerage        -5 AAPL {50.00 USD} @ 75.00 USD
+  Assets:Brokerage          -5 AAPL {50.00 USD} @ 75.00 USD
   Income:Capital-Gain                 -125.00 USD
 
 2020-06-20 txn "Lot value expression and virtual price"
   Assets:Brokerage                     375.00 USD
-  Assets:Brokerage        -5 AAPL {50.00 USD} @@ 375.00 USD
+  Assets:Brokerage          -5 AAPL {50.00 USD} @@ 375.00 USD
   Income:Capital-Gain                 -125.00 USD
 
 2020-06-23 txn "Lot with only lot date"
