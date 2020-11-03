@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.5 (unreleased)
+## 2.5 (2020-11-03)
 
 * Don't create negative cost for lot without cost
 * Support complex implicit conversions

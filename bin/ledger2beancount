@@ -27,7 +27,7 @@ use String::Interpolate qw/safe_interpolate/;
 use Unicode::Normalize;
 use YAML::XS qw/LoadFile/;
 
-my $VERSION = "2.4";
+my $VERSION = "2.5";
 my $DEBUG = 0; # turn on for debugging output
 
 memoize('get_root_type');
