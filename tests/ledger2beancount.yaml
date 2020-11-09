@@ -58,8 +58,6 @@ currency_is_commodity:
   - ETH
 
 commodity_is_currency:
-  - AA
   - MR
-  - XXXX
 
 default_commodity: FOO

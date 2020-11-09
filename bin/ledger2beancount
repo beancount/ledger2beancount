@@ -1607,6 +1607,35 @@ sub parse_posting($$$) {
 }
 
 
+# Get a number spec based on a number
+# Arguments:
+#  - number (float or integer)
+# Returns:
+#  - number spec that can be passed to sprintf (string)
+sub get_num_spec($) {
+    my ($number) = @_;
+
+    if ($number =~ s/^\d+\.//) {
+	my $n = length $number;
+	return "%.${n}f";
+    } else {
+	return "%.0f";
+    }
+}
+
+
+# Is a lot a total lot (rather than a per-uni lot)?
+# Arguments:
+#  - lot
+# Returns:
+#  - boolean
+sub is_total_lot($) {
+    my ($lot) = @_;
+
+    return defined $lot->[TYPE] && $lot->[TYPE] == 2;
+}
+
+
 # Calculate the total price of a lot (convert from per-unit if needed)
 # Arguments:
 #  - amount
@@ -1616,7 +1645,7 @@ sub parse_posting($$$) {
 sub get_lot_total($$) {
     my ($amount, $lot) = @_;
 
-    if (defined $lot->[TYPE] && $lot->[TYPE] == 2) {
+    if (is_total_lot $lot) {
 	return number2int $lot->[AMOUNT]->[NUMBER];
     }
 
@@ -1846,10 +1875,23 @@ sub process_txn($$@) {
 		if (defined $i->[COST]) {
 		    # ledger requires you to specify both lot cost and lot price
 		    # due to a bug.  If both are the same, remove the price.
-		    if ($i->[COST]->[AMOUNT]->[CURRENCY] eq $i->[PRICE]->[AMOUNT]->[CURRENCY] &&
-		        get_lot_total($i, $i->[COST]) == get_lot_total($i, $i->[PRICE])) {
-			$i->[COST]->[AMOUNT]->[WHITESPACE] = $i->[PRICE]->[AMOUNT]->[WHITESPACE];
-			$i->[PRICE] = undef;
+		    if ($i->[COST]->[AMOUNT]->[CURRENCY] eq $i->[PRICE]->[AMOUNT]->[CURRENCY]) {
+			# If a total lot is given, we have to round the
+			# calculated total (which was calculated from a
+			# per-unit lot) to the same precision.
+			my $cost = get_lot_total $i, $i->[COST];
+			my $price = get_lot_total $i, $i->[PRICE];
+			if (is_total_lot $i->[COST]) {
+			    my $round_spec = get_num_spec $cost;
+			    $price = sprintf $round_spec, $price;
+			} elsif (is_total_lot $i->[PRICE]) {
+			    my $round_spec = get_num_spec $price;
+			    $cost = sprintf $round_spec, $cost;
+			}
+			if ($cost == $price) {
+			    $i->[COST]->[AMOUNT]->[WHITESPACE] = $i->[PRICE]->[AMOUNT]->[WHITESPACE];
+			    $i->[PRICE] = undef;
+			}
 		    }
 		} else {
 		    # No ledger lot cost, only price.  This one is tricky

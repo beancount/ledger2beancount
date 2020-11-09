@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.6 (unreleased)
+
+* Round calculated total if needed for `price==cost` comparison
+
 ## 2.5 (2020-11-03)
 
 * Don't create negative cost for lot without cost

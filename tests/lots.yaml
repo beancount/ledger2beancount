@@ -1,0 +1,12 @@
+beancount_header: lots.header
+
+commodity_map:
+  XX: AA
+
+currency_is_commodity:
+  - ETH
+
+commodity_is_currency:
+  - AA
+  - MR
+  - XXXX

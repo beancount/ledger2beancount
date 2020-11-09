@@ -10,6 +10,8 @@
 ;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
+option "inferred_tolerance_default" "GBP:0.004"
+
 ; SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
 ;
 ; SPDX-License-Identifier: GPL-3.0-or-later
@@ -32,6 +34,7 @@
 1970-01-01 open Assets:B
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Cash
+1970-01-01 open Assets:Investments
 1970-01-01 open Assets:Voucher
 1970-01-01 open Assets:Voucher:Groupon
 1970-01-01 open Expenses:Currency
@@ -43,6 +46,9 @@
 
 1970-01-01 commodity AAPL
 1970-01-01 commodity BRL
+1970-01-01 commodity FOO
+1970-01-01 commodity GB00BPN5P782
+1970-01-01 commodity MADEUP
 
 2018-03-17 * "Opening balance"
   Assets:Test              100.00 EUR {{90.00 GBP}}
@@ -491,4 +497,28 @@
 2020-10-23 * "Spacing: take from cost"
   Assets:Test           10.00 EUR {{9.00 GBP}}  ; foo
   Assets:Test                        -9.00 GBP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  9 GB00BPN5P782 {100.251 GBP}
+  Assets:Investments                                   -902.26 GBP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  9 GB00BPN5P782 {{902.26 GBP}}
+  Assets:Investments                                    -902.26 GBP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  9 ETH {100.00000251 MADEUP}
+  Assets:Investments                                -900.0000226 MADEUP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  9 ETH {{900.0000226 MADEUP}}
+  Assets:Investments                                 -900.0000226 MADEUP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  11 FOO {90.909 GBP}
+  Assets:Investments                          -1000 GBP
+
+2020-11-09 * "Total cost and total price don't match due to rounding"
+  Assets:Investments  11 FOO {{1000 GBP}}
+  Assets:Investments                           -1000 GBP
 
