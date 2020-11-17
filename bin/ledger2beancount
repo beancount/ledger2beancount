@@ -790,7 +790,7 @@ sub pp_txn_header($) {
     $l .= mk_beancount_string($i->[PAYEE]) . " " if defined $i->[PAYEE];
     $l .= $i->[NARRATION] ? mk_beancount_string $i->[NARRATION] : mk_beancount_string "";
     if ($i->[TAG]) {
-	my @tags = map { pp_tags $_ } @{$i->[TAG]};
+	my @tags = map { pp_tags @{$_->[VALUE]} } @{$i->[TAG]};
 	$l .= " " . join " ", @tags;
     }
     $l .= " " . pp_comment $i->[COMMENT] if $i->[COMMENT];
@@ -1749,21 +1749,18 @@ sub process_txn($$@) {
 	$header->[COMMENT] = $comment if $comment;
     }
 
-    my @tags;
-    foreach (@{$metadata}) {
-	if ($_->[TYPE] == TAG) {
-	    push @tags, $_ foreach @{$_->[VALUE]};
-	} elsif ($_->[TYPE] == META) {
-	    if (is_meta_payee $_) {
-		$header->[PAYEE] = $_->[VALUE];
-	    } else {
-		push @txn_parsed, $_;
-	    }
+    my @tags = grep { $_->[TYPE] == TAG } @{$metadata};
+    $header->[TAG] = \@tags if @tags;
+
+    my @metadata = grep { $_->[TYPE] == META } @{$metadata};
+    push @metadata, (grep { $_->[TYPE] ~~ [ META, TAG ] } reverse @ledger_apply);
+    foreach (@metadata) {
+	if ($_->[TYPE] == META && is_meta_payee $_) {
+	    $header->[PAYEE] = $_->[VALUE];
 	} else {
-	    die "Can't handle metadata type $_->[TYPE]\n";
+	    push @txn_parsed, $_;
 	}
     }
-    $header->[TAG] = \@tags if @tags;
     if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
 	push @txn_parsed, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
     }
@@ -1793,14 +1790,6 @@ sub process_txn($$@) {
 		$header->[PAYEE] = ${$payee_match}{$custom_narration_RE};
 		$match = 1;
 	    }
-	}
-    }
-    # ledger "apply tag"
-    foreach my $apply (grep { $_->[TYPE] ~~ [ META, TAG ] } reverse @ledger_apply) {
-	if ($apply->[TYPE] == META && is_meta_payee $apply) {
-	    $header->[PAYEE] = $apply->[VALUE];
-	} else {
-	    push @txn_parsed, $apply;
 	}
     }
 
