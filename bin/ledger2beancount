@@ -1716,6 +1716,57 @@ sub get_lot_total($$) {
 }
 
 
+# Process the payee or narration of a transaction
+# Arguments:
+#  - txn header
+#  - metadata (pre-posting metadata)
+# Returns:
+#  - txn header
+#  - metadata (pre-posting metadata)
+sub set_txn_payee($@) {
+    my ($header, @metadata) = @_;
+    my $narration = $header->[NARRATION];
+
+    # Determine payee based on the narration field
+    if ($config->{hledger} && $narration && $narration =~ /$hledger_payee_narration_RE/) {
+	$header->[PAYEE] = $+{payee};
+	$header->[NARRATION] = $+{narration};
+    }
+    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
+	if ($narration && $narration =~ /$custom_narration_RE/) {
+	    $header->[PAYEE] = $+{payee};
+	    $header->[NARRATION] = $+{narration};
+	    last;
+	}
+    }
+    # Config `payee_match` is an array of hashes
+    my @payee_match = @{$config->{payee_match}};
+    my $match = 0;
+    while (!$match && @payee_match) {
+	my $payee_match = shift @payee_match;
+	foreach my $custom_narration_RE (keys %{$payee_match}) {
+	    if ($narration && $narration =~ /$custom_narration_RE/) {
+		$header->[PAYEE] = ${$payee_match}{$custom_narration_RE};
+		$match = 1;
+	    }
+	}
+    }
+
+    my @skip_tags;
+    foreach my $i (@metadata) {
+	if ($i->[TYPE] == META && is_meta_payee $i) {
+	    $header->[PAYEE] = $i->[VALUE];
+	    push @skip_tags, $i->[KEY];
+	    last;
+	}
+    }
+    # Return metadata but skip all metadata where the key is in @skip_tags.
+    @metadata = grep { $_->[TYPE] != META || !($_->[KEY] ~~ @skip_tags)} @metadata;
+
+    return $header, @metadata;
+}
+
+
 # Process a ledger transaction
 # Arguments:
 #  - the year
@@ -1759,31 +1810,6 @@ sub process_txn($$@) {
     }
     if (defined $+{code} && defined $config->{code_tag}) {
 	push @header_data, create_metadata 1, $config->{code_tag}, $+{code}, 0;
-    }
-
-    # Determine payee based on the narration field
-    if ($config->{hledger} && $narration && $narration =~ /$hledger_payee_narration_RE/) {
-	$header->[PAYEE] = $+{payee};
-	$header->[NARRATION] = $+{narration};
-    }
-    foreach my $custom_narration_RE (@{$config->{payee_split}}) {
-	if ($narration && $narration =~ /$custom_narration_RE/) {
-	    $header->[PAYEE] = $+{payee};
-	    $header->[NARRATION] = $+{narration};
-	    last;
-	}
-    }
-    # Config `payee_match` is an array of hashes
-    my @payee_match = @{$config->{payee_match}};
-    my $match = 0;
-    while (!$match && @payee_match) {
-	my $payee_match = shift @payee_match;
-	foreach my $custom_narration_RE (keys %{$payee_match}) {
-	    if ($narration && $narration =~ /$custom_narration_RE/) {
-		$header->[PAYEE] = ${$payee_match}{$custom_narration_RE};
-		$match = 1;
-	    }
-	}
     }
 
     # Count total postings and postings that have amounts.  This is needed
@@ -2075,13 +2101,8 @@ sub process_txn($$@) {
     }
 
     # Add the header and pre-posting data at the beginning of the array
-    foreach my $i (reverse @header_data) {
-	if ($i->[TYPE] == META && is_meta_payee $i) {
-	    $header->[PAYEE] = $i->[VALUE];
-	} else {
-	    unshift @txn_out, $i;
-	}
-    }
+    ($header, @header_data) = set_txn_payee $header, @header_data;
+    unshift @txn_out, $_ foreach reverse @header_data;
     unshift @txn_out, $header;
 
     print_txn @txn_out;
