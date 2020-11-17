@@ -862,7 +862,7 @@ sub dump_txn_header($) {
     print "D:   FLAG: " . ($i->[FLAG] ? $i->[FLAG] : "none") . "\n";
     print "D:   PAYEE: " . ($i->[PAYEE] ? $i->[PAYEE] : "none") . "\n";
     print "D:   NARRATION: " . ($i->[NARRATION] ? $i->[NARRATION] : "none") . "\n";
-    print "D:   TAG: " . ($i->[TAG] ? join ", ", @{$i->[TAG]} : "none") . "\n";
+    print "D:   TAG: " . ($i->[TAG] ? join ", ", map @{$_->[VALUE]}, @{$i->[TAG]} : "none") . "\n";
     print "D:   COMMENT: " . ($i->[COMMENT] ? pp_comment $i->[COMMENT] : "none") . "\n";
 }
 
