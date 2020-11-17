@@ -1752,20 +1752,13 @@ sub process_txn($$@) {
     my @tags = grep { $_->[TYPE] == TAG } @{$metadata};
     $header->[TAG] = \@tags if @tags;
 
-    my @metadata = grep { $_->[TYPE] == META } @{$metadata};
-    push @metadata, (grep { $_->[TYPE] ~~ [ META, TAG ] } reverse @ledger_apply);
-    foreach (@metadata) {
-	if ($_->[TYPE] == META && is_meta_payee $_) {
-	    $header->[PAYEE] = $_->[VALUE];
-	} else {
-	    push @txn_parsed, $_;
-	}
-    }
+    my @header_data = grep { $_->[TYPE] == META } @{$metadata};
+    push @header_data, (grep { $_->[TYPE] ~~ [ META, TAG ] } reverse @ledger_apply);
     if (defined $+{auxdate} && defined $config->{auxdate_tag}) {
-	push @txn_parsed, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
+	push @header_data, create_metadata 1, $config->{auxdate_tag}, pp_date($+{auxdate}, $year), 1;
     }
     if (defined $+{code} && defined $config->{code_tag}) {
-	push @txn_parsed, create_metadata 1, $config->{code_tag}, $+{code}, 0;
+	push @header_data, create_metadata 1, $config->{code_tag}, $+{code}, 0;
     }
 
     # Determine payee based on the narration field
@@ -1792,9 +1785,6 @@ sub process_txn($$@) {
 	    }
 	}
     }
-
-    # Add the header at the beginning of the array
-    unshift @txn_parsed, $header;
 
     # Count total postings and postings that have amounts.  This is needed
     # to distinguish different kinds of balance assignments.
@@ -1872,16 +1862,17 @@ sub process_txn($$@) {
 	    if ($skipped_posting) {
 		print_warning_once "Comment or metadata on virtual posting preserved as comment";
 		push @txn_out, create_comment $i->[DEPTH], ( " " . pp_metadata $_->[KEY], $_->[VALUE]), $header foreach @{$metadata};
+		push @txn_out, $comment if $comment;
 	    } else {
+		push @{$metadata}, $comment if $comment;
 		foreach (@{$metadata}) {
-		    if ($_->[TYPE] == META && !$in_postings && is_meta_payee $_) {
-			$header->[PAYEE] = $_->[VALUE];
-		    } else {
+		    if ($in_postings) {
 			push @txn_out, $_;
+		    } else {
+			push @header_data, $_;
 		    }
 		}
 	    }
-	    push @txn_out, $comment if $comment;
 	} elsif ($i->[TYPE] == POSTING) {
 	    $skipped_posting = 0; # reset variable with each posting
 	    $in_postings = 1;
@@ -2082,6 +2073,17 @@ sub process_txn($$@) {
 	    return;
 	}
     }
+
+    # Add the header and pre-posting data at the beginning of the array
+    foreach my $i (reverse @header_data) {
+	if ($i->[TYPE] == META && is_meta_payee $i) {
+	    $header->[PAYEE] = $i->[VALUE];
+	} else {
+	    unshift @txn_out, $i;
+	}
+    }
+    unshift @txn_out, $header;
+
     print_txn @txn_out;
     if (@assertions) {
 	print_line 0, "";
