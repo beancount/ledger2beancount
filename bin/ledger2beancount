@@ -38,7 +38,8 @@ memoize('pp_date');
 
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
-            TAG META KEY VALUE TYPED TXN_HEADER PAYEE NARRATION ADJUST_WHITESPACE/;
+            TAG META KEY VALUE TYPED TXN_HEADER PAYEE NARRATION ADJUST_WHITESPACE
+            PUSHTAG YEAR/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -406,6 +407,71 @@ sub set_default($$$) {
     $config->{$key} = $value if !exists $config->{$key};
 
     return $config;
+}
+
+
+# Create an apply_account object
+# Arguments:
+#  - account (string)
+# Returns:
+#  - object
+sub create_apply_account($) {
+    my ($account) = @_;
+
+    my $obj;
+    $obj->[TYPE] = ACCOUNT;
+    # Strip trailing : since we always add a : later
+    $account =~ s/:+$//;
+    $obj->[VALUE] = $account;
+    return $obj;
+}
+
+
+# Create an apply_fixated object
+# Arguments:
+#  - amount object
+#  - currency (string)
+# Returns:
+#  - object
+sub create_apply_fixated($$) {
+    my ($amount, $commodity) = @_;
+
+    my $obj;
+    $obj->[TYPE] = FIXATED;
+    $obj->[COST]->[TYPE] = 1;
+    $obj->[COST]->[CURRENCY] = map_commodity $commodity;
+    $obj->[COST]->[AMOUNT] = $amount;
+    return $obj;
+}
+
+
+# Create an apply_pushtag object
+# Arguments:
+#  - tag (string)
+# Returns:
+#  - object
+sub create_apply_pushtag($) {
+    my ($tag) = @_;
+
+    my $obj;
+    $obj->[TYPE] = PUSHTAG;
+    $obj->[VALUE] = $tag;
+    return $obj;
+}
+
+
+# Create an apply_year object
+# Arguments:
+#  - year (string)
+# Returns:
+#  - object
+sub create_apply_year($) {
+    my ($year) = @_;
+
+    my $obj;
+    $obj->[TYPE] = YEAR;
+    $obj->[VALUE] = $year;
+    return $obj;
 }
 
 
@@ -1125,11 +1191,8 @@ sub map_metadata($) {
 sub map_account_apply($) {
     my ($account) = @_;
 
-    foreach my $a (reverse @ledger_apply) {
-	if (${$a}[0] eq "account") {
-	    ${$a}[1] =~ s/:+$//;
-	    $account = ${$a}[1] . ":" . $account;
-	}
+    foreach my $apply (grep { $_->[TYPE] == ACCOUNT } reverse @ledger_apply) {
+	$account = $apply->[VALUE] . ":" . $account;
     }
     return $account;
 }
@@ -1733,15 +1796,11 @@ sub process_txn($$@) {
 	}
     }
     # ledger "apply tag"
-    foreach my $a (reverse @ledger_apply) {
-	if (${$a}[0] eq "metadata") {
-	    if (is_meta_payee ${$a}[1]) {
-		$header->[PAYEE] = ${$a}[1]->[VALUE];
-	    } else {
-		push @txn_parsed, ${$a}[1];
-	    }
-	} elsif (${$a}[0] eq "link") {
-	    push @txn_parsed, ${$a}[1];
+    foreach my $apply (grep { $_->[TYPE] ~~ [ META, TAG ] } reverse @ledger_apply) {
+	if ($apply->[TYPE] == META && is_meta_payee $apply) {
+	    $header->[PAYEE] = $apply->[VALUE];
+	} else {
+	    push @txn_parsed, $apply;
 	}
     }
 
@@ -1861,12 +1920,9 @@ sub process_txn($$@) {
 
 	    if (defined $i->[AMOUNT] && !defined $i->[COST]) {
 		# Apply any fixated costs if needed
-		foreach my $a (reverse @ledger_apply) {
-		    if (${$a}[0] eq "fixed") {
-			my $fixated = ${$a}[1];
-			if ($i->[AMOUNT]->[CURRENCY] eq map_commodity $fixated->[CURRENCY]) {
-			    $i->[COST] = $fixated;
-			}
+		foreach my $fixated (grep { $_->[TYPE] == FIXATED } reverse @ledger_apply) {
+		    if ($i->[AMOUNT]->[CURRENCY] eq $fixated->[COST]->[CURRENCY]) {
+			$i->[COST] = $fixated->[COST];
 		    }
 		}
 	    }
@@ -2208,17 +2264,14 @@ while (@input) {
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	$out = \@output;
-	push @ledger_apply, [$+{type}, $+{val}];
+	push @ledger_apply, create_apply_account $+{val};
     } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<commodity>[^\s]+)\s*(?<fixed>.+)/) {  # apply fixed
 	$out = \@output;
-	my $fixated->[CURRENCY] = $+{commodity};
-	my $rest;
-	($fixated->[AMOUNT], $rest) = get_amount $+{fixed};
-	$fixated->[TYPE] = 1;
+	my ($amount, $rest) = get_amount $+{fixed};
 	if ($rest) {
 	    die "Unknown rest $rest in apply $+{type} directive: $l";
 	}
-	push @ledger_apply, ["fixed", $fixated];
+	push @ledger_apply, create_apply_fixated $amount, $+{commodity};
     } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
 	$out = \@output;
 	# `apply tag` can be converted to beancount in three ways:
@@ -2226,17 +2279,17 @@ while (@input) {
 	# * applying links to each transactions
 	# * applying metadata to each transactions
 	if ("; $+{val}" =~ /$metadata_RE/) {
-	    push @ledger_apply, ["metadata", create_metadata_from_regex 1, \%+];
+	    push @ledger_apply, create_metadata_from_regex 1, \%+;
 	} elsif (is_link $+{val}) {
-	    push @ledger_apply, ["link", create_tag 1, [ $+{val} ]];
+	    push @ledger_apply, create_tag 1, [ $+{val} ];
 	} else {
 	    print_line $depth, "pushtag " . pp_tag_link $+{val};
-	    push @ledger_apply, [$+{type}, $+{val}];
+	    push @ledger_apply, create_apply_pushtag $+{val};
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>year)\s+(?<val>\d+)/) {  # apply year
 	$out = \@output;
 	$year = $+{val};
-	push @ledger_apply, [$+{type}, $+{val}];
+	push @ledger_apply, create_apply_year $+{val};
     } elsif ($l =~ /^[!@]?(apply\s+.*)/) {  # apply .*
 	# ledger seems to silently ignore all other apply statements
 	print_warning_once "Unknown '$1' directive found";
@@ -2250,18 +2303,16 @@ while (@input) {
 	flush_cache('map_account');
     } elsif ($l =~ /^[!@]?end/) {  # end
 	next if !@ledger_apply; # end without any apply
-	my $a = pop @ledger_apply;
-	if (${$a}[0] eq "tag") {
-	    print_line $depth, "poptag " . pp_tag_link ${$a}[1]
-	} elsif (${$a}[0] eq "year") {
+	my $apply = pop @ledger_apply;
+	if ($apply->[TYPE] == PUSHTAG) {
+	    print_line $depth, "poptag " . pp_tag_link $apply->[VALUE];
+	} elsif ($apply->[TYPE] == YEAR) {
 	    # apply year can be nested, so restore the previous year
 	    my $found = 0;
-	    foreach my $a (reverse @ledger_apply) {
-		if (${$a}[0] eq "year") {
-		    $year = ${$a}[1];
-		    $found = 1;
-		    last;
-		}
+	    foreach my $apply (grep { $_->[TYPE] == YEAR } reverse @ledger_apply) {
+		$year = $apply->[VALUE];
+		$found = 1;
+		last;
 	    }
 	    $year = $year_no_apply if !$found;
 	}
