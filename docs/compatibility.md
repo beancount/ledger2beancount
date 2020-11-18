@@ -35,3 +35,15 @@ correctly), ledger2beancount expects input to be UTF-8.  This is
 because beancount files have to be UTF-8, so users are expected to
 have an environment that is compatible with UTF-8 anyway.
 
+Modern operating systems use UTF-8 by default.  On Windows, UTF-8
+may need to be set explicitly for the console.  If you run into
+encoding issues, you should run the following command before you
+use ledger2beancount:
+
+```shell
+chcp 65001
+```
+
+This sets the code page 65001, which is [UTF-8 on Windows
+systems](https://docs.microsoft.com/en-us/windows/win32/intl/code-page-identifiers).
+
