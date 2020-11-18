@@ -98,6 +98,10 @@ your *ledger* files correctly.
 	Specify a metadata tag (after the mapping done by *metadata_map*)
 	used to set the payee.
 
+*narration_tag*
+	Specify a metadata tag (after the mapping done by *metadata_map*)
+	used to set the narration.
+
 *payee_split*
 	Specifies a list of regular expressions to split *ledger*'s payee
 	field into payee and narration.  You have to use the named capture

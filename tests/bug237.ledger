@@ -1,0 +1,9 @@
+
+account Expenses:Transport:Zug
+account Assets:Giro
+
+2020/03/06 * Deutsche Bahn
+    ; thing: 7B6E33
+    Expenses:Transport:Zug                    €3.85
+    Assets:Giro
+

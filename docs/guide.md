@@ -319,6 +319,18 @@ regular expression).  This allows you to define generic matches using
 `payee_split` and `payee_match` and override special cases using metadata
 information.
 
+Similarly, `narration_tag` can be specified to set the narration from
+metadata.  If you use ledger's payee field to describe the payee and
+store the narration as metadata, you can use the following
+configuration:
+
+```yaml
+payee_split:
+  - (?<payee>.*)
+
+narration_tag: narration
+```
+
 
 ## Metadata
 

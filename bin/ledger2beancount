@@ -976,6 +976,22 @@ sub number2int($) {
 
 
 # Does a metadata object specify information that should be used
+# for the narration of the transaction? (cf the narration_tag
+# config variable)
+# Arguments:
+#  - a metadata object
+# Returns:
+#  - 1 if the metadata info should be used to specify the narration
+sub is_meta_narration($) {
+    my ($metadata) = @_;
+
+    if ($metadata->[KEY] eq $config->{narration_tag}) {
+	return 1;
+    }
+}
+
+
+# Does a metadata object specify information that should be used
 # for the payee of the transaction? (cf the payee_tag and
 # payer_tag config variables)
 # Arguments:
@@ -1177,9 +1193,9 @@ sub map_metadata($) {
     $key =~ s/[^a-zA-Z0-9_-]/-/g; # Replace disallowed characters
     $key = $config->{metadata_map}{$key} if exists $config->{metadata_map}{$key};
 
-    # payee_tag and payer_tag don't show up in the beancount file, so
-    # no need to warn about them.
-    if ($key ne $config->{payee_tag} and $key ne $config->{payer_tag}) {
+    # Certain tags won't show up in the beancount file, so there's no need
+    # to warn about them.
+    if (!($key ~~ [$config->{narration_tag}, $config->{payee_tag}, $config->{payer_tag}])) {
 	$ledger_metadata{$ledger_key} = 1;
     }
 
@@ -1753,11 +1769,13 @@ sub set_txn_payee($@) {
     }
 
     my @skip_tags;
-    foreach my $i (@metadata) {
-	if ($i->[TYPE] == META && is_meta_payee $i) {
+    foreach my $i (grep { $_->[TYPE] == META } @metadata) {
+	if (is_meta_narration $i) {
+	    $header->[NARRATION] = $i->[VALUE];
+	    push @skip_tags, $i->[KEY];
+	} elsif (is_meta_payee $i) {
 	    $header->[PAYEE] = $i->[VALUE];
 	    push @skip_tags, $i->[KEY];
-	    last;
 	}
     }
     # Return metadata but skip all metadata where the key is in @skip_tags.
@@ -2175,6 +2193,7 @@ $config = set_default($config, "account_open_date", "1970-01-01");
 $config = set_default($config, "commodities_date", "1970-01-01");
 $config = set_default($config, "payee_tag", "");
 $config = set_default($config, "payer_tag", "");
+$config = set_default($config, "narration_tag", "");
 $config = set_default($config, "payee_match", []);
 $config = set_default($config, "ledger_indent", 4);
 $config = set_default($config, "beancount_indent", 2);

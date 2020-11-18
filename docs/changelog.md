@@ -3,6 +3,7 @@
 ## 2.6 (unreleased)
 
 * Round calculated total if needed for `price==cost` comparison
+* Add `narration_tag` config variable to set narration from metadata
 
 ## 2.5 (2020-11-03)
 

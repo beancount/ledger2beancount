@@ -1,0 +1,6 @@
+
+payee_split:
+  - (?<payee>.*)
+
+narration_tag: thing
+

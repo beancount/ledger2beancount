@@ -78,3 +78,20 @@ end apply tag
         ; payee: Foo
     Equity:Opening-Balance            -10.00 EUR
 
+2020-11-18 * Payee
+    ; thing: My narration
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-11-18 * Payee
+    ; payee: My payee
+    ; thing: My narration
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-11-18 * Payee
+    ; thing: My narration
+    ; payee: My payee
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+

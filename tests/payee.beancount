@@ -70,3 +70,15 @@
     payee: "Foo"
   Equity:Opening-Balance            -10.00 EUR
 
+2020-11-18 * "My narration"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-11-18 * "My payee" "My narration"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-11-18 * "My payee" "My narration"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

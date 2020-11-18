@@ -12,6 +12,7 @@ metadata_map:
 # metadata tags (*after* above mapping) used for specific purposes
 payee_tag: payee
 payer_tag: payer
+narration_tag: thing
 
 payee_split:
   - (?<narration>.*?)\s+\((?<payee>Tesco)\)

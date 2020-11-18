@@ -10,6 +10,7 @@ Stefano started the project, created the design and initial implementation.  Mar
 We have also had contributions and input from:
 
 * Alen Siljak (bug reports)
+* Alexander Baier (bug reports)
 * Ben Creasy (fixes)
 * Colin Dean (bug reports)
 * Jelmer Vernooĳ (package for Debian)

@@ -138,6 +138,10 @@ payer_tag
 
 :   Specify a metadata tag (after the mapping done by `metadata_map`) used to set the payee.
 
+narration_tag
+
+:   Specify a metadata tag (after the mapping done by `metadata_map`) used to set the narration.
+
 payee_split
 
 :   Specifies a list of regular expressions to split ledger's payee field
