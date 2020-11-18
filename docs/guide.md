@@ -215,27 +215,27 @@ perl -pi -e 's/^(\s+code: )"(\d+)"$/$1$2/' *.beancount
 ```
 
 
-## Narration
+## Narration and payee
 
-The ledger payee information, which is generally used as free-form text
-to describe the transaction, is stored in beancount's narration field
-and properly quoted.
+Ledger's "payee" information is a free-form field and is used in
+different ways by different users.  Some use it to describe the
+transaction, some us it to specify the payee, and some put both
+information into the same field, possibly separated by some deliminator.
+While hledger also has only one field, it supports the separation of
+payee and narration using the pipe character (`payee | narration`).
+This is supported by ledger2beancount if the `hledger` option is
+enabled.
 
+Unlike ledger and hledger, beancount offers two separate fields:
 
-## Payees
+* an optional payee
+* a narration (a description of the transaction)
 
-Ledger has limited support for payees.  A `payee` metadata key can be set
-but this also overrides the free-form text to describe the transaction.
-Payees can also be declared explicitly in ledger but this is not required
-by beancount, so such declarations are ignored (they are preserved as
-comments).
-
-hledger allows the separation of payee and narration using the pipe
-character (`payee | narration`).  This is supported by ledger2beancount
-if the `hledger` option is enabled.
-
-Since ledger has limited support for payees, ledger2beancount offers
-several features to determine the payee from the transaction itself.
+By default, ledger's payee information is stored as the narration as
+the field is often used as free-form text to describe the transaction
+while the optional payee is not set.  Since that might not lead to the
+best result, ledger2beancount offers a number of mechanisms to convert
+ledger's free-form field to beancount's payee and narration fields.
 
 You can set `payee_split` and define a list of regular expressions which
 allow you to split ledger's payee field into payee and narration.  You
