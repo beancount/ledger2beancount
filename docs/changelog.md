@@ -4,6 +4,7 @@
 
 * Round calculated total if needed for `price==cost` comparison
 * Add `narration_tag` config variable to set narration from metadata
+* Ensure UTF-8 output and assume UTF-8 input
 
 ## 2.5 (2020-11-03)
 

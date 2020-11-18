@@ -14,7 +14,7 @@ use strict;
 use experimental 'smartmatch';
 use utf8;
 use feature 'unicode_strings';
-use open qw/:std :locale/;
+use open qw/:std :utf8/;
 
 use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;

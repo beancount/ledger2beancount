@@ -23,3 +23,15 @@ use the following features, you need Beancount 2.1:
 * Full-line comments in transactions
 * Transaction tags on multiple lines
 
+# Ledger compatibility
+
+ledger2beancount is compatible with the latest release of ledger and
+supports the majority of features, as documented in the previous
+section.
+
+There is one limitation, though.  While ledger doesn't care about the
+encoding of files (as long as your operating system processes them
+correctly), ledger2beancount expects input to be UTF-8.  This is
+because beancount files have to be UTF-8, so users are expected to
+have an environment that is compatible with UTF-8 anyway.
+

@@ -13,6 +13,7 @@ We have also had contributions and input from:
 * Alexander Baier (bug reports)
 * Ben Creasy (fixes)
 * Colin Dean (bug reports)
+* Daniele Nicolodi (feedback)
 * Jelmer Vernooĳ (package for Debian)
 * Johannes Raufeisen (bug reports)
 * John Wiegley (help with compatibility with ledger)
