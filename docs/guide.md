@@ -264,6 +264,18 @@ into payee and narration in beancount.  `payee_split` is a list of
 regular expressions and ledger2beancount stops when a match is
 found.
 
+Another use case for `payee_split` is [hledger's
+convention](https://hledger.org/journal.html#payee-and-note) of
+separating the payee and narration with the pipe (`|`) symbol.
+While this convention is recognised for hledger files automatically
+(when the `hledger` option is set), you can use the following
+`payee_split` if you use this convention in your ledger files:
+
+```yaml
+payee_split:
+  - ^(?<payee>[^|]+?)\s*\|\s*(?<narration>.+)
+```
+
 Furthermore, you can use `payee_match` to match based on the ledger
 payee field and assign payees according to the match.  This variable
 is a list consisting of regular expressions and the corresponding
