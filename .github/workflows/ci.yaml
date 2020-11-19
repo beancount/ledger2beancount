@@ -48,3 +48,6 @@ jobs:
       - run: mkdocs build
       - run: find -name "*.yml" -exec yamllint -s {} \;
       - run: find -name "*.yaml" -exec yamllint -s {} \;
+      - run: sudo apt-get install aspell aspell-en
+      - run: pip install pyspelling
+      - run: pyspelling

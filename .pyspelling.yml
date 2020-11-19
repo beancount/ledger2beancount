@@ -1,0 +1,24 @@
+spellchecker: aspell
+
+matrix:
+- name: markdown
+  default_encoding: utf-8
+  sources:
+    - "**/*.md"
+  pipeline:
+  pipeline:
+    - pyspelling.filters.markdown:
+      markdown_extensions:
+      - marokdown.extensions.extra:
+    - pyspelling.filters.html:
+        comments: true
+        ignores:
+          - code
+          - pre
+    - pyspelling.filters.url:
+  aspell:
+    lang: en
+  dictionary:
+    encoding: utf-8
+    wordlists:
+    - .aspell.en.pws
