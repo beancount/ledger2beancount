@@ -59,7 +59,7 @@ problems with the conversion.
 _$PWD/.ledger2beancount.yaml_ or _$PWD/ledger2beancount.yaml_
 	The configuration file for the current directory.
 
-_$HOME/.config/ledger2beancount/config.yaml_
+_$XDG_CONFIG_HOME/ledger2beancount/config.yaml_ (usually _$HOME/.config/ledger2beancount/config.yaml_)
 	The default configuration file.
 
 # BUGS

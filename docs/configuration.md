@@ -6,7 +6,8 @@ that is found):
 
 * `.ledger2beancount.yaml` in the current working directory
 * `ledger2beancount.yaml` in the current working directory
-* `$HOME/.config/ledger2beancount/config.yaml`
+* `$XDG_CONFIG_HOME/ledger2beancount/config.yaml` (which is
+   typically `$HOME/.config/ledger2beancount/config.yaml`)
 
 You can also pass an alternative config file via `--config/-c`.  The
 file must end in `.yml` or `.yaml`.
