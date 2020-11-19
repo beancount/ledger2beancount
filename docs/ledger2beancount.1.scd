@@ -56,7 +56,7 @@ problems with the conversion.
 
 # FILES
 
-_$PWD/ledger2beancount.yaml_
+_$PWD/.ledger2beancount.yaml_ or _$PWD/ledger2beancount.yaml_
 	The configuration file for the current directory.
 
 _$HOME/.config/ledger2beancount/config.yaml_

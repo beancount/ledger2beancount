@@ -6,6 +6,7 @@
 * Add `narration_tag` config variable to set narration from metadata
 * Ensure UTF-8 output and assume UTF-8 input
 * Document UTF-8 issue on Windows systems
+* Support configuration file called `.ledger2beancount.yaml`
 
 ## 2.5 (2020-11-03)
 

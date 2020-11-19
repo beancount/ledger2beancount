@@ -1,11 +1,15 @@
 # Configuration
 
 ledger2beancount can use a configuration file.  It will search for
-the config file `ledger2beancount.yaml` in the current working directory.
-If that file is not found, it will look for
-`$HOME/.config/ledger2beancount/config.yaml`.  You can also pass an
-alternative config file via `--config/-c`.  The file must end in `.yml`
-or `.yaml`.  See the sample config file for the variables you can use.
+the config file in the following locations (taking the first file
+that is found):
+
+* `.ledger2beancount.yaml` in the current working directory
+* `ledger2beancount.yaml` in the current working directory
+* `$HOME/.config/ledger2beancount/config.yaml`
+
+You can also pass an alternative config file via `--config/-c`.  The
+file must end in `.yml` or `.yaml`.
 
 While the configuration file is optional, you may have to define a
 number of variables for ledger2beancount to work correctly with your
