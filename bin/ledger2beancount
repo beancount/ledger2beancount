@@ -89,7 +89,7 @@ my %ledger_alias; # Capture "alias" statements
 my $ledger_bucket; # Use bucket if there's only one posting
 my %ledger_define; # Capture "define" statements
 my %ledger_commodity_format; # Ledger commodity format
-# Store some hleger info
+# Store some hledger info
 my @hledger_alias_regex; # regex aliases
 my $hledger_default_commodity; # default commodity set via "D" directive
 # Conversion notes for users from ledger2beancount
