@@ -155,9 +155,13 @@ done
 
 # Validate beancount files
 beancount_version=$(bean-check --version 2>/dev/null | cut -d' ' -f2)
-for test in *.beancount; do
-	test_validity_beancount "$test"
-done
+if [ -z $beancount_version ]; then
+	echo "Skipping beancount validation checks since beancount is not installed"
+else
+	for test in *.beancount; do
+		test_validity_beancount "$test"
+	done
+fi
 
 exit $status
 
