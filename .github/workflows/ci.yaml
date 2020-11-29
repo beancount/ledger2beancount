@@ -49,7 +49,7 @@ jobs:
       - run: find -name "*.yml" -exec yamllint -s {} \;
       - run: find -name "*.yaml" -exec yamllint -s {} \;
       - run: sudo apt-get install aspell aspell-en
-      - run: pip install pyspelling
+      - run: pip install "pyspelling>=2.7"
       - run: pyspelling
       - run: pip install codespell
       - run: find \( -name "*.md" -or -name "*.scd" \) -exec codespell {} \;
