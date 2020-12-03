@@ -749,7 +749,7 @@ sub pp_posting($) {
 	$i->[WHITESPACE] .= $space_diff;
     } elsif ($adjust < 0) {
 	$i->[WHITESPACE] =~ s/$space_diff//;
-	# # Ensure there are two spaces
+	# Ensure there are two spaces
 	$i->[WHITESPACE] = "  " if $i->[WHITESPACE] eq " " || $i->[WHITESPACE] eq "";
     }
 
