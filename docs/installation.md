@@ -38,6 +38,7 @@ a similar location:
 
 ```shell
 git clone https://github.com/beancount/ledger2beancount/
+cd ledger2beancount
 ./bin/ledger2beancount examples/simple.ledger
 ```
 
