@@ -95,3 +95,29 @@ end apply tag
     Assets:Test                        10.00 EUR
     Equity:Opening-Balance            -10.00 EUR
 
+2020-12-30 * Payee and payer
+    ; payee: My payee
+    ; payer: My payer
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * Payee and payer
+    ; payer: My payer
+    ; payee: My payee
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * Payee, payer and narration
+    ; payee: My payee
+    ; payer: My payer
+    ; thing: My narration
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * Payee, payer and narration
+    ; thing: My narration
+    ; payer: My payer
+    ; payee: My payee
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+

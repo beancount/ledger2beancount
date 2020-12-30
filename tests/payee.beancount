@@ -82,3 +82,23 @@
   Assets:Test                        10.00 EUR
   Equity:Opening-Balance            -10.00 EUR
 
+2020-12-30 * "My payee" "Payee and payer"
+  payer: "My payer"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * "My payer" "Payee and payer"
+  payee: "My payee"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * "My payee" "My narration"
+  payer: "My payer"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * "My payer" "My narration"
+  payee: "My payee"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+

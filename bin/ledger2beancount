@@ -1769,11 +1769,16 @@ sub set_txn_payee($@) {
     }
 
     my @skip_tags;
+    my $seen_meta_payee = 0;
     foreach my $i (grep { $_->[TYPE] == META } @metadata) {
 	if (is_meta_narration $i) {
 	    $header->[NARRATION] = $i->[VALUE];
 	    push @skip_tags, $i->[KEY];
-	} elsif (is_meta_payee $i) {
+	} elsif (is_meta_payee $i && !$seen_meta_payee) {
+	    # There can be both payee_tag and payer_tag in which case
+	    # we take the first one for the payee and the keep the
+	    # second one as metadata.
+	    $seen_meta_payee = 1;
 	    $header->[PAYEE] = $i->[VALUE];
 	    push @skip_tags, $i->[KEY];
 	}
