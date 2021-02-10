@@ -25,6 +25,7 @@ We have also had contributions and input from:
 * Simon Michael (bug reports; fixes; help with compatibility with hledger)
 * Taylor R. Campbell (package for pkgsrc)
 * Thierry (bug reports; documentation)
+* Vinod Kurup (fixes)
 * Yuri Khan (feedback)
 * Zhuoyun Wei (package for Arch Linux)
 
