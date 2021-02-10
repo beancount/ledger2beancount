@@ -64,7 +64,7 @@ DOCKER_BUILDKIT=1 docker image build -t <IMAGENAME> .
 Now you can run ledger2beancount like this:
 
 ```shell
-docker run --rm v <HOSTDIR>:/usr/ledger2beancount/docker:rw <IMAGENAME> docker/<LEDGER FILE>
+docker run --rm -v <HOSTDIR>:/usr/ledger2beancount/docker:rw <IMAGENAME> docker/<LEDGER FILE>
 ```
 
 ## macOS
