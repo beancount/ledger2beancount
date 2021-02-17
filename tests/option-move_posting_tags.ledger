@@ -1,0 +1,29 @@
+
+2020-12-30 * Posting-level tags
+    ; :foo:
+    Assets:Test                        10.00 EUR
+        ; :bar:
+    Equity:Opening-Balance            -10.00 EUR
+        ; :baz:
+
+2020-12-30 * Posting-level tags
+    ; :foo:
+    Assets:Test                        10.00 EUR ; :bar:
+    Equity:Opening-Balance            -10.00 EUR ; :baz:
+
+2020-12-30 * Posting-level tags
+    ; :foo:
+    Assets:Test                        10.00 EUR ; :bar:
+        ; :foobar:
+    Equity:Opening-Balance            -10.00 EUR ; :baz:
+        ; :foobaz:
+
+2020-12-30 * Posting-level link
+    Assets:Test                        10.00 EUR
+        ; :2020-12-30-test:
+    Equity:Opening-Balance            -10.00 EUR
+
+2020-12-30 * Posting-level link
+    Assets:Test                        10.00 EUR ; :2020-12-30-test:
+    Equity:Opening-Balance            -10.00 EUR
+

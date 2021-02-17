@@ -366,10 +366,31 @@ but you should make sure the values are valid in beancount.
 
 Beancount allows tags for transactions but currently doesn't support
 tags for postings ([issue
-144](https://github.com/beancount/beancount/issues/144)).  Because of
-this, posting-level tags are currently stored as metadata with the key
-`tags`.  This should be seen as a workaround because metadata with the
-key `tags` is not treated the same way by beancount as proper tags.
+144](https://github.com/beancount/beancount/issues/144)).  There are
+two ways to work around this limitation:
+
+1. Posting-level tags can be stored as metadata with the key `tags`.
+   (This is the default behaviour.)
+2. Posting-level tags can be moved to the transaction itself.
+   (This behaviour can be enabled by setting the option
+   `move_posting_tags` to `true`).
+
+Both approaches have pros and cons.  The advantage of the first method
+(which is the default) is that it's fairly easy to transform the
+metadata to tags (with search and replace or a regex substitution)
+once beancount adds support for posting-level tags.  The disadvantage
+is that the information is stored as meta-data, which is different to
+tags.
+
+The advantage of the second method is that tags are preserved as tags.
+The disadvantage is that you cannot distinguish the origin of those
+tags (transaction vs posting).
+
+Therefore, if you are using ledger2beancount to migrate to beancount,
+the default option makes sense.  On the other hand, if you're using
+ledger2beancount to run ledger and beancount in parallel (for example,
+because you're still working on the migration or want to use Fava),
+turning on `move_posting_tags` might be better.
 
 Ledger's `apply tag` directive is supported.  If the string to apply is
 metadata or a link (according to `link_match`, see below), the information

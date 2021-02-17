@@ -150,6 +150,10 @@ your *ledger* files correctly.
 	Expects beancount commodities (i.e. after transformation
 	and mapping).
 
+*move_posting_tags*
+	Move posting-level tags to the transaction itself to work around
+	the lack of posting-level tags in beancount.
+
 # AUTHORS
 
 Stefano Zacchiroli and Martin Michlmayr

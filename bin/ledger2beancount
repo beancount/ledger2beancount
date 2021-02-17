@@ -1916,7 +1916,12 @@ sub process_txn($$@) {
 		push @{$metadata}, $comment if $comment;
 		foreach (@{$metadata}) {
 		    if ($in_postings) {
-			push @txn_out, $_;
+			if ($_->[TYPE] == TAG && $config->{move_posting_tags}) {
+			    $_->[DEPTH]--;
+			    push @header_data, $_;
+			} else {
+			    push @txn_out, $_;
+			}
 		    } else {
 			push @header_data, $_;
 		    }
@@ -2043,7 +2048,14 @@ sub process_txn($$@) {
 	    }
 
 	    push @txn_out, $i;
-	    push @txn_out, $_ foreach @{$metadata};
+	    foreach (@{$metadata}) {
+		if ($_->[TYPE] == TAG && $config->{move_posting_tags}) {
+		    $_->[DEPTH]--;
+		    push @header_data, $_;
+		} else {
+		    push @txn_out, $_;
+		}
+	    }
 	} else {
 	    push @txn_out, $i;
 	}
@@ -2208,6 +2220,7 @@ $config = set_default($config, "automatic_declarations", 1);
 $config = set_default($config, "decimal_comma", 0);
 $config = set_default($config, "convert_virtual", 0);
 $config = set_default($config, "commodity_map", {});
+$config = set_default($config, "move_posting_tags", 0);
 
 # commodity_map is handled slightly differently to the rest:
 # some defaults are set even if there's a "commodity_map" declaration

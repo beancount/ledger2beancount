@@ -15,6 +15,7 @@ We have also had contributions and input from:
 * Colin Dean (bug reports)
 * Daniele Nicolodi (feedback)
 * Dennis Lee (Docker image)
+* GitHub user faaafo (bug reports)
 * Jelmer Vernooĳ (package for Debian)
 * Johannes Raufeisen (bug reports)
 * John Wiegley (help with compatibility with ledger)

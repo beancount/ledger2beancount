@@ -205,3 +205,8 @@ default_commodity
 :   Specifies the commodity to be used if an amount without commodity is
     found.
 
+move_posting_tags
+
+:   Tells ledger2beancount to move posting-level tags to the transaction
+    itself to work around the lack of posting-level tags in beancount.
+
