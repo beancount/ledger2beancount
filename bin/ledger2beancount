@@ -940,7 +940,7 @@ sub convert_number($$) {
 	$number =~ s/\.//g;
 	$number =~ tr/,/./; # issue #204
     } elsif ($config->{hledger}) {
-	if (defined $ledger_commodity_format{$currency}) {
+	if ($currency && defined $ledger_commodity_format{$currency}) {
 	   my $format = $ledger_commodity_format{$currency};
 	   # We use some shortcuts for the format; basically,
 	   # we just use format to figure out the decimal mark

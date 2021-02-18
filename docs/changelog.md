@@ -9,6 +9,7 @@
 * Document UTF-8 issue on Windows systems
 * Add option to move posting-level tags to the transaction itself
 * Support configuration file called `.ledger2beancount.yaml`
+* Fix uninitialised value warning in hledger mode
 * Add `Dockerfile` to create Docker image
 
 ## 2.5 (2020-11-03)
