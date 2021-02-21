@@ -2,6 +2,7 @@
 
 ledger2beancount is a Perl script and relies on the following modules:
 
+* `Config::Onion`
 * `Date::Calc`
 * `DateTime::Format::Strptime`
 * `enum`
@@ -22,8 +23,9 @@ cpanm --installdeps .
 If you use Debian, you can install the dependencies with this command:
 
 ```shell
-sudo apt install libdate-calc-perl libdatetime-format-strptime-perl \
-    libenum-perl libfile-basedir-perl libgetopt-long-descriptive-perl \
+sudo apt install libconfig-onion-perl libdate-calc-perl \
+    libdatetime-format-strptime-perl libenum-perl libfile-basedir-perl \
+    libgetopt-long-descriptive-perl \
     liblist-moreutils-perl libregexp-common-perl \
     libstring-interpolate-perl libyaml-libyaml-perl
 ```
