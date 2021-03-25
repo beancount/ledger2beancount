@@ -39,7 +39,7 @@ memoize('pp_date');
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
             TAG META KEY VALUE TYPED TXN_HEADER PAYEE NARRATION ADJUST_WHITESPACE
-            PUSHTAG YEAR/;
+            PUSHTAG YEAR MATCH/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -86,6 +86,7 @@ my %commodity_declared;
 # Store some ledger directives relevant for processing
 my @ledger_apply; # Capture open "apply" statements
 my %ledger_alias; # Capture "alias" statements
+my @ledger_account_payee_match; # Capture "payee" sub-directives of "account" declarations
 my $ledger_bucket; # Use bucket if there's only one posting
 my %ledger_define; # Capture "define" statements
 my %ledger_commodity_format; # Ledger commodity format
@@ -489,6 +490,23 @@ sub create_comment($$$) {
     # for metadata `date`/`date2` without the year.
     $comment->[DATE] = $header->[DATE];
     return $comment;
+}
+
+
+# Create a match_account_payee object
+# Arguments:
+#  - payee regex
+#  - account (string)
+# Returns:
+#  - object
+sub create_match_account_payee($$) {
+    my ($payee, $account) = @_;
+
+    my $obj;
+    $obj->[TYPE] = ACCOUNT;
+    $obj->[MATCH] = $payee;
+    $obj->[VALUE] = $account;
+    return $obj;
 }
 
 
@@ -1273,8 +1291,22 @@ sub map_account($) {
 
 # Applies any pending account renames (e.g. ledger alias and "apply
 # account") and then maps the account name.
-sub apply_account($) {
-    my ($account) = @_;
+sub apply_account($$) {
+    my ($account, $narration) = @_;
+
+    # If an account ends in :Unknown, check if any regexes specified
+    # in the payee sub-directive of account declaration match.
+    if (@ledger_account_payee_match && $account =~ /:Unknown$/) {
+	# Set the default payee if necessary
+	if (!$narration) {
+	    $narration = "<Unspecified payee>";
+	}
+	foreach my $match (@ledger_account_payee_match) {
+	    if ($narration =~ /$match->[MATCH]/) {
+		return $match->[VALUE];
+	    }
+	}
+    }
 
     if (exists $ledger_alias{$account}) {
 	$account = $ledger_alias{$account};
@@ -1949,7 +1981,7 @@ sub process_txn($$@) {
 	    } elsif ($i->[ACCOUNT] =~ /^<(.*)>/) {
 		    $i->[ACCOUNT] = $1;
 	    }
-	    $i->[ACCOUNT] = apply_account $i->[ACCOUNT];
+	    $i->[ACCOUNT] = apply_account $i->[ACCOUNT], $header->[NARRATION];
 	    $i->[ADJUST_WHITESPACE] -= length $i->[ACCOUNT];
 
 	    if (defined $i->[AMOUNT] && !defined $i->[COST]) {
@@ -2027,7 +2059,7 @@ sub process_txn($$@) {
 		    # We have two postings, i.e. two accounts; remove the current
 		    # account from the list of accounts to find out which account
 		    # we have to pad against.
-		    my @accounts = map { apply_account $_->[ACCOUNT] } @postings;
+		    my @accounts = map { apply_account $_->[ACCOUNT], $header->[NARRATION] } @postings;
 		    @accounts = grep { $_ ne $i->[ACCOUNT] } @accounts;
 		    # @accounts shouldn't be empty; if it's empty, it means
 		    # both postings had the same account.  While such a
@@ -2448,6 +2480,10 @@ while (@input) {
 		my $alias = $1;
 		$alias =~ s/\s+$//;
 		$ledger_alias{$alias} = map_account_apply $account;
+	    } elsif ($l =~ /^payee\s+(.*)/) {  # payee
+		my $payee = $1;
+		$payee =~ s/\s+$//;
+		push @ledger_account_payee_match, create_match_account_payee $payee, map_account_apply $account;
 	    } else {
 		print_comment_top_level $depth, $l;
 	    }

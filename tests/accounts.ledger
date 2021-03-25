@@ -371,3 +371,30 @@ account Expenses:Food
     Assets:Even-even-more-food        10.00 EUR
     Assets:Cash
 
+account Expenses:Gas
+    payee K.*   
+
+account Expenses:Food
+    alias food
+    payee ^(KFC|Popeyes)$
+    payee ^Metro
+
+account Expenses:Rest
+    payee <Unspecified payee>
+
+2021-03-25 * KFC
+    Expenses:Unknown                  10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Popeyes
+    Expenses:Unknown                  10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Metro
+    Expenses:Unknown                  10.00 EUR
+    Assets:Cash
+
+2021-03-25
+    Expenses:Unknown                  10.00 EUR
+    Assets:Cash
+

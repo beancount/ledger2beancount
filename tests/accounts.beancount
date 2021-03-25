@@ -415,3 +415,25 @@ option "name_income" "Revenue"
   Assets:Even-even-more-food        10.00 EUR
   Assets:Bash
 
+1970-01-01 open Expenses:Gas
+
+; 1970-01-01 open Expenses:Food
+
+1970-01-01 open Expenses:Rest
+
+2021-03-25 * "KFC"
+  Expenses:Gas                      10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Popeyes"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Metro"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 txn ""
+  Expenses:Rest                     10.00 EUR
+  Assets:Bash
+
