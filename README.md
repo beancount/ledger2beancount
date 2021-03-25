@@ -48,7 +48,7 @@ use ledger2beancount and to configure it to your needs.
     * Conversion of invalid account names
     * Mapping of account names
     * Directive `apply account`
-    * Account aliases (`alias`)
+    * Account aliases (the `alias` directive and the `alias` sub-directive of `account` declarations)
 * Balance assignments
 * Balance assertions
 * Comments

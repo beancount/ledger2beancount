@@ -5,6 +5,7 @@
 ;   - Virtual posting in parentheses ignored
 ;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
 ;   - Non-standard root name Revenue used; please set beancount options name_*
+;   - Skipped second account declaration for Expenses:Food (old Expenses:Food)
 ;   - Account Accrued:Accounts Payable:Baz renamed to Liabilities:Accounts-Payable:Baz
 ;   - Account Assets:Bank Debian)bar renamed to Assets:Bank-Debian-bar
 ;   - Account Assets:Bank [Debian] renamed to Assets:Bank--Debian-
@@ -38,7 +39,6 @@ option "name_income" "Revenue"
 
 1970-01-01 open Assets:Test
   description: "Test account"
-;   alias food
 ;   default
 
 1970-01-01 open Equity:Opening-Balance
@@ -58,6 +58,7 @@ option "name_income" "Revenue"
 
 ; These accounts lead to name collision
 1970-01-01 open Expenses:Travel
+; 1970-01-01 open Expenses:Travel
 
 1970-01-01 commodity EUR
 
@@ -69,6 +70,7 @@ option "name_income" "Revenue"
 1970-01-01 open Assets:Bash
 1970-01-01 open Assets:Bbb
 1970-01-01 open Assets:Collision
+1970-01-01 open Assets:Even-even-more-food
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
 1970-01-01 open Equity:Trading:Currency
@@ -381,4 +383,35 @@ option "name_income" "Revenue"
 2019-04-29 * "Strange but legal name in ledger - illegal in beancount"
   Expenses:Baz                     100.00 EUR
   Assets:Bank                     -100.00 EUR
+
+1970-01-01 open Expenses:Food
+
+; 1970-01-01 open Expenses:Food
+
+; 1970-01-01 open Expenses:Food
+;   ; trailing whitespace
+
+; 1970-01-01 open Expenses:Food
+
+; 1970-01-01 open Expenses:Food
+
+2021-03-25 * "Account alias from account sub-directive"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Account alias from account sub-directive"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Account alias from account sub-directive"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Account alias from account sub-directive"
+  Expenses:Food                     10.00 EUR
+  Assets:Bash
+
+2021-03-25 * "Account alias from account sub-directive: will not match"
+  Assets:Even-even-more-food        10.00 EUR
+  Assets:Bash
 

@@ -2430,18 +2430,24 @@ while (@input) {
 	@stanza = read_stanza \@input;
 	# Avoid duplicate account declarations if two accounts are mapped
 	# to the same account and both have account declarations.
+	my $account_declaration = sprintf "$config->{account_open_date} open %s%s", $account, $comment ? " ;$comment" : "";
 	if ($account_declared{$account}) {
 	    print_warning_once "Skipped second account declaration for $account (old $1)";
-	    next;
+	    print_comment_top_level $depth, $account_declaration;
+	} else {
+	    print_line $depth, $account_declaration;
 	}
 	$account_declared{$account} = 1;
-	print_line $depth, sprintf "$config->{account_open_date} open %s%s", $account, $comment ? " ;$comment" : "";
 	foreach $l (@stanza) {
 	    ($depth, $l) = strip_indentation $l;
 	    if ($l =~ /^note\s+(.*)/) {  # note
 		print_line $depth, pp_metadata "description", mk_beancount_string $1;
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
 		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
+	    } elsif ($l =~ /^alias\s+(.*)/) {  # alias
+		my $alias = $1;
+		$alias =~ s/\s+$//;
+		$ledger_alias{$alias} = map_account_apply $account;
 	    } else {
 		print_comment_top_level $depth, $l;
 	    }

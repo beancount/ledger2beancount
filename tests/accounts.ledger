@@ -6,7 +6,7 @@
 
 account Assets:Test
     note Test account
-    alias food
+    alias test
     default
 
 account Equity:Opening balance
@@ -333,4 +333,41 @@ account Assets:Bank Debian]bar
 2019-04-29 * Strange but legal name in ledger - illegal in beancount
     Expenses:Baz:                    100.00 EUR
     Assets:Bank                     -100.00 EUR
+
+account Expenses:Food
+    alias food
+
+account Expenses:Food
+    alias food stuff
+
+account Expenses:Food
+    ; trailing whitespace
+    alias more food   
+
+account Expenses:Food
+    alias one alias for food
+    alias even more food stuff
+
+account Expenses:Food
+    alias Assets:Even-even-more-food  ; this will not match: comments are not supported
+
+2021-03-25 * Account alias from account sub-directive
+    food                              10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Account alias from account sub-directive
+    food stuff                        10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Account alias from account sub-directive
+    more food                         10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Account alias from account sub-directive
+    even more food stuff              10.00 EUR
+    Assets:Cash
+
+2021-03-25 * Account alias from account sub-directive: will not match
+    Assets:Even-even-more-food        10.00 EUR
+    Assets:Cash
 

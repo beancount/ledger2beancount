@@ -8,6 +8,7 @@
 * Ensure UTF-8 output and assume UTF-8 input
 * Document UTF-8 issue on Windows systems
 * Add option to move posting-level tags to the transaction itself
+* Add support for the `alias` sub-directive of `account` declarations
 * Support configuration file called `.ledger2beancount.yaml`
 * Fix uninitialised value warning in hledger mode
 * Add `Dockerfile` to create Docker image

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 73 utf-8
+personal_ws-1.1 en 74 utf-8
 AUR
 Alen
 Baier
@@ -42,6 +42,7 @@ auxdate
 backports
 beancount
 beancount's
+bratekarate
 config
 coreutils
 cpanminus

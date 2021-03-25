@@ -9,7 +9,7 @@ The majority of features from [ledger](https://ledger-cli.org/) and [hledger](ht
     * Conversion of invalid account names
     * Mapping of account names
     * Directive `apply account`
-    * Account aliases (`alias`)
+    * Account aliases (the `alias` directive and the `alias` sub-directive of `account` declarations)
 * Balance assignments
 * Balance assertions
 * Comments

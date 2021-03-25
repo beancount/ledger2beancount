@@ -30,7 +30,8 @@ expected syntax (and semantics) for all such values is that of
 
 ledger2beancount will convert ledger account declarations to beancount
 `open` statements using the `account_open_date` variable as the opening
-date.  The `note` is used as the `description`.
+date.  The `note` is used as the `description`.  The sub-directive
+`alias` is supported.  Other sub-directives are not supported.
 
 Unlike ledger, beancount requires declarations for all account names.
 If an account was not declared in your ledger file but used,
