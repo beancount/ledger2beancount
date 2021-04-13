@@ -1698,7 +1698,7 @@ sub parse_posting($$$) {
 	# If amount was commodity-less and we have an assertion, use the
 	# commodity from assertion.  This is useful since some people do
 	# something like: 0 == 10 EUR
-	if (defined $posting->[AMOUNT] && !defined $posting->[AMOUNT]->[CURRENCY] && defined $posting->[ASSERTION]) {
+	if (defined $posting->[AMOUNT] && !defined $posting->[AMOUNT]->[CURRENCY] && defined $posting->[ASSERTION] && defined $posting->[ASSERTION]->[AMOUNT]->[CURRENCY]) {
 	    $posting->[AMOUNT]->[CURRENCY] = $posting->[ASSERTION]->[AMOUNT]->[CURRENCY];
 	}
     }
@@ -2175,17 +2175,22 @@ sub process_txn($$@) {
     print_txn @txn_out;
     if (@assertions) {
 	print_line 0, "";
-	# Ledger and beancount treat balance assertions differently:
-	# Ledger only considers the account specified while beancount
-	# takes the total of all sub-accounts.
-	#
-	# Print a warning if there are any sub-accounts of the account
-	# in the assertion.
 	foreach my $assertion (@assertions) {
+	    # Ledger and beancount treat balance assertions differently:
+	    # Ledger only considers the account specified while beancount
+	    # takes the total of all sub-accounts.
+	    #
+	    # Print a warning if there are any sub-accounts of the account
+	    # in the assertion.
 	    foreach my $account (keys %account_declared) {
 		if ($account =~ /^$assertion->[ACCOUNT]:/ && $assertion->[TYPE] != SUBACCOUNT) {
 		    print_warning_once "Assertion for $assertion->[ACCOUNT] may fail due to sub-accounts";
 		}
+	    }
+
+	    # Set currency if necessary
+	    if (!defined $assertion->[AMOUNT]->[CURRENCY]) {
+		$assertion->[AMOUNT]->[CURRENCY] = get_default_commodity;
 	    }
 	}
 	print_assertions @assertions;

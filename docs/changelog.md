@@ -13,6 +13,7 @@
 * Support configuration file called `.ledger2beancount.yaml`
 * Fix uninitialised value warning in hledger mode
 * Print warning if account in assertion has sub-accounts
+* Set commodity for commodity-less balance assertion
 * Add `Dockerfile` to create Docker image
 
 ## 2.5 (2020-11-03)

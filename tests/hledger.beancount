@@ -384,3 +384,10 @@
   Assets:Test              10.00 EUR
   Assets:Test
 
+2021-04-14 * "Balance assertion without commodity"
+  Equity:Opening-Balances
+  Assets:Checking:A       5 GBP
+  Assets:Checking:B       5 GBP
+  Assets:Checking         1 GBP
+
+2021-04-15 balance Assets:Checking  11 GBP
