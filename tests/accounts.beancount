@@ -3,7 +3,7 @@
 ;
 ;   - Skipped second account declaration for Expenses:Travel (old Expenses:Bar:Travel)
 ;   - Virtual posting in parentheses ignored
-;   - Account Revenue not allowed; it needs a subaccount, e.g. Revenue:Subaccount
+;   - Account Revenue not allowed; it needs a sub-account, e.g. Revenue:Subaccount
 ;   - Non-standard root name Revenue used; please set beancount options name_*
 ;   - Skipped second account declaration for Expenses:Food (old Expenses:Food)
 ;   - Account Accrued:Accounts Payable:Baz renamed to Liabilities:Accounts-Payable:Baz
@@ -336,7 +336,7 @@ option "name_income" "Revenue"
   Assets:Bank 	 -35.00 EUR
   Expenses:Foo	 35.00 EUR
 
-2019-03-27 txn "Invalid account: root is not valid, needs subaccount"
+2019-03-27 txn "Invalid account: root is not valid, needs sub-account"
   Assets:Bank     42.00 EUR
   Revenue:Subaccount
 

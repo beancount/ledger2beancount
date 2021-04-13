@@ -1272,7 +1272,7 @@ sub map_account($) {
     # beancount doesn't allow just a root account (e.g. Income) as an
     # account name.  It has to be Income:Subaccount
     if ($account eq $root) {
-	print_warning_once("Account $account not allowed; it needs a subaccount, e.g. $account:Subaccount");
+	print_warning_once("Account $account not allowed; it needs a sub-account, e.g. $account:Subaccount");
 	$account .= ":Subaccount";
     }
     if (!($root ~~ @beancount_root_names)) {
