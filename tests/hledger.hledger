@@ -195,19 +195,19 @@ end aliases
     Assets:Checking              1 EUR =* 11 EUR
     Equity:Opening-Balances
 
-2020/07/26 * Sub-account assertion 2
+2020/07/27 * Sub-account assertion 2
     Assets:Checking:A            5 EUR
     Assets:Checking:B            5 EUR
     Assets:Checking              1 EUR =* 22 EUR ; comment
     Equity:Opening-Balances
 
-2020/07/26 * Sub-account assertion 3
+2020/07/28 * Sub-account assertion 3
     Assets:Checking:A            5 EUR
     Assets:Checking:B            5 EUR
     Assets:Checking              1 EUR ==* 33 EUR
     Equity:Opening-Balances
 
-2020/07/26 * Sub-account assertion 4
+2020/07/29 * Sub-account assertion 4
     Assets:Checking:A            5 EUR
     Assets:Checking:B            5 EUR
     Assets:Checking              1 EUR ==* 44 EUR ; comment

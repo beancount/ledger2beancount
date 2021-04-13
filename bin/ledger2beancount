@@ -39,7 +39,7 @@ memoize('pp_date');
 use enum qw/DEPTH TYPE BLANK COMMENT POSTING FLAG ACCOUNT WHITESPACE AMOUNT
             COST PRICE ASSERTION NUMBER CURRENCY DATE NOTE FIXATED NO_CURRENCY
             TAG META KEY VALUE TYPED TXN_HEADER PAYEE NARRATION ADJUST_WHITESPACE
-            PUSHTAG YEAR MATCH/;
+            PUSHTAG YEAR MATCH SUBACCOUNT/;
 
 # regular expression snippets used for ledger parsing
 my $date_RE = qr/\d+[^ =]+/;
@@ -1680,20 +1680,20 @@ sub parse_posting($$$) {
 
     # An assertion (if there's no amount) or balance assignment
     # (if there's no amount).  Starts with =
-    # Note that hledger also has =*, ==* and == assertions.
-    if ($config->{hledger}) {
-	if ($l =~ /^=?=\*\s*(.*)/) {
-	    print_warning_once "hledger's balance assertions for sub-accounts not supported";
-	    # Get amount to get the rest of the line in $l but ignore the
-	    # amount
-	    ($_, $l) = get_amount $1;
-	} elsif ($l =~ /^==\s*(.*)/) {
+    # Note that hledger also has =*, == and ==* assertions.
+    # We don't check for $config->{hledger} since those would be
+    # syntax errors in ledger anyway.
+    if ($l =~ /^=(?<total>=)?(?<sub>\*)?\s*(?<amount>.*)/) {
+	# We don't support == and ==*
+	if (defined $+{total}) {
 	    print_warning_once "hledger's total balance assertions not supported; using regular assertion";
-	    ($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
 	}
-    }
-    if ($l =~ /^=\s*(.*)/) {
-	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $1;
+	if (defined $+{sub}) {
+	    $posting->[ASSERTION]->[TYPE] = SUBACCOUNT;
+	} else {
+	    $posting->[ASSERTION]->[TYPE] = ACCOUNT;
+	}
+	($posting->[ASSERTION]->[AMOUNT], $l) = get_amount $+{amount};
 
 	# If amount was commodity-less and we have an assertion, use the
 	# commodity from assertion.  This is useful since some people do
@@ -2175,6 +2175,19 @@ sub process_txn($$@) {
     print_txn @txn_out;
     if (@assertions) {
 	print_line 0, "";
+	# Ledger and beancount treat balance assertions differently:
+	# Ledger only considers the account specified while beancount
+	# takes the total of all sub-accounts.
+	#
+	# Print a warning if there are any sub-accounts of the account
+	# in the assertion.
+	foreach my $assertion (@assertions) {
+	    foreach my $account (keys %account_declared) {
+		if ($account =~ /^$assertion->[ACCOUNT]:/ && $assertion->[TYPE] != SUBACCOUNT) {
+		    print_warning_once "Assertion for $assertion->[ACCOUNT] may fail due to sub-accounts";
+		}
+	    }
+	}
 	print_assertions @assertions;
     }
 }

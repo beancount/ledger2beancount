@@ -92,7 +92,7 @@ The following syntax from [hledger](https://hledger.org/) is supported if the `h
 * Posting dates: `date` and `date2`
 * Tags: `tag1:, tag2:, tag2: info`
 * Balance assertions
-    * Sub-account balance assertions: recognised but not supported in beancount
+    * Sub-account balance assertions
     * Total balance assertions: recognised but no equivalent in beancount
 * Directives
     * `D` (set default commodity)

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 74 utf-8
+personal_ws-1.1 en 75 utf-8
 AUR
 Alen
 Baier
@@ -54,6 +54,7 @@ hledger's
 ledgerrc
 libstring
 macOS
+mefromthepast
 misparse
 modeline
 perl

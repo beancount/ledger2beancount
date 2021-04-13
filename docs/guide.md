@@ -560,14 +560,49 @@ and therefore the cost is set to `1.00` of the same commodity:
 ## Balance assertions and assignments
 
 Ledger [balance assertions](https://www.ledger-cli.org/3.0/doc/ledger3.html#Balance-assertions)
-are converted to beancount `balance` statements.
+are converted to beancount `balance` statements.  However, there are two
+differences in the way balance assertions are treated that are important
+to consider.
 
-Please note that beancount evaluates balance assertions at the beginning
+First, beancount evaluates balance assertions at the beginning
 of the day whereas ledger evaluates them at the end of the day (up to
 ledger 3.1.1) or at the end of the transaction (newer versions of ledger).
 Therefore, we schedule the balance assertion for the day *after* the
 original transaction.  This assumes that there are no other transactions
 on the same day that change the balance again for this account.
+
+Second, there is a difference in the amount taken into consideration
+for the balance assertion.  While ledger only considers the value of the
+specified account, beancount takes the total of that accounts *and* all
+its sub-accounts.
+
+Let's consider this example:
+
+```ledger
+2021-01-01 Opening balance
+  Assets:Checking:A           5 EUR = 5 EUR
+  Assets:Checking:B           5 EUR = 5 EUR
+  Equity:Opening-Balances   -10 EUR
+
+2021-01-01 Opening balance
+  Assets:Checking             1 EUR = 1 EUR
+  Equity:Opening-Balances    -1 EUR
+```
+
+The assertion for `Assets:Checking` succeeds in ledger because the
+account has a total of 1 EUR.  However, the balance check in beancount
+fails because it takes the total of all sub-accounts: 11 EUR (1 EUR
+from `Assets:Checking` and 5 EUR each from `Assets:Checking:A` and
+`Assets:Checking:B`).
+
+ledger2beancount will print a warning to make you aware of this problem
+if it encounters a balance assertion with an account which has
+sub-accounts.
+
+Note that hledger supports [assertions for sub-accounts](https://hledger.org/hledger.html#assertions-and-subaccounts)
+using the `=*` syntax.  Beancount's behaviour is akin to hledger's `=*`
+syntax, so hledger users can use that feature to avoid compatibility
+problems.
 
 In addition to balance assertions, ledger also supports [balance
 assignments](https://www.ledger-cli.org/3.0/doc/ledger3.html#Balance-assignments).
