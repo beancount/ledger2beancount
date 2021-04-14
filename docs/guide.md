@@ -381,7 +381,7 @@ Both approaches have pros and cons.  The advantage of the first method
 (which is the default) is that it's fairly easy to transform the
 metadata to tags (with search and replace or a regex substitution)
 once beancount adds support for posting-level tags.  The disadvantage
-is that the information is stored as meta-data, which is different to
+is that the information is stored as metadata, which is different to
 tags.
 
 The advantage of the second method is that tags are preserved as tags.
