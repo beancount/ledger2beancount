@@ -725,6 +725,23 @@ implicit conversions, ledger2beancount will calculate and add an
 exchange rate.
 
 
+## Buckets
+
+Ledger's [bucket
+feature](https://www.ledger-cli.org/3.0/doc/ledger3.html#bucket)
+(`bucket` or `A`) can be used to set a default account to use for
+balancing transactions.  That is, if a transaction only has a single
+posting, the bucket account will be used to balance the transaction.
+
+There is a plugin for beancount called `fill_account` which acts in a
+similar manner to ledger's bucket directive.  However, it only supports
+one account to balance all transactions whereas ledger allows changing
+the bucket account at any point in the file.
+
+Therefore, ledger2beancount adds the missing posting explicitly using
+the account name specified in the latest `bucket` directive.
+
+
 ## Fixated prices and costs
 
 ledger allows you to ["fix" the cost or price](https://www.ledger-cli.org/3.0/doc/ledger3.html#Fixated-prices-and-costs)
