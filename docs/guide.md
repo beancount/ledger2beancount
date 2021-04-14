@@ -720,8 +720,9 @@ this example:
 ```
 
 They are generally a bad idea since they make it very easy to hide
-problems that are hard to track down.  Beancount doesn't support
-implicit conversions.
+problems that are hard to track down.  Since beancount doesn't support
+implicit conversions, ledger2beancount will calculate and add an
+exchange rate.
 
 
 ## Fixated prices and costs
