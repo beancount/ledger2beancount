@@ -21,7 +21,7 @@ docs/ledger2beancount.1: docs/ledger2beancount.1.scd
 docs/ledger2beancount.5: docs/ledger2beancount.5.scd
 	scdoc < $< > $@
 
-docs/manual.pdf: docs/index.md docs/features.md docs/compatibility.md docs/installation.md docs/usage.md docs/configuration.md docs/guide.md docs/limitations.md docs/changelog.md docs/contributing.md docs/authors.md docs/license.md
+docs/manual.pdf: docs/index.md docs/features.md docs/compatibility.md docs/installation.md docs/usage.md docs/configuration.md docs/guide.md docs/limitations.md docs/tips.md docs/changelog.md docs/contributing.md docs/authors.md docs/license.md
 	pandoc -f markdown+definition_lists+backtick_code_blocks $^ -o $@
 
 pdf: docs/manual.pdf

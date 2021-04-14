@@ -16,6 +16,7 @@
 * Set commodity for commodity-less balance assertion
 * Expand path name of `beancount_header` config variable
 * Document handling of buckets
+* Document pre- and post-processing examples
 * Add `Dockerfile` to create Docker image
 
 ## 2.5 (2020-11-03)
