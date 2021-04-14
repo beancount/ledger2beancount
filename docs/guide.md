@@ -762,12 +762,11 @@ ledger2beancount will look for some hledger specific features:
 
 6. Account aliases can be regular expressions.
 
-7. Total balance assertions (`==`) are recognised, but since there's
-   no equivalent in beancount they are treated as regular balance
+7. Total balance assertions (`==` and `==*`) are recognised, but since
+   there's no equivalent in beancount they are treated as regular balance
    assertions.
 
-8. Sub-account balance assertions (`=*` and `==*`) are recognised
-   but ignored since there's no equivalent in beancount.
+8. Sub-account balance assertions (`=*`) are supported.
 
 9. Digit group marks (space, comma, and period) are supported and
    the format information from `commodity` and `D` directives is used
