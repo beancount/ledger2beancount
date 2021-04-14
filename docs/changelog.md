@@ -14,6 +14,7 @@
 * Fix uninitialised value warning in hledger mode
 * Print warning if account in assertion has sub-accounts
 * Set commodity for commodity-less balance assertion
+* Expand path name of `beancount_header` config variable
 * Document handling of buckets
 * Add `Dockerfile` to create Docker image
 

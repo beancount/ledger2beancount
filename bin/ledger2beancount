@@ -401,6 +401,17 @@ sub print_posting_tags($);
 sub print_metadata($);
 
 
+# Expand path name with the help of $ENV
+sub expand_path($) {
+    my ($filename) = @_;
+
+    $filename =~ s#^~/#\$HOME/#;
+    $filename =~ s/\$\{?(\w+)\}?/$ENV{$1}/g;
+
+    return $filename;
+}
+
+
 # Set values if the key doesn't exist already
 sub set_default($$$) {
     my ($config, $key, $value) = @_;
@@ -2710,8 +2721,9 @@ if (scalar keys %root_names) {
 }
 
 if ($config->{beancount_header}) {
-    open my $beancount_header, $config->{beancount_header} or
-	die "Can't file beancount header: $config->{beancount_header}";
+    my $filename = expand_path $config->{beancount_header};
+    open my $beancount_header, $filename or
+	die "Can't find beancount header $filename: $!";
     print foreach <$beancount_header>;
     close $beancount_header;
 }
