@@ -32,7 +32,7 @@
 * Go to the [GitHub release page](https://github.com/beancount/ledger2beancount/releases/new) to create a new release:
 
     * Select the tag
-    * Use 2.X as the version
+    * Use 2.X as the release title
     * Copy release notes from `docs/changelog.md`
 
 * Email packagers:
