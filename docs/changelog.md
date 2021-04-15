@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.6 (unreleased)
+## 2.6 (2021-04-15)
 
 * Round calculated total if needed for `price==cost` comparison
 * Add `narration_tag` config variable to set narration from metadata
