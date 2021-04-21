@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.7 (unreleased)
+
+* Improve pre-processing example in documentation
+
 ## 2.6 (2021-04-15)
 
 * Round calculated total if needed for `price==cost` comparison
