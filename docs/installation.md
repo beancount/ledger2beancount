@@ -69,9 +69,10 @@ docker run --rm -v <HOSTDIR>:/usr/ledger2beancount/docker:rw <IMAGENAME> docker/
 
 ## macOS
 
-You can install `cpanm` from Homebrew:
+You can install Perl and `cpanm` from Homebrew:
 
 ```shell
+brew install perl
 brew install cpanminus
 ```
 
