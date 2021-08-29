@@ -137,7 +137,7 @@ else
 fi
 
 # Validate hledger file
-hledger_version=$(hledger --version n 2>/dev/null | cut -d" " -f2)
+hledger_version=$(hledger --version 2>/dev/null | cut -d" " -f2)
 if [ -z $hledger_version ]; then
 	echo "Skipping hledger validation checks since hledger is not installed"
 elif ! $(meets_version $hledger_version 1.14.2); then
