@@ -1,0 +1,59 @@
+; SPDX-FileCopyrightText: © 2021 Martin Michlmayr <tbm@cyrius.com>
+;
+; SPDX-License-Identifier: GPL-3.0-or-later
+
+; This is an .hledger file because the +amount syntax is currently
+; not supported by ledger (https://github.com/ledger/ledger/issues/1990)
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                          $+10,00
+    Assets:Test                          $-10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                          +$10,00
+    Assets:Test                          -$10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                       +10,00 AUD
+    Assets:Test                       -10,00 AUD
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                        $ + 10,00
+    Assets:Test                        $ - 10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                         $+ 10,00
+    Assets:Test                         $- 10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                         + $10,00
+    Assets:Test                          -$10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                        + $ 10,00
+    Assets:Test                        - $ 10,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                      + 10,00 AUD
+    Assets:Test                      - 10,00 AUD
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                           $+1,00
+    Assets:Test                           $-1,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                           +$1,00
+    Assets:Test                           -$1,00
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                       + 1,00 AUD
+    Assets:Test                       - 1,00 AUD
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                            $+,10
+    Assets:Test                            $-,10
+
+2021-08-29 * Amount with plus sign
+    Assets:Test                            +$,10
+    Assets:Test                            -$,10
+

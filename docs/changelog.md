@@ -3,6 +3,7 @@
 ## 2.7 (unreleased)
 
 * Improve pre-processing example in documentation
+* Add support for amounts with plus sign
 
 ## 2.6 (2021-04-15)
 
