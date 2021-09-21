@@ -4,6 +4,7 @@
 
 * Improve pre-processing example in documentation
 * Add support for amounts with plus sign
+* Set option `name_income` for top-level account `Revenue`
 
 ## 2.6 (2021-04-15)
 

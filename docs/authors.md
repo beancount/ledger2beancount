@@ -24,6 +24,7 @@ We have also had contributions and input from:
 * Kirill Goncharov (bug reports; package for Arch Linux)
 * Marin Bernard (bug reports)
 * Martin Blais (help with compatibility with beancount)
+* Mohsin Kaleem (bug reports)
 * Remco Rĳnders (feedback)
 * Simon Michael (bug reports; fixes; help with compatibility with hledger)
 * Taylor R. Campbell (package for pkgsrc)

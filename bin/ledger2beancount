@@ -177,6 +177,8 @@ my %root_mappings = (
     qr/Καθαρή θέση/ => "equity",
     qr/Έσοδα/ => "income",
     qr/Έξοδα/ => "expenses",
+    # en - English
+    qr/Revenues?/ => "income",
     # es - Spanish
     qr/Activos?/ => "assets",
     qr/Pasivos?/ => "liabilities",
