@@ -329,3 +329,23 @@ D 1.000,00 EUR
 2022-08-04 Decimal comma with default commodity
     Assets:Test               1.000,00
     Assets:Test
+
+D 1000. GBP
+
+2022-08-04 Amount with decimal separator but no fractional part
+    Assets:Test                     1.
+    Assets:Test
+
+2022-08-04 Amount with decimal separator but no fractional part
+    Assets:Test                 1. GBP
+    Assets:Test
+
+D 1.000, EUR
+
+2022-08-04 Amount with decimal separator but no fractional part
+    Assets:Test                     1,
+    Assets:Test
+
+2022-08-04 Amount with decimal separator but no fractional part
+    Assets:Test                 1, EUR
+    Assets:Test

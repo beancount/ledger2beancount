@@ -54,7 +54,7 @@ my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # To keep the regex simpler, we parse the () and [] for virtual accounts
 # as part of the account name and strip these brackets later.
 my $account_RE = qr/[^\s;][^\t]*?/;
-my $number_RE = qr/([\d\s,.]*\d([.,]\d+)?|\.\d+|,\d+)/;
+my $number_RE = qr/([\d\s,.]*\d([.,]\d*)?|\.\d+|,\d+)/;
 # Currently ledger only allows - as sign (see https://github.com/ledger/ledger/issues/1990)
 # but hledger allows + and - so just accept both.
 my $sign_RE = qr/[+-]/;
@@ -981,7 +981,7 @@ sub convert_number($$) {
 	   # character.  We don't care if anything else is in
 	   # the right format.
 	   $number =~ s/\s+//g;
-	   if ($format =~ /,\d+$/) {
+	   if ($format =~ /,\d*$/) {
 		# Decimal marker: comma
 		$number =~ s/\.//g;
 		$number =~ s/,/./g;

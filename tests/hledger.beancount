@@ -11,6 +11,7 @@
 ;   - Metadata key foo,bar renamed to foo-bar
 ;   - Metadata key test♚ renamed to test-
 ;   - Collision for account Assets:Checking: Assets:Checking, assets:checking
+;   - Collision for commodity GBP: GBP, £
 ;----------------------------------------------------------------------
 
 ; SPDX-FileCopyrightText: © 2019 Martin Michlmayr <tbm@cyrius.com>
@@ -400,4 +401,24 @@
 
 2022-08-04 txn "Decimal comma with default commodity"
   Assets:Test               1000.00 EUR
+  Assets:Test
+
+; D 1000. GBP
+
+2022-08-04 txn "Amount with decimal separator but no fractional part"
+  Assets:Test                     1. GBP
+  Assets:Test
+
+2022-08-04 txn "Amount with decimal separator but no fractional part"
+  Assets:Test                 1. GBP
+  Assets:Test
+
+; D 1.000, EUR
+
+2022-08-04 txn "Amount with decimal separator but no fractional part"
+  Assets:Test                     1. EUR
+  Assets:Test
+
+2022-08-04 txn "Amount with decimal separator but no fractional part"
+  Assets:Test                 1. EUR
   Assets:Test
