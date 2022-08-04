@@ -2576,7 +2576,7 @@ while (@input) {
 	    if ($l =~ /^note\s+(.*)/) {  # note
 		print_line $depth, pp_metadata "name", mk_beancount_string $1;
 	    } elsif ($l =~ /^format\s+(.*)/) {  # format
-	        my ($amount, $l) = get_amount $1;
+		my ($amount, $l) = get_amount $1;
 		$ledger_commodity_format{$amount->[CURRENCY]} = get_amount_format $1;
 		if ($l =~ /^\s*$comment_RE/) {
 		    # do nothing: we don't show format info in beancount,
