@@ -1514,13 +1514,8 @@ sub get_value_expr($) {
 
 
 # Parse an amount
-sub get_amount($) {
+sub parse_amount($) {
     my ($l) = @_;
-
-    # Inline math
-    if ($l =~ /^\(/) {
-	return get_value_expr $l;
-    }
 
     my $amount;
     $amount->[ADJUST_WHITESPACE] = 0;
@@ -1542,20 +1537,43 @@ sub get_amount($) {
 	} elsif ($config->{hledger} && defined $hledger_default_commodity) {
 	    $amount->[CURRENCY] = $hledger_default_commodity;
 	}
-	$amount->[NUMBER] = convert_number $+{number}, $amount->[CURRENCY];
-
-	# ledger allows amounts without a leading zero (e.g. .10) but
-	# beancount doesn't.
-	if ($amount->[NUMBER] =~ s/^\./0./) {
-	    $amount->[ADJUST_WHITESPACE]--;
-	}
-
-	$amount->[NUMBER] = $sign . $amount->[NUMBER];
-
-	return $amount, "$rest";
+	$amount->[NUMBER] = $+{number};
+	return $sign, $amount, "$rest";
     } else {
 	die "Cannot parse amount from $l\n";
     }
+}
+
+
+# Get an amount
+sub get_amount($) {
+    my ($l) = @_;
+
+    # Inline math
+    if ($l =~ /^\(/) {
+	return get_value_expr $l;
+    }
+
+    my ($sign, $amount, $rest) = parse_amount $l;
+
+    $amount->[NUMBER] = convert_number $amount->[NUMBER], $amount->[CURRENCY];
+
+    # ledger allows amounts without a leading zero (e.g. .10) but
+    # beancount doesn't.
+    if ($amount->[NUMBER] =~ s/^\./0./) {
+	$amount->[ADJUST_WHITESPACE]--;
+    }
+    $amount->[NUMBER] = $sign . $amount->[NUMBER];
+    return $amount, "$rest";
+}
+
+
+# Get the original format of an amount
+sub get_amount_format($) {
+    my ($l) = @_;
+
+    my ($sign, $amount, $rest) = parse_amount $l;
+    return $amount->[NUMBER];
 }
 
 
@@ -2533,13 +2551,13 @@ while (@input) {
 	    # In hledger, a commodity directive can contain an amount
 	    # where the amount defines the format for this commodity
 	    # instead of a separate format directive.
-	    my ($amount, $l) = get_amount $l;
+	    my ($amount, $rest) = get_amount $l;
 	    $commodity = $amount->[CURRENCY];
-	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
-	    if ($l =~ /^\s*$comment_RE/) {
+	    $ledger_commodity_format{$commodity} = get_amount_format $l;
+	    if ($rest =~ /^\s*$comment_RE/) {
 		$comment = " ;$+{comment}";
-            } elsif ($l) {
-		die "Unknown rest in commodity declaration for $commodity: $l";
+            } elsif ($rest) {
+		die "Unknown rest in commodity declaration for $commodity: $rest";
             }
 	} else {
 		die "Cannot parse commodity directive: $l";
@@ -2559,7 +2577,7 @@ while (@input) {
 		print_line $depth, pp_metadata "name", mk_beancount_string $1;
 	    } elsif ($l =~ /^format\s+(.*)/) {  # format
 	        my ($amount, $l) = get_amount $1;
-		$ledger_commodity_format{$amount->[CURRENCY]} = $amount->[NUMBER];
+		$ledger_commodity_format{$amount->[CURRENCY]} = get_amount_format $1;
 		if ($l =~ /^\s*$comment_RE/) {
 		    # do nothing: we don't show format info in beancount,
 		    # so we can discard the comment
@@ -2582,7 +2600,8 @@ while (@input) {
 	# Not supported in beancount
 	print_comment_top_level $depth, $l;
 
-	my ($amount, $l) = get_amount $2;
+	my $info = $2;
+	my ($amount, $l) = get_amount $info;
 	my $commodity = $amount->[CURRENCY];
 	if ($l =~ /^\s*$comment_RE/) {
 	    # do nothing: we don't show D directive in beancount,
@@ -2591,7 +2610,7 @@ while (@input) {
 	    die "Unknown rest in D directive for $commodity: $l";
         }
 	if (!defined $ledger_commodity_format{$commodity}) {
-	    $ledger_commodity_format{$commodity} = $amount->[NUMBER];
+	    $ledger_commodity_format{$commodity} = get_amount_format $info;
 	}
 	$hledger_default_commodity = $commodity;
     } elsif ($l =~ /^[!@]?(payee\s+.*)/) {  # payee declaration

@@ -391,3 +391,13 @@
   Assets:Checking         1 GBP
 
 2021-04-15 balance Assets:Checking  11 GBP
+
+; D 1.000,00 EUR
+
+2022-08-04 txn "Decimal comma with default commodity"
+  Assets:Test                   1.00 EUR
+  Assets:Test
+
+2022-08-04 txn "Decimal comma with default commodity"
+  Assets:Test               1000.00 EUR
+  Assets:Test
