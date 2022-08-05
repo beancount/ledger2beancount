@@ -3,6 +3,7 @@
 ## 2.7 (unreleased)
 
 * Fix parsing of amounts with decimal comma with default commodity in hledger mode
+* Allow amounts without fractional part but decimal separator for hledger
 * Improve pre-processing example in documentation
 * Add support for amounts with plus sign
 * Set option `name_income` for top-level account `Revenue`
