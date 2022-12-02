@@ -263,3 +263,15 @@ commodity $
     Assets:Test                            1
     Assets:Test                           -1
 
+2022-12-02 * Inline math and whitespace
+    Expenses:Drinks                (1/1.159 GBP) ; comment
+    Assets:Test
+
+2022-12-02 * Inline math and whitespace
+    Expenses:Drinks                (1/1.159 GBP); comment
+    Assets:Test
+
+2022-12-02 * Inline math and whitespace
+    Expenses:Drinks                (1/1.159 GBP)  ; comment
+    Assets:Test
+

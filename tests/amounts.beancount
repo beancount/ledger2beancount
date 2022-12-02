@@ -28,6 +28,7 @@
 1970-01-01 open Assets:Rewards
 1970-01-01 open Assets:Test
 1970-01-01 open Equity:Exchange
+1970-01-01 open Expenses:Drinks
 1970-01-01 open Expenses:Housing:Rent
 1970-01-01 open Expenses:Travel:Airfare
 1970-01-01 open Income:401k:Match
@@ -289,4 +290,16 @@
   Assets:Test                        -4.20 USD
   Assets:Test                            1 FOO
   Assets:Test                           -1 FOO
+
+2022-12-02 * "Inline math and whitespace"
+  Expenses:Drinks                 1/1.159 GBP ; comment
+  Assets:Test
+
+2022-12-02 * "Inline math and whitespace"
+  Expenses:Drinks                 1/1.159 GBP; comment
+  Assets:Test
+
+2022-12-02 * "Inline math and whitespace"
+  Expenses:Drinks                 1/1.159 GBP  ; comment
+  Assets:Test
 

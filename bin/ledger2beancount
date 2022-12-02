@@ -1469,13 +1469,14 @@ sub get_default_commodity() {
 sub get_value_expr($) {
     my ($l) = @_;
 
-    if ($l !~ /^(?<math>$RE{balanced}{-parens=>'()'})\s*(?<rest>.*)/) {
+    if ($l !~ /^(?<math>$RE{balanced}{-parens=>'()'})(?<space>\s*)(?<rest>.*)/) {
 	die "Cannot parse inline math from $l\n";
     }
+    my $amount;
     my $math = $+{math};
+    $amount->[WHITESPACE] = $+{space};
     my $rest = $+{rest};
 
-    my $amount;
     $amount->[ADJUST_WHITESPACE] = length($math) - 1; # we subtract the new length later
     # Strip the outer () since beancount doesn't require them.
     $math =~ s/^\(//;
