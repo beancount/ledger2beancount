@@ -1,6 +1,6 @@
 # ledger2beancount releases
 
-## 2.7 (unreleased)
+## 2.7 (2022-12-03)
 
 * Fix parsing of amounts with decimal comma with default commodity in hledger mode
 * Allow amounts without fractional part but decimal separator for hledger
