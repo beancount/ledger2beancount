@@ -4,4 +4,3 @@ link_match:
   - ^\d\d\d\d-\d\d-\d\d-
 
 move_posting_tags: true
-
