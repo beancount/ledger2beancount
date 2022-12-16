@@ -664,7 +664,6 @@ sub pp_comment($) {
     my ($comment) = @_;
 
     return ";" . $comment->[WHITESPACE] . $comment->[VALUE];
-
 }
 
 # pretty print a single metadata key/value pair, in beancount format
