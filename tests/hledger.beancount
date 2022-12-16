@@ -4,6 +4,9 @@
 ;   - hledger's total balance assertions not supported; using regular assertion
 ;   - Account assets:checking renamed to Assets:Checking
 ;   - Account expenses:food renamed to Expenses:Food
+;   - Tag 10!20 renamed to 10-20
+;   - Tag test+ renamed to test-
+;   - Tag ♚ renamed to -
 ;   - Metadata key 2012 renamed to x2012
 ;   - Metadata key 2012foo renamed to x2012foo
 ;   - Metadata key TEST1234TEST renamed to test1234test
@@ -422,3 +425,23 @@
 2022-08-04 txn "Amount with decimal separator but no fractional part"
   Assets:Test                 1. EUR
   Assets:Test
+
+2022-12-16 txn "Tag test" #-
+  Assets:A                 1000 EUR
+  Assets:B
+
+2022-12-16 txn "Tag test" #test-
+  Assets:A                 1000 EUR
+  Assets:B
+
+2022-12-16 txn "Tag test" #- #test-
+  Assets:A                 1000 EUR
+  Assets:B
+
+2022-12-16 txn "Tag test in tag_map" #WTF
+  Assets:A                 1000 EUR
+  Assets:B
+
+2022-12-16 txn "Link and link_match" ^10-20
+  Assets:A                 1000 EUR
+  Assets:B

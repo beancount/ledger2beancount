@@ -40,6 +40,10 @@ decimal_comma: false
 # postings in parentheses are always ignored, regardless of this option)
 convert_virtual: false
 
+# mapping of ledger tags to corresponding beancount tag
+tag_map:
+  WTF???: WTF
+
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
   x-payee: payee

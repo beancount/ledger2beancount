@@ -15,3 +15,11 @@ commodity_map:
   kr: NOK
   R$: BRL
   zł: PLN
+
+# mapping of ledger tags to corresponding beancount tag
+tag_map:
+  WTF???: WTF
+
+link_match:
+  - ^\d\d!\d\d
+

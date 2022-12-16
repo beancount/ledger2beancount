@@ -125,3 +125,94 @@ commodity EUR
     Equity:Opening-Balance            -10.00 EUR
         ;:bar: test
 
+2022-12-16 * Tag test
+    ; :foo/bar:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :test+:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :♚:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :foo_bar:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :foo-bar:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :1234:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :abcd1234:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    ; :foo/bar:♚:foo_bar:foo-bar:1234:abcd1234:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :foo/bar:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :test+:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :test!:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :♚:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :foo_bar:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :foo-bar:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :1234:
+    Assets:Test
+
+2022-12-16 * Tag test
+    Assets:Test                        10.00 EUR
+        ; :abcd1234:
+    Assets:Test
+
+2022-12-16 * Tag test in tag_map
+    ; :WTF???:
+    Assets:Test                        10.00 EUR
+        ; :WTF???:
+    Assets:Test
+
+2022-12-16 * Link and link_match
+    ; :10!20:
+    Assets:Test                        10.00 EUR
+    Assets:Test
+

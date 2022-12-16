@@ -131,6 +131,10 @@ commodity_map
 
 :   Specifies a mapping of ledger commodities to beancount commodities.
 
+tag_map
+
+:   Specifies a mapping of ledger tags to corresponding beancount tags.
+
 metadata_map
 
 :   Specifies a mapping of ledger metadata keys to corresponding beancount keys.

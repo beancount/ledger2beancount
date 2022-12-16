@@ -1,5 +1,9 @@
 # ledger2beancount releases
 
+## 2.8 (unreleased)
+
+* Accept all valid ledger tags
+
 ## 2.7 (2022-12-03)
 
 * Fix parsing of amounts with decimal comma with default commodity in hledger mode

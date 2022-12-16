@@ -3,6 +3,11 @@ date_format: "%Y-%m-%d"
 # Date without year (if ledger's Y/year directive is used)
 date_format_no_year: "%m-%d"
 
+# mapping of ledger tags to corresponding beancount tag
+tag_map:
+  WTF???: WTF
+  aa!bb!cc: aa_bb_cc
+
 # mapping of ledger metadata key to corresponding beancount key
 metadata_map:
   label: bank-label
@@ -47,6 +52,7 @@ code_tag: code
 
 link_match:
   - ^\d\d\d\d-\d\d-\d\d-
+  - ^\d\d!\d\d
 
 link_tags:
   - Trip
@@ -62,3 +68,4 @@ commodity_is_currency:
   - MR
 
 default_commodity: FOO
+

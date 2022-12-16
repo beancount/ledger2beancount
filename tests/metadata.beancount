@@ -88,7 +88,7 @@
   Assets:Test                        10.00 EUR
     test: "baz"
   Equity:Opening-Balance            -10.00 EUR
-    links: "^brussels-fosdem"
+    links: "brussels-fosdem"
 
 2018-03-19 * "Metadata, some posting-level links"
   #tag1
@@ -99,9 +99,9 @@
   ^4
   Assets:Test                        10.00 EUR
     test: "baz"
-    links: "^5"
+    links: "5"
   Equity:Opening-Balance            -10.00 EUR
-    links: "^6"
+    links: "6"
 
 2018-03-20 * "Typed meta data with date"
   date: 2017-12-31

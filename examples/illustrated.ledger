@@ -281,6 +281,12 @@ Y 2017
     Assets:A                            10.00 EUR
     Assets:B
 
+; Beancount is more restrictive in what it accepts as tags.  For
+; example, :♚: is valid in ledger but #♚ is not a valid beancount
+; tag.  You can use `tag_map` to map ledger tags to beancount tags:
+; tag_map:
+;   ♚: black_king
+;
 ; In ledger, you can declare tags:
 tag foo
 ; This is not required in beancount and there's no way to do it, so

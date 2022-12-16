@@ -349,3 +349,23 @@ D 1.000, EUR
 2022-08-04 Amount with decimal separator but no fractional part
     Assets:Test                 1, EUR
     Assets:Test
+
+2022-12-16 Tag test  ; ♚:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2022-12-16 Tag test  ; test+:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2022-12-16 Tag test  ; ♚:, test+:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2022-12-16 Tag test in tag_map  ; WTF???:
+    Assets:A                 10.00 EUR
+    Assets:B
+
+2022-12-16 Link and link_match  ; 10!20:
+    Assets:A                 10.00 EUR
+    Assets:B

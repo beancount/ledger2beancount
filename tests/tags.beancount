@@ -1,3 +1,13 @@
+;----------------------------------------------------------------------
+; ledger2beancount conversion notes:
+;
+;   - Tag 10!20 renamed to 10-20
+;   - Tag test! renamed to test-
+;   - Tag test+ renamed to test-
+;   - Tag ♚ renamed to -
+;   - Collision for tag test-: test!, test+
+;----------------------------------------------------------------------
+
 ; Beancount: 2.1.0
 ; SPDX-FileCopyrightText: © 2018 Martin Michlmayr <tbm@cyrius.com>
 ;
@@ -140,4 +150,95 @@
   Equity:Opening-Balance            -10.00 EUR
     ;test
     tags: "bar"
+
+2022-12-16 * "test" "Tag test"
+  #foo/bar
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #test-
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #-
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #foo_bar
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #foo-bar
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #1234
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #abcd1234
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  #foo/bar #- #foo_bar #foo-bar #1234 #abcd1234
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "foo/bar"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "test-"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "test-"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "-"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "foo_bar"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "foo-bar"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "1234"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test"
+  Assets:Test                        10.00 EUR
+    tags: "abcd1234"
+  Assets:Test
+
+2022-12-16 * "test" "Tag test in tag_map"
+  #WTF
+  Assets:Test                        10.00 EUR
+    tags: "WTF"
+  Assets:Test
+
+2022-12-16 * "Link and link_match"
+  ^10-20
+  Assets:Test                        10.00 EUR
+  Assets:Test
 

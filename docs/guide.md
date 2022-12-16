@@ -366,6 +366,11 @@ but you should make sure the values are valid in beancount.
 
 ## Tags
 
+Tags are converted to beancount tags.  However, beancount doesn't
+accept the same range of characters for tags as ledger.  The `tag_map`
+config can be used to define how ledger tags are mapped to beancount
+tags.
+
 Beancount allows tags for transactions but currently doesn't support
 tags for postings ([issue
 144](https://github.com/beancount/beancount/issues/144)).  There are

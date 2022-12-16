@@ -33,6 +33,7 @@ my $DEBUG = 0; # turn on for debugging output
 memoize('get_root_type');
 memoize('map_account');
 memoize('map_commodity');
+memoize('map_tag');
 memoize('map_metadata');
 memoize('pp_date');
 
@@ -47,7 +48,7 @@ my $hledger_date_RE = qr#(\d{4}[./-])?\d{1,2}[./-]\d{1,2}#;
 my $flags_RE = qr/[*!]/;
 my $txn_header_RE = qr/^(?<date>$date_RE)(=(?<auxdate>$date_RE))?(\s+|$)(?<flag>$flags_RE)?(\s*\((?<code>[^)]*)\))?\s*(?<narration>.*)/;
 my $hledger_payee_narration_RE = qr/(?<payee>[^|]+?)\s*\|\s*(?<narration>.*)/;
-my $tags_RE = qr/(?<tags>[\w:-]+)/;
+my $tags_RE = qr/(?<tags>[^ ]+)/;
 my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # An account can be pretty much anything but in a posting it has to be
 # followed by two spaces, a tab or new line.
@@ -103,6 +104,7 @@ my @conversion_notes;
 my %ledger_accounts;
 my %account_regex_map;
 my %ledger_commodities;
+my %ledger_tags;
 my %ledger_metadata;
 # Mapping of non-standard root names to their types
 my %root_names;
@@ -399,6 +401,8 @@ my %root_mappings = (
 # Declarations
 sub create_tag($$);
 sub map_commodity($);
+sub map_tag($);
+sub map_tag_add_link($);
 sub map_metadata($);
 sub print_line($$);
 sub print_tags($);
@@ -540,7 +544,7 @@ sub create_metadata($$$$) {
 
     # Check if we should store as metadata or as links
     if (defined $config->{link_tags} && lc $metadata->[KEY] ~~ [ map lc $_, @{$config->{link_tags}} ]) {
-	return create_tag $metadata->[DEPTH], [ "^$metadata->[VALUE]" ];
+	return create_tag $metadata->[DEPTH], [ "^" . map_tag $metadata->[VALUE] ];
     } else {
 	$metadata->[TYPE] = META;
 	return $metadata;
@@ -746,8 +750,6 @@ sub pp_tag_link($) {
 
     if ($key =~ /^\^/) {
 	return $key;
-    } elsif (is_link $key) {
-	return "^" . $key;
     } else {
 	return "#" . $key;
     }
@@ -1108,7 +1110,7 @@ sub parse_hledger_comment($) {
 		push @metadata, create_metadata $depth, $key, $value, 0;
 	    }
 	} else {
-	    push @metadata, create_tag $depth, [ $key ];
+	    push @metadata, create_tag $depth, [ map_tag_add_link $key ];
 	}
     }
     $str =~ s/,?\s*$//;
@@ -1143,7 +1145,7 @@ sub parse_ledger_comment($) {
 	push @metadata, create_metadata_from_regex $depth, \%+;
     } elsif ($l =~ /^;:$tags_RE:$/ or $l =~ /^$comment_RE\s+:$tags_RE:\s*$/
 	     or $l =~ /^;\s*:$tags_RE:(?<comment>\s+.*)?$/) {  # tags comment
-	push @metadata, create_tag $depth, [ split /:/, $+{tags} ];
+	push @metadata, create_tag $depth, [ map map_tag_add_link $_, split /:/, $+{tags} ];
     } elsif ($l =~ /^$comment_RE/) {  # (every other) comment
 	# do nothing
     } else {
@@ -1197,6 +1199,40 @@ sub pp_note_for_txn($$) {
     $buf .= mk_beancount_string $header->[NARRATION];
     $buf .= "\n";
     return $buf;
+}
+
+
+# map a (ledger) tag to the desired (beancount) tag (or link).  Relies on
+# the config variable tag_map
+# The syntax documentation says: "Transactions can be tagged with arbitrary
+# strings", but in reality the regex is: [A-Za-z0-9\-_/.]+
+sub map_tag($) {
+    my ($tag) = @_;
+
+    $ledger_tags{$tag} = 1;
+
+    $tag = $config->{tag_map}{$tag} if exists $config->{tag_map}{$tag};
+    # Work around lack of Unicode support (beancount #161)
+    $tag = NFKD $tag;
+    $tag =~ s/\p{NonspacingMark}//g;
+    $tag =~ s#[^A-Za-z0-9/._-]#-#g; # Replace disallowed characters
+    $tag = $config->{tag_map}{$tag} if exists $config->{tag_map}{$tag};
+
+    return $tag;
+}
+
+
+# Map a tag according to map_tag and convert it to a link if needed.
+sub map_tag_add_link($) {
+    my ($ledger_tag) = @_;
+
+    my $tag = map_tag $ledger_tag;
+
+    if (is_link $ledger_tag) {
+	return "^" . $tag;
+    } else {
+	return $tag;
+    }
 }
 
 
@@ -1447,7 +1483,7 @@ sub print_posting_tags($) {
     my @tags = grep { !is_link $_ } @{$tag->[VALUE]};
     my @links = grep { is_link $_ } @{$tag->[VALUE]};
     print_line $tag->[DEPTH], "tags: \"" . join(', ', @tags) . "\"" if @tags;
-    print_line $tag->[DEPTH], "links: \"" . join(', ', @links) . "\"" if @links;
+    print_line $tag->[DEPTH], "links: \"" . join(', ', map { substr($_, 1) } @links) . "\"" if @links;
 }
 
 
@@ -2417,10 +2453,11 @@ while (@input) {
 	if ("; $+{val}" =~ /$metadata_RE/) {
 	    push @ledger_apply, create_metadata_from_regex 1, \%+;
 	} elsif (is_link $+{val}) {
-	    push @ledger_apply, create_tag 1, [ $+{val} ];
+	    push @ledger_apply, create_tag 1, [ "^" . map_tag $+{val} ];
 	} else {
-	    print_line $depth, "pushtag " . pp_tag_link $+{val};
-	    push @ledger_apply, create_apply_pushtag $+{val};
+	    my $tag = map_tag $+{val};
+	    print_line $depth, "pushtag " . pp_tag_link $tag;
+	    push @ledger_apply, create_apply_pushtag $tag;
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>year)\s+(?<val>\d+)/) {  # apply year
 	$out = \@output;
@@ -2673,6 +2710,13 @@ foreach (sort keys %ledger_commodities) {
     }
 }
 
+foreach (sort keys %ledger_tags) {
+    my $map = map_tag $_;
+    if ($_ ne $map && !($map ~~ [values %{$config->{tag_map}}])) {
+        print_warning "Tag $_ renamed to $map";
+    }
+}
+
 foreach (sort keys %ledger_metadata) {
     my $map = map_metadata $_;
     if ($_ ne $map && !($map ~~ [values %{$config->{metadata_map}}])) {
@@ -2698,6 +2742,16 @@ foreach (keys %ledger_commodities) {
 foreach (sort keys %mapped_commodities) {
     if (@{$mapped_commodities{$_}} > 1) {
 	print_warning "Collision for commodity $_: " . join ", ", sort @{$mapped_commodities{$_}};
+    }
+}
+
+my %mapped_tags;
+foreach (keys %ledger_tags) {
+    push @{$mapped_tags{map_tag $_}}, $_;
+}
+foreach (sort keys %mapped_tags) {
+    if (@{$mapped_tags{$_}} > 1) {
+	print_warning "Collision for tag $_: " . join ", ", sort @{$mapped_tags{$_}};
     }
 }
 

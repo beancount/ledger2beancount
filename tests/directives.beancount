@@ -19,6 +19,8 @@
 ;   - Directive `define` not supported by beancount: replacing hundred with $100
 ;   - Directive `define` not supported by beancount: replacing twenty with $20
 ;   - Directive `define` not supported by beancount: replacing thousand with $1000
+;   - Tag 10!20 renamed to 10-20
+;   - Tag foo!bar renamed to foo-bar
 ;   - Collision for commodity USD: $, USD
 ;----------------------------------------------------------------------
 
@@ -265,4 +267,27 @@ poptag #foo
 2020-06-27 txn "Using multiple define"
   Assets:Test             1000 +100*4 +20 USD
   Equity:Opening-Balance
+
+pushtag #foo-bar
+
+2022-12-16 * "Tag not valid in beancount"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+poptag #foo-bar
+
+pushtag #WTF
+
+2022-12-16 * "Tag in tag_map"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+poptag #WTF
+
+
+2022-12-16 * "Link and link_match"
+  ^10-20
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
 

@@ -261,3 +261,27 @@ def thousand=$1000
     Assets:Test  (thousand + hundred*4 + twenty)
     Equity:Opening-Balance
 
+apply tag foo!bar
+
+2022-12-16 * Tag not valid in beancount
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+end apply
+
+apply tag WTF???
+
+2022-12-16 * Tag in tag_map
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+end apply
+
+apply tag 10!20
+
+2022-12-16 * Link and link_match
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+end apply
+
