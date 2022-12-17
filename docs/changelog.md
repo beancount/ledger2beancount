@@ -3,6 +3,7 @@
 ## 2.8 (unreleased)
 
 * Accept all valid ledger tags
+* Stop creating empty note for balance assertion without narration
 
 ## 2.7 (2022-12-03)
 

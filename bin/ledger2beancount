@@ -2230,7 +2230,7 @@ sub process_txn($$@) {
 	    my %seen;
 	    @accounts = grep { !$seen{$_}++ } @accounts;
 	    foreach (@accounts) {
-		print_line 0, pp_note_for_txn $header, $_;
+		print_line 0, pp_note_for_txn $header, $_ if $header->[NARRATION];
 	    }
 	    print_assertions @assertions;
 	    return;
