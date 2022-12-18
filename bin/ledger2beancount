@@ -2208,7 +2208,8 @@ sub process_txn($$@) {
 		next if $i->[TYPE] != POSTING;
 		if ($i->[AMOUNT]->[CURRENCY] eq $commodity && number2int $i->[AMOUNT]->[NUMBER] != 0) {
 		    $i->[PRICE]->[TYPE] = 1;
-		    ($i->[PRICE]->[AMOUNT], $_) = get_amount "$rate $other_commodity";
+		    ($i->[PRICE]->[AMOUNT], $_) = get_amount $rate;
+		    $i->[PRICE]->[AMOUNT]->[CURRENCY] = $other_commodity;
 		    $i->[PRICE]->[AMOUNT]->[WHITESPACE] = $postings[0]->[AMOUNT]->[WHITESPACE];
 		}
 	    }

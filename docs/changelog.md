@@ -4,6 +4,7 @@
 
 * Accept all valid ledger tags
 * Stop creating empty note for balance assertion without narration
+* Avoid incorrect collision warning in implicit conversions
 
 ## 2.7 (2022-12-03)
 

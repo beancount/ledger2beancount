@@ -4,6 +4,8 @@
 ;   - Lot value expressions not supported in beancount: 2 EUR
 ;   - Lot value expressions not supported in beancount: ten_dollars
 ;   - Lot value expressions not supported in beancount: 0.90 EUR
+;   - Commodity AClub renamed to ACLUB
+;   - Commodity LeClub renamed to LECLUB
 ;   - Commodity XXXx renamed to XXXX
 ;   - Metadata key VALUE renamed to value
 ;   - Collision for commodity EUR: EUR, €
@@ -35,6 +37,7 @@ option "inferred_tolerance_default" "GBP:0.004"
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Cash
 1970-01-01 open Assets:Investments
+1970-01-01 open Assets:Rewards
 1970-01-01 open Assets:Voucher
 1970-01-01 open Assets:Voucher:Groupon
 1970-01-01 open Expenses:Currency
@@ -45,9 +48,11 @@ option "inferred_tolerance_default" "GBP:0.004"
 1970-01-01 open Liabilities:Credit-Card
 
 1970-01-01 commodity AAPL
+1970-01-01 commodity ACLUB
 1970-01-01 commodity BRL
 1970-01-01 commodity FOO
 1970-01-01 commodity GB00BPN5P782
+1970-01-01 commodity LECLUB
 1970-01-01 commodity MADEUP
 
 2018-03-17 * "Opening balance"
@@ -521,4 +526,8 @@ option "inferred_tolerance_default" "GBP:0.004"
 2020-11-09 * "Total cost and total price don't match due to rounding"
   Assets:Investments  11 FOO {{1000 GBP}}
   Assets:Investments                           -1000 GBP
+
+2022-12-18 * "Implicit conversion with rename of commodity"
+  Assets:Rewards                             1000 LECLUB @ 1 ACLUB
+  Assets:Rewards                            -1000 ACLUB
 

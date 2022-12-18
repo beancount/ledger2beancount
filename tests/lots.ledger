@@ -480,3 +480,7 @@ commodity XXXx
     Assets:Investments  11 "FOO" {{1000 GBP}} @ 90.909 GBP
     Assets:Investments                           -1000 GBP
 
+2022-12-18 * Implicit conversion with rename of commodity
+    Assets:Rewards                             1000 LeClub
+    Assets:Rewards                            -1000 AClub
+
