@@ -6,6 +6,7 @@ requires 'experimental';
 requires 'File::BaseDir';
 requires 'Getopt::Long::Descriptive';
 requires 'List::MoreUtils';
+requires 'List::Util', '>= 1.55';
 requires 'POSIX';
 requires 'Regexp::Common';
 requires 'String::Interpolate';

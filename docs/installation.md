@@ -8,6 +8,7 @@ ledger2beancount is a Perl script and relies on the following modules:
 * `File::BaseDir`
 * `Getopt::Long::Descriptive`
 * `List::MoreUtils`
+* `List::Util`
 * `Regexp::Common`
 * `String::Interpolate`
 * `YAML::XS`

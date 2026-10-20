@@ -2,6 +2,7 @@
 
 ## 2.8 (unreleased)
 
+* Replace deprecated `smartmatch` with `List::Util::any`
 * Accept all valid ledger tags
 * Improve parsing of lot information (accept elements in any order)
 * Stop creating empty note for balance assertion without narration
