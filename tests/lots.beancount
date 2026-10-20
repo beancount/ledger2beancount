@@ -531,3 +531,19 @@ option "inferred_tolerance_default" "GBP:0.004"
   Assets:Rewards                             1000 LECLUB @ 1 ACLUB
   Assets:Rewards                            -1000 ACLUB
 
+2026-10-20 txn "Elements in lots can have any order"
+  Assets:Test       100 FOO {43.44 USD, 2011-11-23}
+  Equity:Opening-Balance
+
+2026-10-20 txn "Elements in lots can have any order"
+  Assets:Test       100 FOO {43.44 USD, 2011-11-23, "Note"}
+  Equity:Opening-Balance
+
+2026-10-20 txn "Elements in lots can have any order"
+  Assets:Test       100 FOO {43.44 USD, "Note"}
+  Equity:Opening-Balance
+
+2026-10-20 txn "Elements in lots can have any order"
+  Assets:Test       100 FOO {43.44 USD, 2026-10-20, "Note"}
+  Equity:Opening-Balance
+

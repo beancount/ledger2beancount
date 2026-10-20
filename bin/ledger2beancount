@@ -1639,48 +1639,41 @@ sub get_lot($) {
     # * Price: @
     # * Virtual price: (@)
     # * Balance assertion: =
-    if ($l =~ /^($|;|@|\(@|=)/) {
-	return $amount, $cost, $l;
-    }
+    while ($l !~ /^\s*($|;|@|\(@|=)/) {
 
-    # Look for a cost: {...} or {{...}}
-    if ($l =~ /^(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?(?<rest>.*)/) {
-	$l = $+{rest};
-	$cost->[TYPE] = length $+{type};
-	my $rest;
-	($cost->[AMOUNT], $rest) = get_amount $+{amount};
-	if ($rest) {
-	    die "Cost in lot had a rest: $rest";
-	}
-    }
-
-    # A lot date: dates are always in square brackets [date]
-    if ($l =~ /^\s*\[(?<date>\d+[^ =\]]+)\](?<rest>.*)/) {
-	$l = $+{rest};
-	$cost->[DATE] = pp_date $+{date}, 0;
-    }
-
-    # A lot note: (note).  Don't confuse with a ((lot value expression))
-    # (see below) or a virtual price: (@).
-    if ($l !~ /^\s*(\(\(|\(@)/ && $l =~ /^\s*(?<note>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
-	$l = $+{rest};
-	$cost->[NOTE] = $+{note};
-	$cost->[NOTE] =~ s/^\(//;
-	$cost->[NOTE] =~ s/\)$//;
-    }
-
-    # A lot value expression: ((market))
-    if ($l =~ /^\s*\(\(/ && $l =~ /^\s*(?<valuation>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
-	$l = $+{rest};
-	my $valuation = $+{valuation};
-	$valuation =~ s/^\(\(//;
-	$valuation =~ s/\)\)$//;
-	$valuation =~ s/^\s+//;
-	$valuation =~ s/\s+$//;
-	# Print a warning unless it's "market" which is the default
-	# behaviour anyway.
-	if ($valuation ne "market") {
-	    print_warning_once "Lot value expressions not supported in beancount: $valuation";
+	# Look for a cost: {...} or {{...}}
+	if ($l =~ /^\s*(?<type>\{\{?)\s*(?<amount>[^}]+)\}\}?(?<rest>.*)/) {
+	    $l = $+{rest};
+	    $cost->[TYPE] = length $+{type};
+	    my $rest;
+	    ($cost->[AMOUNT], $rest) = get_amount $+{amount};
+	    if ($rest) {
+		die "Cost in lot had a rest: $rest";
+	    }
+	# A lot date: dates are always in square brackets [date]
+	} elsif ($l =~ /^\s*\[(?<date>\d+[^ =\]]+)\](?<rest>.*)/) {
+	    $l = $+{rest};
+	    $cost->[DATE] = pp_date $+{date}, 0;
+	# A lot note: (note).  Don't confuse with a ((lot value expression))
+	# (see below) or a virtual price: (@).
+	} elsif ($l !~ /^\s*(\(\(|\(@)/ && $l =~ /^\s*(?<note>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
+	    $l = $+{rest};
+	    $cost->[NOTE] = $+{note};
+	    $cost->[NOTE] =~ s/^\(//;
+	    $cost->[NOTE] =~ s/\)$//;
+	# A lot value expression: ((market))
+	} elsif ($l =~ /^\s*\(\(/ && $l =~ /^\s*(?<valuation>$RE{balanced}{-parens=>'()'})(?<rest>.*)/) {
+	    $l = $+{rest};
+	    my $valuation = $+{valuation};
+	    $valuation =~ s/^\(\(//;
+	    $valuation =~ s/\)\)$//;
+	    $valuation =~ s/^\s+//;
+	    $valuation =~ s/\s+$//;
+	    # Print a warning unless it's "market" which is the default
+	    # behaviour anyway.
+	    if ($valuation ne "market") {
+		print_warning_once "Lot value expressions not supported in beancount: $valuation";
+	    }
 	}
     }
 
