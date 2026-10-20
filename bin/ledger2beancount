@@ -1535,15 +1535,16 @@ sub get_value_expr($) {
     $terms =~ s/[.,\s\d\(\)\*\/+-]/ /g;
     $terms =~ s/^\s+//;
     my @terms = uniq split /\s+/, $terms;
+    $amount->[NUMBER] = 0;
     if (scalar @terms == 0) {
 	die "Failed to find commodity in inline math: $math\n";
-    } elsif (scalar @terms == 1) {
+    } elsif (scalar @terms == 1 && $math ne $terms[0]) {
 	$math =~ s/\s*\Q$terms[0]\E\s*//g;
+	$amount->[NUMBER] = convert_number $math, $amount->[CURRENCY];
     } else {
 	print_warning_once("Complex inline math not supported in beancount: $math");
     }
     $amount->[CURRENCY] = map_commodity $terms[0];
-    $amount->[NUMBER] = convert_number $math, $amount->[CURRENCY];
     $amount->[ADJUST_WHITESPACE] -= length pp_amount $amount;
     return $amount, $rest;
 }
