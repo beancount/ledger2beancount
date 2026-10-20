@@ -473,11 +473,11 @@ commodity XXXx
     Assets:Investments                                 -900.0000226 MADEUP
 
 2020-11-09 * Total cost and total price don't match due to rounding
-    Assets:Investments  11 "FOO" {90.909 GBP} @@ 1000 GBP
+    Assets:Investments  11 FOO {90.909 GBP} @@ 1000 GBP
     Assets:Investments                          -1000 GBP
 
 2020-11-09 * Total cost and total price don't match due to rounding
-    Assets:Investments  11 "FOO" {{1000 GBP}} @ 90.909 GBP
+    Assets:Investments  11 FOO {{1000 GBP}} @ 90.909 GBP
     Assets:Investments                           -1000 GBP
 
 2022-12-18 * Implicit conversion with rename of commodity
