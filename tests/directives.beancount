@@ -19,6 +19,7 @@
 ;   - Directive `define` not supported by beancount: replacing hundred with $100
 ;   - Directive `define` not supported by beancount: replacing twenty with $20
 ;   - Directive `define` not supported by beancount: replacing thousand with $1000
+;   - Directive `define` not supported by beancount: replacing ten with $10
 ;   - Tag 10!20 renamed to 10-20
 ;   - Tag foo!bar renamed to foo-bar
 ;   - Collision for commodity USD: $, USD
@@ -31,7 +32,9 @@
 
 
 1970-01-01 open Assets:Another:Alias
+1970-01-01 open Assets:Bar
 1970-01-01 open Assets:Checking
+1970-01-01 open Assets:Foo
 1970-01-01 open Assets:GG
 1970-01-01 open Assets:Savings
 1970-01-01 open Assets:Test
@@ -41,6 +44,7 @@
 1970-01-01 open Assets:Test1:Test2:CC:DD
 1970-01-01 open Assets:Test1:Test2:EE:FF
 1970-01-01 open Assets:Test1:Test2:XXX:AA
+1970-01-01 open Assets:Trailing-Whitespace
 1970-01-01 open Assets:What:A:Long:Name
 1970-01-01 open Equity:Opening-Balance
 
@@ -290,4 +294,38 @@ poptag #WTF
   Assets:Test                        10.00 EUR
   Assets:Test
 
+
+
+2026-10-21 * "Test alias with trailing whitespace"
+  Assets:GG     10.00 EUR
+  Assets:Trailing-Whitespace
+
+pushtag #trailing
+
+2026-10-21 * "Tag with trailing whitespace"
+  Assets:Test                        10.00 EUR
+  Assets:Test
+
+poptag #trailing
+
+
+2026-10-21 * "Test apply with trailing whitespace"
+  Assets:Foo    10.00 EUR
+  Assets:Bar
+
+
+
+2026-10-21 * "Transaction without year - year has trailing whitespace"
+  Assets:Test                        10.00 EUR
+  Equity:Opening-Balance            -10.00 EUR
+
+
+
+2026-10-21 * "Bucket with trailing whitespace"
+  Assets:Test                        10.00 EUR
+  Assets:Trailing-Whitespace
+
+2026-10-21 txn "Define, with trailing whitespace"
+  Assets:Test                          10 USD
+  Equity:Opening-Balance
 

@@ -57,6 +57,7 @@ option "title" "Test account names"
 1970-01-01 open Assets:Test:I-Love-Crowns
 1970-01-01 open Assets:Commodity-Test123
 1970-01-01 open Expenses:Purchase
+1970-01-01 open Assets:Trailing-Whitespace
 
 ; These accounts lead to name collision
 1970-01-01 open Expenses:Travel

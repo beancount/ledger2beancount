@@ -23,6 +23,7 @@ account Assets:♚♛♕♔
 account Assets:Test:I love ♚♛♕♔
 account Assets:Commodity-Test123
 account expenses:purchase
+account Assets:Trailing-Whitespace  
 
 ; These accounts lead to name collision
 account Expenses:Foo:Travel

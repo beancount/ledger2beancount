@@ -2419,6 +2419,7 @@ while (@input) {
     } elsif ($l =~ /^[!@]?(?<type>alias)\s+(?<account>$account_RE)\s*=\s*(?<val>.*)/) {  # alias
 	my $account = $+{account};
 	my $value = $+{val};
+	$value =~ s/\s+$//;
         if ($config->{hledger} && $account =~ m#^/(.*)/$#) {
 	    flush_cache('map_account');
 	    $account = "(?i)$1";
@@ -2430,7 +2431,9 @@ while (@input) {
 	}
     } elsif ($l =~ /^[!@]?apply\s+(?<type>account)\s+(?<val>.*)/) {  # apply account
 	$out = \@output;
-	push @ledger_apply, create_apply_account $+{val};
+	my $value = $+{val};
+	$value =~ s/\s+$//;
+	push @ledger_apply, create_apply_account $value;
     } elsif ($l =~ /^[!@]?apply\s+(?<type>(fixed|rate))\s+(?<commodity>[^\s]+)\s*(?<fixed>.+)/) {  # apply fixed
 	$out = \@output;
 	my ($amount, $rest) = get_amount $+{fixed};
@@ -2440,16 +2443,18 @@ while (@input) {
 	push @ledger_apply, create_apply_fixated $amount, $+{commodity};
     } elsif ($l =~ /^[!@]?apply\s+(?<type>tag)\s+(?<val>.*)/) {  # apply tag
 	$out = \@output;
+	my $value = $+{val};
+	$value =~ s/\s+$//;
 	# `apply tag` can be converted to beancount in three ways:
 	# * using pushtag/poptag for tags
 	# * applying links to each transactions
 	# * applying metadata to each transactions
-	if ("; $+{val}" =~ /$metadata_RE/) {
+	if ("; $value" =~ /$metadata_RE/) {
 	    push @ledger_apply, create_metadata_from_regex 1, \%+;
-	} elsif (is_link $+{val}) {
-	    push @ledger_apply, create_tag 1, [ "^" . map_tag $+{val} ];
+	} elsif (is_link $value) {
+	    push @ledger_apply, create_tag 1, [ "^" . map_tag $value ];
 	} else {
-	    my $tag = map_tag $+{val};
+	    my $tag = map_tag $value;
 	    print_line $depth, "pushtag " . pp_tag_link $tag;
 	    push @ledger_apply, create_apply_pushtag $tag;
 	}
@@ -2484,7 +2489,9 @@ while (@input) {
 	    $year = $year_no_apply if !$found;
 	}
     } elsif ($l =~ /^[!@]?(bucket|A)\s+(.*)/) {  # bucket
-	$ledger_bucket = map_account $2;
+	my $account = $2;
+	$account =~ s/\s+$//;
+	$ledger_bucket = map_account $account;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
 	$l = shift @input;
 	# block comments may or may not be indented.  If the first line has
@@ -2497,10 +2504,13 @@ while (@input) {
 	    $l = shift @input;
 	}
     } elsif ($l =~ /^[!@]?(define|def)\s+([^=]+?)\s*=\s*(.*)/) {  # define
-	if (index($2, "(") == -1) {
-	    $ledger_define{$2} = $3;
+	my $key = $2;
+	my $value = $3;
+	$value =~ s/\s+$//;
+	if (index($key, "(") == -1) {
+	    $ledger_define{$key} = $value;
 	} else {
-	    print_warning_once "Directive `$1` with function is not supported: $2";
+	    print_warning_once "Directive `$1` with function is not supported: $key";
 	    print_comment_top_level 0, $l;
 	}
     } elsif ($l =~ /^[!@]?(fixed|endfixed)/) {  # Fixated price
@@ -2542,6 +2552,7 @@ while (@input) {
 	} else {
 	    ($account, $comment) = split /\s\s+;/, $1, 2;
 	}
+	$account =~ s/\s+$//;
 	$account = map_account $account;
 	@stanza = read_stanza \@input;
 	# Avoid duplicate account declarations if two accounts are mapped

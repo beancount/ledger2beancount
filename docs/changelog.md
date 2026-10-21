@@ -5,6 +5,7 @@
 * Replace deprecated `smartmatch` with `List::Util::any`
 * Accept all valid ledger tags
 * Improve parsing of lot information (accept elements in any order)
+* Ignore trailing whitespace in ledger directives
 * Stop creating empty note for balance assertion without narration
 * Avoid incorrect collision warning in implicit conversions
 

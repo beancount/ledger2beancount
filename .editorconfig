@@ -49,6 +49,9 @@ trim_trailing_whitespace = false
 [tests/comments.ledger]
 trim_trailing_whitespace = false
 
+[tests/directives.ledger]
+trim_trailing_whitespace = false
+
 [tests/metadata.ledger]
 trim_trailing_whitespace = false
 

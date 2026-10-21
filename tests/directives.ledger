@@ -285,3 +285,43 @@ apply tag 10!20
 
 end apply
 
+alias CC=Assets:Trailing-Whitespace  
+
+2026-10-21 * Test alias with trailing whitespace
+    Assets:GG     10.00 EUR
+    CC
+
+apply tag trailing  
+
+2026-10-21 * Tag with trailing whitespace
+    Assets:Test                        10.00 EUR
+    Assets:Test
+
+end apply
+
+apply account Assets:  
+
+2026-10-21 * Test apply with trailing whitespace
+    Foo           10.00 EUR
+    Bar
+
+end apply
+
+apply year 2026   
+
+10-21 * Transaction without year - year has trailing whitespace
+    Assets:Test                        10.00 EUR
+    Equity:Opening-Balance            -10.00 EUR
+
+end apply
+
+bucket Assets:Trailing-Whitespace   
+
+2026-10-21 * Bucket with trailing whitespace
+    Assets:Test                        10.00 EUR
+
+define ten=$10  
+2026-10-21 Define, with trailing whitespace
+    Assets:Test                            (ten)
+    Equity:Opening-Balance
+
