@@ -441,8 +441,6 @@ sub create_apply_account($) {
 
     my $obj;
     $obj->[TYPE] = ACCOUNT;
-    # Strip trailing : since we always add a : later
-    $account =~ s/:+$//;
     $obj->[VALUE] = $account;
     return $obj;
 }

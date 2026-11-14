@@ -20,6 +20,13 @@
 ;   - Directive `define` not supported by beancount: replacing twenty with $20
 ;   - Directive `define` not supported by beancount: replacing thousand with $1000
 ;   - Directive `define` not supported by beancount: replacing ten with $10
+;   - Account Assets::Bar renamed to Assets:X:Bar
+;   - Account Assets:Test1:::Test2:AA renamed to Assets:Test1:X:X:Test2:AA
+;   - Account Assets:Test1:::Test2:Another:Alias renamed to Assets:Test1:X:X:Test2:Another:Alias
+;   - Account Assets:Test1:::Test2:BB renamed to Assets:Test1:X:X:Test2:BB
+;   - Account Assets:Test1:::Test2:CC:DD renamed to Assets:Test1:X:X:Test2:CC:DD
+;   - Account Assets:Test1:::Test2:EE:FF renamed to Assets:Test1:X:X:Test2:EE:FF
+;   - Account Assets:Test1:::Test2:XXX:AA renamed to Assets:Test1:X:X:Test2:XXX:AA
 ;   - Tag 10!20 renamed to 10-20
 ;   - Tag foo!bar renamed to foo-bar
 ;   - Collision for commodity USD: $, USD
@@ -32,20 +39,20 @@
 
 
 1970-01-01 open Assets:Another:Alias
-1970-01-01 open Assets:Bar
 1970-01-01 open Assets:Checking
 1970-01-01 open Assets:Foo
 1970-01-01 open Assets:GG
 1970-01-01 open Assets:Savings
 1970-01-01 open Assets:Test
-1970-01-01 open Assets:Test1:Test2:AA
-1970-01-01 open Assets:Test1:Test2:Another:Alias
-1970-01-01 open Assets:Test1:Test2:BB
-1970-01-01 open Assets:Test1:Test2:CC:DD
-1970-01-01 open Assets:Test1:Test2:EE:FF
-1970-01-01 open Assets:Test1:Test2:XXX:AA
+1970-01-01 open Assets:Test1:X:X:Test2:AA
+1970-01-01 open Assets:Test1:X:X:Test2:Another:Alias
+1970-01-01 open Assets:Test1:X:X:Test2:BB
+1970-01-01 open Assets:Test1:X:X:Test2:CC:DD
+1970-01-01 open Assets:Test1:X:X:Test2:EE:FF
+1970-01-01 open Assets:Test1:X:X:Test2:XXX:AA
 1970-01-01 open Assets:Trailing-Whitespace
 1970-01-01 open Assets:What:A:Long:Name
+1970-01-01 open Assets:X:Bar
 1970-01-01 open Equity:Opening-Balance
 
 1970-01-01 commodity EUR
@@ -165,14 +172,14 @@ pushtag #bar
 2018-03-29 * "Test apply"
   test: "martin"
   ^2018-02-02-brussels-fosdem
-  Assets:Test1:Test2:AA            10.00 EUR
-  Assets:Test1:Test2:BB
+  Assets:Test1:X:X:Test2:AA            10.00 EUR
+  Assets:Test1:X:X:Test2:BB
 
 2018-03-29 * "Test apply"
   test: "martin"
   ^2018-02-02-brussels-fosdem
-  Assets:Test1:Test2:CC:DD         10.00 EUR
-  Assets:Test1:Test2:EE:FF
+  Assets:Test1:X:X:Test2:CC:DD         10.00 EUR
+  Assets:Test1:X:X:Test2:EE:FF
 
 poptag #bar
 poptag #foo
@@ -181,18 +188,18 @@ poptag #foo
 
 
 2018-03-29 * "Test apply"
-  Assets:Test1:Test2:AA            10.00 EUR
+  Assets:Test1:X:X:Test2:AA            10.00 EUR
   Assets:What:A:Long:Name
 
 
 2018-03-29 * "Test apply"
-  Assets:Test1:Test2:XXX:AA            10.00 EUR
-  Assets:Test1:Test2:Another:Alias
+  Assets:Test1:X:X:Test2:XXX:AA            10.00 EUR
+  Assets:Test1:X:X:Test2:Another:Alias
 
 
 2018-03-29 * "Test apply"
   Assets:GG     10.00 EUR
-  Assets:Test1:Test2:Another:Alias
+  Assets:Test1:X:X:Test2:Another:Alias
 
 
 2018-03-29 * "Test apply"
@@ -311,7 +318,7 @@ poptag #trailing
 
 2026-10-21 * "Test apply with trailing whitespace"
   Assets:Foo    10.00 EUR
-  Assets:Bar
+  Assets:X:Bar
 
 
 

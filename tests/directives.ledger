@@ -121,12 +121,12 @@ include include3.ledger
 
 ; Test apply account and apply tag
 
-!apply account Assets:
+!apply account Assets
 apply tag foo
 apply tag bar
 apply tag 2018-02-02-brussels-fosdem
 apply tag test: martin
-@apply account Test1:::::::::::
+@apply account Test1::
 @apply account Test2
 
 2018-03-29 * Test apply
@@ -148,8 +148,8 @@ end apply
 ; Test apply account and alias
 
 alias BB=Assets:What:A:Long:Name
-!apply account Assets:
-@apply account Test1:::::::::::
+!apply account Assets
+@apply account Test1::
 @apply account Test2
 
 2018-03-29 * Test apply
