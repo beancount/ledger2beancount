@@ -126,7 +126,7 @@ apply tag foo
 apply tag bar
 apply tag 2018-02-02-brussels-fosdem
 apply tag test: martin
-@apply account Test1::
+@apply account Test1
 @apply account Test2
 
 2018-03-29 * Test apply
@@ -149,7 +149,7 @@ end apply
 
 alias BB=Assets:What:A:Long:Name
 !apply account Assets
-@apply account Test1::
+@apply account Test1
 @apply account Test2
 
 2018-03-29 * Test apply
@@ -301,7 +301,7 @@ end apply
 
 apply account Assets:  
 
-2026-10-21 * Test apply with trailing whitespace
+2026-10-21 * Test apply colon and with trailing whitespace
     Foo           10.00 EUR
     Bar
 

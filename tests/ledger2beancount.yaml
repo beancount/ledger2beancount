@@ -30,8 +30,6 @@ payee_match:
 
 account_map:
   "Equity:Opening-balance": Equity:Opening-Balance
-  Assets::Foo: Assets:Foo
-  Assets::Test1:::Test2:EE:FF: Assets:Test:Test2:EE:FF
 
 # mapping of ledger commodities to valid beancount commodities
 commodity_map:

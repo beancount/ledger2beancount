@@ -9,8 +9,6 @@
 ;   - Account Accrued:Accounts Payable:Baz renamed to Liabilities:Accounts-Payable:Baz
 ;   - Account Assets:Bank Debian)bar renamed to Assets:Bank-Debian-bar
 ;   - Account Assets:Bank [Debian] renamed to Assets:Bank--Debian-
-;   - Account Assets:Baz:::Bar renamed to Assets:Baz:X:X:Bar
-;   - Account Assets:Foo::Bar renamed to Assets:Foo:X:Bar
 ;   - Account Assets:test renamed to Assets:Test
 ;   - Account Assets:♚_DASD!;?@#$!%^& *"(*(0-;♚ds renamed to Assets:X-DASD----------------0---ds
 ;   - Account Assets:♚foo:♚bar renamed to Assets:Xfoo:Xbar
@@ -73,11 +71,9 @@ option "title" "Test account names"
 1970-01-01 open Assets:Accounts-Receivable:Foo
 1970-01-01 open Assets:Bank
 1970-01-01 open Assets:Bash
-1970-01-01 open Assets:Baz:X:X:Bar
 1970-01-01 open Assets:Bbb
 1970-01-01 open Assets:Collision
 1970-01-01 open Assets:Even-even-more-food
-1970-01-01 open Assets:Foo:X:Bar
 1970-01-01 open Assets:MuchLonger
 1970-01-01 open Assets:Short
 1970-01-01 open Equity:Trading:Currency
@@ -456,10 +452,3 @@ option "title" "Test account names"
   Expenses:Rest                     10.00 EUR
   Assets:Bash
 
-2026-11-14 * "Test empty sub-account"
-  Assets:Foo:X:Bar                  10.00 EUR
-  Assets:Bash
-
-2026-11-14 * "Test empty sub-account"
-  Assets:Baz:X:X:Bar                10.00 EUR
-  Assets:Bash

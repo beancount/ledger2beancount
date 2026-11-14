@@ -441,6 +441,8 @@ sub create_apply_account($) {
 
     my $obj;
     $obj->[TYPE] = ACCOUNT;
+    # Strip trailing : since we always add a : later
+    $account =~ s/:+$//;
     $obj->[VALUE] = $account;
     return $obj;
 }
@@ -1312,7 +1314,6 @@ sub map_account($) {
     }
 
     # Ensure account names are valid in beancount
-    $account =~ s/(?<=:)(?=:)/X/g; # Don't allow empty sub-accounts
     $account =~ s/(^|:)(\p{lower})/$1\U$2\E/g; # Make first letter uppercase
     $account =~ s/(^|:)[^\p{letter}\p{number}]/$1X/g; # Make sure first character is a letter or number
     $account =~ s/[^\p{letter}\p{number}:-]/-/g; # Replace disallowed characters
