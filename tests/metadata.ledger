@@ -166,14 +166,19 @@ commodity EUR
     Assets:Cash                       -10.00 EUR
     Expenses:Food
       ; foo: bar
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; foo: baz
+   [Expenses:Virtual2]                 -2.00 EUR
       ; foo: baz
 
 2020-05-29 * Metadata on virtual posting should be ignored
     Assets:Cash                       -10.00 EUR
     Expenses:Food
       ; foo: bar
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; Some comment
+      ; foo: baz
+   [Expenses:Virtual2]                 -2.00 EUR
       ; Some comment
       ; foo: baz
 
@@ -181,7 +186,10 @@ commodity EUR
     Assets:Cash                       -10.00 EUR
     Expenses:Food
       ; foo: bar
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; foo: baz
+      ; Some comment
+   [Expenses:Virtual2]                 -2.00 EUR
       ; foo: baz
       ; Some comment
 
@@ -212,7 +220,9 @@ commodity EUR
       ; xyz: abc
 
 2020-05-30 * Metadata on virtual posting should be ignored
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; foo: baz
+   [Expenses:Virtual2]                 -2.00 EUR
       ; foo: baz
     Expenses:Food
       ; foo: bar
@@ -220,7 +230,10 @@ commodity EUR
       ; xyz: abc
 
 2020-05-30 * Metadata on virtual posting should be ignored
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; Some comment
+      ; foo: baz
+   [Expenses:Virtual2]                 -2.00 EUR
       ; Some comment
       ; foo: baz
     Expenses:Food
@@ -229,7 +242,10 @@ commodity EUR
       ; xyz: abc
 
 2020-05-30 * Metadata on virtual posting should be ignored
-   [Expenses:Virtual]                   2.00 EUR
+   [Expenses:Virtual1]                  2.00 EUR
+      ; foo: baz
+      ; Some comment
+   [Expenses:Virtual2]                 -2.00 EUR
       ; foo: baz
       ; Some comment
     Expenses:Food

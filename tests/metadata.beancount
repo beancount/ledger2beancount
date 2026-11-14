@@ -195,18 +195,23 @@
   Expenses:Food
     foo: "bar"
     ; foo: baz
-
-2020-05-29 * "Metadata on virtual posting should be ignored"
-  Assets:Cash                       -10.00 EUR
-  Expenses:Food
-    foo: "bar"
-    ; Some comment
     ; foo: baz
 
 2020-05-29 * "Metadata on virtual posting should be ignored"
   Assets:Cash                       -10.00 EUR
   Expenses:Food
     foo: "bar"
+    ; Some comment
+    ; foo: baz
+    ; Some comment
+    ; foo: baz
+
+2020-05-29 * "Metadata on virtual posting should be ignored"
+  Assets:Cash                       -10.00 EUR
+  Expenses:Food
+    foo: "bar"
+    ; foo: baz
+    ; Some comment
     ; foo: baz
     ; Some comment
 
@@ -234,6 +239,7 @@
     xyz: "abc"
 
 2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
     ; foo: baz
   Expenses:Food
     foo: "bar"
@@ -243,12 +249,16 @@
 2020-05-30 * "Metadata on virtual posting should be ignored"
     ; Some comment
     ; foo: baz
+    ; Some comment
+    ; foo: baz
   Expenses:Food
     foo: "bar"
   Assets:Cash                       -10.00 EUR
     xyz: "abc"
 
 2020-05-30 * "Metadata on virtual posting should be ignored"
+    ; foo: baz
+    ; Some comment
     ; foo: baz
     ; Some comment
   Expenses:Food

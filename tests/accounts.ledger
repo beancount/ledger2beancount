@@ -187,7 +187,9 @@ commodity EUR
 
 2018-10-22 Whitespace is not part of account name
     Assets:Test                      10.00 EUR
-    [Assets:Bank] 	            -10.00 EUR
+    Assets:Bank                     -10.00 EUR
+    [Assets:Test] 	                 10.00 EUR
+    [Assets:Bank] 	                -10.00 EUR
 
 2018-10-22 Trailing whitespace is not part of account name
     Assets:Test                      10.00 EUR
@@ -203,14 +205,20 @@ commodity EUR
 
 2018-10-22 Trailing whitespace is not part of account name
     Assets:Test                      10.00 EUR
+    Assets:Bank                     -10.00 EUR
+    [Assets:Test]                    10.00 EUR
     [Assets:Bank] 
 
 2018-10-22 Trailing whitespace is not part of account name
     Assets:Test                      10.00 EUR
+    Assets:Bank                     -10.00 EUR
+    [Assets:Test]	                 10.00 EUR
     [Assets:Bank]	
 
 2018-10-22 Trailing whitespace is not part of account name
     Assets:Test                      10.00 EUR
+    Assets:Bank                     -10.00 EUR
+    [Assets:Bank] 	                 10.00 EUR
     [Assets:Bank] 	
 
 2019-02-28 Tab after account name
@@ -265,22 +273,26 @@ account Assets:Bank Debian]bar
 
 2018-01-02 * Account name with brackets, as virtual posting
     Expenses:Foo                      10.00 USD
-    Assets:Bank                       -8.00 USD
+    Assets:Bank                      -10.00 USD
+    [Expenses:Foo]                     2.00 USD
     [Assets:Bank (Debian)]            -2.00 USD
 
 2018-01-02 * Account name with brackets, as virtual posting
     Expenses:Foo                      10.00 USD
-    Assets:Bank                       -8.00 USD
+    Assets:Bank                      -10.00 USD
+    [Expenses:Foo]                     2.00 USD
     [Assets:Bank [Debian]]            -2.00 USD
 
 2018-01-02 * Account name with brackets, as virtual posting
     Expenses:Foo                      10.00 USD
-    Assets:Bank                       -8.00 USD
+    Assets:Bank                      -10.00 USD
+    [Expenses:Foo]                     2.00 USD
     [Assets:Bank Debian)bar]          -2.00 USD
 
 2018-01-02 * Account name with brackets, as virtual posting
     Expenses:Foo                      10.00 USD
-    Assets:Bank                       -8.00 USD
+    Assets:Bank                      -10.00 USD
+    [Expenses:Foo]                     2.00 USD
     [Assets:Bank Debian]bar]          -2.00 USD
 
 2019-03-27 Don't confuse account and amount due to tabs
