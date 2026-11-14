@@ -411,3 +411,10 @@ account Expenses:Rest
     Expenses:Unknown                  10.00 EUR
     Assets:Cash
 
+2026-11-14 * Test empty sub-account
+    Assets:Foo::Bar                   10.00 EUR
+    Assets:Cash
+
+2026-11-14 * Test empty sub-account
+    Assets:Baz:::Bar                  10.00 EUR
+    Assets:Cash

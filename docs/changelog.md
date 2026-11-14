@@ -8,6 +8,7 @@
 * Ignore trailing whitespace in ledger directives
 * Stop creating empty note for balance assertion without narration
 * Avoid incorrect collision warning in implicit conversions
+* Don't allow empty sub-accounts
 
 ## 2.7 (2022-12-03)
 
