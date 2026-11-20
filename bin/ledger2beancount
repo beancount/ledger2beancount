@@ -1043,7 +1043,6 @@ sub is_meta_payee($) {
 # Print metadata
 # Arguments:
 #  - a metadata object
-#  - in_postings
 sub print_metadata($) {
     my ($metadata) = @_;
 
