@@ -329,3 +329,11 @@ poptag #trailing
   Assets:Test                          10 USD
   Equity:Opening-Balance
 
+1970-01-01 open Assets:Cash
+  description: "Cash account"
+1970-01-01 open Assets:Reserve
+
+2026-11-20 * "Test of apply account"
+  Assets:Cash      10 USD
+  Assets:Reserve  -10 USD
+

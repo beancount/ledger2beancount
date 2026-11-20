@@ -325,3 +325,13 @@ define ten=$10
     Assets:Test                            (ten)
     Equity:Opening-Balance
 
+apply account Assets
+account Cash
+    note Cash account
+account Reserve
+
+2026-11-20 * Test of apply account
+    Cash      10 USD
+    Reserve  -10 USD
+
+end apply account

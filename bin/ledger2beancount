@@ -2552,7 +2552,8 @@ while (@input) {
 	    ($account, $comment) = split /\s\s+;/, $1, 2;
 	}
 	$account =~ s/\s+$//;
-	$account = map_account $account;
+	my $ledger_account = map_account_apply $account;
+	$account = map_account $ledger_account;
 	@stanza = read_stanza \@input;
 	# Avoid duplicate account declarations if two accounts are mapped
 	# to the same account and both have account declarations.
@@ -2573,11 +2574,11 @@ while (@input) {
 	    } elsif ($l =~ /^alias\s+(.*)/) {  # alias
 		my $alias = $1;
 		$alias =~ s/\s+$//;
-		$ledger_alias{$alias} = map_account_apply $account;
+		$ledger_alias{$alias} = $ledger_account;
 	    } elsif ($l =~ /^payee\s+(.*)/) {  # payee
 		my $payee = $1;
 		$payee =~ s/\s+$//;
-		push @ledger_account_payee_match, create_match_account_payee $payee, map_account_apply $account;
+		push @ledger_account_payee_match, create_match_account_payee $payee, $account;
 	    } else {
 		print_comment_top_level $depth, $l;
 	    }

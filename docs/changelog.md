@@ -10,6 +10,7 @@
 * Avoid incorrect collision warning in implicit conversions
 * Avoid infinite loop for unterminated ledger blocks
 * Handle `include` directives with quotes
+* Ensure `apply account` is applied to `account` directives
 * Fix implicit conversion with option `decimal_comma`
 * Ensure assertions have commodity with option `default_commodity`
 * Improve test suite compatibility with upcoming ledger 3.5
