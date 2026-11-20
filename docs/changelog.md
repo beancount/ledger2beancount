@@ -11,6 +11,7 @@
 * Avoid infinite loop for unterminated ledger blocks
 * Handle `include` directives with quotes
 * Improve test suite compatibility with upcoming ledger 3.5
+* Drop requirement on `Date::Calc`
 
 ## 2.7 (2022-12-03)
 

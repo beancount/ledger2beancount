@@ -16,7 +16,6 @@ use utf8;
 use feature 'unicode_strings';
 use open qw/:std :utf8/;
 
-use Date::Calc qw/Add_Delta_Days/;
 use DateTime::Format::Strptime qw/strftime/;
 use File::BaseDir qw/config_home/;
 use Getopt::Long::Descriptive;
@@ -725,8 +724,7 @@ sub pp_assertion($) {
     # whereas ledger evaluates them at the end of the txn. So we schedule the
     # balance assertion for *after* the original txn. This assumes that there
     # are no *other* txn in the same day that change the balance again.
-    my $assertion_date = sprintf("%04d-%02d-%02d",
-				 Add_Delta_Days(split(/-/, $assertion->[DATE]), 1));
+    my $assertion_date = $date_iso->parse_datetime($assertion->[DATE])->add(days => 1)->ymd;
     return "$assertion_date balance $assertion->[ACCOUNT]  " . pp_amount $assertion->[AMOUNT];
 }
 

@@ -2,7 +2,6 @@
 
 ledger2beancount is a Perl script and relies on the following modules:
 
-* `Date::Calc`
 * `DateTime::Format::Strptime`
 * `enum`
 * `File::BaseDir`
