@@ -211,3 +211,6 @@ define thousand=1.000,00 EUR
     Assets:Test                               ,5
     Assets:Test                          -    ,5
 
+2026-11-20 * Implicit conversion
+    Assets:Test1       -10,00 GBP
+    Assets:Test2         9,00 EUR

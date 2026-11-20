@@ -236,3 +236,6 @@
   Assets:Test                              0.5 XXX
   Assets:Test                         -0.5 XXX
 
+2026-11-20 * "Implicit conversion"
+  Assets:Test1       -10.00 GBP @ 0.9 EUR
+  Assets:Test2         9.00 EUR
