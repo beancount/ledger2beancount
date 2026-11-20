@@ -11,6 +11,7 @@
 * Avoid infinite loop for unterminated ledger blocks
 * Handle `include` directives with quotes
 * Fix implicit conversion with option `decimal_comma`
+* Ensure assertions have commodity with option `default_commodity`
 * Improve test suite compatibility with upcoming ledger 3.5
 * Drop requirement on `Date::Calc`
 
