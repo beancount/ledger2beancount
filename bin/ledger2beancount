@@ -2554,9 +2554,7 @@ while (@input) {
 	# account foo ; bar
 	# In ledger, this is parsed as account "foo ; bar"; in hledger as
 	# account "foo" with comment "bar".
-	# If there are two spaces, ledger will also parse it part of the
-	# account name, but such an account name is invalid so treat it
-	# as a comment.
+	# If there are two spaces, treat it as a comment.
 	if ($config->{hledger}) {
 	    ($account, $comment) = split /\s*;/, $1, 2;
 	} else {
