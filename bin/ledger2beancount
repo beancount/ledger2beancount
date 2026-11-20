@@ -2389,18 +2389,20 @@ while (@input) {
     if ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}\s+begin/) {
 	do {
 	    $l = shift @input;
-	} while $l !~ /;\s*:?$config->{ignore_marker}\s+end/;
+	} while $l && $l !~ /;\s*:?$config->{ignore_marker}\s+end/;
+	die "Unterminated $config->{ignore_marker} block (expected end marker)\n" unless defined $l;
     } elsif ($config->{ignore_marker} && $l =~ /;\s*:?$config->{ignore_marker}/) {
 	next;
     } elsif ($config->{keep_marker} && $l =~ /;\s*:?$config->{keep_marker}\s+begin/) {
 	$out = \@output;
 	$l = shift @input;
-	do {
+	while (defined $l && $l !~ /;\s*:?$config->{keep_marker}\s+end/) {
 	    if ($l =~ /^$comment_top_level_RE$/) {
 		print_line $depth, $+{comment};
 	    }
 	    $l = shift @input;
-	} while $l !~ /;\s*:?$config->{keep_marker}\s+end/;
+	}
+	die "Unterminated $config->{keep_marker} block (expected end marker)\n" unless defined $l;
     } elsif ($config->{keep_marker} && $l =~ /^$comment_top_level_RE\s*;\s*:?$config->{keep_marker}/) {
 	print_line $depth, $+{comment};
     } elsif ($l =~ /^[!@]?include\s+(?<filename>.*)/) {  # include
@@ -2493,16 +2495,18 @@ while (@input) {
 	$account =~ s/\s+$//;
 	$ledger_bucket = map_account $account;
     } elsif ($l =~ /^[!@]?(comment|test)/) {  # block comment
+	my $directive = $1;
 	$l = shift @input;
 	# block comments may or may not be indented.  If the first line has
 	# indentation, strip the same indentation, from all other comments.
-	my $strip_indent = $l =~ /^(\h+)/ ? $1 : "";
-	while ($l !~ /^end\s+(comment|test)/) {
+	my $strip_indent = defined $l && $l =~ /^(\h+)/ ? $1 : "";
+	while (defined $l && $l !~ /^end\s+(comment|test)/) {
 	    chomp $l;
 	    $l =~ s/^$strip_indent//;
 	    print_comment_top_level $depth, $l;
 	    $l = shift @input;
 	}
+	die "Unterminated $directive block (expected end $directive)\n" unless defined $l;
     } elsif ($l =~ /^[!@]?(define|def)\s+([^=]+?)\s*=\s*(.*)/) {  # define
 	my $key = $2;
 	my $value = $3;
