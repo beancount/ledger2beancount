@@ -13,6 +13,7 @@
 * Ensure `apply account` is applied to `account` directives
 * Fix implicit conversion with option `decimal_comma`
 * Ensure assertions have commodity with option `default_commodity`
+* Handle CRLF line endings
 * Improve test suite compatibility with upcoming ledger 3.5
 * Drop requirement on `Date::Calc`
 

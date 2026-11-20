@@ -58,3 +58,5 @@ trim_trailing_whitespace = false
 [tests/spacing.ledger]
 trim_trailing_whitespace = false
 
+[tests/crlf.ledger]
+end_of_line = crlf

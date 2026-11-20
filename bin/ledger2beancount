@@ -2361,7 +2361,15 @@ if (ref $config->{payee_match} ne ref []) {
 
 unshift(@ARGV, '-') unless @ARGV;
 open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
-my @input = <$input>;
+my @input;
+while (defined(my $line = <$input>)) {
+    if ($line =~ s/\r\n?/\n/g) {
+	# Bare CR can put multiple logical lines in one read.
+	push @input, split /(?<=\n)/, $line;
+    } else {
+	push @input, $line;
+    }
+}
 close $input;
 
 # To store year declaration
