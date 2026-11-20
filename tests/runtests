@@ -125,11 +125,11 @@ case "$LANG" in
 esac
 
 # Validate ledger files
-ledger_date=$(ledger --version 2>/dev/null | grep "^Ledger [0-9]" | cut -d " " -f 2 | cut -d - -f 2 | sed 's/,//')
-if [ -z $ledger_date ]; then
+ledger_version=$(ledger --version 2>/dev/null | sed -n 's/^Ledger \([0-9][0-9.]*\).*/\1/p')
+if [ -z $ledger_version ]; then
 	echo "Skipping ledger validation checks since ledger is not installed"
-elif [ $ledger_date -lt 20190205 ]; then
-	echo "Skipping ledger validation checks since ledger from $ledger_date is too old"
+elif ! meets_version "$ledger_version" 3.1.2; then
+	echo "Skipping ledger validation checks since ledger $ledger_version is too old"
 else
 	for test in *.ledger; do
 		test_validity_ledger "$test"
