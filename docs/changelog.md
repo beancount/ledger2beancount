@@ -12,6 +12,7 @@
 * Handle `include` directives with quotes
 * Ensure `apply account` is applied to `account` directives
 * Honour typed metadata on `account` and `commodity` directives
+* Accept bare symbols in `commodity` directives
 * Fix implicit conversion with option `decimal_comma`
 * Ensure assertions have commodity with option `default_commodity`
 * Handle CRLF line endings

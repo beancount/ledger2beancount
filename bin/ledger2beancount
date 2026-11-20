@@ -64,6 +64,9 @@ my $commodity_quoted_RE = qr/(")(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 # An unquoted commodity may not contain certain characters
 my $commodity_unquoted_RE = qr/(?!-)(?!")[^;\s0-9=)({}@*\/+,.-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
+# Certain commodities that ought to be quoted commodities can be given
+# without the quotes on commodity directives.
+my $ledger_commodity_directive_RE = qr/$commodity_quoted_RE|[^"\s;]+/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
@@ -2597,9 +2600,13 @@ while (@input) {
 	$l = $1;
 	my $commodity;
 	my $comment = "";
-	if ($l =~ /^(?<commodity>$commodity_RE)\s*($comment_RE)?$/) {
-	    $commodity = map_commodity $+{commodity};
+	my $symbol_RE = $config->{hledger} ? $commodity_RE : $ledger_commodity_directive_RE;
+	if ($l =~ /^(?<commodity>$symbol_RE)\s*($comment_RE)?$/) {
+	    my $symbol = $+{commodity};
 	    $comment = " ;$+{comment}" if $+{comment};
++	    # Use the same mapping key as the corresponding quoted amount symbol
++	    $symbol = qq("$symbol") if $symbol !~ /\A$commodity_RE\z/;
++	    $commodity = map_commodity $symbol;
 	} elsif ($config->{hledger}) {
 	    # In hledger, a commodity directive can contain an amount
 	    # where the amount defines the format for this commodity

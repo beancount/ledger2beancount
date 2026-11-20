@@ -48,6 +48,15 @@ commodity M♛O
 
 commodity "TEST123" ; comment with "quote"
 
+commodity N1
+    format 1000.00 "N1"
+
+commodity N2 ; foo
+    format 1000.00 "N2"
+
+commodity N3  ; foo
+    format 1000.00 "N3"
+
 2018-03-17 * Test quoted commodity
     Assets:Test                      1 "DE0002635307"
     Equity:Opening-Balance          -1 "DE0002635307"
