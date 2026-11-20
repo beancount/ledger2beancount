@@ -673,6 +673,16 @@ sub pp_metadata($$) {
 }
 
 
+# Format a Ledger metadata value for Beancount.
+sub pp_metadata_value($$) {
+    my ($value, $typed) = @_;
+
+    $value //= "";
+    return parse_ledger_value $value if $typed;
+    return mk_beancount_string $value;
+}
+
+
 # Print an amount
 sub pp_amount($) {
     my ($amount) = @_;
@@ -1046,13 +1056,7 @@ sub is_meta_payee($) {
 sub print_metadata($) {
     my ($metadata) = @_;
 
-    # Metadata values can be empty
-    my $value = defined $metadata->[VALUE] ? $metadata->[VALUE] : "";
-    if (defined $metadata->[TYPED] && $metadata->[TYPED]) {
-	$value = parse_ledger_value $value;
-    } else {
-	$value = mk_beancount_string $value;
-    }
+    my $value = pp_metadata_value $metadata->[VALUE], $metadata->[TYPED];
     print_line $metadata->[DEPTH], pp_metadata $metadata->[KEY], $value;
 }
 
@@ -2577,7 +2581,8 @@ while (@input) {
 	    if ($l =~ /^note\s+(.*)/) {  # note
 		print_line $depth, pp_metadata "description", mk_beancount_string $1;
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
-		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
+		my $value = pp_metadata_value $+{value}, $+{typed};
+		print_line $depth, pp_metadata $+{key}, $value;
 	    } elsif ($l =~ /^alias\s+(.*)/) {  # alias
 		my $alias = $1;
 		$alias =~ s/\s+$//;
@@ -2635,7 +2640,8 @@ while (@input) {
 		    die "Cannot parse commodity format information: $l";
 		}
 	    } elsif ($l =~ /^$metadata_RE/) {  # metadata
-		print_line $depth, pp_metadata $+{key}, mk_beancount_string $+{value};
+		my $value = pp_metadata_value $+{value}, $+{typed};
+		print_line $depth, pp_metadata $+{key}, $value;
 	    } else {
 		print_comment_top_level $depth, $l;
 	    }

@@ -22,6 +22,8 @@ commodity USD
 commodity EUR
     note Euro
     format 1000.00EUR
+    ; normal_metadata: 42.0
+    ; typed_metadata:: 42.0
     nomarket
     default
 

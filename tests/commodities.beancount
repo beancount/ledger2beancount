@@ -42,6 +42,8 @@
 
 1970-01-01 commodity EUR
   name: "Euro"
+  normal_metadata: "42.0"
+  typed_metadata: 42.0
 ;   nomarket
 ;   default
 

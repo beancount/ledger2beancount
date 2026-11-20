@@ -6,6 +6,7 @@
 
 account Assets:Test
     note Test account
+    ; as-of:: [2025-05-05]
     alias test
     default
 
