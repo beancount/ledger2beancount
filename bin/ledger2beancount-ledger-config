@@ -14,9 +14,9 @@ open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
 
 my $format;
 while (<$input>) {
-    if (/^--input-date-format\s+"?(.*)"?/) {
+    if (/^--input-date-format\h+(.+)/) {
         $format = $1;
-    } elsif (!$format && /^--date-format\s+"?(.*)"?/) {
+    } elsif (!$format && /^--date-format\h+(.*)/) {
         $format = $1;
     } elsif (/^--decimal-comma/) {
         print "decimal_comma: true\n";
@@ -24,5 +24,8 @@ while (<$input>) {
 }
 close $input;
 
-print "date_format: \"$format\"\n" if $format;
+if ($format) {
+    $format =~ s/\A(["'])(.*)\1\z/$2/;
+    print "date_format: \"$format\"\n";
+}
 
