@@ -1,0 +1,19 @@
+; Ledger: 3.5.0
+
+1970-01-01 open Assets:Bank
+1970-01-01 open Equity:Opening
+
+1970-01-01 commodity CHF
+
+2026-11-21 txn "Swiss Amount"
+  Assets:Bank     1234567.89 CHF
+  Equity:Opening
+
+2026-11-21 txn "Apostrophe grouping before commodity"
+  Assets:Bank     -1234.56 CHF
+  Equity:Opening
+
+2026-11-21 txn "Apostrophe grouping in inline math"
+  Assets:Bank        1234.50* 2 CHF
+  Equity:Opening
+

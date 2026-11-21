@@ -1,0 +1,14 @@
+; Ledger: 3.5.0
+
+2026-11-21 Swiss Amount
+    Assets:Bank     CHF 1'234'567.89
+    Equity:Opening
+
+2026-11-21 Apostrophe grouping before commodity
+    Assets:Bank     -1'234.56 CHF
+    Equity:Opening
+
+2026-11-21 Apostrophe grouping in inline math
+    Assets:Bank     (1'234.50 CHF * 2)
+    Equity:Opening
+

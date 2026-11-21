@@ -54,7 +54,9 @@ my $hledger_tags_RE = qr/(?<key>[^ :]+):\s*(?<value>.*?)/;
 # To keep the regex simpler, we parse the () and [] for virtual accounts
 # as part of the account name and strip these brackets later.
 my $account_RE = qr/[^\s;][^\t]*?/;
-my $number_RE = qr/([\d\s,.]*\d([.,]\d*)?|\.\d+|,\d+)/;
+my $number_apostrophe_RE = qr/\d+(?:'\d{3})+(?:[.,]\d*)?/;
+# Keep grouping apostrophes in the number when looking for a suffix commodity.
+my $number_RE = qr/(?>$number_apostrophe_RE|[\d\s,.]*\d([.,]\d*)?|\.\d+|,\d+)/;
 # Currently ledger only allows - as sign (see https://github.com/ledger/ledger/issues/1990)
 # but hledger allows + and - so just accept both.
 my $sign_RE = qr/[+-]/;
@@ -982,6 +984,7 @@ sub print_txn(@) {
 sub convert_number($$) {
     my ($number, $currency) = @_;
 
+    $number =~ tr/'//d;
     if ($config->{decimal_comma}) {
 	$number =~ s/\.//g;
 	$number =~ tr/,/./; # issue #204
@@ -1536,6 +1539,7 @@ sub get_value_expr($) {
     # that's the commodity we need.  If there are multiple, beancount
     # can't handle it.
     my $terms = $math;
+    $terms =~ s/(?<![\d.,'])$number_apostrophe_RE(?![\d.,'])/ /g;
     $terms =~ s/[.,\s\d\(\)\*\/+-]/ /g;
     $terms =~ s/^\s+//;
     my @terms = uniq split /\s+/, $terms;
@@ -1678,6 +1682,8 @@ sub get_lot($) {
 	    if ($valuation ne "market") {
 		print_warning_once "Lot value expressions not supported in beancount: $valuation";
 	    }
+	} else {
+	    die "Cannot parse lot information in $l_orig: $l\n";
 	}
     }
 

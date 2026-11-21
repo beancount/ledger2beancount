@@ -74,6 +74,16 @@ test_validity_hledger () {
 test_validity_ledger () {
 	test=$1
 	printf "Validating $test... "
+
+	# Ensure ledger is new enough
+	needed=$(grep "^; Ledger:" $test | head -n 1 | sed 's/^; Ledger:[[:space:]]*//')
+	if [ -n "$needed" ]; then
+		if ! $(meets_version $ledger_version $needed); then
+			echo "skipping since ledger is too old"
+			return
+		fi
+	fi
+
 	tmp=$(mktemp)
 	ledger --init-file /dev/null -f $test bal > $tmp 2>&1
 	# Ignore errors due to missing Python support

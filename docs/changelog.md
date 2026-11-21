@@ -14,6 +14,7 @@
 * Honour typed metadata on `account` and `commodity` directives
 * Accept bare symbols in `commodity` directives
 * Fix implicit conversion with option `decimal_comma`
+* Allow apostrophe as digit group separator
 * Ensure assertions have commodity with option `default_commodity`
 * Handle CRLF line endings
 * Improve test suite compatibility with upcoming ledger 3.5
