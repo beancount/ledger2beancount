@@ -66,16 +66,14 @@ my $commodity_quoted_RE = qr/(")(?:(?=(\\?))\g{-1}.)*?\g{-2}/;
 # An unquoted commodity may not contain certain characters
 my $commodity_unquoted_RE = qr/(?!-)(?!")[^;\s0-9=)({}@*\/+,.-]+/;
 my $commodity_RE = qr/$commodity_quoted_RE|$commodity_unquoted_RE/;
-# Certain commodities that ought to be quoted commodities can be given
-# without the quotes on commodity directives.
-my $ledger_commodity_directive_RE = qr/$commodity_quoted_RE|[^"\s;]+/;
+# Ledger accepts bare symbols in commodity and price directives.
+my $ledger_bare_commodity_RE = qr/[^"\s;]+/;
 my $comment_top_level_RE = qr/[;#%|*]\s?(?<comment>.*?)/;
 my $comment_RE = qr/;(?<comment>.*)/;
 my $metadata_RE = qr/;\s*(?<key>[^\h:][^\h]*?):(?<typed>:)?(\s*$|\s+(?<value>.*))/;
 # Postings: this does not match everything, just ensures a line consists of
 # a posting
 my $posting_RE = qr/((?<flag>$flags_RE)\s+)?(?<account>$account_RE)/;
-my $price_RE = qr/^P\s+(?<date>$date_RE)\s+(\d\d:\d\d(:\d\d)?\s+)?(?<commodity1>$commodity_RE)\s+(?<commodity2>.*)/;
 
 # Maximum limit for beancount commodities
 my $BEANCOUNT_COMMODITY_MAX_LEN = 24;
@@ -1407,6 +1405,15 @@ sub map_commodity($) {
 }
 
 
+# Use the same mapping key as an amount when its commodity needs quotes.
+sub map_bare_commodity($) {
+    my ($symbol) = @_;
+
+    $symbol = qq("$symbol") if $symbol !~ /\A$commodity_RE\z/;
+    return map_commodity $symbol;
+}
+
+
 # emit a single line
 sub print_line($$) {
     my ($depth, $line) = @_;
@@ -2372,6 +2379,15 @@ if (ref $config->{payee_match} ne ref []) {
 
 # MAIN CONVERSION LOOP
 
+my $bare_symbol_RE = $config->{hledger} ? $commodity_unquoted_RE : $ledger_bare_commodity_RE;
+my $directive_symbol_RE = qr/$commodity_quoted_RE|$bare_symbol_RE/;
+# A field beginning with a digit immediately after the date is a time.
+my $price_RE = qr/
+    ^P\s+(?<date>\d+[^\s=]+)\s+
+    (?:\d{1,2}:\d\d(?::\d\d)?\s+|(?!\d))
+    (?<commodity1>$directive_symbol_RE)\s+(?<commodity2>.*)
+/x;
+
 unshift(@ARGV, '-') unless @ARGV;
 open my $input, $ARGV[0] or die "Can't read $ARGV[0]";
 my @input;
@@ -2538,9 +2554,9 @@ while (@input) {
     } elsif ($l =~ /^(Y\s*|year\s+)(\d{4})/) {  # year declaration
 	$year = $2;
 	$year_no_apply = $2;
-    } elsif ($l =~ /^$price_RE/) {
+    } elsif ($l =~ $price_RE) {
 	$out = \@output;
-	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_commodity $+{commodity1};
+	$l = sprintf "%s price %s ", pp_date($+{date}, $year), map_bare_commodity $+{commodity1};
 	my ($commodity2, $rest) = get_amount $+{commodity2};
 	$l .= pp_amount $commodity2;
 	if ($rest =~ /^\s*;/) {
@@ -2606,13 +2622,9 @@ while (@input) {
 	$l = $1;
 	my $commodity;
 	my $comment = "";
-	my $symbol_RE = $config->{hledger} ? $commodity_RE : $ledger_commodity_directive_RE;
-	if ($l =~ /^(?<commodity>$symbol_RE)\s*($comment_RE)?$/) {
-	    my $symbol = $+{commodity};
+	if ($l =~ /^(?<commodity>$directive_symbol_RE)\s*($comment_RE)?$/) {
 	    $comment = " ;$+{comment}" if $+{comment};
-+	    # Use the same mapping key as the corresponding quoted amount symbol
-+	    $symbol = qq("$symbol") if $symbol !~ /\A$commodity_RE\z/;
-+	    $commodity = map_commodity $symbol;
+	    $commodity = map_bare_commodity $+{commodity};
 	} elsif ($config->{hledger}) {
 	    # In hledger, a commodity directive can contain an amount
 	    # where the amount defines the format for this commodity

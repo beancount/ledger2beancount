@@ -13,6 +13,7 @@
 * Ensure `apply account` is applied to `account` directives
 * Honour typed metadata on `account` and `commodity` directives
 * Accept bare symbols in `commodity` directives
+* Accept bare commodity symbols in `P` directives
 * Fix implicit conversion with option `decimal_comma`
 * Allow apostrophe as digit group separator
 * Ensure assertions have commodity with option `default_commodity`

@@ -12,6 +12,7 @@
 1970-01-01 commodity EUR
 1970-01-01 commodity GBP
 
+1970-01-01 commodity EXV6_DE
 1970-01-01 commodity JPY
 1970-01-01 commodity MILESMORE4
 1970-01-01 commodity UR
@@ -23,6 +24,8 @@
 2019-04-28 price EUR 124.56 JPY
 2020-06-26 price GBP 1.11 EUR ;comment
 2020-06-26 price GBP 1.11 EUR ;comment
+2025-04-29 price EXV6_DE 48.5 EUR
+2025-04-30 price EXV6_DE 49.5 EUR
 
 2018-03-21 * "Virtual cost (@)"
   Assets:Test                  10.00 EUR @ 0.90 GBP
